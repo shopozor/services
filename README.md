@@ -2,7 +2,7 @@
 
 ## Introduction
 
-In the past, we made evaluations on many existing open source software that we could wrap and use as our backend. Our last attempts were with `vue-storefront` and `saleor`. The latter was the most developped of our attempts. It was almost sure that it would be our production backend. 
+In the past, we made evaluations on many existing open source software that we could wrap and use as our backend. Our last attempts were with [vuestorefront](https://www.vuestorefront.io/) and [saleor](https://getsaleor.com/). The latter was the most developped of our attempts. It was almost sure that it would be our production backend. 
 
 However, `saleor` is written in python and builds up its graphql API with graphene. That has the following disadvantages:
 
