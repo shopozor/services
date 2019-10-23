@@ -1,0 +1,6 @@
+- args:
+    is_enum: true
+    table:
+      name: product_states
+      schema: public
+  type: set_table_is_enum

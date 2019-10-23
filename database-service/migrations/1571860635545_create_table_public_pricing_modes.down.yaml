@@ -1,0 +1,3 @@
+- args:
+    sql: DROP TABLE "public"."pricing_modes"
+  type: run_sql

@@ -1,0 +1,11 @@
+- args:
+    sql: ALTER TABLE "public"."users" ADD COLUMN "address_id" int4
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."users" ALTER COLUMN "address_id" DROP NOT NULL
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."users" ADD CONSTRAINT users_address_id_fkey FOREIGN
+      KEY (address_id) REFERENCES "public"."addresses" (id) ON DELETE cascade ON UPDATE
+      restrict
+  type: run_sql

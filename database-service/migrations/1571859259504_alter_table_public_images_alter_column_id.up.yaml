@@ -1,0 +1,12 @@
+- args:
+    sql: ALTER TABLE "public"."images" ALTER COLUMN "id" TYPE int4;
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."images" ADD CONSTRAINT "images_id_key" UNIQUE ("id")
+  type: run_sql
+- args:
+    sql: COMMENT ON COLUMN "public"."images"."id" IS E''
+  type: run_sql
+- args:
+    sql: alter table "public"."images" rename column "id" to "product_id";
+  type: run_sql

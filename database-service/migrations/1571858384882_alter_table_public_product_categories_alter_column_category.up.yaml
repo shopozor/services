@@ -1,0 +1,7 @@
+- args:
+    sql: ALTER TABLE "public"."product_categories" ADD CONSTRAINT "product_categories_category_key"
+      UNIQUE ("category")
+  type: run_sql
+- args:
+    sql: COMMENT ON COLUMN "public"."product_categories"."category" IS E''
+  type: run_sql

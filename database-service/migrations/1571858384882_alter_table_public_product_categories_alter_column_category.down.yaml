@@ -1,0 +1,6 @@
+- args:
+    sql: ALTER TABLE "public"."product_categories" DROP CONSTRAINT "product_categories_category_key"
+  type: run_sql
+- args:
+    sql: COMMENT ON COLUMN "public"."product_categories"."category" IS E'null'
+  type: run_sql

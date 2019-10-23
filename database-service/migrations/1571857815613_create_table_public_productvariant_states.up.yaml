@@ -1,0 +1,8 @@
+- args:
+    sql: CREATE TABLE "public"."productvariant_states"("state" text NOT NULL, PRIMARY
+      KEY ("state") , UNIQUE ("state"));
+  type: run_sql
+- args:
+    name: productvariant_states
+    schema: public
+  type: add_existing_table_or_view

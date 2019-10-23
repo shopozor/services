@@ -1,0 +1,12 @@
+- args:
+    sql: ALTER TABLE "public"."addresses" ALTER COLUMN "id" TYPE integer;
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."addresses" DROP CONSTRAINT "addresses_id_key"
+  type: run_sql
+- args:
+    sql: COMMENT ON COLUMN "public"."addresses"."id" IS E'null'
+  type: run_sql
+- args:
+    sql: alter table "public"."addresses" rename column "user_id" to "id";
+  type: run_sql
