@@ -1,3 +1,0 @@
-- args:
-    sql: ALTER TABLE "public"."productvariants" DROP COLUMN "gross_cost_price_unit";
-  type: run_sql

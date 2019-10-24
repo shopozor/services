@@ -1,8 +1,0 @@
-- args:
-    sql: CREATE TABLE "public"."pricing_modes"("mode" text NOT NULL, PRIMARY KEY ("mode")
-      , UNIQUE ("mode"));
-  type: run_sql
-- args:
-    name: pricing_modes
-    schema: public
-  type: add_existing_table_or_view

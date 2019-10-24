@@ -1,3 +1,0 @@
-- args:
-    sql: ALTER TABLE "public"."product_categories" DROP COLUMN "background_image";
-  type: run_sql

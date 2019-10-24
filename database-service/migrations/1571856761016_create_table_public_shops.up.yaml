@@ -1,9 +1,0 @@
-- args:
-    sql: CREATE TABLE "public"."shops"("id" serial NOT NULL, "name" text NOT NULL,
-      "description" text NOT NULL, "latitude" numeric NOT NULL, "longitude" numeric
-      NOT NULL, PRIMARY KEY ("id") , UNIQUE ("id"));
-  type: run_sql
-- args:
-    name: shops
-    schema: public
-  type: add_existing_table_or_view

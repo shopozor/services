@@ -1,9 +1,0 @@
-- args:
-    sql: ALTER TABLE "public"."product_states" ADD COLUMN "id" int4
-  type: run_sql
-- args:
-    sql: ALTER TABLE "public"."product_states" ALTER COLUMN "id" DROP NOT NULL
-  type: run_sql
-- args:
-    sql: ALTER TABLE "public"."product_states" ALTER COLUMN "id" SET DEFAULT nextval('product_states_id_seq'::regclass)
-  type: run_sql

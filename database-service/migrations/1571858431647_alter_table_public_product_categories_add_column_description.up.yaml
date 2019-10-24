@@ -1,4 +1,0 @@
-- args:
-    sql: ALTER TABLE "public"."product_categories" ADD COLUMN "description" text NOT
-      NULL;
-  type: run_sql

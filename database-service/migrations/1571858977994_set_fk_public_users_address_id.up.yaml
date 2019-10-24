@@ -1,6 +1,0 @@
-- args:
-    sql: "\n           alter table \"public\".\"users\"\n           add constraint
-      \"users_address_id_fkey\" \n           foreign key (\"address_id\") \n           references
-      \"public\".\"addresses\"\n           (\"id\") on update restrict on delete cascade;\n
-      \     "
-  type: run_sql

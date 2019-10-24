@@ -1,6 +1,0 @@
-- args:
-    sql: ALTER TABLE "public"."product_states" ALTER COLUMN "state" TYPE text;
-  type: run_sql
-- args:
-    sql: COMMENT ON COLUMN "public"."product_states"."state" IS E''
-  type: run_sql

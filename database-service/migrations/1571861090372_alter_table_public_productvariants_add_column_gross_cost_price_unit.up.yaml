@@ -1,4 +1,0 @@
-- args:
-    sql: ALTER TABLE "public"."productvariants" ADD COLUMN "gross_cost_price_unit"
-      text NOT NULL;
-  type: run_sql

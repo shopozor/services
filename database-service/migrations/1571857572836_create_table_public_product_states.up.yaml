@@ -1,8 +1,0 @@
-- args:
-    sql: CREATE TABLE "public"."product_states"("state" varchar NOT NULL, "id" serial
-      NOT NULL, PRIMARY KEY ("id") , UNIQUE ("id"));
-  type: run_sql
-- args:
-    name: product_states
-    schema: public
-  type: add_existing_table_or_view

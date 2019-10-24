@@ -1,3 +1,0 @@
-- sql: "alter table \"public\".\"product_categories\"\n    add constraint \"product_categories_pkey\"
-    \n    primary key ( \"category\" );"
-  type: run_sql

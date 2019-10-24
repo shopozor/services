@@ -1,6 +1,0 @@
-- args:
-    sql: ALTER TABLE "public"."users" ALTER COLUMN "first_name" TYPE varchar;
-  type: run_sql
-- args:
-    sql: COMMENT ON COLUMN "public"."users"."first_name" IS E''
-  type: run_sql

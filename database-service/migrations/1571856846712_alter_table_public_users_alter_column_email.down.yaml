@@ -1,6 +1,0 @@
-- args:
-    sql: ALTER TABLE "public"."users" ALTER COLUMN "email" TYPE text;
-  type: run_sql
-- args:
-    sql: COMMENT ON COLUMN "public"."users"."email" IS E'null'
-  type: run_sql

@@ -1,3 +1,0 @@
-- args:
-    sql: ALTER TABLE "public"."product_states" DROP COLUMN "id" CASCADE
-  type: run_sql
