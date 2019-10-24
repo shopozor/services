@@ -39,6 +39,7 @@ ALTER SEQUENCE public.images_id_seq OWNED BY public.images.product_id;
 CREATE TABLE public.pricing_modes (
     mode text NOT NULL
 );
+INSERT INTO public.pricing_modes (mode) VALUES ('FREE'), ('AUTO_UNIT'), ('AUTO_PRICE'), ('BULK');
 CREATE TABLE public.product_categories (
     name text NOT NULL,
     id integer NOT NULL,
