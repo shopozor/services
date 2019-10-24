@@ -1,0 +1,191 @@
+- args:
+    allowlist: []
+    functions: []
+    query_collections: []
+    remote_schemas: []
+    tables:
+    - array_relationships: []
+      configuration:
+        custom_column_names: {}
+        custom_root_fields:
+          delete: null
+          insert: null
+          select: null
+          select_aggregate: null
+          select_by_pk: null
+          update: null
+      delete_permissions: []
+      event_triggers: []
+      insert_permissions: []
+      is_enum: false
+      object_relationships: []
+      select_permissions: []
+      table: users
+      update_permissions: []
+    - array_relationships: []
+      configuration:
+        custom_column_names: {}
+        custom_root_fields:
+          delete: null
+          insert: null
+          select: null
+          select_aggregate: null
+          select_by_pk: null
+          update: null
+      delete_permissions: []
+      event_triggers: []
+      insert_permissions: []
+      is_enum: true
+      object_relationships: []
+      select_permissions: []
+      table: productvariant_states
+      update_permissions: []
+    - array_relationships: []
+      configuration:
+        custom_column_names: {}
+        custom_root_fields:
+          delete: null
+          insert: null
+          select: null
+          select_aggregate: null
+          select_by_pk: null
+          update: null
+      delete_permissions: []
+      event_triggers: []
+      insert_permissions: []
+      is_enum: false
+      object_relationships: []
+      select_permissions: []
+      table: productvariants
+      update_permissions: []
+    - array_relationships: []
+      configuration:
+        custom_column_names: {}
+        custom_root_fields:
+          delete: null
+          insert: null
+          select: null
+          select_aggregate: null
+          select_by_pk: null
+          update: null
+      delete_permissions: []
+      event_triggers: []
+      insert_permissions: []
+      is_enum: false
+      object_relationships: []
+      select_permissions: []
+      table: addresses
+      update_permissions: []
+    - array_relationships: []
+      configuration:
+        custom_column_names: {}
+        custom_root_fields:
+          delete: null
+          insert: null
+          select: null
+          select_aggregate: null
+          select_by_pk: null
+          update: null
+      delete_permissions: []
+      event_triggers: []
+      insert_permissions: []
+      is_enum: true
+      object_relationships: []
+      select_permissions: []
+      table: product_states
+      update_permissions: []
+    - array_relationships: []
+      configuration:
+        custom_column_names: {}
+        custom_root_fields:
+          delete: null
+          insert: null
+          select: null
+          select_aggregate: null
+          select_by_pk: null
+          update: null
+      delete_permissions: []
+      event_triggers: []
+      insert_permissions: []
+      is_enum: false
+      object_relationships:
+      - comment: null
+        name: producer
+        using:
+          foreign_key_constraint_on: producer_id
+      select_permissions: []
+      table: products
+      update_permissions: []
+    - array_relationships: []
+      configuration:
+        custom_column_names: {}
+        custom_root_fields:
+          delete: null
+          insert: null
+          select: null
+          select_aggregate: null
+          select_by_pk: null
+          update: null
+      delete_permissions: []
+      event_triggers: []
+      insert_permissions: []
+      is_enum: false
+      object_relationships: []
+      select_permissions: []
+      table: images
+      update_permissions: []
+    - array_relationships: []
+      configuration:
+        custom_column_names: {}
+        custom_root_fields:
+          delete: null
+          insert: null
+          select: null
+          select_aggregate: null
+          select_by_pk: null
+          update: null
+      delete_permissions: []
+      event_triggers: []
+      insert_permissions: []
+      is_enum: false
+      object_relationships: []
+      select_permissions: []
+      table: product_categories
+      update_permissions: []
+    - array_relationships: []
+      configuration:
+        custom_column_names: {}
+        custom_root_fields:
+          delete: null
+          insert: null
+          select: null
+          select_aggregate: null
+          select_by_pk: null
+          update: null
+      delete_permissions: []
+      event_triggers: []
+      insert_permissions: []
+      is_enum: false
+      object_relationships: []
+      select_permissions: []
+      table: shops
+      update_permissions: []
+    - array_relationships: []
+      configuration:
+        custom_column_names: {}
+        custom_root_fields:
+          delete: null
+          insert: null
+          select: null
+          select_aggregate: null
+          select_by_pk: null
+          update: null
+      delete_permissions: []
+      event_triggers: []
+      insert_permissions: []
+      is_enum: true
+      object_relationships: []
+      select_permissions: []
+      table: pricing_modes
+      update_permissions: []
+  type: replace_metadata
