@@ -1,3 +1,0 @@
-- args:
-    sql: ALTER TABLE "public"."products" DROP COLUMN "producer_id";
-  type: run_sql
