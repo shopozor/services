@@ -1,10 +1,10 @@
 version: '3.6'
 services:
   postgres:
-    image: postgres
+    image: postgres:11.2-alpine
     restart: always
     volumes:
-    - db_data:/var/lib/postgresql/data
+    - db_data:/var/lib/postgresql-11.2/data
   graphql-engine:
     image: hasura/graphql-engine:v1.0.0-beta.8
     ports:
