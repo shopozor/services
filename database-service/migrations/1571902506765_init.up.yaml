@@ -179,7 +179,7 @@
       delete_permissions: []
       event_triggers: []
       insert_permissions: []
-      is_enum: false
+      is_enum: true
       object_relationships: []
       select_permissions: []
       table: pricing_modes
