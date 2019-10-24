@@ -9,5 +9,6 @@ However, `saleor` is written in python and builds up its graphql API with graphe
 * very slow graphql API calls
 * very slow unit tests
 * very slow integration / functional tests
+* impossible to load a set of fixtures before all acceptance scenarios and only revert the changes made within a single acceptance scenario
 * difficult to make subscriptions happen
 * `saleor` is a big monolith where views are entangled with logic; for example, it would be a lot of work to only take the pure logic out of it; one smell of that is the way their unit tests are organized: it is a lot of work to unbraid view tests from logic tests and it is also a lot of work to unbraid their module dependencies
