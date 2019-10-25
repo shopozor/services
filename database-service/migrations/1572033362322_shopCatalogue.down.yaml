@@ -1,0 +1,72 @@
+- args:
+    relationship: shop_productvariants
+    table:
+      name: shops
+      schema: public
+  type: drop_relationship
+- args:
+    relationship: shop_productvariants
+    table:
+      name: productvariants
+      schema: public
+  type: drop_relationship
+- args:
+    relationship: shop
+    table:
+      name: shop_productvariant
+      schema: public
+  type: drop_relationship
+- args:
+    relationship: productvariant
+    table:
+      name: shop_productvariant
+      schema: public
+  type: drop_relationship
+- args:
+    sql: |-
+      COMMENT ON TABLE "public"."shop_productvariant" IS NULL;
+      DROP TABLE "public"."shop_productvariant"
+  type: run_sql
+- args:
+    relationship: product_category
+    table:
+      name: products
+      schema: public
+  type: drop_relationship
+- args:
+    relationship: products
+    table:
+      name: product_categories
+      schema: public
+  type: drop_relationship
+- args:
+    relationship: productvariants
+    table:
+      name: productvariant_states
+      schema: public
+  type: drop_relationship
+- args:
+    relationship: pricingModeByPricingMode
+    table:
+      name: productvariants
+      schema: public
+  type: drop_relationship
+- args:
+    relationship: productvariant_state
+    table:
+      name: productvariants
+      schema: public
+  type: drop_relationship
+- args:
+    name: variants
+    new_name: productvariants
+    table:
+      name: products
+      schema: public
+  type: rename_relationship
+- args:
+    relationship: productvariants
+    table:
+      name: products
+      schema: public
+  type: drop_relationship
