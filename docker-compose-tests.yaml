@@ -20,7 +20,7 @@ services:
     build:
       context: ./database-service
       dockerfile: ./Dockerfile
-    restart: always 
+    restart: "no" 
     depends_on:
       - graphql-engine
     volumes:
