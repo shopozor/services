@@ -1,0 +1,9 @@
+# python stuff
+*.py[cod]
+*.log
+*.pot
+*.pyc
+.coverage
+.testmondata
+__pycache__/
+.pytest_cache/
