@@ -11,4 +11,5 @@ However, `saleor` is written in python and builds up its graphql API with graphe
 * very slow integration / functional tests
 * impossible to load a set of fixtures before all acceptance scenarios and only revert the changes made within a single acceptance scenario
 * difficult to make subscriptions happen
+* difficult with Django to make safe accesses to the postgres database; by default, `saleor` defines one single database user with all the necessary permissions, which is dangerous; it would be better to use the built-in postgres views to restrict the database users' permissions based on the purpose they have
 * `saleor` is a big monolith where views are entangled with logic; for example, it would be a lot of work to only take the pure logic out of it; one smell of that is the way their unit tests are organized: it is a lot of work to unbraid view tests from logic tests and it is also a lot of work to unbraid their module dependencies
