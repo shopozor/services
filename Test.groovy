@@ -4,12 +4,11 @@ pipeline {
     REPORTS_FOLDER = 'junit-reports'
   }
   stages {
+    // sudo curl -L "https://github.com/docker/compose/releases/download/1.24.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    // sudo chmod +x /usr/local/bin/docker-compose
     stage('GraphQL engine tests') {
       steps {
-        // step([$class: 'DockerComposeBuilder', dockerComposeFile: 'docker-compose-tests.yml', option: [$class: 'StartAllServices'], useCustomDockerComposeFile: true])
-        // step([$class: 'DockerComposeBuilder', dockerComposeFile: 'docker-compose-tests.yml', option: [$class: 'ExecuteCommandInsideContainer', command: 'pytest --hasura-endpoint http://graphql-engine:8080 -ra --junitxml=test-report.xml', index: 1, privilegedMode: false, service: 'hasura-service-tests', workDir: ''], useCustomDockerComposeFile: true])
-        // step([$class: 'DockerComposeBuilder', dockerComposeFile: 'docker-compose-tests.yml', option: [$class: 'StopAllServices'], useCustomDockerComposeFile: true])
-        sh "docker-compose -f /var/jenkins_home/workspace/docker-compose-test/docker-compose-tests.yml up --abort-on-container-exit"
+        sh "docker-compose -f /var/jenkins_home/workspace/docker-compose-test/docker-compose-tests.yaml up --abort-on-container-exit"
       }
     }
   }
