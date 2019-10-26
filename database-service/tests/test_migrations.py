@@ -1,11 +1,10 @@
 import sh
 
-def test_migrations_can_be_applied_without_errors():
+def test_migrations_can_be_applied_without_errors(hasura_endpoint):
     # 1. Check that the migration status is fine
     # assert we see the migrations folder from here
 
-    # TODO: put the endpoint in a fixture in conftest.py
     cmd = sh.Command('hasura')
-    result = cmd('migrate', 'apply', '--endpoint', 'http://graphql-engine:8080', '--skip-update-check')
+    result = cmd('migrate', 'apply', '--endpoint', hasura_endpoint, '--skip-update-check')
 
     assert 0 == result.exit_code

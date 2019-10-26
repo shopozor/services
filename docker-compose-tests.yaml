@@ -25,9 +25,7 @@ services:
       - graphql-engine
     volumes:
       - ./database-service:/app
-    entrypoint:
-      - pytest
-      - -ra
+    entrypoint: pytest --hasura-endpoint http://graphql-engine:8080 -ra --junitxml=test-report.xml
 
 volumes:
   db_data:
