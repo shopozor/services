@@ -9,6 +9,6 @@ COPY tests/requirements.txt /tmp
 WORKDIR /tmp
 
 RUN pip install -r requirements.txt \
-  && rm requirements.txt
+  && rm requirements.txt 
 
-WORKDIR /app/tests
+WORKDIR /app
