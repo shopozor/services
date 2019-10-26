@@ -1,0 +1,129 @@
+- args:
+    name: productvariants
+    table:
+      name: products
+      schema: public
+    using:
+      foreign_key_constraint_on:
+        column: product_id
+        table:
+          name: productvariants
+          schema: public
+  type: create_array_relationship
+- args:
+    name: productvariants
+    new_name: variants
+    table:
+      name: products
+      schema: public
+  type: rename_relationship
+- args:
+    name: productvariant_state
+    table:
+      name: productvariants
+      schema: public
+    using:
+      foreign_key_constraint_on: state
+  type: create_object_relationship
+- args:
+    name: pricingModeByPricingMode
+    table:
+      name: productvariants
+      schema: public
+    using:
+      foreign_key_constraint_on: pricing_mode
+  type: create_object_relationship
+- args:
+    name: productvariants
+    table:
+      name: productvariant_states
+      schema: public
+    using:
+      foreign_key_constraint_on:
+        column: state
+        table:
+          name: productvariants
+          schema: public
+  type: create_array_relationship
+- args:
+    name: products
+    table:
+      name: product_categories
+      schema: public
+    using:
+      foreign_key_constraint_on:
+        column: category_id
+        table:
+          name: products
+          schema: public
+  type: create_array_relationship
+- args:
+    name: product_category
+    table:
+      name: products
+      schema: public
+    using:
+      foreign_key_constraint_on: category_id
+  type: create_object_relationship
+- args:
+    sql: >-
+      CREATE TABLE "public"."shop_productvariant"(
+        "productvariant_id" integer NOT NULL,
+        "shop_id" integer NOT NULL,
+        PRIMARY KEY ("productvariant_id", "shop_id"),
+        FOREIGN KEY ("shop_id") REFERENCES "public"."shops"("id") ON UPDATE restrict ON DELETE restrict,
+        FOREIGN KEY ("productvariant_id") REFERENCES "public"."productvariants"("id") ON UPDATE restrict ON DELETE restrict
+      );
+
+      COMMENT ON TABLE "public"."shop_productvariant" IS E 'This table contains
+      the different shop of the shopozor';
+  type: run_sql
+- args:
+    name: shop_productvariant
+    schema: public
+  type: add_existing_table_or_view
+- args:
+    sql: >-
+      COMMENT ON TABLE "public"."shop_productvariant" IS E 'many-to-many bridge
+      table from shops to productvariants'
+  type: run_sql
+- args:
+    name: productvariant
+    table:
+      name: shop_productvariant
+      schema: public
+    using:
+      foreign_key_constraint_on: productvariant_id
+  type: create_object_relationship
+- args:
+    name: shop
+    table:
+      name: shop_productvariant
+      schema: public
+    using:
+      foreign_key_constraint_on: shop_id
+  type: create_object_relationship
+- args:
+    name: shop_productvariants
+    table:
+      name: productvariants
+      schema: public
+    using:
+      foreign_key_constraint_on:
+        column: productvariant_id
+        table:
+          name: shop_productvariant
+          schema: public
+  type: create_array_relationship
+- args:
+    name: shop_productvariants
+    table:
+      name: shops
+      schema: public
+    using:
+      foreign_key_constraint_on:
+        column: shop_id
+        table:
+          name: shop_productvariant
+          schema: public
+  type: create_array_relationship

@@ -63,7 +63,8 @@ CREATE TABLE public.products (
     publication_date timestamp with time zone DEFAULT now() NOT NULL,
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     state text DEFAULT 'INVISIBLE'::text NOT NULL,
-    category_id integer NOT NULL
+    category_id integer NOT NULL,
+    producer_id integer NOT NULL
 );
 CREATE SEQUENCE public.products_id_seq
     AS integer
@@ -156,6 +157,8 @@ ALTER TABLE ONLY public.product_states
     ADD CONSTRAINT product_states_pkey PRIMARY KEY (state);
 ALTER TABLE ONLY public.products
     ADD CONSTRAINT products_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY public.products
+    ADD CONSTRAINT products_producer_id_key UNIQUE (producer_id);
 ALTER TABLE ONLY public.productvariant_states
     ADD CONSTRAINT productvariant_states_pkey PRIMARY KEY (state);
 ALTER TABLE ONLY public.productvariants
@@ -174,6 +177,8 @@ ALTER TABLE ONLY public.products
     ADD CONSTRAINT products_category_id_fkey FOREIGN KEY (category_id) REFERENCES public.product_categories(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.products
     ADD CONSTRAINT products_id_fkey FOREIGN KEY (id) REFERENCES public.images(product_id) ON UPDATE RESTRICT ON DELETE RESTRICT;
+ALTER TABLE ONLY public.products
+    ADD CONSTRAINT products_producer_id_fkey FOREIGN KEY (producer_id) REFERENCES public.users(id) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.products
     ADD CONSTRAINT products_state_fkey FOREIGN KEY (state) REFERENCES public.product_states(state) ON UPDATE RESTRICT ON DELETE RESTRICT;
 ALTER TABLE ONLY public.productvariants
