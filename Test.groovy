@@ -13,7 +13,7 @@ pipeline {
   post {
     always {
       script {
-         junit "**/$REPORTS_FOLDER/*.xml"
+         junit "**/test-report.xml"
       }
     }
   }
