@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('GraphQL engine tests') {
       steps {
-        sh "docker-compose -f /var/jenkins_home/workspace/docker-compose-test/docker-compose-tests.yaml up --abort-on-container-exit"
+        sh "docker-compose -f docker-compose-tests.yaml up --abort-on-container-exit"
       }
     }
   }
