@@ -8,7 +8,7 @@ services:
   graphql-engine:
     image: hasura/graphql-engine:v1.0.0-beta.8
     ports:
-    - 9000:8080
+    - 8080:8080
     depends_on:
     - postgres
     restart: always
@@ -26,7 +26,7 @@ services:
       - graphql-engine
     volumes:
       - ./database-service:/app
-    entrypoint: pytest --hasura-endpoint http://graphql-engine:9000 -ra --junitxml=test-report.xml
+    entrypoint: pytest --hasura-endpoint http://graphql-engine:8080 -ra --junitxml=test-report.xml
 
 volumes:
   db_data:
