@@ -1,8 +1,5 @@
 pipeline {
   agent any
-  environment {
-    REPORTS_FOLDER = 'junit-reports'
-  }
   stages {
     stage('GraphQL engine tests') {
       steps {
