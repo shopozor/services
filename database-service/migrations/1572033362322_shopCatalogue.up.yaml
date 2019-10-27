@@ -74,9 +74,7 @@
         FOREIGN KEY ("shop_id") REFERENCES "public"."shops"("id") ON UPDATE restrict ON DELETE restrict,
         FOREIGN KEY ("productvariant_id") REFERENCES "public"."productvariants"("id") ON UPDATE restrict ON DELETE restrict
       );
-
-      COMMENT ON TABLE "public"."shop_productvariant" IS E 'This table contains
-      the different shop of the shopozor';
+      COMMENT ON TABLE "public"."shop_productvariant" IS 'This table contains the different shop of the shopozor';
   type: run_sql
 - args:
     name: shop_productvariant
@@ -84,7 +82,7 @@
   type: add_existing_table_or_view
 - args:
     sql: >-
-      COMMENT ON TABLE "public"."shop_productvariant" IS E 'many-to-many bridge
+      COMMENT ON TABLE "public"."shop_productvariant" IS 'many-to-many bridge
       table from shops to productvariants'
   type: run_sql
 - args:
