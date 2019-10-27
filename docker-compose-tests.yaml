@@ -21,12 +21,13 @@ services:
       context: ./database-service
       dockerfile: ./Dockerfile
       network: host
+    network_mode: host
     restart: "no" 
     depends_on:
       - graphql-engine
     volumes:
       - ./database-service:/app
-    entrypoint: pytest --hasura-endpoint http://graphql-engine:9000 -ra --junitxml=test-report.xml
+    entrypoint: pytest --hasura-endpoint http://localhost:9000 -ra --junitxml=test-report.xml
 
 volumes:
   db_data:
