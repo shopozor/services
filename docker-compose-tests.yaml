@@ -21,6 +21,7 @@ services:
       context: ./database-service
       dockerfile: ./Dockerfile
       network: host
+      target: unittest
     restart: "no" 
     depends_on:
       - graphql-engine

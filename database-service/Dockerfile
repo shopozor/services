@@ -1,4 +1,11 @@
-FROM python:3.8-slim
+FROM hasura/graphql-engine:v1.0.0-beta.8.cli-migrations AS app
+
+COPY migrations /app/migrations
+COPY config.yaml /app 
+
+WORKDIR /app
+
+FROM python:3.8-slim AS unittest
 
 RUN apt-get -y update \
   && apt-get install -y curl \
