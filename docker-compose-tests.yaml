@@ -22,12 +22,24 @@ services:
       dockerfile: ./Dockerfile
       network: host
       target: unittest
-    restart: "no" 
+    restart: "no"
     depends_on:
       - graphql-engine
     volumes:
       - ./database-service:/app
     entrypoint: pytest --hasura-endpoint http://graphql-engine:8080 -ra --junitxml=test-report.xml
+  fixtures-service:
+    build:
+      context: ./fixtures-service
+      dockerfile: ./Dockerfile
+      network: host
+    restart: "no"
+    environment:
+      - PYTHONPATH=.:${PYTHONPATH}
+    volumes:
+      - ./fixtures-service:/app
+    stdin_open: "true"
+    tty: "true"
 
 volumes:
   db_data:
