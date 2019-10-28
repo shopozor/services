@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('GraphQL engine tests') {
       steps {
-        sh "docker-compose -f docker-compose-tests.yaml up --abort-on-container-exit"
+        sh "docker-compose -f docker-compose-tests.yaml up postgres graphql-engine hasura-service-tests --abort-on-container-exit"
       }
     }
   }
