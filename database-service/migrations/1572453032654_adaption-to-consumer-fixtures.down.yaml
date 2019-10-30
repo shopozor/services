@@ -1,0 +1,52 @@
+- args:
+    sql: ALTER TABLE "public"."products" DROP COLUMN "image_id";
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."images" DROP COLUMN "id";
+  type: run_sql
+- args:
+    sql: alter table "public"."images" drop constraint "images_pkey";
+  type: run_sql
+- sql: "alter table \"public\".\"images\"\n    add constraint \"images_pkey\" \n    primary
+    key ( \"product_id\" );"
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."images" ADD COLUMN "product_id" int4
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."images" ALTER COLUMN "product_id" DROP NOT NULL
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."images" ADD CONSTRAINT products_id_fkey FOREIGN KEY
+      (id) REFERENCES "public"."images" (product_id) ON DELETE restrict ON UPDATE
+      restrict
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."images" ADD CONSTRAINT images_id_key UNIQUE (product_id)
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."images" ALTER COLUMN "product_id" SET DEFAULT nextval('images_id_seq'::regclass)
+  type: run_sql
+- args:
+    sql: "\n          alter table \"public\".\"products\" drop constraint \"products_image_id_fkey\"\n
+      \     "
+  type: run_sql
+- args:
+    sql: alter table "public"."productimages" rename to "images";
+  type: run_sql
+- args:
+    sql: DROP TABLE "public"."vat"
+  type: run_sql
+- args:
+    sql: DROP TABLE "public"."vat_types"
+  type: run_sql
+- args:
+    sql: "\n          alter table \"public\".\"vat\" drop constraint \"vat_type_fkey\"\n
+      \     "
+  type: run_sql
+- args:
+    sql: DROP TABLE "public"."roles"
+  type: run_sql
+- args:
+    sql: DROP TABLE "public"."margindefinitions"
+  type: run_sql

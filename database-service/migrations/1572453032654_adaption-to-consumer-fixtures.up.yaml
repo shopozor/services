@@ -1,0 +1,63 @@
+- args:
+    sql: ALTER TABLE "public"."products" ADD COLUMN "image_id" integer NULL;
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."images" ADD COLUMN "id" serial NOT NULL UNIQUE;
+  type: run_sql
+- args:
+    sql: alter table "public"."images" drop constraint "images_pkey";
+  type: run_sql
+- args:
+    sql: "alter table \"public\".\"images\"\n    add constraint \"images_pkey\" \n
+      \   primary key ( \"id\" );"
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."images" DROP COLUMN "product_id" CASCADE
+  type: run_sql
+- args:
+    sql: "\n           alter table \"public\".\"products\"\n           add constraint
+      \"products_image_id_fkey\" \n           foreign key (\"image_id\") \n           references
+      \"public\".\"images\"\n           (\"id\") on update restrict on delete restrict;\n
+      \     "
+  type: run_sql
+- args:
+    sql: alter table "public"."images" rename to "productimages";
+  type: run_sql
+- args:
+    sql: CREATE TABLE "public"."vat"("type" text NOT NULL, "rate" float4 NOT NULL,
+      PRIMARY KEY ("type") , UNIQUE ("type"));
+  type: run_sql
+- args:
+    name: vat
+    schema: public
+  type: add_existing_table_or_view
+- args:
+    sql: CREATE TABLE "public"."vat_types"("type" text NOT NULL, PRIMARY KEY ("type")
+      , UNIQUE ("type"));
+  type: run_sql
+- args:
+    name: vat_types
+    schema: public
+  type: add_existing_table_or_view
+- args:
+    sql: "\n           alter table \"public\".\"vat\"\n           add constraint \"vat_type_fkey\"
+      \n           foreign key (\"type\") \n           references \"public\".\"vat_types\"\n
+      \          (\"type\") on update restrict on delete restrict;\n      "
+  type: run_sql
+- args:
+    sql: CREATE TABLE "public"."roles"("role" text NOT NULL, PRIMARY KEY ("role")
+      , UNIQUE ("role"));
+  type: run_sql
+- args:
+    name: roles
+    schema: public
+  type: add_existing_table_or_view
+- args:
+    sql: CREATE TABLE "public"."margindefinitions"("role" text NOT NULL, "margin"
+      float4 NOT NULL, PRIMARY KEY ("role") , FOREIGN KEY ("role") REFERENCES "public"."roles"("role")
+      ON UPDATE restrict ON DELETE restrict, UNIQUE ("role"));
+  type: run_sql
+- args:
+    name: margindefinitions
+    schema: public
+  type: add_existing_table_or_view

@@ -4,13 +4,13 @@ services:
     image: postgres:11.2-alpine
     restart: "no"
     volumes:
-    - db_data:/var/lib/postgresql-test/data
+      - db_data:/var/lib/postgresql-test/data
   graphql-engine:
     image: hasura/graphql-engine:v1.0.0-beta.8
     ports:
-    - 9000:8080
+      - 9000:8080
     depends_on:
-    - postgres
+      - postgres
     restart: "no"
     environment:
       HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:@postgres:5432/postgres
