@@ -3,7 +3,7 @@ from fixtures_generation.providers.geo import Provider as ShopozorGeoProvider
 from fixtures_generation.providers.product import Provider as ProductProvider
 from fixtures_generation.providers.time import Provider as DateTimeProvider
 
-import fixtures_generation.constants as constants
+import fixtures_generation.settings as settings
 
 import dateutil.parser
 import itertools
@@ -58,10 +58,9 @@ class FakeDataFactory:
 
     def __address(self):
         return {
-            'streetAddress': self.__fake.street_address(),
+            'street_address': self.__fake.street_address(),
             'city': self.__fake.city(),
-            'postalCode': self.__fake.postcode(),
-            'country': 'CH'
+            'postal_code': self.__fake.postcode()
         }
 
     def __create_producer(self, id):
@@ -76,7 +75,8 @@ class FakeDataFactory:
             'firstName': first_name,
             'lastName': last_name,
             'permissions': [],
-            'address': self.__address()
+            'address': self.__address(),
+            'description': self.__fake.description()
         }
 
     def create_producers(self, start_index, list_size=1):
@@ -93,6 +93,7 @@ class FakeDataFactory:
             'isSuperUser': False,
             'firstName': first_name,
             'lastName': last_name,
+            'description': self.__fake.description(),
             'permissions': [{
                 'code': 'MANAGE_PRODUCERS'
             }],
@@ -146,78 +147,42 @@ class FakeDataFactory:
     def create_softozors(self, start_index, list_size=1):
         return [self.create_softozor(start_index + id) for id in range(0, list_size)]
 
-    def __staff(self, pk, user_id):
-        return {
-            'fields': {
-                'user_id': user_id,
-                'description': self.__fake.description()
-            },
-            'model': 'shopozor.staff',
-            'pk': pk
-        }
-
-    def create_staff(self, producers):
-        offset = producers[0]['id']
-        return [self.__staff(user['id'] - offset + 1, user['id']) for user in producers]
-
     def __get_random_elements(self, elements, length):
         return self.__fake.random_elements(
             elements=elements, length=length, unique=True)
 
-    def __productstaff(self, pk, product_id, producer_id):
-        return {
-            'fields': {
-                'product_id': product_id,
-                'staff_id': producer_id
-            },
-            'model': 'shopozor.productstaff',
-            'pk': pk
-        }
-
-    def create_productstaff(self, producers, products):
-        product_ids = [product['pk'] for product in products]
-        result = []
-        productstaff_pk = 1
-        total_nb_products = 0
-        for producer in producers:
-            nb_products = self.__fake.random.randint(
-                1, self.__MAX_NB_PRODUCTS_PER_PRODUCER)
-            producer_product_ids = self.__get_random_elements(
-                product_ids, nb_products)
-            for producer_product_id in producer_product_ids:
-                result.append(self.__productstaff(
-                    productstaff_pk, producer_product_id, producer['id']))
-                productstaff_pk += 1
-            product_ids = [
-                id for id in product_ids if id not in producer_product_ids]
-            total_nb_products += nb_products
-        print('#products assigned to producers: %d out of %d' %
-              (total_nb_products, len(products)))
-        return result
-
-    def __shop(self, pk, variant_ids):
+    def __shop(self, pk):
         latitude = float(self.__fake.local_latitude())
         longitude = float(self.__fake.local_longitude())
-        return self.__fake.shop(pk, latitude, longitude, variant_ids)
+        return self.__fake.shop(pk, latitude, longitude)
 
-    def create_shops(self, producers, productstaff, product_variants, list_size=1):
+    def create_shops(self, producers, productuser, product_variants, list_size=1):
+        return [self.__shop(pk + 1) for pk in range(0, list_size)]
+
+    def __shop_productvariant(self, variant_id, shop_id):
+        return {
+            'model': 'shop_productvariant',
+            'productvariant_id': variant_id,
+            'shop_id': shop_id
+        }
+
+    def create_shop_productvariant(self, shop_ids, producers, products, productvariants):
         result = []
-
         producer_ids = [producer['id'] for producer in producers]
-
         total_nb_producers = 0
-        for shop_id in range(0, list_size):
+        for shop_id in shop_ids:
             nb_producers = self.__fake.random.randint(
                 1, self.__MAX_NB_PRODUCERS_PER_SHOP)
             shop_producer_ids = self.__get_random_elements(
                 producer_ids, nb_producers)
-            shop_product_ids = [item['fields']['product_id'] for item in productstaff if item['model']
-                                == 'shopozor.productstaff' and item['fields']['staff_id'] in shop_producer_ids]
-            variant_ids = [variant['pk']
-                           for variant in product_variants if variant['fields']['product'] in shop_product_ids]
+            shop_product_ids = [
+                item['id'] for item in products if item['producer_id'] in shop_producer_ids]
+            variant_ids = [variant['id']
+                           for variant in productvariants if variant['product_id'] in shop_product_ids]
             producer_ids = [
                 id for id in producer_ids if id not in shop_producer_ids]
-            result.append(self.__shop(shop_id + 1, variant_ids))
+            for variant_id in variant_ids:
+                result.append(self.__shop_productvariant(variant_id, shop_id))
             total_nb_producers += nb_producers
         print('#producers assigned to shops: %d out of %d' %
               (total_nb_producers, len(producers)))
@@ -225,150 +190,76 @@ class FakeDataFactory:
 
     def __category(self, pk, name):
         return {
-            'fields': {
-                'background_image': self.__fake.category_image_url(),
-                'background_image_alt': '',
-                'description': '',
-                'description_json': {
-                    'blocks': [{
-                        'data': {},
-                        'depth': 0,
-                        'entityRanges': [],
-                        'inlineStyleRanges': [],
-                        'key': '',
-                        'text': '',
-                        'type': 'unstyled'
-                    }],
-                    'entityMap': {}
-                },
-                'level': 0,
-                'lft': 1,
-                'name': name,
-                'parent': None,
-                'rght': 2,
-                'seo_description': '',
-                'seo_title': '',
-                'slug': self.__fake.slug(),
-                'tree_id': pk
-            },
-            'model': 'product.category',
-            'pk': pk
+            'background_image': self.__fake.category_image_url(),
+            'background_image_alt': self.__fake.image_alt(),
+            'description': self.__fake.description(),
+            'name': name,
+            'model': 'product_categories',
+            'id': pk
         }
 
     def create_categories(self):
         start_pk = 1
         return [self.__category(pk, category) for pk, category in enumerate(self.category_types, start_pk)]
 
-    def __producttype(self, pk, name):
-        return {
-            'fields': {
-                # we currently simplify this has_variant thing and put it to True all the time
-                # if a product belongs to a producttype with has_variants == False, then it needs to have an empty variant
-                # only the product and productvariant attributes carry information in such a case, which might be useful
-                # but not now
-                'has_variants': True,
-                'is_shipping_required': False,
-                'name': name,
-                'weight': self.__fake.weight()
-            },
-            'model': 'product.producttype',
-            'pk': pk
-        }
-
-    def create_producttypes(self):
-        producttypes = list(itertools.chain.from_iterable(
-            self.category_types.values()))
-        start_pk = 1
-        return [self.__producttype(pk, type) for pk, type in enumerate(producttypes, start_pk)]
-
-    def __product(self, pk, category_id, producttype_id):
+    def __product(self, pk, producer_id, image_id):
         description = self.__fake.description()
+        category_name = self.__fake.random_element(
+            elements=self.category_types.keys())
+        category_id = [category['id']
+                       for category in categories if category['name'] == category_name][0]
+        publication_date = self.__fake.publication_date()
         return {
-            'fields': {
-                'category': category_id,
-                'charge_taxes': True,
-                'description': description,
-                'description_json': {
-                    'blocks': [
-                        {
-                            'data': {},
-                            'depth': 0,
-                            'entityRanges': [],
-                            'inlineStyleRanges': [],
-                            'key': '',
-                            'text': description,
-                            'type': 'unstyled'
-                        }
-                    ],
-                    'entityMap': {}
-                },
-                'is_published': self.__fake.is_published(),
-                'name': self.__fake.product_name(),
-                'price': self.__fake.money_amount(max_amount=0),
-                'product_type': producttype_id,
-                'publication_date': self.__fake.publication_date(),
-                'seo_description': description,
-                'seo_title': '',
-                'weight': self.__fake.weight()
-            },
-            'model': 'product.product',
-            'pk': pk
+            'id': pk,
+            'name': self.__fake.product_name(),
+            'description': description,
+            'publication_date': publication_date,
+            'updated_at': self.__fake.updated_at(start_date=dateutil.parser.parse(publication_date)),
+            'state': self.__fake.product_state(),
+            'category_id': category_id,
+            'producer_id': producer_id,
+            'conservation_mode': self.__fake.conservation_mode(),
+            'conservation_days': self.__fake.conservation_days(),
+            'vat_rate': self.__fake.vat_rate(settings.VAT_rates['products']),
+            'image_id': image_id,
+            'model': 'products'
         }
 
-    def create_products(self, categories, producttypes, list_size=1):
+    def create_products(self, categories, producer_ids):
         result = []
-        nb_published_products = 0
-        for pk in range(1, list_size + 1):
-            category_name = self.__fake.random_element(
-                elements=self.category_types.keys())
-            category_id = [category['pk']
-                           for category in categories if category['fields']['name'] == category_name][0]
-            producttype_name = self.__fake.random_element(
-                elements=self.category_types[category_name])
-            producttype_id = [
-                type['pk'] for type in producttypes if type['fields']['name'] == producttype_name][0]
-            product = self.__product(pk, category_id, producttype_id)
-            result.append(product)
-            nb_published_products += int(product['fields']['is_published'])
-        print('#published products: %d out of %d' %
-              (nb_published_products, len(result)))
+        nb_visible_products = 0
+        product_index = 1
+        for producer_id in producer_ids:
+            nb_products = self.__fake.random.randint(
+                1, self.__MAX_NB_PRODUCTS_PER_PRODUCER)
+            for i in range(0, nb_products):
+                product_id = i + product_index
+                image_id = product_id
+                product = self.__product(product_id, producer_id, image_id)
+                nb_visible_products += int(product['state'] == 'VISIBLE')
+                result.append(product)
+            product_index += nb_products
+        print('#visible products: %d out of %d' %
+              (nb_visible_products, len(result)))
         return result
 
-    def __shopozor_product(self, pk, product_id, publication_date):
-        return {
-            'fields': {
-                'product_id': product_id,
-                'conservation_mode': self.__fake.conservation_mode(),
-                'conservation_until': self.__fake.conservation_until(start_date=publication_date),
-                'vat_rate': self.__fake.vat_rate(constants.VAT_rates['products'])
-            },
-            'model': 'shopozor.product',
-            'pk': pk
-        }
-
-    def create_shopozor_products(self, products):
-        start_pk = 1
-        return [self.__shopozor_product(pk, product['pk'], dateutil.parser.parse(product['fields']['publication_date'])) for pk, product in enumerate(products, start_pk)]
-
-    def __productvariant(self, pk, product):
+    def __productvariant(self, pk, product_id):
         quantity = self.__fake.quantity()
         cost_price = self.__fake.variant_cost_price()
         return {
-            'fields': {
-                'attributes': '{}',
-                'cost_price': cost_price,
-                'name': self.__fake.variant_name(),
-                # TODO: this value is not really faked; it should not be part of the faker provider
-                'price_override': self.__fake.price_override(cost_price, constants.SHOPOZOR_MARGIN),
-                'product': product['pk'],
-                'quantity': quantity,
-                'quantity_allocated': self.__fake.quantity_allocated(quantity),
-                'sku': self.__fake.sku(),
-                'track_inventory': True,
-                'weight': self.__fake.weight()
-            },
-            'model': 'product.productvariant',
-            'pk': pk
+            'id': pk,
+            'state': self.__fake.productvariant_state(),
+            'product_id': product_id,
+            'quantity': quantity,
+            'quantity_allocated': self.__fake.quantity_allocated(quantity),
+            'gross_cost_price': cost_price,
+            'pricing_mode': self.__fake.pricing_mode(),
+            'name': self.__fake.variant_name(),
+            # TODO: generate reasonable measure, measure_unit, and gross_cost_price_unit!
+            'measure': 0,
+            'measure_unit': '',
+            'gross_cost_price_unit': '',
+            'model': 'productvariants'
         }
 
     def create_productvariants(self, products):
@@ -379,73 +270,47 @@ class FakeDataFactory:
             nb_variants = self.__fake.random.randint(
                 1, self.__MAX_NB_VARIANTS_PER_PRODUCT)
             for _ in range(0, nb_variants):
-                result.append(self.__productvariant(pk, product))
+                result.append(self.__productvariant(pk, product['id']))
                 pk += 1
         return result
 
-    def __productimage(self, pk, product_id):
+    def __productimage(self, pk):
         return {
-            'model': 'product.productimage',
-            'pk': pk,
-            'fields': {
-                'sort_order': 0,
-                'product': product_id,
-                'image': self.__fake.product_image_url(),
-                'ppoi': '0.5x0.5',
-                'alt': ''
-            }
+            'model': 'productimages',
+            'id': pk,
+            'url': self.__fake.product_image_url(),
+            'alt': ''
         }
 
     def create_productimages(self, product_ids):
-        result = []
-        pk = 1
-        for product_id in product_ids:
-            nb_imgs = self.__fake.random.randint(
-                0, self.__MAX_NB_IMAGES_PER_PRODUCT)
-            for _ in range(0, nb_imgs):
-                result.append(self.__productimage(pk, product_id))
-                pk += 1
-        return result
+        # we create one image / product
+        # each product has a reference to an image with image_id = product_id
+        start_pk = 1
+        return [self.__productimage(pk) for pk, _ in enumerate(product_ids, start_pk)]
 
-    def __vat(self, pk):
+    def __vat(self, type, rate):
         return {
-            'model': 'django_prices_vatlayer.vat',
-            'pk': pk,
-            'fields': {
-                'country_code': 'CH',
-                'data': '{"country_name":"Switzerland","standard_rate":%f,"reduced_rates":{"reduced":%f,"special":%f}}'
-                % (constants.VAT_rates['services'] * 100, constants.VAT_rates['products'] * 100, constants.VAT_rates['special'] * 100)
-            }
+            'model': 'vat',
+            'type': type,
+            'rate': rate
         }
 
-    def __ratetypes(self, pk):
-        return {
-            'model': 'django_prices_vatlayer.ratetypes',
-            'pk': pk,
-            'fields': {
-                'types': '["reduced","special"]'
-            }
-        }
+    def create_vat(self):
+        return [self.__vat('PRODUCTS', settings.VAT_rates['products']), self.__vat('SERVICES', settings.VAT_rates['services']), self.__vat('SPECIAL', settings.VAT_rates['special'])]
 
-    def create_vat_layer(self):
-        return [self.__vat(1), self.__ratetypes(1)]
-
-    def __margindefinition(self, pk, role, margin):
+    def __margindefinition(self, role, margin):
         return {
-            'model': 'shopozor.margindefinitions',
-            'pk': pk,
-            'fields': {
-                'role': role,
-                'margin': margin
-            }
+            'model': 'margindefinitions',
+            'role': role,
+            'margin': margin
         }
 
     def create_margindefns(self):
         return [
             self.__margindefinition(
-                1, 'manager', constants.margin_rates['manager'] * 100),
+                'MANAGER', settings.margin_rates['manager']),
             self.__margindefinition(
-                2, 'rex', constants.margin_rates['rex'] * 100),
+                'REX', settings.margin_rates['rex']),
             self.__margindefinition(
-                3, 'softozor', constants.margin_rates['softozor'] * 100)
+                'SOFTOZOR', settings.margin_rates['softozor'])
         ]

@@ -25,32 +25,22 @@ class Provider(LoremProvider):
     def category_image_url(self):
         return os.path.join('category-backgrounds', '%s.png' % ''.join(self.random_letters()))
 
+    def conservation_days(self):
+        return self.random_int(min=0, max=360)
+
     def conservation_mode(self):
         return self.word(ext_word_list=self.conservation_modes)
 
     def description(self):
         return self.text(max_nb_chars=200)
 
-    def has_variants(self):
-        return self.__random_bool()
+    def image_alt(self):
+        return self.text(max_nb_chars=50)
 
-    def is_published(self):
-        distro = collections.OrderedDict([(True, 0.95), (False, 0.05)])
+    def pricing_mode(self):
+        distro = collections.OrderedDict(
+            [('FREE', 0.25), ('AUTO_UNIT', 0.25), ('AUTO_PRICE', 0.25), ('BULK', 0.25)])
         return self.random_element(distro)
-
-    def money_amount(self, max_amount=100):
-        return {
-            '_type': 'Money',
-            'amount': str(self.__random_money_amount(0, max_amount)),
-            'currency': 'CHF'
-        }
-
-    def price_override(self, cost_price, shopozor_margin):
-        return {
-            '_type': 'Money',
-            'amount': str(float(cost_price['amount']) / (1 - shopozor_margin)),
-            'currency': cost_price['currency']
-        }
 
     def product_image_url(self):
         return os.path.join('products', '%s.png' % ''.join(self.random_letters()))
@@ -58,17 +48,24 @@ class Provider(LoremProvider):
     def product_name(self):
         return self.sentence(nb_words=3, variable_nb_words=True)
 
-    def shop(self, pk, latitude, longitude, variant_ids):
+    def product_state(self):
+        distro = collections.OrderedDict(
+            [('VISIBLE', 0.75), ('INVISIBLE', 0.15), ('DELETED', 0.1)])
+        return self.random_element(distro)
+
+    def productvariant_state(self):
+        distro = collections.OrderedDict(
+            [('VISIBLE', 0.70), ('INVISIBLE', 0.15), ('DELETED', 0.05), ('CHANGE_ASAP', 0.1)])
+        return self.random_element(distro)
+
+    def shop(self, pk, latitude, longitude):
         return {
-            'model': 'shopozor.shop',
-            'pk': pk,
-            'fields': {
-                'description': self.description(),
-                'name': self.sentence(nb_words=5, variable_nb_words=True),
-                'latitude': latitude,
-                'longitude': longitude,
-                'product_variants': variant_ids
-            }
+            'model': 'shops',
+            'id': pk,
+            'description': self.description(),
+            'name': self.sentence(nb_words=5, variable_nb_words=True),
+            'latitude': latitude,
+            'longitude': longitude
         }
 
     def quantity(self):
@@ -77,11 +74,8 @@ class Provider(LoremProvider):
     def quantity_allocated(self, quantity):
         return self.random_int(min=0, max=quantity)
 
-    def sku(self):
-        return str(self.random_number(digits=9, fix_len=True))
-
     def variant_cost_price(self, max_amount=100):
-        return self.money_amount(max_amount)
+        return self.__random_money_amount(0, max_amount)
 
     def variant_name(self):
         return self.word(ext_word_list=self.variant_names)
@@ -91,6 +85,3 @@ class Provider(LoremProvider):
 
     def vat_rate(self, vat_products_rate):
         return vat_products_rate if self.__has_vat_rate() else 0
-
-    def weight(self):
-        return self.__random_float(0, 100, 2)

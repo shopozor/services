@@ -1,7 +1,7 @@
 from copy import deepcopy
 from fixtures_generation import json_helpers
 
-import fixtures_generation.constants as constants
+import fixtures_generation.settings as settings
 import math
 import os
 import urllib.parse
@@ -102,8 +102,8 @@ def get_service_tax(cost_price, vat_rate):
     # we keep taxes at its most precise amount without rounding for the sake of transparency
     # the gross price takes rounding into account
     tax = float(cost_price['amount']) * vat_rate / \
-        (1 + vat_rate) * constants.SHOPOZOR_MARGIN / \
-        (1 - constants.SHOPOZOR_MARGIN)
+        (1 + vat_rate) * settings.SHOPOZOR_MARGIN / \
+        (1 - settings.SHOPOZOR_MARGIN)
     return money_amount(amount=round_to_nearest_half(tax), currency=cost_price['currency'])
 
 
@@ -113,29 +113,29 @@ def get_gross_price(cost_price, vat_rate):
 
 
 def get_net_price(cost_price, product_vat_rate, service_vat_rate):
-    result_amount = float(cost_price['amount']) * ((1 + product_vat_rate) * constants.SHOPOZOR_MARGIN + (1 - constants.SHOPOZOR_MARGIN) * (
-        1 + service_vat_rate)) / ((1 - constants.SHOPOZOR_MARGIN) * (1 + service_vat_rate) * (1 + product_vat_rate))
+    result_amount = float(cost_price['amount']) * ((1 + product_vat_rate) * settings.SHOPOZOR_MARGIN + (1 - settings.SHOPOZOR_MARGIN) * (
+        1 + service_vat_rate)) / ((1 - settings.SHOPOZOR_MARGIN) * (1 + service_vat_rate) * (1 + product_vat_rate))
     return money_amount(amount=round_to_nearest_half(result_amount), currency=cost_price['currency'])
 
 
 def get_price(variant_fields, product_vat_rate):
     return {
-        'gross': get_gross_price(variant_fields['cost_price'], constants.VAT_rates['services']),
-        'net': get_net_price(variant_fields['cost_price'], product_vat_rate, constants.VAT_rates['services']),
+        'gross': get_gross_price(variant_fields['cost_price'], settings.VAT_rates['services']),
+        'net': get_net_price(variant_fields['cost_price'], product_vat_rate, settings.VAT_rates['services']),
         'productTax': get_product_tax(variant_fields['cost_price'], product_vat_rate),
-        'serviceTax': get_service_tax(variant_fields['cost_price'], constants.VAT_rates['services'])
+        'serviceTax': get_service_tax(variant_fields['cost_price'], settings.VAT_rates['services'])
     }
 
 
 def get_margin(cost_price, margin_rate, service_vat_rate):
-    total_gross_margin = constants.SHOPOZOR_MARGIN / \
-        (1 - constants.SHOPOZOR_MARGIN) * float(cost_price['amount'])
+    total_gross_margin = settings.SHOPOZOR_MARGIN / \
+        (1 - settings.SHOPOZOR_MARGIN) * float(cost_price['amount'])
     total_net_margin = total_gross_margin / (1 + service_vat_rate)
     return {
-        'gross': money_amount(amount=round_money_amount(total_gross_margin * margin_rate / constants.SHOPOZOR_MARGIN), currency=cost_price['currency']),
-        'net': money_amount(amount=round_to_nearest_half(total_net_margin * margin_rate / constants.SHOPOZOR_MARGIN), currency=cost_price['currency']),
+        'gross': money_amount(amount=round_money_amount(total_gross_margin * margin_rate / settings.SHOPOZOR_MARGIN), currency=cost_price['currency']),
+        'net': money_amount(amount=round_to_nearest_half(total_net_margin * margin_rate / settings.SHOPOZOR_MARGIN), currency=cost_price['currency']),
         # we keep taxes as precise as possible; the gross price takes rounding into account
-        'tax': money_amount(amount=round_to_nearest_half((total_gross_margin - total_net_margin) * margin_rate / constants.SHOPOZOR_MARGIN), currency=cost_price['currency'])
+        'tax': money_amount(amount=round_to_nearest_half((total_gross_margin - total_net_margin) * margin_rate / settings.SHOPOZOR_MARGIN), currency=cost_price['currency'])
     }
 
 
@@ -145,9 +145,9 @@ def variant_node(variant_id, variant_fields, product_fields, shopozor_product_fi
         'name': variant_fields['name'],
         'isAvailable': product_fields['is_published'],
         'margin': {
-            'manager': get_margin(variant_fields['cost_price'], constants.margin_rates['manager'], constants.VAT_rates['services']),
-            'rex': get_margin(variant_fields['cost_price'], constants.margin_rates['rex'], constants.VAT_rates['services']),
-            'softozor': get_margin(variant_fields['cost_price'], constants.margin_rates['softozor'], constants.VAT_rates['services'])
+            'manager': get_margin(variant_fields['cost_price'], settings.margin_rates['manager'], settings.VAT_rates['services']),
+            'rex': get_margin(variant_fields['cost_price'], settings.margin_rates['rex'], settings.VAT_rates['services']),
+            'softozor': get_margin(variant_fields['cost_price'], settings.margin_rates['softozor'], settings.VAT_rates['services'])
         },
         'stockQuantity': max(variant_fields['quantity'] - variant_fields['quantity_allocated'], 0),
         'costPrice': {
@@ -301,16 +301,16 @@ def postprocess_is_available_flag(edges):
 def get_price_margins(purchase_cost):
     return {
         'manager': {
-            'start': get_margin(purchase_cost['start'], constants.margin_rates['manager'], constants.VAT_rates['services']),
-            'stop': get_margin(purchase_cost['stop'], constants.margin_rates['manager'], constants.VAT_rates['services'])
+            'start': get_margin(purchase_cost['start'], settings.margin_rates['manager'], settings.VAT_rates['services']),
+            'stop': get_margin(purchase_cost['stop'], settings.margin_rates['manager'], settings.VAT_rates['services'])
         },
         'rex': {
-            'start': get_margin(purchase_cost['start'], constants.margin_rates['rex'], constants.VAT_rates['services']),
-            'stop': get_margin(purchase_cost['stop'], constants.margin_rates['rex'], constants.VAT_rates['services'])
+            'start': get_margin(purchase_cost['start'], settings.margin_rates['rex'], settings.VAT_rates['services']),
+            'stop': get_margin(purchase_cost['stop'], settings.margin_rates['rex'], settings.VAT_rates['services'])
         },
         'softozor': {
-            'start': get_margin(purchase_cost['start'], constants.margin_rates['softozor'], constants.VAT_rates['services']),
-            'stop': get_margin(purchase_cost['stop'], constants.margin_rates['softozor'], constants.VAT_rates['services'])
+            'start': get_margin(purchase_cost['start'], settings.margin_rates['softozor'], settings.VAT_rates['services']),
+            'stop': get_margin(purchase_cost['stop'], settings.margin_rates['softozor'], settings.VAT_rates['services'])
         }
     }
 

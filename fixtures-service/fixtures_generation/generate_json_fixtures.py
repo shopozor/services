@@ -1,5 +1,5 @@
 from fixtures_generation.fixtures_faker import FakeDataFactory
-from fixtures_generation import json_helpers
+from fixtures_generation import json_helpers, settings
 
 import argparse
 import os
@@ -156,7 +156,7 @@ def main(output_folder, fixture_variant):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate json fixtures')
-    parser.add_argument('-o', '--output-folder', type=str, default='fixtures',
+    parser.add_argument('-o', '--output-folder', type=str, default=settings.FIXTURE_DIR,
                         help='Folder where to output the JSON files containing the users and passwords')
     parser.add_argument('--fixture-variant', type=str, default='all',
                         help='Fixture variant: tiny, small, medium, large, or all')
