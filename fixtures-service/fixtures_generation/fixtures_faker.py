@@ -152,16 +152,22 @@ class FakeDataFactory:
             elements=elements, length=length, unique=True)
 
     def __shop(self, pk):
-        latitude = float(self.__fake.local_latitude())
-        longitude = float(self.__fake.local_longitude())
-        return self.__fake.shop(pk, latitude, longitude)
+        return {
+            'id': pk,
+            'description': self.__fake.description(),
+            'name': self.__fake.sentence(nb_words=5, variable_nb_words=True),
+            'latitude': float(self.__fake.local_latitude()),
+            'longitude': float(self.__fake.local_longitude())
+        }
 
     def create_shops(self, producers, productuser, product_variants, list_size=1):
-        return [self.__shop(pk + 1) for pk in range(0, list_size)]
+        result = [self.__shop(pk + 1) for pk in range(0, list_size)]
+        return {
+            'shops': result
+        }
 
     def __shop_productvariant(self, variant_id, shop_id):
         return {
-            'model': 'shop_productvariant',
             'productvariant_id': variant_id,
             'shop_id': shop_id
         }
@@ -186,7 +192,9 @@ class FakeDataFactory:
             total_nb_producers += nb_producers
         print('#producers assigned to shops: %d out of %d' %
               (total_nb_producers, len(producers)))
-        return result
+        return {
+            'shop_productvariant': result
+        }
 
     def __category(self, pk, name):
         return {
@@ -194,13 +202,16 @@ class FakeDataFactory:
             'background_image_alt': self.__fake.image_alt(),
             'description': self.__fake.description(),
             'name': name,
-            'model': 'product_categories',
             'id': pk
         }
 
     def create_categories(self):
         start_pk = 1
-        return [self.__category(pk, category) for pk, category in enumerate(self.category_types, start_pk)]
+        result = [self.__category(pk, category) for pk, category in enumerate(
+            self.category_types, start_pk)]
+        return {
+            'product_categories': result
+        }
 
     def __product(self, pk, producer_id, image_id):
         description = self.__fake.description()
@@ -221,8 +232,7 @@ class FakeDataFactory:
             'conservation_mode': self.__fake.conservation_mode(),
             'conservation_days': self.__fake.conservation_days(),
             'vat_rate': self.__fake.vat_rate(settings.VAT_rates['products']),
-            'image_id': image_id,
-            'model': 'products'
+            'image_id': image_id
         }
 
     def create_products(self, categories, producer_ids):
@@ -241,7 +251,9 @@ class FakeDataFactory:
             product_index += nb_products
         print('#visible products: %d out of %d' %
               (nb_visible_products, len(result)))
-        return result
+        return {
+            'products': result
+        }
 
     def __productvariant(self, pk, product_id):
         quantity = self.__fake.quantity()
@@ -258,8 +270,7 @@ class FakeDataFactory:
             # TODO: generate reasonable measure, measure_unit, and gross_cost_price_unit!
             'measure': 0,
             'measure_unit': '',
-            'gross_cost_price_unit': '',
-            'model': 'productvariants'
+            'gross_cost_price_unit': ''
         }
 
     def create_productvariants(self, products):
@@ -272,11 +283,12 @@ class FakeDataFactory:
             for _ in range(0, nb_variants):
                 result.append(self.__productvariant(pk, product['id']))
                 pk += 1
-        return result
+        return {
+            'productvariants': result
+        }
 
     def __productimage(self, pk):
         return {
-            'model': 'productimages',
             'id': pk,
             'url': self.__fake.product_image_url(),
             'alt': ''
@@ -286,27 +298,33 @@ class FakeDataFactory:
         # we create one image / product
         # each product has a reference to an image with image_id = product_id
         start_pk = 1
-        return [self.__productimage(pk) for pk, _ in enumerate(product_ids, start_pk)]
+        result = [self.__productimage(pk)
+                  for pk, _ in enumerate(product_ids, start_pk)]
+        return {
+            'productimages': result
+        }
 
     def __vat(self, type, rate):
         return {
-            'model': 'vat',
             'type': type,
             'rate': rate
         }
 
     def create_vat(self):
-        return [self.__vat('PRODUCTS', settings.VAT_rates['products']), self.__vat('SERVICES', settings.VAT_rates['services']), self.__vat('SPECIAL', settings.VAT_rates['special'])]
+        result = [self.__vat('PRODUCTS', settings.VAT_rates['products']), self.__vat(
+            'SERVICES', settings.VAT_rates['services']), self.__vat('SPECIAL', settings.VAT_rates['special'])]
+        return {
+            'vat': result
+        }
 
     def __margindefinition(self, role, margin):
         return {
-            'model': 'margindefinitions',
             'role': role,
             'margin': margin
         }
 
     def create_margindefns(self):
-        return [
+        result = [
             self.__margindefinition(
                 'MANAGER', settings.margin_rates['manager']),
             self.__margindefinition(
@@ -314,3 +332,6 @@ class FakeDataFactory:
             self.__margindefinition(
                 'SOFTOZOR', settings.margin_rates['softozor'])
         ]
+        return {
+            'margindefinitions': result
+        }

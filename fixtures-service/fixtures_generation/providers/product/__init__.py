@@ -16,9 +16,6 @@ class Provider(LoremProvider):
     def __random_bool(self):
         return bool(self.generator.random.getrandbits(1))
 
-    def __random_float(self, min, max, nb_digits):
-        return round(self.generator.random.uniform(min, max), nb_digits)
-
     def __random_money_amount(self, min, max):
         return round(self.generator.random.uniform(min, max) * 2, 1) / 2
 
@@ -57,16 +54,6 @@ class Provider(LoremProvider):
         distro = collections.OrderedDict(
             [('VISIBLE', 0.70), ('INVISIBLE', 0.15), ('DELETED', 0.05), ('CHANGE_ASAP', 0.1)])
         return self.random_element(distro)
-
-    def shop(self, pk, latitude, longitude):
-        return {
-            'model': 'shops',
-            'id': pk,
-            'description': self.description(),
-            'name': self.sentence(nb_words=5, variable_nb_words=True),
-            'latitude': latitude,
-            'longitude': longitude
-        }
 
     def quantity(self):
         return self.random_int(min=0, max=1000)
