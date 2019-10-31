@@ -20,7 +20,6 @@ services:
     build:
       context: ./database-service
       dockerfile: ./Dockerfile
-      network: host
       target: unittest
     restart: "no"
     depends_on:
@@ -32,7 +31,6 @@ services:
     build:
       context: ./fixtures-service
       dockerfile: ./Dockerfile
-      network: host
     restart: "no"
     environment:
       - PYTHONPATH=.:${PYTHONPATH}

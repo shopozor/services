@@ -9,7 +9,6 @@ services:
     build:
       context: ./database-service
       dockerfile: ./Dockerfile
-      network: host
       target: app
     ports:
       - 8080:8080
