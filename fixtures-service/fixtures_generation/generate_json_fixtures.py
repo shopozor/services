@@ -101,6 +101,9 @@ def generate_variant(variant_name, output_folder):
 
     shopozor = {}
 
+    addresses = factory.create_addresses(producers, managers, rex, softozor)
+    shopozor.update(addresses)
+
     shops = factory.create_shops(variant['#shops'])
     shopozor.update(shops)
 

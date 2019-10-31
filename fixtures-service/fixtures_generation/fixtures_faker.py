@@ -47,20 +47,16 @@ class FakeDataFactory:
         return {
             'id': id,
             'email': self.__fake.email(),
-            'isActive': True,
-            'isStaff': False,
-            'isSuperUser': False,
-            'permissions': []
+            'is_active': True,
+            'is_staff': False,
+            'is_superuser': False
         }
 
     def create_consumers(self, start_index, list_size=1):
-        return [self.__create_consumer(start_index + id) for id in range(0, list_size)]
-
-    def __address(self):
+        result = [self.__create_consumer(start_index + id)
+                  for id in range(0, list_size)]
         return {
-            'street_address': self.__fake.street_address(),
-            'city': self.__fake.city(),
-            'postal_code': self.__fake.postcode()
+            'users': result
         }
 
     def __create_producer(self, id):
@@ -69,18 +65,20 @@ class FakeDataFactory:
         return {
             'id': id,
             'email': self.create_email(first_name, last_name),
-            'isActive': True,
-            'isStaff': True,
-            'isSuperUser': False,
-            'firstName': first_name,
-            'lastName': last_name,
-            'permissions': [],
-            'address': self.__address(),
+            'is_active': True,
+            'is_staff': True,
+            'is_superuser': False,
+            'first_name': first_name,
+            'last_name': last_name,
             'description': self.__fake.description()
         }
 
     def create_producers(self, start_index, list_size=1):
-        return [self.__create_producer(start_index + id) for id in range(0, list_size)]
+        result = [self.__create_producer(start_index + id)
+                  for id in range(0, list_size)]
+        return {
+            'users': result
+        }
 
     def __create_manager(self, id):
         first_name = self.__fake.first_name()
@@ -88,20 +86,20 @@ class FakeDataFactory:
         return {
             'id': id,
             'email': self.create_email(first_name, last_name),
-            'isActive': True,
-            'isStaff': True,
-            'isSuperUser': False,
-            'firstName': first_name,
-            'lastName': last_name,
+            'is_active': True,
+            'is_staff': True,
+            'is_superuser': False,
+            'first_name': first_name,
+            'last_name': last_name,
             'description': self.__fake.description(),
-            'permissions': [{
-                'code': 'MANAGE_PRODUCERS'
-            }],
-            'address': self.__address()
         }
 
     def create_managers(self, start_index, list_size=1):
-        return [self.__create_manager(start_index + id) for id in range(0, list_size)]
+        result = [self.__create_manager(start_index + id)
+                  for id in range(0, list_size)]
+        return {
+            'users': result
+        }
 
     def __create_rex(self, id):
         first_name = self.__fake.first_name()
@@ -109,28 +107,17 @@ class FakeDataFactory:
         return {
             'id': id,
             'email': self.create_email(first_name, last_name),
-            'isActive': True,
-            'isStaff': True,
-            'isSuperUser': False,
-            'permissions': [
-                {
-                    'code': 'MANAGE_STAFF'
-                },
-                {
-                    'code': 'MANAGE_USERS'
-                },
-                {
-                    'code': 'MANAGE_PRODUCERS'
-                },
-                {
-                    'code': 'MANAGE_MANAGERS'
-                }
-            ],
-            'address': self.__address()
+            'is_active': True,
+            'is_staff': True,
+            'is_superuser': False
         }
 
     def create_reges(self, start_index, list_size=1):
-        return [self.__create_rex(start_index + id) for id in range(0, list_size)]
+        result = [self.__create_rex(start_index + id)
+                  for id in range(0, list_size)]
+        return {
+            'users': result
+        }
 
     def create_softozor(self, id):
         first_name = self.__fake.first_name()
@@ -138,18 +125,40 @@ class FakeDataFactory:
         return {
             'id': id,
             'email': self.create_email(first_name, last_name),
-            'isActive': True,
-            'isStaff': True,
-            'isSuperUser': True,
-            'permissions': []
+            'is_active': True,
+            'is_staff': True,
+            'is_superuser': True
         }
 
     def create_softozors(self, start_index, list_size=1):
-        return [self.create_softozor(start_index + id) for id in range(0, list_size)]
+        result = [self.create_softozor(start_index + id)
+                  for id in range(0, list_size)]
+        return {
+            'users': result
+        }
 
     def __get_random_elements(self, elements, length):
         return self.__fake.random_elements(
             elements=elements, length=length, unique=True)
+
+    def __address(self, user_id):
+        return {
+            'user_id': user_id,
+            'street_address': self.__fake.street_address(),
+            'city': self.__fake.city(),
+            'postal_code': self.__fake.postcode()
+        }
+
+    def create_addresses(self, producers, managers, reges, softozors):
+        users = producers['users']
+        users.extend(managers['users'])
+        users.extend(reges['users'])
+        users.extend(softozors['users'])
+
+        result = [self.__address(user['id']) for user in users]
+        return {
+            'addresses': result
+        }
 
     def __shop(self, pk):
         return {
@@ -209,7 +218,7 @@ class FakeDataFactory:
         result = []
         nb_visible_products = 0
         product_index = 1
-        producer_ids = [item['id'] for item in producers]
+        producer_ids = [item['id'] for item in producers['users']]
         for producer_id in producer_ids:
             nb_products = self.__fake.random.randint(
                 1, self.__MAX_NB_PRODUCTS_PER_PRODUCER)
@@ -268,7 +277,7 @@ class FakeDataFactory:
     def create_shop_productvariant(self, shops, producers, products, productvariants):
         result = []
         shop_ids = [item['id'] for item in shops['shops']]
-        producer_ids = [item['id'] for item in producers]
+        producer_ids = [item['id'] for item in producers['users']]
         total_nb_producers = 0
         for shop_id in shop_ids:
             nb_producers = self.__fake.random.randint(
