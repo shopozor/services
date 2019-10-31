@@ -24,7 +24,6 @@ variants = {
         '#managers': 2,
         '#rex': 1,
         '#softozor': 1,
-        '#products': 160,
         '#shops': 2,
         '#max(variants/product)': 5,
         '#max(producers/shop)': 8,
@@ -36,7 +35,6 @@ variants = {
         '#managers': 5,
         '#rex': 1,
         '#softozor': 1,
-        '#products': 300,
         '#shops': 5,
         '#max(variants/product)': 5,
         '#max(producers/shop)': 6,
@@ -48,7 +46,6 @@ variants = {
         '#managers': 20,
         '#rex': 1,
         '#softozor': 1,
-        '#products': 5000,
         '#shops': 20,
         '#max(variants/product)': 7,
         '#max(producers/shop)': 7,
@@ -102,43 +99,32 @@ def generate_variant(variant_name, output_folder):
     json_helpers.dump(softozor, os.path.join(
         output_folder, variant_name, 'Users', 'Softozor.json'))
 
-    shopozor = []
+    shopozor = {}
+
+    shops = factory.create_shops(variant['#shops'])
+    shopozor.update(shops)
 
     categories = factory.create_categories()
-    shopozor.extend(categories)
+    shopozor.update(categories)
 
-    producttypes = factory.create_producttypes()
-    shopozor.extend(producttypes)
+    products = factory.create_products(categories, producers)
+    shopozor.update(products)
 
-    products = factory.create_products(
-        categories, producttypes, variant['#products'])
-    shopozor.extend(products)
+    productvariants = factory.create_productvariants(products)
+    shopozor.update(productvariants)
 
-    shopozor_products = factory.create_shopozor_products(products)
-    shopozor.extend(shopozor_products)
+    shop_productvariant = factory.create_shop_productvariant(
+        shops, producers, products, productvariants)
+    shopozor.update(shop_productvariant)
 
-    product_variants = factory.create_productvariants(products)
-    shopozor.extend(product_variants)
+    productimages = factory.create_productimages(products)
+    shopozor.update(productimages)
 
-    product_ids = [product['pk'] for product in products]
-    product_images = factory.create_productimages(product_ids)
-    shopozor.extend(product_images)
-
-    staff = factory.create_staff(producers)
-    shopozor.extend(staff)
-
-    productstaff = factory.create_productstaff(producers, products)
-    shopozor.extend(productstaff)
-
-    shops = factory.create_shops(
-        producers, productstaff, product_variants, variant['#shops'])
-    shopozor.extend(shops)
-
-    vat_layer = factory.create_vat_layer()
-    shopozor.extend(vat_layer)
+    vat = factory.create_vat()
+    shopozor.update(vat)
 
     margin_defns = factory.create_margindefns()
-    shopozor.extend(margin_defns)
+    shopozor.update(margin_defns)
 
     json_helpers.dump(shopozor, os.path.join(
         output_folder, variant_name, 'Shopozor.json'))

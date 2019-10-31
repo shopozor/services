@@ -160,40 +160,10 @@ class FakeDataFactory:
             'longitude': float(self.__fake.local_longitude())
         }
 
-    def create_shops(self, producers, productuser, product_variants, list_size=1):
+    def create_shops(self, list_size=1):
         result = [self.__shop(pk + 1) for pk in range(0, list_size)]
         return {
             'shops': result
-        }
-
-    def __shop_productvariant(self, variant_id, shop_id):
-        return {
-            'productvariant_id': variant_id,
-            'shop_id': shop_id
-        }
-
-    def create_shop_productvariant(self, shop_ids, producers, products, productvariants):
-        result = []
-        producer_ids = [producer['id'] for producer in producers]
-        total_nb_producers = 0
-        for shop_id in shop_ids:
-            nb_producers = self.__fake.random.randint(
-                1, self.__MAX_NB_PRODUCERS_PER_SHOP)
-            shop_producer_ids = self.__get_random_elements(
-                producer_ids, nb_producers)
-            shop_product_ids = [
-                item['id'] for item in products if item['producer_id'] in shop_producer_ids]
-            variant_ids = [variant['id']
-                           for variant in productvariants if variant['product_id'] in shop_product_ids]
-            producer_ids = [
-                id for id in producer_ids if id not in shop_producer_ids]
-            for variant_id in variant_ids:
-                result.append(self.__shop_productvariant(variant_id, shop_id))
-            total_nb_producers += nb_producers
-        print('#producers assigned to shops: %d out of %d' %
-              (total_nb_producers, len(producers)))
-        return {
-            'shop_productvariant': result
         }
 
     def __category(self, pk, name):
@@ -213,7 +183,7 @@ class FakeDataFactory:
             'product_categories': result
         }
 
-    def __product(self, pk, producer_id, image_id):
+    def __product(self, pk, categories, producer_id, image_id):
         description = self.__fake.description()
         category_name = self.__fake.random_element(
             elements=self.category_types.keys())
@@ -235,17 +205,19 @@ class FakeDataFactory:
             'image_id': image_id
         }
 
-    def create_products(self, categories, producer_ids):
+    def create_products(self, categories, producers):
         result = []
         nb_visible_products = 0
         product_index = 1
+        producer_ids = [item['id'] for item in producers]
         for producer_id in producer_ids:
             nb_products = self.__fake.random.randint(
                 1, self.__MAX_NB_PRODUCTS_PER_PRODUCER)
             for i in range(0, nb_products):
                 product_id = i + product_index
                 image_id = product_id
-                product = self.__product(product_id, producer_id, image_id)
+                product = self.__product(
+                    product_id, categories['product_categories'], producer_id, image_id)
                 nb_visible_products += int(product['state'] == 'VISIBLE')
                 result.append(product)
             product_index += nb_products
@@ -276,7 +248,7 @@ class FakeDataFactory:
     def create_productvariants(self, products):
         result = []
         pk = 1
-        for product in products:
+        for product in products['products']:
             # any product has at least one variant
             nb_variants = self.__fake.random.randint(
                 1, self.__MAX_NB_VARIANTS_PER_PRODUCT)
@@ -287,6 +259,37 @@ class FakeDataFactory:
             'productvariants': result
         }
 
+    def __shop_productvariant(self, variant_id, shop_id):
+        return {
+            'productvariant_id': variant_id,
+            'shop_id': shop_id
+        }
+
+    def create_shop_productvariant(self, shops, producers, products, productvariants):
+        result = []
+        shop_ids = [item['id'] for item in shops['shops']]
+        producer_ids = [item['id'] for item in producers]
+        total_nb_producers = 0
+        for shop_id in shop_ids:
+            nb_producers = self.__fake.random.randint(
+                1, self.__MAX_NB_PRODUCERS_PER_SHOP)
+            shop_producer_ids = self.__get_random_elements(
+                producer_ids, nb_producers)
+            shop_product_ids = [
+                item['id'] for item in products['products'] if item['producer_id'] in shop_producer_ids]
+            variant_ids = [variant['id']
+                           for variant in productvariants['productvariants'] if variant['product_id'] in shop_product_ids]
+            producer_ids = [
+                id for id in producer_ids if id not in shop_producer_ids]
+            for variant_id in variant_ids:
+                result.append(self.__shop_productvariant(variant_id, shop_id))
+            total_nb_producers += nb_producers
+        print('#producers assigned to shops: %d out of %d' %
+              (total_nb_producers, len(producers)))
+        return {
+            'shop_productvariant': result
+        }
+
     def __productimage(self, pk):
         return {
             'id': pk,
@@ -294,9 +297,10 @@ class FakeDataFactory:
             'alt': ''
         }
 
-    def create_productimages(self, product_ids):
+    def create_productimages(self, products):
         # we create one image / product
         # each product has a reference to an image with image_id = product_id
+        product_ids = [item['id'] for item in products['products']]
         start_pk = 1
         result = [self.__productimage(pk)
                   for pk, _ in enumerate(product_ids, start_pk)]
