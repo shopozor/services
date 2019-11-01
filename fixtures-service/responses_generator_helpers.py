@@ -52,21 +52,21 @@ def set_page_info(query, totalCount=None):
     }
 
 
-def get_users_fixture(fixture_variant):
+def get_users_fixture(fixture_set):
     users_fixture = json_helpers.load(os.path.join(
-        FIXTURE_DIR, fixture_variant, 'Users', 'Producteurs.json'))
+        FIXTURE_DIR, fixture_set, 'Users', 'Producteurs.json'))
     users_fixture.extend(json_helpers.load(os.path.join(
-        FIXTURE_DIR, fixture_variant, 'Users', 'Responsables.json')))
+        FIXTURE_DIR, fixture_set, 'Users', 'Responsables.json')))
     users_fixture.extend(json_helpers.load(os.path.join(
-        FIXTURE_DIR, fixture_variant, 'Users', 'Rex.json')))
+        FIXTURE_DIR, fixture_set, 'Users', 'Rex.json')))
     users_fixture.extend(json_helpers.load(os.path.join(
-        FIXTURE_DIR, fixture_variant, 'Users', 'Softozor.json')))
+        FIXTURE_DIR, fixture_set, 'Users', 'Softozor.json')))
     return users_fixture
 
 
-def get_shopozor_fixture(fixture_variant):
+def get_shopozor_fixture(fixture_set):
     return json_helpers.load(os.path.join(
-        FIXTURE_DIR, fixture_variant, 'Shopozor.json'))
+        FIXTURE_DIR, fixture_set, 'Shopozor.json'))
 
 
 def round_money_amount(amount):

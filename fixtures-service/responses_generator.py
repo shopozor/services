@@ -29,9 +29,9 @@ class ResponsesGenerator():
 
 class ShopListsGenerator(ResponsesGenerator):
 
-    def __init__(self, output_dir, fixture_variant):
-        self.__SHOPS_FIXTURE = helpers.get_shopozor_fixture(fixture_variant)
-        super().__init__(os.path.join(output_dir, fixture_variant, 'Consumer'))
+    def __init__(self, output_dir, fixture_set):
+        self.__SHOPS_FIXTURE = helpers.get_shopozor_fixture(fixture_set)
+        super().__init__(os.path.join(output_dir, fixture_set, 'Consumer'))
 
     def _produce_data(self):
         return {
@@ -48,9 +48,9 @@ class ShopListsGenerator(ResponsesGenerator):
 
 class ShopCategoriesGenerator(ResponsesGenerator):
 
-    def __init__(self, output_dir, fixture_variant):
-        self.__SHOPS_FIXTURE = helpers.get_shopozor_fixture(fixture_variant)
-        super().__init__(os.path.join(output_dir, fixture_variant, 'Consumer'))
+    def __init__(self, output_dir, fixture_set):
+        self.__SHOPS_FIXTURE = helpers.get_shopozor_fixture(fixture_set)
+        super().__init__(os.path.join(output_dir, fixture_set, 'Consumer'))
 
     def _produce_data(self):
         return {
@@ -69,10 +69,10 @@ class ShopCategoriesGenerator(ResponsesGenerator):
 
 class ProductListsGenerator(ResponsesGenerator):
 
-    def __init__(self, output_dir, fixture_variant):
-        self.__SHOPS_FIXTURE = helpers.get_shopozor_fixture(fixture_variant)
-        self.__USERS_FIXTURE = helpers.get_users_fixture(fixture_variant)
-        super().__init__(os.path.join(output_dir, fixture_variant, 'Consumer'))
+    def __init__(self, output_dir, fixture_set):
+        self.__SHOPS_FIXTURE = helpers.get_shopozor_fixture(fixture_set)
+        self.__USERS_FIXTURE = helpers.get_users_fixture(fixture_set)
+        super().__init__(os.path.join(output_dir, fixture_set, 'Consumer'))
 
     def _product_data(self):
         product_catalogues = {}
