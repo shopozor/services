@@ -35,7 +35,12 @@ services:
     environment:
       - PYTHONPATH=.:${PYTHONPATH}
     volumes:
-      - ./fixtures-service:/app
+      - .:/app
+    entrypoint:
+      - bash
+      - -c
+      - |
+          ./fixtures-service/entrypoint.sh
 
 volumes:
   db_data:
