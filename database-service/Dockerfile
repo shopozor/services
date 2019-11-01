@@ -1,7 +1,7 @@
-FROM hasura/graphql-engine:v1.0.0-beta.8.cli-migrations AS app
+FROM hasura/graphql-engine:v1.0.0-beta.9.cli-migrations AS app
 
 COPY migrations /app/migrations
-COPY config.yaml /app 
+COPY config.yaml /app
 
 WORKDIR /app
 
@@ -16,6 +16,6 @@ COPY tests/requirements.txt /tmp
 WORKDIR /tmp
 
 RUN pip install -r requirements.txt \
-  && rm requirements.txt 
+  && rm requirements.txt
 
 WORKDIR /app
