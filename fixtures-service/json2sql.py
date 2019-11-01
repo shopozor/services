@@ -16,14 +16,21 @@ def main(input, migration_name, output_folder, write_mode):
     json_data = json_helpers.load(input)
 
     # this is a migration file format
-    output_filename = os.path.join(output_folder, f'{timestamp()}_{migration_name}.up.sql')
+    migration = f'{timestamp()}_{migration_name}'
+    up_migration_file = os.path.join(output_folder, migration + '.up.sql')
+    down_migration_file = os.path.join(output_folder, migration + '.down.sql')
 
-    with open(output_filename, write_mode) as output_file:
+    with open(up_migration_file, write_mode) as output_file:
         for table, data in json_data.items():
             for data_item in data:
                 columns = ','.join(data_item.keys())
-                values = ','.join(map(lambda val: f"'{val}'", data_item.values()))
-                output_file.write(f'INSERT INTO public.{table} ({columns}) VALUES ({values});\n')
+                values = ','.join(
+                    map(lambda val: f"'{val}'", data_item.values()))
+                output_file.write(
+                    f'INSERT INTO public.{table} ({columns}) VALUES ({values});\n')
+
+    with open(down_migration_file, write_mode) as output_file:
+        output_file.write(f'DELETE FROM public.{table}')
 
 
 if __name__ == '__main__':
