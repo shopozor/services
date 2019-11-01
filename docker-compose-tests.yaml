@@ -31,6 +31,7 @@ services:
     build:
       context: ./fixtures-service
       dockerfile: ./Dockerfile
+      target: build-image
     restart: "no"
     environment:
       - PYTHONPATH=.:${PYTHONPATH}
