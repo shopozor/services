@@ -1,9 +1,17 @@
-FROM hasura/graphql-engine:v1.0.0-beta.8.cli-migrations AS app
+FROM hasura/graphql-engine:v1.0.0-beta.9.cli-migrations AS app
 
 COPY migrations /app/migrations
-COPY config.yaml /app 
+COPY config.yaml /app
 
 WORKDIR /app
+
+FROM python:3.8-slim AS virtualenv-image
+
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+COPY tests/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
 
 FROM python:3.8-slim AS unittest
 
@@ -11,11 +19,7 @@ RUN apt-get -y update \
   && apt-get install -y curl \
   && curl -L https://github.com/hasura/graphql-engine/raw/master/cli/get.sh | bash
 
-COPY tests/requirements.txt /tmp
+COPY --from=virtualenv-image /opt/venv /opt/venv
 
-WORKDIR /tmp
-
-RUN pip install -r requirements.txt \
-  && rm requirements.txt 
-
+ENV PATH="/opt/venv/bin:$PATH"
 WORKDIR /app

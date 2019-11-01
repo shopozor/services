@@ -10,3 +10,10 @@ __pycache__/
 
 # test reports
 test-report.xml
+
+# generated data
+fixtures/
+responses/
+
+# virtualenv
+venv/

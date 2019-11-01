@@ -23,3 +23,26 @@ As it is not trivial to enforce automatic installation of the pre-commit hooks, 
 pre-commit install
 ```
 That pre-supposes that you have the `pre-commit` module installed in your python environment.
+
+### Fixtures generation
+
+In order to generate fixtures, you proceed as follows: at the root of this clone, run
+```
+docker-compose -f docker-compose-tests.yaml up fixtures-service
+```
+That creates
+
+* a `fixtures` folder at the root of this clone
+* new migrations under `./database-service/migrations`
+
+### Fixtures loading into the database
+
+1. Start hasura with
+```
+docker-compose -f docker-compose.yaml up graphql-engine
+```
+
+2. In folder `database-service`, run
+```
+hasura migrate apply --endpoint http://localhost:8080
+```

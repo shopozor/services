@@ -116,7 +116,6 @@ ALTER SEQUENCE public.shops_id_seq OWNED BY public.shops.id;
 CREATE TABLE public.users (
     id integer NOT NULL,
     email character varying NOT NULL,
-    password character varying NOT NULL,
     is_superuser boolean DEFAULT false NOT NULL,
     is_active boolean DEFAULT false NOT NULL,
     is_staff boolean DEFAULT false NOT NULL,
@@ -157,8 +156,6 @@ ALTER TABLE ONLY public.product_states
     ADD CONSTRAINT product_states_pkey PRIMARY KEY (state);
 ALTER TABLE ONLY public.products
     ADD CONSTRAINT products_pkey PRIMARY KEY (id);
-ALTER TABLE ONLY public.products
-    ADD CONSTRAINT products_producer_id_key UNIQUE (producer_id);
 ALTER TABLE ONLY public.productvariant_states
     ADD CONSTRAINT productvariant_states_pkey PRIMARY KEY (state);
 ALTER TABLE ONLY public.productvariants
