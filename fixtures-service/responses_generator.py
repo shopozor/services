@@ -1,5 +1,5 @@
-from fixtures_generation import json_helpers
-import fixtures_generation.responses_generator_helpers as helpers
+import json_helpers
+import responses_generator_helpers as helpers
 
 import abc
 import os

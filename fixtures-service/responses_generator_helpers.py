@@ -1,7 +1,8 @@
-from copy import deepcopy
-from fixtures_generation import json_helpers
+import json_helpers
+import settings
 
-import fixtures_generation.settings as settings
+from copy import deepcopy
+
 import math
 import os
 import urllib.parse

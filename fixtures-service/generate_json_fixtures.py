@@ -1,5 +1,7 @@
-from fixtures_generation.fixtures_faker import FakeDataFactory
-from fixtures_generation import json_helpers, settings
+from fixtures_faker import FakeDataFactory
+
+import json_helpers
+import settings
 
 import argparse
 import os

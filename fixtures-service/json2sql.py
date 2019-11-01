@@ -1,4 +1,4 @@
-from fixtures_generation import json_helpers
+import json_helpers
 
 import argparse
 import datetime

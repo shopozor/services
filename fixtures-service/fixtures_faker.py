@@ -1,9 +1,9 @@
 from faker import Faker
-from fixtures_generation.providers.geo import Provider as ShopozorGeoProvider
-from fixtures_generation.providers.product import Provider as ProductProvider
-from fixtures_generation.providers.time import Provider as DateTimeProvider
+from providers.geo import Provider as ShopozorGeoProvider
+from providers.product import Provider as ProductProvider
+from providers.time import Provider as DateTimeProvider
 
-import fixtures_generation.settings as settings
+import settings
 
 import dateutil.parser
 import itertools

@@ -1,4 +1,4 @@
-from fixtures_generation.responses_generator import ShopCategoriesGenerator, ShopListsGenerator, ProductListsGenerator
+from responses_generator import ShopCategoriesGenerator, ShopListsGenerator, ProductListsGenerator
 
 import argparse
 
