@@ -15,7 +15,7 @@ COPY tests/requirements.txt /tmp
 
 WORKDIR /tmp
 
-RUN pip install -r requirements.txt \
+RUN pip install --no-cache-dir -r requirements.txt \
   && rm requirements.txt
 
 WORKDIR /app
