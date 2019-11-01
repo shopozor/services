@@ -6,6 +6,7 @@ import os
 
 
 def timestamp():
+    # this generates the same kind of timestamps as hasura does for its migration files
     epoch = datetime.datetime.utcfromtimestamp(0)
     now = datetime.datetime.now()
     return round((now - epoch).total_seconds() * 1000)
@@ -14,6 +15,7 @@ def timestamp():
 def main(input, migration_name, output_folder, write_mode):
     json_data = json_helpers.load(input)
 
+    # this is a migration file format
     output_filename = os.path.join(output_folder, f'{timestamp()}_{migration_name}.up.sql')
 
     with open(output_filename, write_mode) as output_file:
