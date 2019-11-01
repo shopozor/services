@@ -43,8 +43,7 @@ CREATE TABLE public.product_categories (
     name text NOT NULL,
     id integer NOT NULL,
     description text NOT NULL,
-    background_image text NOT NULL,
-    background_image_alt text NULL
+    background_image text NOT NULL
 );
 CREATE SEQUENCE public.product_categories_id_seq
     AS integer
@@ -65,10 +64,7 @@ CREATE TABLE public.products (
     updated_at timestamp with time zone DEFAULT now() NOT NULL,
     state text DEFAULT 'INVISIBLE'::text NOT NULL,
     category_id integer NOT NULL,
-    producer_id integer NOT NULL,
-    conservation_mode text NULL,
-    conservation_days integer NULL,
-    vat_rate real NULL
+    producer_id integer NOT NULL
 );
 CREATE SEQUENCE public.products_id_seq
     AS integer
