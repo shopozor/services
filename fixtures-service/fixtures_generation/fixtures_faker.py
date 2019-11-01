@@ -150,7 +150,8 @@ class FakeDataFactory:
         }
 
     def create_addresses(self, producers, managers, reges, softozors):
-        users = producers['users']
+        users = []
+        users.extend(producers['users'])
         users.extend(managers['users'])
         users.extend(reges['users'])
         users.extend(softozors['users'])
@@ -192,6 +193,19 @@ class FakeDataFactory:
             'product_categories': result
         }
 
+    def __productimage(self, pk):
+        return {
+            'id': pk,
+            'url': self.__fake.product_image_url(),
+            'alt': self.__fake.image_alt()
+        }
+
+    def create_productimages(self, list_size=1):
+        result = [self.__productimage(pk) for pk in range(1, list_size + 1)]
+        return {
+            'productimages': result
+        }
+
     def __product(self, pk, categories, producer_id, image_id):
         description = self.__fake.description()
         category_name = self.__fake.random_element(
@@ -214,7 +228,7 @@ class FakeDataFactory:
             'image_id': image_id
         }
 
-    def create_products(self, categories, producers):
+    def create_products(self, categories, producers, images):
         result = []
         nb_visible_products = 0
         product_index = 1
@@ -224,7 +238,7 @@ class FakeDataFactory:
                 1, self.__MAX_NB_PRODUCTS_PER_PRODUCER)
             for i in range(0, nb_products):
                 product_id = i + product_index
-                image_id = product_id
+                image_id = images['productimages'][product_id - 1]['id']
                 product = self.__product(
                     product_id, categories['product_categories'], producer_id, image_id)
                 nb_visible_products += int(product['state'] == 'VISIBLE')
@@ -294,27 +308,9 @@ class FakeDataFactory:
                 result.append(self.__shop_productvariant(variant_id, shop_id))
             total_nb_producers += nb_producers
         print('#producers assigned to shops: %d out of %d' %
-              (total_nb_producers, len(producers)))
+              (total_nb_producers, len(producers['users'])))
         return {
             'shop_productvariant': result
-        }
-
-    def __productimage(self, pk):
-        return {
-            'id': pk,
-            'url': self.__fake.product_image_url(),
-            'alt': ''
-        }
-
-    def create_productimages(self, products):
-        # we create one image / product
-        # each product has a reference to an image with image_id = product_id
-        product_ids = [item['id'] for item in products['products']]
-        start_pk = 1
-        result = [self.__productimage(pk)
-                  for pk, _ in enumerate(product_ids, start_pk)]
-        return {
-            'productimages': result
         }
 
     def __vat(self, type, rate):

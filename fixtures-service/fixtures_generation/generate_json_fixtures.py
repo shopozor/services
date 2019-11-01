@@ -110,7 +110,12 @@ def generate_variant(variant_name, output_folder):
     categories = factory.create_categories()
     shopozor.update(categories)
 
-    products = factory.create_products(categories, producers)
+    nb_images = variant['#shops'] * \
+        variant['#max(producers/shop)'] * variant['#max(products/producer)']
+    productimages = factory.create_productimages(nb_images)
+    shopozor.update(productimages)
+
+    products = factory.create_products(categories, producers, productimages)
     shopozor.update(products)
 
     productvariants = factory.create_productvariants(products)
@@ -120,9 +125,6 @@ def generate_variant(variant_name, output_folder):
         shops, producers, products, productvariants)
     shopozor.update(shop_productvariant)
 
-    productimages = factory.create_productimages(products)
-    shopozor.update(productimages)
-
     vat = factory.create_vat()
     shopozor.update(vat)
 
@@ -130,7 +132,7 @@ def generate_variant(variant_name, output_folder):
     shopozor.update(margin_defns)
 
     json_helpers.dump(shopozor, os.path.join(
-        output_folder, variant_name, 'Shopozor.json'))
+        output_folder, variant_name, 'Shopozor.json'), sort_keys=False)
 
     print('#############################################')
 

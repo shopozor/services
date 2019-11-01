@@ -7,7 +7,7 @@ import os
 class Provider(LoremProvider):
 
     conservation_modes = ('au frigo', 'à la cave', 'au soleil', 'au congélateur',
-                          'à température ambiante', 'dans du papier d\'alu', 'à l\'abri de la lumière')
+                          'à température ambiante', 'dans du papier alu', 'abri de la lumière')
 
     variant_names = (
         '1l', '2l', '2.5l', '5l', '250ml', '500ml', '45cm x 45cm', '55cm x 55cm', 'XS', 'S', 'M', 'L', 'XL', '100g', '200g', '250g', '500g', '1kg'
