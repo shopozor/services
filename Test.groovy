@@ -10,8 +10,10 @@ pipeline {
   post {
     always {
       script {
-        sh "docker-compose down"
         junit "**/test-report.xml"
+      }
+      failure {
+        sh "docker-compose down"
       }
     }
   }
