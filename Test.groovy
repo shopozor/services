@@ -12,9 +12,10 @@ pipeline {
       script {
         junit "**/test-report.xml"
       }
-      failure {
-        sh "docker-compose down"
-      }
+    }
+    // TODO: this needs to be done ALL the time, not only upon failure!
+    failure {
+      sh "docker-compose down"
     }
   }
 }
