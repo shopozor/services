@@ -36,9 +36,7 @@ care of everything, including applying migrations and loading fixtures
 make dev.start
 ```
 
-Note that this generally produces several errors due to postgres still not being
-able to load the migrations. **Just be patient** and wait for another 20
-seconds...
+This command handles the case where the `graphql-engine` cannot connect to the `postgres` service for a moment and retries to apply migrations until it works. Therefore, this command can take up to 30 seconds to be successful. Just ignore the error messages on the console.
 
 ### Tearing everything down when development is finished
 
