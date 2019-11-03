@@ -9,12 +9,15 @@ pipeline {
     // }
     stage('Test GraphQL engine') {
       steps {
-        sh "docker-compose -f docker-compose-tests.yaml up --abort-on-container-exit hasura-service-tests"
+        // all the involved services need to be mentioned here otherwise they will not be aborted
+        sh "docker-compose -f docker-compose-tests.yaml up --abort-on-container-exit postgres graphql-engine hasura-service-tests"
       }
     }
   }
   post {
-    always {
+    failure {
+      // upon failure in the docker-compose command, the containers might not be shut down
+      // therefore we enforce it here
       sh "docker-compose down"
     }
     always {
