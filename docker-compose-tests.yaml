@@ -2,7 +2,7 @@ version: '3.6'
 services:
   postgres:
     image: postgres:11.2-alpine
-    restart: "no"
+    restart: "always"
     volumes:
       - db_data:/var/lib/postgresql-test/data
   graphql-engine:
