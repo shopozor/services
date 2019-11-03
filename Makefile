@@ -2,6 +2,8 @@
 HASURA_ENDPOINT = http://localhost:8080
 HASURA_MIGRATE_APPLY = hasura migrate apply --endpoint $(HASURA_ENDPOINT)
 HASURA_STATUS_APPLY = hasura migrate apply --endpoint $(HASURA_ENDPOINT)
+FIXTURES_FOLDER = database-service/fixtures
+FIXTURES_MIGRATIONS_FOLDER = $(FIXTURES_FOLDER)/migrations
 
 dev.start: up fixtures
 
@@ -25,19 +27,20 @@ db.migrate.status:
 
 fixtures.generate:
 	@echo "Generating fixtures ..."
-	@if [ ! -d fixtures/migrations ]; then mkdir -p fixtures/migrations; fi
+	# without file config.yaml (even empty), hasura migrate apply will fail
+	@if [ ! -d $(FIXTURES_MIGRATIONS_FOLDER) ]; then mkdir -p $(FIXTURES_MIGRATIONS_FOLDER); touch $(FIXTURES_FOLDER)/config.yaml; fi
 	@docker-compose -f docker-compose-tests.yaml up fixtures-service
 	@docker-compose -f docker-compose-tests.yaml rm -f fixtures-service
 
 
 fixtures.up:
-	cd fixtures && $(HASURA_MIGRATE_APPLY) --up all
+	cd $(FIXTURES_FOLDER) && $(HASURA_MIGRATE_APPLY) --up all
 
 fixtures.down:
-	cd fixtures && $(HASURA_MIGRATE_APPLY) --down all
+	cd $(FIXTURES_FOLDER && $(HASURA_MIGRATE_APPLY) --down all
 
 fixtures.clean:
-	rm -rf fixtures/migrations/*
+	rm -rf $(FIXTURES_MIGRATIONS_FOLDER)/*
 
 fixtures: fixtures.clean fixtures.generate fixtures.up
 

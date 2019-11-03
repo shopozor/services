@@ -29,9 +29,9 @@ services:
     entrypoint: pytest --hasura-endpoint http://graphql-engine:8080 -ra --junitxml=test-report.xml
   fixtures-service:
     build:
-      context: ./fixtures-service
+      context: ./database-service
       dockerfile: ./Dockerfile
-      target: build-image
+      target: unittest
     restart: "no"
     environment:
       - PYTHONPATH=.:${PYTHONPATH}
@@ -41,7 +41,7 @@ services:
       - bash
       - -c
       - |
-          ./fixtures-service/entrypoint.sh
+          ./database-service/tests/fixtures-generator/entrypoint.sh
 
 volumes:
   db_data:
