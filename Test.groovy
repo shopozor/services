@@ -12,17 +12,13 @@ pipeline {
         sh "docker-compose -f docker-compose-tests.yaml up --abort-on-container-exit hasura-service-tests"
       }
     }
-    stage('Stop GraphQL engine') {
-      steps {
-        sh "docker-compose down"
-      }
-    }
   }
   post {
     always {
-      script {
-        junit "**/test-report.xml"
-      }
+      sh "docker-compose down"
+    }
+    always {
+      junit "**/test-report.xml"
     }
   }
 }
