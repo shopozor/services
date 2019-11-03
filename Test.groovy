@@ -4,7 +4,7 @@ pipeline {
     stage('Start GraphQL engine') {
       steps {
         sh "docker-compose -f docker-compose-tests.yaml up graphql-engine"
-        sh "chmod u+x ./scripts/waitForService.sh && ./scripts/waitForService.sh localhost 9000"
+        sh "chmod u+x ./database-service/scripts/waitForService.sh && ./database-service/scripts/waitForService.sh localhost 9000"
       }
     }
     stage('Test GraphQL engine') {
