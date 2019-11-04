@@ -9,7 +9,6 @@ pipeline {
     }
     stage('Test GraphQL engine') {
       steps {
-        // all the involved services need to be mentioned here otherwise they will not be aborted
         sh "docker-compose -f docker-compose-tests.yaml up hasura-service-tests"
       }
     }

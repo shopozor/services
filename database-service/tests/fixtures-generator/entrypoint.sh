@@ -8,9 +8,7 @@ GENERATE_JSON_FIXTURES=database-service/tests/fixtures-generator/generate_json_f
 JSON_TO_SQL=database-service/tests/fixtures-generator/json2sql.py
 
 python ${GENERATE_JSON_FIXTURES} -o ${FIXTURES_FOLDER}
-python ${JSON_TO_SQL} -i ${FIXTURES_FOLDER}/${FIXTURES_SET}/Users/Consommateurs.json -n shopozor-consumers -o ${FIXTURES_MIGRATIONS_FOLDER}
-python ${JSON_TO_SQL} -i ${FIXTURES_FOLDER}/${FIXTURES_SET}/Users/Producteurs.json -n shopozor-producers -o ${FIXTURES_MIGRATIONS_FOLDER}
-python ${JSON_TO_SQL} -i ${FIXTURES_FOLDER}/${FIXTURES_SET}/Users/Responsables.json -n shopozor-managers -o ${FIXTURES_MIGRATIONS_FOLDER}
-python ${JSON_TO_SQL} -i ${FIXTURES_FOLDER}/${FIXTURES_SET}/Users/Rex.json -n shopozor-rex -o ${FIXTURES_MIGRATIONS_FOLDER}
-python ${JSON_TO_SQL} -i ${FIXTURES_FOLDER}/${FIXTURES_SET}/Users/Softozor.json -n shopozor-softozor -o ${FIXTURES_MIGRATIONS_FOLDER}
+for persona in consumers producers managers rex softozor; do
+    python ${JSON_TO_SQL} -i ${FIXTURES_FOLDER}/${FIXTURES_SET}/Users/$persona.json -n shopozor-$persona -o ${FIXTURES_MIGRATIONS_FOLDER}
+done
 python ${JSON_TO_SQL} -i ${FIXTURES_FOLDER}/${FIXTURES_SET}/Shopozor.json -n shopozor-data -o ${FIXTURES_MIGRATIONS_FOLDER}
