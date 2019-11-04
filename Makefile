@@ -1,4 +1,3 @@
-
 HASURA_ENDPOINT = http://localhost:8080
 HASURA_MIGRATE_APPLY = hasura migrate apply --endpoint $(HASURA_ENDPOINT)
 HASURA_STATUS_APPLY = hasura migrate apply --endpoint $(HASURA_ENDPOINT)
@@ -22,7 +21,6 @@ up: build
 	@echo "Waiting for postgres to be ready for loading migrations..."
 	@until make db.migrate.apply 2>&1 /dev/null; do echo "Waiting for database to be ready ..."; sleep 2s; done
 
-
 down:
 	@docker-compose down
 
@@ -36,7 +34,6 @@ fixtures.generate:
 	@echo "Generating fixtures ..."
 	@docker-compose -f docker-compose-tests.yaml up fixtures-service
 	@docker-compose -f docker-compose-tests.yaml rm -f fixtures-service
-
 
 fixtures.up:
 	cd $(FIXTURES_FOLDER) && $(HASURA_MIGRATE_APPLY) --up all
@@ -62,7 +59,6 @@ logs:
 
 console:
 	cd database-service && hasura console
-
 
 %.logs:
 	docker-compose logs -f $*
