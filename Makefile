@@ -38,7 +38,7 @@ fixtures.up:
 	cd $(FIXTURES_FOLDER) && $(HASURA_MIGRATE_APPLY) --up all
 
 fixtures.down:
-	cd $(FIXTURES_FOLDER && $(HASURA_MIGRATE_APPLY) --down all
+	cd $(FIXTURES_FOLDER) && $(HASURA_MIGRATE_APPLY) --down all
 
 fixtures.clean:
 	rm -rf $(FIXTURES_MIGRATIONS_FOLDER)/*
