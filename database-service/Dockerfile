@@ -5,21 +5,14 @@ COPY config.yaml /app
 
 WORKDIR /app
 
-FROM python:3.8-slim AS virtualenv-image
-
-RUN python -m venv /opt/venv
-ENV PATH="/opt/venv/bin:$PATH"
-
-COPY tests/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
 FROM python:3.8-slim AS unittest
 
 RUN apt-get -y update \
   && apt-get install -y curl \
   && curl -L https://github.com/hasura/graphql-engine/raw/master/cli/get.sh | bash
 
-COPY --from=virtualenv-image /opt/venv /opt/venv
+COPY tests/requirements.txt .
 
-ENV PATH="/opt/venv/bin:$PATH"
+RUN pip install --no-cache-dir -r requirements.txt
+
 WORKDIR /app
