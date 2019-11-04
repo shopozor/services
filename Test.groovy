@@ -1,6 +1,11 @@
 pipeline {
   agent any
   stages {
+    stage('Build the docker images') {
+      steps {
+        sh "docker-compose build"
+      }
+    }
     stage('Start GraphQL engine') {
       steps {
         sh "docker-compose -f docker-compose-tests.yaml up -d postgres graphql-engine"
