@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Start GraphQL engine') {
       steps {
-        sh "docker-compose -f docker-compose-tests.yaml up postgres graphql-engine -d"
+        sh "docker-compose -f docker-compose-tests.yaml up -d postgres graphql-engine"
         sh "chmod u+x ./database-service/scripts/waitForService.sh && ./database-service/scripts/waitForService.sh localhost 9000"
       }
     }
