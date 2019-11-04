@@ -35,8 +35,6 @@ services:
       dockerfile: ./Dockerfile
       target: unittest
     restart: "no"
-    environment:
-      - PYTHONPATH=.:${PYTHONPATH}
     volumes:
       - ./database-service:/app
     entrypoint:
