@@ -12,7 +12,6 @@ build:
 	@echo "Building images..."
 	@docker-compose build
 
-
 up: build
 	@echo "Starting containers..."
 	@docker-compose up -d postgres
