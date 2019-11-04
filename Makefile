@@ -10,9 +10,11 @@ dev.start: up fixtures
 dev.end: down fixtures.clean
 
 up:
+	@echo "Building images..."
+	@docker-compose build
 	@echo "Starting containers..."
 	@docker-compose up -d postgres
-	sleep 1s
+	@sleep 1s
 	@docker-compose up -d graphql-engine
 	@echo "Waiting for postgres to be ready for loading migrations..."
 	@until make db.migrate.apply 2>&1 /dev/null; do echo "Waiting for database to be ready ..."; sleep 2s; done
