@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Build the docker images') {
       steps {
-        sh "rm -Rf ./database-service/tests/__pycache__/"
+        sh "pyclean ."
         sh "docker-compose build"
       }
     }
