@@ -2,7 +2,7 @@ version: '3.6'
 services:
   postgres:
     image: postgres:11.2-alpine
-    restart: "no"
+    restart: "always"
     volumes:
       - db_data:/var/lib/postgresql-test/data
   graphql-engine:
@@ -11,7 +11,7 @@ services:
       - 9000:8080
     depends_on:
       - postgres
-    restart: "no"
+    restart: "always"
     environment:
       HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:@postgres:5432/postgres
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
@@ -26,12 +26,14 @@ services:
       - graphql-engine
     volumes:
       - ./database-service:/app
-    entrypoint: pytest --hasura-endpoint http://graphql-engine:8080 -ra --junitxml=test-report.xml
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+    entrypoint: python -m pytest -p no:cacheprovider --hasura-endpoint http://graphql-engine:8080 -ra --junitxml=test-report.xml
   fixtures-service:
     build:
-      context: ./fixtures-service
+      context: ./database-service
       dockerfile: ./Dockerfile
-      target: build-image
+      target: unittest
     restart: "no"
     environment:
       - PYTHONPATH=.:${PYTHONPATH}
@@ -41,7 +43,11 @@ services:
       - bash
       - -c
       - |
-          ./fixtures-service/entrypoint.sh
+          ./database-service/tests/fixtures-generator/entrypoint.sh
 
 volumes:
   db_data:
+
+networks:
+  default:
+    name: default-network

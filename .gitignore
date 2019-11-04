@@ -17,3 +17,6 @@ responses/
 
 # virtualenv
 venv/
+
+# editors
+.vscode/
