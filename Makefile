@@ -9,9 +9,12 @@ dev.start: up fixtures
 
 dev.end: down fixtures.clean
 
-up:
+build:
 	@echo "Building images..."
 	@docker-compose build
+
+
+up: build
 	@echo "Starting containers..."
 	@docker-compose up -d postgres
 	@sleep 1s
