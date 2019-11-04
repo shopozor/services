@@ -28,7 +28,7 @@ services:
       - ./database-service:/app
     environment:
       - PYTHONDONTWRITEBYTECODE=1
-    entrypoint: python -m pytest -p no:cacheprovider --hasura-endpoint http://graphql-engine:8080 -ra --junitxml=test-report.xml
+    entrypoint: python -m pytest -p no:cacheprovider --hasura-endpoint http://graphql-engine:8080 --root /app -ra --junitxml=test-report.xml
   fixtures-service:
     build:
       context: ./database-service
