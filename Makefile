@@ -24,10 +24,10 @@ down:
 	@docker-compose down
 
 db.migrate.apply:
-	cd database-service && $(HASURA_MIGRATE_APPLY)
+	$(HASURA_MIGRATE_APPLY) --project database-service
 
 db.migrate.status:
-	cd database-service && $(HASURA_MIGRATE_STATUS)
+	$(HASURA_MIGRATE_STATUS) --project database-service
 
 fixtures.generate:
 	@echo "Generating fixtures ..."
@@ -35,10 +35,10 @@ fixtures.generate:
 	@docker-compose -f docker-compose-tests.yaml rm -f fixtures-service
 
 fixtures.up:
-	cd $(FIXTURES_FOLDER) && $(HASURA_MIGRATE_APPLY) --up all
+	$(HASURA_MIGRATE_APPLY) --project $(FIXTURES_FOLDER) --up all
 
 fixtures.down:
-	cd $(FIXTURES_FOLDER) && $(HASURA_MIGRATE_APPLY) --down all
+	$(HASURA_MIGRATE_APPLY) --project $(FIXTURES_FOLDER) --down all
 
 fixtures.clean:
 	rm -rf $(FIXTURES_MIGRATIONS_FOLDER)/*
