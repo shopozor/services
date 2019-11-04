@@ -74,32 +74,32 @@ def generate_variant(variant_name, output_folder):
     consumers = factory.create_consumers(
         start_index, nb_of_consumers)
     json_helpers.dump(consumers, os.path.join(
-        output_folder, variant_name, 'Users', 'Consommateurs.json'))
+        output_folder, variant_name, 'Users', 'consumers.json'))
 
     nb_of_producers = variant['#producers']
     start_index += nb_of_consumers
     producers = factory.create_producers(
         start_index, nb_of_producers)
     json_helpers.dump(producers, os.path.join(
-        output_folder, variant_name, 'Users', 'Producteurs.json'))
+        output_folder, variant_name, 'Users', 'producers.json'))
 
     nb_of_managers = variant['#managers']
     start_index += nb_of_producers
     managers = factory.create_managers(start_index, nb_of_managers)
     json_helpers.dump(managers, os.path.join(
-        output_folder, variant_name, 'Users', 'Responsables.json'))
+        output_folder, variant_name, 'Users', 'managers.json'))
 
     nb_of_reges = variant['#rex']
     start_index += nb_of_managers
     rex = factory.create_reges(start_index, nb_of_reges)
     json_helpers.dump(rex, os.path.join(
-        output_folder, variant_name, 'Users', 'Rex.json'))
+        output_folder, variant_name, 'Users', 'rex.json'))
 
     nb_of_softozors = variant['#softozor']
     start_index += nb_of_reges
     softozor = factory.create_softozors(start_index, nb_of_softozors)
     json_helpers.dump(softozor, os.path.join(
-        output_folder, variant_name, 'Users', 'Softozor.json'))
+        output_folder, variant_name, 'Users', 'softozor.json'))
 
     shopozor = {}
 

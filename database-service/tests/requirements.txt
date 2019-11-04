@@ -1,2 +1,6 @@
+faker==2.0.3
+more-itertools==7.2.0
 pytest==5.2.2
+python-dateutil==2.8.0
 sh==1.12.14
+unidecode==1.1.1
