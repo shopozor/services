@@ -10,6 +10,7 @@ def hasura_timestamp():
     now = datetime.datetime.now()
     return round((now - epoch).total_seconds() * 1000)
 
+
 def generate_up_migration(json_data, output_folder, migration_name, write_mode):
     migration_file = os.path.join(output_folder, migration_name + '.up.sql')
     with open(migration_file, write_mode) as output_file:
@@ -21,6 +22,7 @@ def generate_up_migration(json_data, output_folder, migration_name, write_mode):
                 output_file.write(
                     f'INSERT INTO public.{table} ({columns}) VALUES ({values});\n')
 
+
 def generate_down_migration(json_data, output_folder, migration_name, write_mode):
     migration_file = os.path.join(output_folder, migration_name + '.down.sql')
     with open(migration_file, write_mode) as output_file:
@@ -31,8 +33,10 @@ def generate_down_migration(json_data, output_folder, migration_name, write_mode
 def main(input, migration_name, output_folder, write_mode):
     json_data = json_helpers.load(input)
     migration_file_format = f'{hasura_timestamp()}_{migration_name}'
-    generate_up_migration(json_data, output_folder, migration_file_format, write_mode)
-    generate_down_migration(json_data, output_folder, migration_file_format, write_mode)
+    generate_up_migration(json_data, output_folder,
+                          migration_file_format, write_mode)
+    generate_down_migration(json_data, output_folder,
+                            migration_file_format, write_mode)
 
 
 if __name__ == '__main__':

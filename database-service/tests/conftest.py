@@ -15,6 +15,7 @@ def pytest_addoption(parser):
 def hasura_endpoint(request):
     return request.config.getoption("--hasura-endpoint")
 
-@pytest.fixture 
+
+@pytest.fixture
 def app_root_folder(request):
     return request.config.getoption("--root")
