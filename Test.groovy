@@ -3,7 +3,6 @@ pipeline {
   stages {
     stage('Build the docker images') {
       steps {
-        sh "pyclean ."
         sh "docker-compose build"
       }
     }
