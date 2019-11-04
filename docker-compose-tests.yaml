@@ -38,12 +38,12 @@ services:
     environment:
       - PYTHONPATH=.:${PYTHONPATH}
     volumes:
-      - .:/app
+      - ./database-service:/app
     entrypoint:
       - bash
       - -c
       - |
-          ./database-service/tests/fixtures-generator/entrypoint.sh
+          ./tests/fixtures-generator/entrypoint.sh
 
 volumes:
   db_data:

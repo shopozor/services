@@ -34,8 +34,6 @@ db.migrate.status:
 
 fixtures.generate:
 	@echo "Generating fixtures ..."
-	# without file config.yaml (even empty), hasura migrate apply will fail
-	@if [ ! -d $(FIXTURES_MIGRATIONS_FOLDER) ]; then mkdir -p $(FIXTURES_MIGRATIONS_FOLDER); touch $(FIXTURES_FOLDER)/config.yaml; fi
 	@docker-compose -f docker-compose-tests.yaml up fixtures-service
 	@docker-compose -f docker-compose-tests.yaml rm -f fixtures-service
 
