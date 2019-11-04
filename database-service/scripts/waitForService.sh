@@ -8,8 +8,9 @@ wait_for_port() {
     echo "waiting $HASURA_GRAPHQL_MIGRATIONS_SERVER_TIMEOUT for $PORT to be ready"
     for i in `seq 1 $HASURA_GRAPHQL_MIGRATIONS_SERVER_TIMEOUT`;
     do
-        nc -z $HOST $PORT > /dev/null 2>&1 && echo "port $PORT is ready" && return
-        sleep 1
+        echo "waiting for graphql engine"
+        nc -z $HOST $PORT
+        [ "$?" == "0" ] && return || sleep 1
     done
     echo "failed waiting for $PORT" && exit 1
 }
