@@ -19,6 +19,38 @@ def test_shopozor_structural_migrations_can_be_applied_without_errors(hasura_end
     assert 0 == result.exit_code
 
 
+def rollback_migrations(hasura_endpoint, migrations_folder):
+    cmd = sh.Command('hasura')
+    return cmd('migrate', 'apply', '--down', 'all', '--endpoint', hasura_endpoint, '--project', migrations_folder, '--skip-update-check')
+
+
+def get_tables_list_from_database(conn):
+    cursor = conn.cursor()
+    cursor.execute(
+        "SELECT table_name FROM information_schema.tables WHERE table_schema='public'")
+    return cursor.fetchall()
+
+
+def is_database_empty(conn):
+    tables_list = get_tables_list_from_database(conn)
+    return 0 == len(tables_list)
+
+
+def test_shopozor_structural_migrations_can_be_rolled_back(hasura_endpoint, app_root_folder, postgres_connection):
+    # Given I've applied structural migrations
+    project_folder = app_root_folder
+    result = apply_migrations(hasura_endpoint, project_folder)
+    assert 0 == result.exit_code
+
+    # When I revert the migrations
+    result = rollback_migrations(hasura_endpoint, project_folder)
+
+    # Then I get no errors
+    assert 0 == result.exit_code
+    # And the database is empty
+    assert is_database_empty(postgres_connection)
+
+
 def cleanup_fixtures(fixtures_dir):
     if os.path.isdir(fixtures_dir):
         shutil.rmtree(fixtures_dir)
