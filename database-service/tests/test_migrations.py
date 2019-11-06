@@ -8,7 +8,7 @@ def apply_migrations(hasura_endpoint, migrations_folder):
     return cmd('migrate', 'apply', '--endpoint', hasura_endpoint, '--project', migrations_folder, '--skip-update-check')
 
 
-def test_shopozor_structural_migrations_can_be_applied_without_errors(hasura_endpoint, app_root_folder):
+def test_shopozor_structural_migrations_can_be_applied(hasura_endpoint, app_root_folder):
     # Given I've structural project migrations
     project_folder = app_root_folder
 
@@ -19,9 +19,14 @@ def test_shopozor_structural_migrations_can_be_applied_without_errors(hasura_end
     assert 0 == result.exit_code
 
 
+def get_number_of_migrations_in_folder(folder):
+    return os.listdir(folder) / 2
+
+
 def rollback_migrations(hasura_endpoint, migrations_folder):
     cmd = sh.Command('hasura')
-    return cmd('migrate', 'apply', '--down', 'all', '--endpoint', hasura_endpoint, '--project', migrations_folder, '--skip-update-check')
+    nb_migrations = get_number_of_migrations_in_folder(migrations_folder)
+    return cmd('migrate', 'apply', '--down', nb_migrations, '--endpoint', hasura_endpoint, '--project', migrations_folder, '--skip-update-check')
 
 
 def get_tables_list_from_database(conn):
@@ -64,7 +69,7 @@ def generate_fixtures(app_root_folder, fixtures_set, fixtures_output_dir):
     return cmd(fixtures_set, fixtures_output_dir, migrations_output_dir, app_root_folder)
 
 
-def test_fixtures_migrations_can_be_applied_without_errors(hasura_endpoint, app_root_folder):
+def test_fixtures_migrations_can_be_applied(hasura_endpoint, app_root_folder):
     # Given I've structural project migrations
     structural_project_folder = app_root_folder
     # Given I've generated the fixtures
@@ -80,3 +85,28 @@ def test_fixtures_migrations_can_be_applied_without_errors(hasura_endpoint, app_
     # Then I get no errors
     assert 0 == structural_migration_result.exit_code
     assert 0 == fixtures_migration_result.exit_code
+
+
+def get_non_empty_tables(postgres_connection):
+    cursor = conn.cursor()
+    cursor.execute(
+        "SELECT relname FROM pg_stat_all_tables WHERE schemaname = 'public' AND n_tup_ins > 0")
+    table_names = cursor.fetchall()
+    return sorted(tuple(item[0] for item in table_names))
+
+
+def test_fixtures_migrations_can_be_rolled_back(hasura_endpoint, app_root_folder, postgres_connection, enum_table_names):
+    # Given I've applied fixtures migrations
+    structural_project_folder = app_root_folder
+    fixtures_project_folder = os.path.join(app_root_folder, 'fixtures')
+    generate_fixtures(app_root_folder, 'small', fixtures_project_folder)
+    apply_migrations(hasura_endpoint, app_root_folder)
+    apply_migrations(hasura_endpoint, fixtures_project_folder)
+
+    # When I revert the fixtures data
+    result = rollback_migrations(hasura_endpoint, fixtures_project_folder)
+
+    # Then I get no errors
+    assert 0 == result.exit_code
+    # And the database is empty
+    assert enum_table_names == get_non_empty_tables(postgres_connection)

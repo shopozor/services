@@ -25,3 +25,8 @@ def app_root_folder(request):
 @pytest.fixture
 def postgres_connection():
     return psycopg2.connect(host='postgres', database='postgres', user='postgres')
+
+
+@pytest.fixture
+def enum_table_names():
+    return sorted(('vat_types', 'pricing_modes', 'product_states', 'productvariant_states', 'roles'))
