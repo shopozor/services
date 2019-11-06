@@ -28,7 +28,11 @@ services:
       - ./database-service:/app
     environment:
       - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONPATH=./tests:$PYTHONPATH
     entrypoint: python -m pytest -p no:cacheprovider --hasura-endpoint http://graphql-engine:8080 --root /app -ra --junitxml=test-report.xml
+    # tty: "true"
+    # stdin_open: "true"
+    # entrypoint: bash
   fixtures-service:
     build:
       context: ./database-service
