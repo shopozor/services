@@ -1,0 +1,8 @@
+- args:
+    name: pricingModeByPricingMode
+    table:
+      name: productvariants
+      schema: public
+    using:
+      foreign_key_constraint_on: pricing_mode
+  type: create_object_relationship

@@ -1,0 +1,8 @@
+- args:
+    name: productvariant
+    table:
+      name: shop_productvariant
+      schema: public
+    using:
+      foreign_key_constraint_on: productvariant_id
+  type: create_object_relationship
