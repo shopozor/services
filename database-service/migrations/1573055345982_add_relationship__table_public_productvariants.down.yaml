@@ -1,0 +1,6 @@
+- args:
+    relationship: productvariant_state
+    table:
+      name: productvariants
+      schema: public
+  type: drop_relationship

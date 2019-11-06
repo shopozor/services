@@ -1,0 +1,18 @@
+- args:
+    is_enum: false
+    table:
+      name: roles
+      schema: public
+  type: set_table_is_enum
+- args:
+    sql: DELETE FROM public.roles WHERE role='REX'
+  type: run_sql
+- args:
+    sql: DELETE FROM public.roles WHERE role='MANAGER'
+  type: run_sql
+- args:
+    sql: DELETE FROM public.roles WHERE role='SOFTOZOR'
+  type: run_sql
+- args:
+    sql: DROP TABLE "public"."roles"
+  type: run_sql

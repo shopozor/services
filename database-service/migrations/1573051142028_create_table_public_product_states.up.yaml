@@ -1,0 +1,17 @@
+- args:
+    sql: CREATE TABLE "public"."product_states"("state" text NOT NULL, PRIMARY KEY ("state")
+      , UNIQUE ("state"));
+  type: run_sql
+- args:
+    name: product_states
+    schema: public
+  type: add_existing_table_or_view
+- args:
+    sql: INSERT INTO public.product_states VALUES ('VISIBLE'), ('INVISIBLE'), ('DELETED')
+  type: run_sql
+- args:
+    is_enum: true
+    table:
+      name: product_states
+      schema: public
+  type: set_table_is_enum

@@ -1,0 +1,16 @@
+- args:
+    sql: CREATE TABLE "public"."productvariants"("id" serial NOT NULL, "state" text
+      NOT NULL DEFAULT 'INVISIBLE', "product_id" integer NOT NULL, "quantity" integer
+      NOT NULL DEFAULT 0, "quantity_allocated" integer NOT NULL DEFAULT 0, "gross_cost_price"
+      money NOT NULL DEFAULT 0, "pricing_mode" text NOT NULL DEFAULT 'FREE', "name"
+      varchar NOT NULL, "measure" float4 NOT NULL DEFAULT 0, "measure_unit" text NOT
+      NULL, "gross_cost_price_unit" text NOT NULL, PRIMARY KEY ("id") , FOREIGN KEY
+      ("pricing_mode") REFERENCES "public"."pricing_modes"("mode") ON UPDATE restrict
+      ON DELETE restrict, FOREIGN KEY ("product_id") REFERENCES "public"."products"("id")
+      ON UPDATE restrict ON DELETE restrict, FOREIGN KEY ("state") REFERENCES "public"."productvariant_states"("state")
+      ON UPDATE restrict ON DELETE restrict, UNIQUE ("id"));
+  type: run_sql
+- args:
+    name: productvariants
+    schema: public
+  type: add_existing_table_or_view

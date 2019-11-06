@@ -1,0 +1,9 @@
+- args:
+    sql: CREATE TABLE "public"."vat"("type" text NOT NULL, "rate" float4 NOT NULL,
+      PRIMARY KEY ("type") , FOREIGN KEY ("type") REFERENCES "public"."vat_types"("type")
+      ON UPDATE restrict ON DELETE restrict, UNIQUE ("type"));
+  type: run_sql
+- args:
+    name: vat
+    schema: public
+  type: add_existing_table_or_view

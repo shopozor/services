@@ -1,0 +1,9 @@
+- args:
+    sql: CREATE TABLE "public"."margindefinitions"("role" text NOT NULL, "margin"
+      float4 NOT NULL, PRIMARY KEY ("role") , FOREIGN KEY ("role") REFERENCES "public"."roles"("role")
+      ON UPDATE restrict ON DELETE restrict, UNIQUE ("role"));
+  type: run_sql
+- args:
+    name: margindefinitions
+    schema: public
+  type: add_existing_table_or_view

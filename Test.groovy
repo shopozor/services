@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Build the docker images') {
       steps {
-        sh "docker-compose build"
+        sh "docker-compose -f docker-compose-tests.yaml build"
       }
     }
     stage('Start GraphQL engine') {
@@ -14,6 +14,7 @@ pipeline {
     }
     stage('Test GraphQL engine') {
       steps {
+        sh "chmod u+x ./database-service/tests/fixtures-generator/entrypoint.sh"
         sh "docker-compose -f docker-compose-tests.yaml up hasura-service-tests"
       }
     }

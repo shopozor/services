@@ -1,0 +1,9 @@
+- args:
+    sql: CREATE TABLE "public"."product_categories"("name" text NOT NULL, "id" serial
+      NOT NULL, "description" text, "background_image" varchar, "background_image_alt"
+      varchar, PRIMARY KEY ("id") , UNIQUE ("name"), UNIQUE ("id"));
+  type: run_sql
+- args:
+    name: product_categories
+    schema: public
+  type: add_existing_table_or_view

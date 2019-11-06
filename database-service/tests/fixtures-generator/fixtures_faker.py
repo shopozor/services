@@ -203,7 +203,7 @@ class FakeDataFactory:
     def create_productimages(self, list_size=1):
         result = [self.__productimage(pk) for pk in range(1, list_size + 1)]
         return {
-            'productimages': result
+            'product_images': result
         }
 
     def __product(self, pk, categories, producer_id, image_id):
@@ -238,7 +238,7 @@ class FakeDataFactory:
                 1, self.__MAX_NB_PRODUCTS_PER_PRODUCER)
             for i in range(0, nb_products):
                 product_id = i + product_index
-                image_id = images['productimages'][product_id - 1]['id']
+                image_id = images['product_images'][product_id - 1]['id']
                 product = self.__product(
                     product_id, categories['product_categories'], producer_id, image_id)
                 nb_visible_products += int(product['state'] == 'VISIBLE')
