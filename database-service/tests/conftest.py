@@ -1,6 +1,10 @@
+import os
 import psycopg2
 import pytest
 from urllib.parse import urljoin
+
+from utils.database import DatabaseHandler
+from utils.migrations import HasuraClient, FixturesGenerator
 
 
 def pytest_addoption(parser):
@@ -30,3 +34,23 @@ def postgres_connection():
 @pytest.fixture
 def enum_table_names():
     return sorted(('vat_types', 'pricing_modes', 'product_states', 'productvariant_states', 'roles'))
+
+
+@pytest.fixture
+def hasura_client(hasura_endpoint):
+    return HasuraClient(hasura_endpoint)
+
+
+@pytest.fixture
+def db_handler(postgres_connection):
+    return DatabaseHandler(postgres_connection)
+
+
+@pytest.fixture
+def fixtures_project_folder(app_root_folder):
+    return os.path.join(app_root_folder, 'fixtures')
+
+
+@pytest.fixture
+def fixtures_generator(app_root_folder, fixtures_project_folder):
+    return FixturesGenerator(app_root_folder, fixtures_project_folder)

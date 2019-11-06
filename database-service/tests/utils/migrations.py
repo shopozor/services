@@ -35,3 +35,6 @@ class FixturesGenerator:
         self.cleanup()
         migrations_output_dir = os.path.join(self.__output_dir, 'migrations')
         return self.__generator_cmd(fixtures_set, self.__output_dir, migrations_output_dir, self.__app_root_folder)
+
+    def project_folder(self):
+        return self.__output_dir
