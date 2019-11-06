@@ -54,3 +54,10 @@ def fixtures_project_folder(app_root_folder):
 @pytest.fixture
 def fixtures_generator(app_root_folder, fixtures_project_folder):
     return FixturesGenerator(app_root_folder, fixtures_project_folder)
+
+
+@pytest.fixture
+def small_fixtures(fixtures_generator):
+    fixtures_generator.generate('small')
+    yield fixtures_generator.project_folder()
+    fixtures_generator.cleanup()

@@ -6,7 +6,7 @@ class DatabaseHandler:
         cursor = self.__conn.cursor()
         cursor.execute(
             "SELECT table_name FROM information_schema.tables WHERE table_schema='public'")
-        return cursor.fetchall()
+        return [item[0] for item in cursor.fetchall()]
 
     def is_database_empty(self):
         tables_list = self.__get_tables_list()
@@ -14,7 +14,10 @@ class DatabaseHandler:
 
     def get_non_empty_tables(self):
         cursor = self.__conn.cursor()
-        cursor.execute(
-            "SELECT relname FROM pg_stat_all_tables WHERE schemaname = 'public' AND n_tup_ins > 0")
-        table_names = cursor.fetchall()
-        return sorted(tuple(item[0] for item in table_names))
+        tables_list = self.__get_tables_list()
+        tables_stats = {}
+        for table in tables_list:
+            cursor.execute(f'SELECT COUNT(*) FROM {table}')
+            nb_entries = cursor.fetchall()
+            tables_stats[table] = nb_entries[0][0]
+        return sorted(tuple(item for item in tables_stats if tables_stats[item] > 0))
