@@ -1,7 +1,6 @@
 import os
-import sh
-import shutil
 
+from utils.database import DatabaseHandler
 from utils.migrations import HasuraClient, FixturesGenerator
 
 
@@ -17,18 +16,6 @@ def test_shopozor_structural_migrations_can_be_applied(hasura_endpoint, app_root
     assert 0 == result.exit_code
 
 
-def get_tables_list_from_database(conn):
-    cursor = conn.cursor()
-    cursor.execute(
-        "SELECT table_name FROM information_schema.tables WHERE table_schema='public'")
-    return cursor.fetchall()
-
-
-def is_database_empty(conn):
-    tables_list = get_tables_list_from_database(conn)
-    return 0 == len(tables_list)
-
-
 def test_shopozor_structural_migrations_can_be_rolled_back(hasura_endpoint, app_root_folder, postgres_connection):
     # Given I've applied structural migrations
     project_folder = app_root_folder
@@ -42,7 +29,8 @@ def test_shopozor_structural_migrations_can_be_rolled_back(hasura_endpoint, app_
     # Then I get no errors
     assert 0 == result.exit_code
     # And the database is empty
-    assert is_database_empty(postgres_connection)
+    db_handler = DatabaseHandler(postgres_connection)
+    assert db_handler.is_database_empty()
 
 
 def test_fixtures_migrations_can_be_applied(hasura_endpoint, app_root_folder):
@@ -65,14 +53,6 @@ def test_fixtures_migrations_can_be_applied(hasura_endpoint, app_root_folder):
     assert 0 == fixtures_migration_result.exit_code
 
 
-def get_non_empty_tables(postgres_connection):
-    cursor = conn.cursor()
-    cursor.execute(
-        "SELECT relname FROM pg_stat_all_tables WHERE schemaname = 'public' AND n_tup_ins > 0")
-    table_names = cursor.fetchall()
-    return sorted(tuple(item[0] for item in table_names))
-
-
 def test_fixtures_migrations_can_be_rolled_back(hasura_endpoint, app_root_folder, postgres_connection, enum_table_names):
     # Given I've applied fixtures migrations
     structural_project_folder = app_root_folder
@@ -89,4 +69,6 @@ def test_fixtures_migrations_can_be_rolled_back(hasura_endpoint, app_root_folder
     # Then I get no errors
     assert 0 == result.exit_code
     # And the database is empty
-    assert enum_table_names == get_non_empty_tables(postgres_connection)
+    db_handler = DatabaseHandler(postgres_connection)
+    assert enum_table_names == db_handler.get_non_empty_tables(
+        postgres_connection)
