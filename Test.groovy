@@ -3,7 +3,7 @@ pipeline {
   stages {
     stage('Build the docker images') {
       steps {
-        sh "docker-compose build"
+        sh "docker-compose -f docker-compose-tests.yaml build"
       }
     }
     stage('Start GraphQL engine') {
