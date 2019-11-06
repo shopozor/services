@@ -38,7 +38,8 @@ fixtures.up:
 	$(HASURA_MIGRATE_APPLY) --project $(FIXTURES_FOLDER) --up all
 
 fixtures.down:
-	$(HASURA_MIGRATE_APPLY) --project $(FIXTURES_FOLDER) --down all
+	# TODO: get the number of migrations from a truncated $(shell echo $((`ls database-service/migrations | wc -l`/2)))
+	$(HASURA_MIGRATE_APPLY) --project $(FIXTURES_FOLDER) --down 6
 
 fixtures.clean:
 	rm -rf $(FIXTURES_MIGRATIONS_FOLDER)/*
