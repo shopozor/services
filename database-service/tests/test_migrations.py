@@ -1,3 +1,6 @@
+# TODO: we need to use the incremental feature of pytest that guarantees that the following tests are run in this order:
+
+
 def test_shopozor_structural_migrations_can_be_applied(hasura_client, app_root_folder):
     # Given I've structural project migrations
     project_folder = app_root_folder
