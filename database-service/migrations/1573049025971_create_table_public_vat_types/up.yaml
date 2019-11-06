@@ -1,0 +1,17 @@
+- args:
+    sql: CREATE TABLE "public"."vat_types"("type" text NOT NULL, PRIMARY KEY ("type")
+      , UNIQUE ("type"));
+  type: run_sql
+- args:
+    name: vat_types
+    schema: public
+  type: add_existing_table_or_view
+- args:
+    sql: INSERT INTO public.vat_types VALUES ('SERVICES'), ('PRODUCTS'), ('SPECIAL')
+  type: run_sql
+- args:
+    is_enum: true
+    table:
+      name: vat_types
+      schema: public
+  type: set_table_is_enum
