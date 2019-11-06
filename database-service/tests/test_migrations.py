@@ -27,15 +27,15 @@ def test_shopozor_structural_migrations_can_be_rolled_back(hasura_client, app_ro
 def test_fixtures_migrations_can_be_applied(hasura_client, app_root_folder, small_fixtures):
     # Given I've structural project migrations
     structural_project_folder = app_root_folder
-
-    # When I apply the migrations
     structural_migration_result = hasura_client.apply_migrations(
         app_root_folder)
+    assert 0 == structural_migration_result.exit_code
+
+    # When I apply the migrations
     fixtures_migration_result = hasura_client.apply_migrations(
         small_fixtures)
 
     # Then I get no errors
-    assert 0 == structural_migration_result.exit_code
     assert 0 == fixtures_migration_result.exit_code
 
 
