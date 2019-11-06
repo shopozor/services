@@ -7,9 +7,7 @@ WORKDIR /app
 
 FROM python:3.8-slim AS unittest
 
-RUN apt-get -y update \
-  && apt-get install -y curl \
-  && curl -L https://github.com/hasura/graphql-engine/raw/master/cli/get.sh | bash
+COPY --from=app /bin/hasura-cli /usr/local/bin/hasura
 
 COPY tests/requirements.txt .
 
