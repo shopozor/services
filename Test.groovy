@@ -14,6 +14,7 @@ pipeline {
     }
     stage('Test GraphQL engine') {
       steps {
+        sh "chmod u+x ./database-service/tests/fixtures-generator/entrypoint.sh"
         sh "docker-compose -f docker-compose-tests.yaml up hasura-service-tests"
       }
     }
