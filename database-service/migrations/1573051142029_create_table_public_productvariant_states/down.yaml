@@ -1,0 +1,21 @@
+- args:
+    is_enum: false
+    table:
+      name: productvariant_states
+      schema: public
+  type: set_table_is_enum
+- args:
+    sql: DELETE FROM public.productvariant_states WHERE state='VISIBLE'
+  type: run_sql
+- args:
+    sql: DELETE FROM public.productvariant_states WHERE state='INVISIBLE'
+  type: run_sql
+- args:
+    sql: DELETE FROM public.productvariant_states WHERE state='DELETED'
+  type: run_sql
+- args:
+    sql: DELETE FROM public.productvariant_states WHERE state='CHANGE_ASAP'
+  type: run_sql
+- args:
+    sql: DROP TABLE "public"."productvariant_states"
+  type: run_sql
