@@ -8,6 +8,7 @@ pipeline {
     }
     stage('Generate the database fixtures') {
       steps {
+        sh "chmod u+x ./fixtures-generator/entrypoint.sh"
         sh "docker-compose -f docker-compose-tests.yaml up fixtures-service"
       }
     }
@@ -19,7 +20,6 @@ pipeline {
     }
     stage('Test GraphQL engine') {
       steps {
-        sh "chmod u+x ./database-service/tests/fixtures-generator/entrypoint.sh"
         sh "docker-compose -f docker-compose-tests.yaml up hasura-service-tests"
       }
     }
