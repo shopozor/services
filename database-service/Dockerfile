@@ -5,7 +5,7 @@ COPY config.yaml /app
 
 WORKDIR /app
 
-FROM python:3.8-slim AS unittest
+FROM python:3.8-slim AS integration-test
 
 COPY --from=app /bin/hasura-cli /usr/local/bin/hasura
 

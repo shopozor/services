@@ -27,7 +27,6 @@ class FixturesGenerator:
         self.__output_dir = output_dir
         self.__generator_cmd = sh.Command(os.path.join(app_root_folder, 'tests',
                                                        'fixtures-generator', 'entrypoint.sh'))
-        self.__fixed_timestamp = "true"
 
     def cleanup(self):
         if os.path.isdir(self.__output_dir):
@@ -36,7 +35,7 @@ class FixturesGenerator:
     def generate(self, fixtures_set):
         self.cleanup()
         migrations_output_dir = os.path.join(self.__output_dir, 'migrations')
-        return self.__generator_cmd(fixtures_set, self.__output_dir, migrations_output_dir, self.__app_root_folder, self.__fixed_timestamp)
+        return self.__generator_cmd(fixtures_set, self.__output_dir, migrations_output_dir, self.__app_root_folder)
 
     def project_folder(self):
         return self.__output_dir

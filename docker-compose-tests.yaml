@@ -20,7 +20,7 @@ services:
     build:
       context: ./database-service
       dockerfile: ./Dockerfile
-      target: unittest
+      target: integration-test
     restart: "no"
     depends_on:
       - graphql-engine
