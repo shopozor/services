@@ -9,9 +9,11 @@ pipeline {
     }
     stage('Generate the database fixtures') {
       steps {
-        helpers.deleteFolder('fixtures')
-        sh "chmod u+x ./fixtures-generator/entrypoint.sh"
-        sh "docker-compose -f docker-compose-tests.yaml up fixtures-service"
+        script {
+          helpers.deleteFolder('fixtures')
+          sh "chmod u+x ./fixtures-generator/entrypoint.sh"
+          sh "docker-compose -f docker-compose-tests.yaml up fixtures-service"
+        }
       }
     }
     stage('Start GraphQL engine') {
@@ -28,9 +30,11 @@ pipeline {
   }
   post {
     always {
-      sh "docker-compose down"
-      helpers.deleteFolder('fixtures')
-      junit "**/test-report.xml"
+      script {
+        sh "docker-compose down"
+        helpers.deleteFolder('fixtures')
+        junit "**/test-report.xml"
+      }
     }
   }
 }
