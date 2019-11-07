@@ -1,7 +1,7 @@
 import os
 import pytest
 
-from utils.migrations import HasuraClient, FixturesGenerator
+from utils.migrations import HasuraClient
 
 
 def pytest_addoption(parser):
@@ -31,18 +31,7 @@ def hasura_client(hasura_endpoint, app_root_folder):
 
 
 @pytest.fixture
-def fixtures_project_folder(app_root_folder):
-    return os.path.join(app_root_folder, 'fixtures')
-
-
-@pytest.fixture
-def fixtures_generator(app_root_folder, fixtures_project_folder):
-    return FixturesGenerator(app_root_folder, fixtures_project_folder)
-
-
-@pytest.fixture
-def small_fixtures(fixtures_generator, hasura_client):
-    fixtures_generator.generate('small')
-    yield fixtures_generator.project_folder()
-    hasura_client.rollback_migrations(fixtures_generator.project_folder())
-    fixtures_generator.cleanup()
+def small_fixtures(app_root_folder, hasura_client):
+    fixtures_project_folder = os.path.join(app_root_folder, 'fixtures')
+    yield fixtures_project_folder
+    hasura_client.rollback_migrations(fixtures_project_folder)
