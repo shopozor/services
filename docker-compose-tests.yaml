@@ -26,23 +26,27 @@ services:
       - graphql-engine
     volumes:
       - ./database-service:/app
+      - ./fixtures:/app/fixtures
     environment:
       - PYTHONDONTWRITEBYTECODE=1
       - PYTHONPATH=./tests:$PYTHONPATH
-    entrypoint: python -m pytest -p no:cacheprovider --hasura-endpoint http://graphql-engine:8080 --root /app -ra --junitxml=test-report.xml
+    entrypoint: python -m pytest --hasura-endpoint http://graphql-engine:8080 --root /app -ra --junitxml=test-report.xml
   fixtures-service:
     build:
-      context: ./database-service
+      context: ./fixtures-generator
       dockerfile: ./Dockerfile
-      target: integration-test
     restart: "no"
+    user: $USER
     volumes:
-      - ./database-service:/app
+      - ./fixtures-generator:/app
+      - ./fixtures:/app/fixtures
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
     entrypoint:
       - bash
       - -c
       - |
-          ./tests/fixtures-generator/entrypoint.sh
+          ./entrypoint.sh
 
 volumes:
   db_data:
