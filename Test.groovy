@@ -30,11 +30,6 @@ pipeline {
     always {
       script {
         sh "docker-compose down"
-        wsCleanup {
-          includePattern('fixtures')
-          deleteDirectories(true)
-          setFailBuild(false)
-        }
         junit "**/test-report.xml"
       }
     }
