@@ -9,6 +9,7 @@ pipeline {
     stage('Generate the database fixtures') {
       steps {
         script {
+          sh "rm -Rf fixtures && mkdir fixtures"
           sh "chmod u+x ./fixtures-generator/entrypoint.sh"
           sh "docker-compose -f docker-compose-tests.yaml up fixtures-service"
         }
@@ -30,6 +31,7 @@ pipeline {
     always {
       script {
         sh "docker-compose down"
+        sh "rm -Rf fixtures"
         junit "**/test-report.xml"
       }
     }
