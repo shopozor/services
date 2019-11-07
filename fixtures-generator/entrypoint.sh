@@ -8,7 +8,7 @@ APP_ROOT=${4:-./}
 GENERATE_JSON_FIXTURES=${APP_ROOT}/generate_json_fixtures.py
 JSON_TO_SQL=${APP_ROOT}/json2sql.py
 
-if [ ! -d ${FIXTURES_MIGRATIONS_FOLDER} ]; then mkdir -m 777 -p ${FIXTURES_MIGRATIONS_FOLDER}; fi
+if [ ! -d ${FIXTURES_MIGRATIONS_FOLDER} ]; then mkdir -p ${FIXTURES_MIGRATIONS_FOLDER}; fi
 
 python ${GENERATE_JSON_FIXTURES} -o ${FIXTURES_FOLDER}
 
