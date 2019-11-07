@@ -28,7 +28,10 @@ def app_root_folder(request):
 
 @pytest.fixture
 def postgres_connection():
-    return psycopg2.connect(host='postgres', database='postgres', user='postgres')
+    conn = psycopg2.connect(
+        host='postgres', database='postgres', user='postgres')
+    yield conn
+    conn.close()
 
 
 @pytest.fixture
@@ -37,13 +40,13 @@ def enum_table_names():
 
 
 @pytest.fixture
-def hasura_client(hasura_endpoint):
-    return HasuraClient(hasura_endpoint)
+def db_handler(postgres_connection):
+    return DatabaseHandler(postgres_connection)
 
 
 @pytest.fixture
-def db_handler(postgres_connection):
-    return DatabaseHandler(postgres_connection)
+def hasura_client(hasura_endpoint, db_handler):
+    return HasuraClient(hasura_endpoint)
 
 
 @pytest.fixture
