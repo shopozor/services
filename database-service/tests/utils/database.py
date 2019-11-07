@@ -6,7 +6,9 @@ class DatabaseHandler:
         cursor = self.__conn.cursor()
         cursor.execute(
             "SELECT table_name FROM information_schema.tables WHERE table_schema='public'")
-        return [item[0] for item in cursor.fetchall()]
+        result = [item[0] for item in cursor.fetchall()]
+        cursor.close()
+        return result
 
     def is_database_empty(self):
         tables_list = self.__get_tables_list()
@@ -20,4 +22,7 @@ class DatabaseHandler:
             cursor.execute(f'SELECT COUNT(*) FROM {table}')
             nb_entries = cursor.fetchall()
             tables_stats[table] = nb_entries[0][0]
-        return sorted(tuple(item for item in tables_stats if tables_stats[item] > 0))
+        result = sorted(
+            tuple(item for item in tables_stats if tables_stats[item] > 0))
+        cursor.close()
+        return result
