@@ -1,3 +1,4 @@
+def helpers = new ch.softozor.pipeline.Helpers()
 pipeline {
   agent any
   stages {
@@ -8,6 +9,7 @@ pipeline {
     }
     stage('Generate the database fixtures') {
       steps {
+        helpers.deleteFolder('fixtures')
         sh "chmod u+x ./fixtures-generator/entrypoint.sh"
         sh "docker-compose -f docker-compose-tests.yaml up fixtures-service"
       }
@@ -27,7 +29,7 @@ pipeline {
   post {
     always {
       sh "docker-compose down"
-      sh "rm -Rf fixtures"
+      helpers.deleteFolder('fixtures')
       junit "**/test-report.xml"
     }
   }
