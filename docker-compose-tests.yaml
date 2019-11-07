@@ -34,7 +34,7 @@ services:
     build:
       context: ./database-service
       dockerfile: ./Dockerfile
-      target: unittest
+      target: integration-test
     restart: "no"
     volumes:
       - ./database-service:/app
