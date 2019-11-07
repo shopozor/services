@@ -11,7 +11,7 @@ pipeline {
         script {
           sh "rm -Rf fixtures && mkdir fixtures"
           sh "chmod u+x ./fixtures-generator/entrypoint.sh"
-          sh "USER=$(id -u) docker-compose -f docker-compose-tests.yaml up fixtures-service"
+          sh """USER=$(id -u) docker-compose -f docker-compose-tests.yaml up fixtures-service"""
         }
       }
     }
