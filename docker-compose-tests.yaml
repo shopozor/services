@@ -44,6 +44,20 @@ services:
       - -c
       - |
           ./database-service/tests/fixtures-generator/entrypoint.sh
+  feature-tests:
+    build:
+      context: ./features
+      dockerfile: ./Dockerfile
+      target: feature-test
+    restart: "no"
+    depends_on:
+      - graphql-engine
+    volumes:
+      - ./features:/app
+    # entrypoint: behave --junit --junit-directory . --tags ~wip
+    tty: "true"
+    stdin_open: "true"
+    entrypoint: bash
 
 volumes:
   db_data:
