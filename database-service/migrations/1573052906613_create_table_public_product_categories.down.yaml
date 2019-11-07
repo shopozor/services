@@ -1,0 +1,3 @@
+- args:
+    sql: DROP TABLE "public"."product_categories"
+  type: run_sql

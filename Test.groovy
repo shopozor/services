@@ -3,7 +3,17 @@ pipeline {
   stages {
     stage('Build the docker images') {
       steps {
-        sh "docker-compose build"
+        sh "docker-compose -f docker-compose-tests.yaml build"
+      }
+    }
+    stage('Generate the database fixtures') {
+      steps {
+        script {
+          sh "rm -Rf fixtures && mkdir fixtures"
+          sh "chmod u+x ./fixtures-generator/entrypoint.sh"
+          // without that USER variable, it is not possible to delete the generated fixtures folder anymore
+          sh "USER=`id -u` docker-compose -f docker-compose-tests.yaml up fixtures-service"
+        }
       }
     }
     stage('Generate the database fixtures') {

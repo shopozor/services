@@ -1,0 +1,17 @@
+- args:
+    sql: CREATE TABLE "public"."roles"("role" text NOT NULL, PRIMARY KEY ("role")
+      , UNIQUE ("role"));
+  type: run_sql
+- args:
+    name: roles
+    schema: public
+  type: add_existing_table_or_view
+- args:
+    sql: INSERT INTO public.roles VALUES ('REX'), ('MANAGER'), ('SOFTOZOR')
+  type: run_sql
+- args:
+    is_enum: true
+    table:
+      name: roles
+      schema: public
+  type: set_table_is_enum

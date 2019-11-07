@@ -1,4 +1,3 @@
-
 HASURA_ENDPOINT = http://localhost:8080
 HASURA_MIGRATE_APPLY = hasura migrate apply --endpoint $(HASURA_ENDPOINT)
 HASURA_STATUS_APPLY = hasura migrate apply --endpoint $(HASURA_ENDPOINT)
@@ -13,7 +12,6 @@ build:
 	@echo "Building images..."
 	@docker-compose build
 
-
 up: build
 	@echo "Starting containers..."
 	@docker-compose up -d postgres
@@ -22,35 +20,35 @@ up: build
 	@echo "Waiting for postgres to be ready for loading migrations..."
 	@until make db.migrate.apply 2>&1 /dev/null; do echo "Waiting for database to be ready ..."; sleep 2s; done
 
-
 down:
 	@docker-compose down
 
 db.migrate.apply:
-	cd database-service && $(HASURA_MIGRATE_APPLY)
+	$(HASURA_MIGRATE_APPLY) --project database-service
 
 db.migrate.status:
-	cd database-service && $(HASURA_MIGRATE_STATUS)
+	$(HASURA_MIGRATE_STATUS) --project database-service
 
 fixtures.generate:
 	@echo "Generating fixtures ..."
-	# without file config.yaml (even empty), hasura migrate apply will fail
-	@if [ ! -d $(FIXTURES_MIGRATIONS_FOLDER) ]; then mkdir -p $(FIXTURES_MIGRATIONS_FOLDER); touch $(FIXTURES_FOLDER)/config.yaml; fi
 	@docker-compose -f docker-compose-tests.yaml up fixtures-service
 	@docker-compose -f docker-compose-tests.yaml rm -f fixtures-service
 
-
 fixtures.up:
-	cd $(FIXTURES_FOLDER) && $(HASURA_MIGRATE_APPLY) --up all
+	$(HASURA_MIGRATE_APPLY) --project $(FIXTURES_FOLDER) --up all
 
 fixtures.down:
-	cd $(FIXTURES_FOLDER && $(HASURA_MIGRATE_APPLY) --down all
+	# TODO: get the number of migrations from a truncated $(shell echo $((`ls database-service/migrations | wc -l`/2)))
+	$(HASURA_MIGRATE_APPLY) --project $(FIXTURES_FOLDER) --down 6
 
 fixtures.clean:
 	rm -rf $(FIXTURES_MIGRATIONS_FOLDER)/*
 
 fixtures: fixtures.clean fixtures.generate fixtures.up
 
+test:
+	@docker-compose -f docker-compose-tests.yaml up --abort-on-container-exit postgres graphql-engine hasura-service-tests
+	@docker-compose down
 
 %.restart:
 	make $*.down
@@ -61,7 +59,6 @@ logs:
 
 console:
 	cd database-service && hasura console
-
 
 %.logs:
 	docker-compose logs -f $*

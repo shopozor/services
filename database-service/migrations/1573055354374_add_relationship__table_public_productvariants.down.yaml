@@ -1,0 +1,6 @@
+- args:
+    relationship: pricingModeByPricingMode
+    table:
+      name: productvariants
+      schema: public
+  type: drop_relationship

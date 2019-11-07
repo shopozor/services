@@ -1,0 +1,17 @@
+- args:
+    sql: CREATE TABLE "public"."products"("id" serial NOT NULL, "name" varchar NOT
+      NULL, "description" varchar NOT NULL, "publication_date" timestamptz NOT NULL,
+      "updated_at" timestamptz NOT NULL, "state" text NOT NULL, "category_id" integer
+      NOT NULL, "producer_id" integer NOT NULL, "image_id" integer, "conservation_mode"
+      text, "conservation_days" integer, "vat_rate" float4, PRIMARY KEY ("id") , FOREIGN
+      KEY ("category_id") REFERENCES "public"."product_categories"("id") ON UPDATE
+      restrict ON DELETE restrict, FOREIGN KEY ("image_id") REFERENCES "public"."product_images"("id")
+      ON UPDATE restrict ON DELETE restrict, FOREIGN KEY ("producer_id") REFERENCES
+      "public"."users"("id") ON UPDATE restrict ON DELETE restrict, FOREIGN KEY ("state")
+      REFERENCES "public"."product_states"("state") ON UPDATE restrict ON DELETE restrict,
+      UNIQUE ("id"));
+  type: run_sql
+- args:
+    name: products
+    schema: public
+  type: add_existing_table_or_view

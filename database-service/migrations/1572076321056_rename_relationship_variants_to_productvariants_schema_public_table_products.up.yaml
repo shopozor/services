@@ -1,7 +1,0 @@
-- args:
-    name: variants
-    new_name: productvariants
-    table:
-      name: products
-      schema: public
-  type: rename_relationship

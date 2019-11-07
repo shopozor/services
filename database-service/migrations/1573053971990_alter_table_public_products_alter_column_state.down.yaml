@@ -1,0 +1,6 @@
+- args:
+    sql: ALTER TABLE ONLY "public"."products" ALTER COLUMN "state" SET DEFAULT 'INVISIBLE';
+  type: run_sql
+- args:
+    sql: COMMENT ON COLUMN "public"."products"."state" IS E'null'
+  type: run_sql
