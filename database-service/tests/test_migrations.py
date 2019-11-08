@@ -9,14 +9,14 @@ def test_shopozor_structural_migrations_can_be_applied(hasura_client, app_root_f
     assert has_worked is True
 
 
-def test_fixtures_migrations_can_be_applied(hasura_client, app_root_folder, small_fixtures):
+def test_fixtures_migrations_can_be_applied(hasura_client, app_root_folder, fixtures_set):
     # Given I've applied structural migrations
     structural_project_folder = app_root_folder
     has_worked = hasura_client.apply_migrations(structural_project_folder)
     assert has_worked is True
 
     # When I apply the fixtures migrations
-    has_worked = hasura_client.apply_migrations(small_fixtures)
+    has_worked = hasura_client.apply_migrations(fixtures_set)
 
     # Then I get no error
     assert has_worked is True
