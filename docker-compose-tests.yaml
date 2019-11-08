@@ -40,7 +40,6 @@ services:
     volumes:
       - ./fixtures-generator:/app
       - ./fixtures:/app/fixtures
-      - ./graphql:/app/graphql
     environment:
       - PYTHONDONTWRITEBYTECODE=1
     entrypoint:
@@ -57,7 +56,7 @@ services:
     depends_on:
       - graphql-engine
     volumes:
-      - ./features:/app/features
+      - ./features:/app
       - ./fixtures:/app/fixtures
     # entrypoint: behave --junit --junit-directory . --tags ~wip
     tty: "true"
