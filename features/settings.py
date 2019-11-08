@@ -1,4 +1,6 @@
 
+import os
+
 GRAPHQL_RESPONSES_DIR = os.path.join('..', 'graphql', 'responses')
 
 
