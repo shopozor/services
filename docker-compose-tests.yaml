@@ -30,7 +30,7 @@ services:
     environment:
       - PYTHONDONTWRITEBYTECODE=1
       - PYTHONPATH=./tests:$PYTHONPATH
-    entrypoint: python -m pytest --hasura-endpoint http://graphql-engine:8080 --root /app -ra --junitxml=test-report.xml
+    entrypoint: pytest --hasura-endpoint http://graphql-engine:8080 --root /app -ra --junitxml=test-report.xml
   fixtures-service:
     build:
       context: ./fixtures-generator
