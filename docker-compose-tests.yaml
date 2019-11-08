@@ -47,11 +47,11 @@ services:
       - -c
       - |
           ./entrypoint.sh
-  feature-tests:
+  features-tests:
     build:
       context: ./features
       dockerfile: ./Dockerfile
-      target: feature-test
+      target: features-tests
     restart: "no"
     depends_on:
       - graphql-engine

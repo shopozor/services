@@ -1,4 +1,4 @@
-FROM python:3.8-slim AS feature-test
+FROM python:3.8-slim AS features-tests
 
 COPY requirements.txt .
 
