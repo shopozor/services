@@ -1,6 +1,6 @@
 # language: fr
 
-@initial-release @auth
+@initial-release @auth @wip
 @fixture.password-reset
 Fonctionnalité: L'utilisateur réinitialise son mot de passe
 
@@ -13,7 +13,6 @@ Fonctionnalité: L'utilisateur réinitialise son mot de passe
   ![Processus de réinitialisation du mot de passe](ResetUserPassword-fr.png)
 
   @passwordReset.graphql
-  @fixture.user-accounts
   Plan du Scénario: L'utilisateur fait une demande de réinitialisation de mot de passe
 
     Le mot de passe actuel du client est conservé jusqu'au moment où il en donne un autre.
@@ -43,7 +42,6 @@ Fonctionnalité: L'utilisateur réinitialise son mot de passe
     Mais il n'obtient aucun message d'erreur
 
   @setPassword.graphql
-  @fixture.user-accounts
   Plan du Scénario: L'utilisateur définit un mot de passe conforme dans les temps
 
     Au moment où l'utilisateur définit son mot de passe, la validité du lien est vérifiée.
@@ -64,7 +62,7 @@ Fonctionnalité: L'utilisateur réinitialise son mot de passe
       | Softozor     |
 
   @setPassword.graphql
-  @fixture.user-accounts @HackerAbuse
+  @HackerAbuse
   Plan du Scénario: L'utilisateur définit un mot de passe non conforme dans les temps
 
     Si l'utilisateur entre un mot de passe non conforme, cela signifie qu'il a contourné les vérifications
@@ -85,7 +83,6 @@ Fonctionnalité: L'utilisateur réinitialise son mot de passe
       | Softozor     |
 
   @setPassword.graphql
-  @fixture.user-accounts
   Plan du Scénario: L'utilisateur définit son mot de passe une deuxième fois avec le même lien
 
     Le lien de réinitialisation de mot de passe ne peut être utilisé qu'une seule fois.
@@ -105,7 +102,6 @@ Fonctionnalité: L'utilisateur réinitialise son mot de passe
       | Softozor     |
 
   @setPassword.graphql
-  @fixture.user-accounts
   Plan du Scénario: L'utilisateur définit son mot de passe trop tard
 
     En plus de n'être utilisable qu'une seule fois, le lien expire après un certain temps.

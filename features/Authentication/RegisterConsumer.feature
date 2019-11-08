@@ -1,6 +1,6 @@
 #language: fr
 
-@initial-release @auth
+@initial-release @auth @wip
 @fixture.signup
 Fonctionnalité: Enregistrer un nouveau Consommateur
 
@@ -65,7 +65,6 @@ Fonctionnalité: Enregistrer un nouveau Consommateur
     Et il ne reçoit pas d'e-mail d'activation de compte
 
   @signup.graphql
-  @fixture.user-accounts  
   Scénario: Le Consommateur a déjà un compte inactif et propose un mot de passe conforme
 
     Le Consommateur qui a déjà enregistré son e-mail et son mot de passe mais n'a pas réussi à
@@ -79,7 +78,6 @@ Fonctionnalité: Enregistrer un nouveau Consommateur
     Et son compte reste inactif
 
   @signup.graphql
-  @fixture.user-accounts
   Scénario: Le Consommateur a déjà un compte inactif et propose un mot de passe non conforme
 
     Si l'utilisateur propose un mot de passe non conforme, alors son compte ne s'active pas.
@@ -93,7 +91,7 @@ Fonctionnalité: Enregistrer un nouveau Consommateur
     Et il ne reçoit pas d'e-mail d'activation de compte
 
   @signup.graphql
-  @HackerAbuse @fixture.user-accounts
+  @HackerAbuse
   Scénario: Un utilisateur s'enregistre avec l'e-mail d'un compte actif
 
     Si un utilisateur tente de s'enregistrer avec un e-mail lié à un compte déjà actif,
@@ -112,7 +110,7 @@ Fonctionnalité: Enregistrer un nouveau Consommateur
     Et son mot de passe n'est pas sauvegardé
 
   @signup.graphql
-  @HackerAbuse @fixture.user-accounts
+  @HackerAbuse
   Scénario: L'e-mail est insensible à la casse
 
     Si un utilisateur essaie de s'enregistrer avec un e-mail comprenant les mêmes symboles

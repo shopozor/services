@@ -1,6 +1,6 @@
 # language: fr
 
-@initial-release @auth
+@initial-release @auth @wip
 Fonctionnalité: Les mots de passe satisfont à la politique relative aux mots de passe
 
   *En tant qu'Utilisateur,  

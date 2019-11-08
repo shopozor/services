@@ -20,14 +20,12 @@ Fonctionnalité: Désinscrire un Consommateur
   # the email specified in the token corresponds to the account to be deleted
   # --> that would prevent a user from unregistering another user
 
-  @fixture.user-accounts
   Scénario: Le Consommateur est inscrit
 
     Etant donné un Consommateur identifié
     Lorsqu'il se désinscrit avec un mot de passe valide
     Alors il reçoit un e-mail de confirmation de suppression de compte
 
-  @fixture.user-accounts
   Scénario: Le Consommateur confirme la désinscription dans les temps
 
     Les données personnelles du Consommateur sont supprimées, i.e. son entrée Consommateur
@@ -48,7 +46,6 @@ Fonctionnalité: Désinscrire un Consommateur
     Alors ses données personnelles sont supprimées
     Et le lien est invalidé
 
-  @fixture.user-accounts
   Scénario: Le Consommateur confirme la désinscription trop tard
 
     # TODO: le Consommateur doit entrer son mot de passe pour confirmer la désinscription
@@ -58,7 +55,6 @@ Fonctionnalité: Désinscrire un Consommateur
     Alors il obtient un message d'erreur stipulant que le lien a expiré
     Et son compte n'est pas supprimé
 
-  @fixture.user-accounts
   Scénario: Le Consommateur confirme la désinscription une deuxième fois
 
     # TODO: le Consommateur doit entrer son mot de passe pour confirmer la désinscription
@@ -69,7 +65,6 @@ Fonctionnalité: Désinscrire un Consommateur
     Alors il obtient un message d'erreur stipulant que le lien a expiré
 
   # need order data  
-  @fixture.user-accounts
   Scénario: Les commandes associées au Consommateur ne sont pas supprimées
 
     Les commandes passées par un Consommateur ne sont pas supprimées.

@@ -1,6 +1,6 @@
 # language: fr
 
-@initial-release @consumer
+@initial-release @consumer @wip
 Fonctionnalité: Un Incognito visite un Shop
 
   **En tant qu'Incognito,  
@@ -27,11 +27,7 @@ Fonctionnalité: Un Incognito visite un Shop
   # de telle sorte qu'une information qui a déjà été demandée n'aura pas besoin d'être redemandée au serveur. Nous synchroniserions
   # la base de données locale de l'application client avec le serveur en arrière-plan. Les souscriptions graphql mettraient à jour
   # la base de données locale en temps réel.
-  # La technologie supportant graphql dans notre serveur est toutefois graphene, qui est réputée pour être lente. En d'autres termes,
-  # moins les interfaces utilisateurs font de requêtes, mieux c'est. Si, toutefois, ces requêtes se font en arrière-plan, l'utilisateur
-  # ne devrait pas remarquer de lag, sauf au premier chargement des données qu'il désire.
-  # Dans les premiers mois d'utilisation du Shopozor, nous ne nous attendons pas à avoir une quantité pharaonique de données à
-  # représenter sur nos interfaces et nous n'aurons pas de worker threads à disposition.
+  #
   # Nous avons décidé de partir sur le lazy mode. Des benchmarks seront effectués pour valider l'approche.
 
   Contexte: L'utilisateur est Incognito
@@ -39,7 +35,6 @@ Fonctionnalité: Un Incognito visite un Shop
     Etant donné un utilisateur non identifié sur le Shopozor
 
   @shops.graphql
-  @fixture.small-shops
   Scénario: Incognito obtient la liste des Shops
 
     La liste des Shops permet à Incognito de les situer sur une carte et de s'en faire
@@ -48,9 +43,7 @@ Fonctionnalité: Un Incognito visite un Shop
     Lorsqu'Incognito demande quels Shops il peut visiter
     Alors il obtient pour chaque Shop disponible ses coordonnées géographiques avec sa description générale
 
-  @wip
   @shopCategories.graphql
-  @fixture.small-shops
   Scénario: Incognito obtient la liste des Rayons
 
     La visite d'un Shop se fait au travers des différents Rayons qu'il propose. Chaque Shop propose
@@ -59,9 +52,7 @@ Fonctionnalité: Un Incognito visite un Shop
     Lorsqu'Incognito se renseigne sur les différents Rayons disponibles dans le Shopozor
     Alors il en obtient la liste
 
-  @wip
   @shopCatalogue.graphql
-  @fixture.small-shops
   Scénario: Incognito se balade dans les Rayons d'un Shop
 
     Incognito peut entrer dans un Shop pour y consulter son catalogue de Produits. Celui-ci
@@ -75,9 +66,7 @@ Fonctionnalité: Un Incognito visite un Shop
     Lorsqu'Incognito en visite les Rayons
     Alors il obtient la liste de tous les Produits qui y sont publiés
 
-  @wip
   @productDetails.graphql
-  @fixture.tiny-shops
   Scénario: Chaque Produit est détaillé
 
     Incognito peut obtenir tous les détails de chacun des Produits appartenant
@@ -88,9 +77,7 @@ Fonctionnalité: Un Incognito visite un Shop
     Lorsqu'Incognito y inspecte un Produit
     Alors il en obtient la description détaillée
 
-  @wip
   @productDetails.graphql
-  @fixture.tiny-shops
   Scénario: Les différentes marges et taxes de chaque Produit sont détaillées
 
     Tous les détails en CHF sur le prix d'un Produit sont communiqués de façon transparente.
@@ -107,9 +94,7 @@ Fonctionnalité: Un Incognito visite un Shop
     Et le montant de la TVA sur le Produit
     Et le montant de la TVA sur le service fourni par le Shopozor
 
-  @wip
   @productDetails.graphql
-  @fixture.tiny-shops
   Scénario: Incognito obtient les détails sur le prix d'un Produit
 
     Soit un Produit proposé dans le catalogue d'un Shop
