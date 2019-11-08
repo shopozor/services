@@ -7,9 +7,11 @@ class HasuraClient:
         self.__cli = sh.Command('hasura')
         self.__endpoint = hasura_endpoint
 
-    def apply_migrations(self, migrations_folder):
+    # TODO: check that the migrations are applied!
+
+    def apply_migrations(self, project_folder):
         result = self.__cli('migrate', 'apply', '--endpoint', self.__endpoint,
-                            '--project', migrations_folder, '--skip-update-check')
+                            '--project', project_folder, '--skip-update-check')
         return result.exit_code
 
     def __get_number_of_migrations_in_folder(self, folder):

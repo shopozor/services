@@ -32,6 +32,7 @@ def hasura_client(hasura_endpoint, app_root_folder):
 
 @pytest.fixture
 def small_fixtures(app_root_folder, hasura_client):
-    fixtures_project_folder = os.path.join(app_root_folder, 'fixtures')
+    fixtures_project_folder = os.path.join(
+        app_root_folder, 'fixtures', 'small')
     yield fixtures_project_folder
     hasura_client.rollback_migrations(fixtures_project_folder)
