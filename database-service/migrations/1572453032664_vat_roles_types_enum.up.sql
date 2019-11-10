@@ -1,2 +1,0 @@
-INSERT INTO public.vat_types VALUES ('SERVICES'), ('PRODUCTS'), ('SPECIAL');
-INSERT INTO public.roles VALUES ('REX'), ('SOFTOZOR'), ('MANAGER');

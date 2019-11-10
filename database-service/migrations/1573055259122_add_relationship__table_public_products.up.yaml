@@ -1,0 +1,12 @@
+- args:
+    name: productvariants
+    table:
+      name: products
+      schema: public
+    using:
+      foreign_key_constraint_on:
+        column: product_id
+        table:
+          name: productvariants
+          schema: public
+  type: create_array_relationship

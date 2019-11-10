@@ -1,0 +1,21 @@
+- args:
+    is_enum: false
+    table:
+      name: pricing_modes
+      schema: public
+  type: set_table_is_enum
+- args:
+    sql: DELETE FROM public.pricing_modes WHERE mode='FREE'
+  type: run_sql
+- args:
+    sql: DELETE FROM public.pricing_modes WHERE mode='AUTO_UNIT'
+  type: run_sql
+- args:
+    sql: DELETE FROM public.pricing_modes WHERE mode='AUTO_PRICE'
+  type: run_sql
+- args:
+    sql: DELETE FROM public.pricing_modes WHERE mode='BULK'
+  type: run_sql
+- args:
+    sql: DROP TABLE "public"."pricing_modes"
+  type: run_sql

@@ -1,0 +1,11 @@
+- args:
+    sql: CREATE TABLE "public"."shop_productvariant"("productvariant_id" integer NOT
+      NULL, "shop_id" integer NOT NULL, PRIMARY KEY ("productvariant_id","shop_id")
+      , FOREIGN KEY ("productvariant_id") REFERENCES "public"."productvariants"("id")
+      ON UPDATE restrict ON DELETE restrict, FOREIGN KEY ("shop_id") REFERENCES "public"."shops"("id")
+      ON UPDATE restrict ON DELETE restrict);
+  type: run_sql
+- args:
+    name: shop_productvariant
+    schema: public
+  type: add_existing_table_or_view
