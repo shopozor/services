@@ -2,6 +2,7 @@ from faker import Faker
 from providers.geo import Provider as ShopozorGeoProvider
 from providers.product import Provider as ProductProvider
 from providers.time import Provider as DateTimeProvider
+from providers.user import Provider as UserProvider
 
 import settings
 
@@ -33,6 +34,7 @@ class FakeDataFactory:
         self.__fake.add_provider(ShopozorGeoProvider)
         self.__fake.add_provider(ProductProvider)
         self.__fake.add_provider(DateTimeProvider)
+        self.__fake.add_provider(UserProvider)
         self.__MAX_NB_PRODUCERS_PER_SHOP = max_nb_producers_per_shop
         self.__MAX_NB_PRODUCTS_PER_PRODUCER = max_nb_products_per_producer
         self.__MAX_NB_IMAGES_PER_PRODUCT = max_nb_images_per_product
@@ -47,7 +49,7 @@ class FakeDataFactory:
         return {
             'id': id,
             'email': self.__fake.email(),
-            'is_active': True,
+            'is_active': self.__fake.is_active(),
             'is_staff': False,
             'is_superuser': False
         }
