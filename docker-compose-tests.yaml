@@ -37,11 +37,11 @@ services:
       context: ./fixtures-generator
       dockerfile: ./Dockerfile
     restart: "no"
-    # TODO: is it possible to provide user with a default value (e.g. root)?
     user: $USER
     volumes:
       - ./fixtures-generator:/app
       - ./fixtures:/app/fixtures
+      - ./test-utils:/app/test_utils
     environment:
       - PYTHONDONTWRITEBYTECODE=1
     entrypoint:
@@ -61,7 +61,7 @@ services:
       - ./database-service:/db
       - ./features:/app
       - ./fixtures:/app/fixtures
-      - ./test-utils:/app/test-utils
+      - ./test-utils:/app/test_utils
     # entrypoint: behave --junit --junit-directory . --tags ~wip
     tty: "true"
     stdin_open: "true"
