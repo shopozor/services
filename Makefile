@@ -6,11 +6,12 @@ FIXTURES_MIGRATIONS_FOLDER = $(FIXTURES_FOLDER)/migrations
 
 dev.start: up fixtures
 
-dev.end: down fixtures.clean
+dev.end: down fixtures.clean rm
 
 build:
 	@echo "Building images..."
 	@docker-compose build
+	@docker-compose -f docker-compose-tests.yaml build
 
 up: build
 	@echo "Starting containers..."
@@ -22,6 +23,12 @@ up: build
 
 down:
 	@docker-compose down
+	@docker-compose -f docker-compose-tests.yaml down
+
+rm:
+	@docker-compose rm -f
+	@docker-compose -f docker-compose-tests.yaml rm -f
+
 
 db.migrate.apply:
 	$(HASURA_MIGRATE_APPLY) --project database-service
@@ -31,7 +38,9 @@ db.migrate.status:
 
 fixtures.generate:
 	@echo "Generating fixtures ..."
-	@docker-compose -f docker-compose-tests.yaml up fixtures-service
+	@if [ -d fixtures ]; then rm -rf fixtures; fi
+	@mkdir fixtures
+	@docker-compose -f docker-compose-tests.yaml -f docker-compose-tests-dev.yaml up fixtures-service
 	@docker-compose -f docker-compose-tests.yaml rm -f fixtures-service
 
 fixtures.up:
