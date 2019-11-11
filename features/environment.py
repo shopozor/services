@@ -1,7 +1,6 @@
 from behave import use_fixture
-from behave.fixture import use_fixture_by_tag
-
-from fixtures import login, signup, password_reset, shops_fixtures
+from behave.fixture import use_fixture_by_tag, use_fixture
+from fixtures import graphql_client, database_seed, login, signup, password_reset, shops_fixtures
 
 
 fixtures_registry = {
@@ -18,9 +17,5 @@ def before_tag(context, tag):
 
 
 def before_all(context):
-    print('before_all!')
-    # TODO: 1. create graphql client
-    # context.test.client = ApiClient(user=AnonymousUser())
-    # get the endpoint from context.config.userdata.get('graphql_endpoint')
-    # TODO: 2. apply migrations
-    pass
+    use_fixture(graphql_client, context)
+    use_fixture(database_seed, context)
