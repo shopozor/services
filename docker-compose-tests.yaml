@@ -27,6 +27,7 @@ services:
     volumes:
       - ./database-service:/app
       - ./fixtures:/app/fixtures
+      - ./test-utils:/app/tests/utils
     environment:
       - PYTHONDONTWRITEBYTECODE=1
       - PYTHONPATH=./tests:$PYTHONPATH
@@ -36,6 +37,7 @@ services:
       context: ./fixtures-generator
       dockerfile: ./Dockerfile
     restart: "no"
+    # TODO: is it possible to provide user with a default value (e.g. root)?
     user: $USER
     volumes:
       - ./fixtures-generator:/app
@@ -56,8 +58,10 @@ services:
     depends_on:
       - graphql-engine
     volumes:
+      - ./database-service:/db
       - ./features:/app
       - ./fixtures:/app/fixtures
+      - ./test-utils:/app/test-utils
     # entrypoint: behave --junit --junit-directory . --tags ~wip
     tty: "true"
     stdin_open: "true"
