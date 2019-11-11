@@ -38,7 +38,7 @@ db.migrate.status:
 
 fixtures.generate:
 	@echo "Generating fixtures ..."
-	@if [ -d fixtures ]; then rm -rf $(FIXTURES_FOLDER); fi
+	@if [ -d $(FIXTURES_FOLDER) ]; then rm -rf $(FIXTURES_FOLDER); fi
 	@mkdir $(FIXTURES_FOLDER)
 	@docker-compose -f docker-compose-tests.yaml -f docker-compose-tests-dev.yaml up fixtures-service
 	@docker-compose -f docker-compose-tests.yaml rm -f fixtures-service
