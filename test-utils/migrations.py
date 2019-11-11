@@ -25,12 +25,11 @@ class HasuraClient:
         result = self.__cli('migrate', 'apply', '--endpoint', self.__endpoint,
                             '--project', project_folder, '--skip-update-check')
         if result.exit_code == 0:
-            migrations_folder = os.path.join(project_folder, 'migrations')
             return self.__get_not_present_migrations_count(project_folder) == 0
         return False
 
-    def __get_number_of_migrations_in_folder(self, folder):
-        return int(len(os.listdir(folder)) / 2)
+    def __get_number_of_migrations_in_folder(self, migrations_folder):
+        return int(len(os.listdir(migrations_folder)) / 2)
 
     def rollback_migrations(self, project_folder):
         migrations_folder = os.path.join(project_folder, 'migrations')
