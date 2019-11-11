@@ -1,13 +1,13 @@
-import os.path
-
 from behave import fixture
 from behave.fixture import use_composite_fixture_with, fixture_call_params
 from test_utils import json_helpers
 from test_utils.migrations import HasuraClient
 from utils.graphql_client import GraphQLClient
 
-import urllib.parse
 import settings
+
+import os.path
+import urllib.parse
 
 
 @fixture
@@ -46,24 +46,22 @@ def unknown(context):
 
 @fixture
 def inactive_customer(context):
-    user_data = {
-        "email": "inactive_consumer@budzons.ch",
-        # TODO: get user id from existing fixtures
-        "id": 100,
-        "isActive": False,
-        "isStaff": False,
-        "isSuperUser": False
-    }
-    context.inactive_customer = user_data
-    return user_data
+    consumers = json_helpers.load(
+        os.path.join(settings.json_fixtures_dir(context), 'Users', 'consumers.json'))
+    inactive_consumers = [
+        consumer for consumer in consumers if consumer['is_active'] == False]
+    context.inactive_customer = inactive_consumers[0]
+    return inactive_consumers[0]
 
 
 @fixture
 def consumer(context):
-    user_data = json_helpers.load(
-        os.path.join(settings.json_fixtures_dir(context), 'Users', 'consumers.json'))[0]
-    context.consumer = user_data
-    return user_data
+    consumers = json_helpers.load(
+        os.path.join(settings.json_fixtures_dir(context), 'Users', 'consumers.json'))
+    active_consumers = [
+        consumer for consumer in consumers if consumer['is_active'] == True]
+    context.consumer = active_consumers[0]
+    return active_consumers[0]
 
 
 @fixture
