@@ -13,18 +13,17 @@ MEDIA_URL = '/media/'
 STATIC_URL = '/static/'
 PRODUCT_THUMBNAIL_SIZE = 500
 CATEGORY_THUMBNAIL_SIZE = 250
-FIXTURE_DIR = 'fixtures'
 
 
-def shop_node(shop_id, shop_fields):
+def shop_node(shop):
     return {
         'node': {
-            'id': shop_id,
-            'name': shop_fields['name'],
-            'description': shop_fields['description'],
+            'id': shop['id'],
+            'name': shop['name'],
+            'description': shop['description'],
             'geocoordinates': {
-                'latitude': shop_fields['latitude'],
-                'longitude': shop_fields['longitude']
+                'latitude': shop['latitude'],
+                'longitude': shop['longitude']
             }
         }
     }
@@ -53,21 +52,21 @@ def set_page_info(query, totalCount=None):
     }
 
 
-def get_users_fixture(fixture_set):
+def get_users_fixture(input_dir):
     users_fixture = json_helpers.load(os.path.join(
-        FIXTURE_DIR, fixture_set, 'Users', 'Producteurs.json'))
+        input_dir, 'Users', 'producers.json'))
     users_fixture.extend(json_helpers.load(os.path.join(
-        FIXTURE_DIR, fixture_set, 'Users', 'Responsables.json')))
+        input_dir, 'Users', 'managers.json')))
     users_fixture.extend(json_helpers.load(os.path.join(
-        FIXTURE_DIR, fixture_set, 'Users', 'Rex.json')))
+        input_dir, 'Users', 'rex.json')))
     users_fixture.extend(json_helpers.load(os.path.join(
-        FIXTURE_DIR, fixture_set, 'Users', 'Softozor.json')))
+        input_dir, 'Users', 'softozor.json')))
     return users_fixture
 
 
-def get_shopozor_fixture(fixture_set):
+def get_shopozor_fixture(input_dir):
     return json_helpers.load(os.path.join(
-        FIXTURE_DIR, fixture_set, 'Shopozor.json'))
+        input_dir, 'Shopozor.json'))
 
 
 def round_money_amount(amount):

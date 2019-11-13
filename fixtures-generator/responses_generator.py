@@ -10,8 +10,9 @@ class ResponsesGenerator():
 
     __metaclass__ = abc.ABCMeta
 
-    def __init__(self, output_dir):
+    def __init__(self, fixtures_dir, output_dir, fixtures_set):
         self._OUTPUT_DIR = output_dir
+        self._INPUT_DIR = os.path.join(fixtures_dir, fixtures_set)
 
     @abc.abstractmethod
     def _produce_data(self):
@@ -30,15 +31,16 @@ class ResponsesGenerator():
 
 class ShopListsGenerator(ResponsesGenerator):
 
-    def __init__(self, output_dir, fixture_set):
-        self.__SHOPS_FIXTURE = helpers.get_shopozor_fixture(fixture_set)
-        super().__init__(os.path.join(output_dir, fixture_set, 'Consumer'))
+    def __init__(self, fixtures_dir, output_dir, fixtures_set):
+        super().__init__(fixtures_dir, os.path.join(
+            output_dir, fixtures_set, 'Consumer'), fixtures_set)
+        self.__SHOPS_FIXTURE = helpers.get_shopozor_fixture(self._INPUT_DIR)
 
     def _produce_data(self):
         return {
             'data': {
                 'shops': {
-                    'edges': [helpers.shop_node(shop_fixture['pk'], shop_fixture['fields']) for shop_fixture in [shop for shop in self.__SHOPS_FIXTURE if shop['model'] == 'shopozor.shop']]
+                    'edges': [helpers.shop_node(shop) for shop in self.__SHOPS_FIXTURE['shops']]
                 }
             }
         }
@@ -49,9 +51,10 @@ class ShopListsGenerator(ResponsesGenerator):
 
 class ShopCategoriesGenerator(ResponsesGenerator):
 
-    def __init__(self, output_dir, fixture_set):
-        self.__SHOPS_FIXTURE = helpers.get_shopozor_fixture(fixture_set)
-        super().__init__(os.path.join(output_dir, fixture_set, 'Consumer'))
+    def __init__(self, fixtures_dir, output_dir, fixtures_set):
+        super().__init__(fixtures_dir, os.path.join(
+            output_dir, fixtures_set, 'Consumer'), fixtures_set)
+        self.__SHOPS_FIXTURE = helpers.get_shopozor_fixture(self._INPUT_DIR)
 
     def _produce_data(self):
         return {
@@ -70,10 +73,11 @@ class ShopCategoriesGenerator(ResponsesGenerator):
 
 class ProductListsGenerator(ResponsesGenerator):
 
-    def __init__(self, output_dir, fixture_set):
-        self.__SHOPS_FIXTURE = helpers.get_shopozor_fixture(fixture_set)
-        self.__USERS_FIXTURE = helpers.get_users_fixture(fixture_set)
-        super().__init__(os.path.join(output_dir, fixture_set, 'Consumer'))
+    def __init__(self, fixtures_dir, output_dir, fixtures_set):
+        super().__init__(fixtures_dir, os.path.join(
+            output_dir, fixtures_set, 'Consumer'), fixtures_set)
+        self.__SHOPS_FIXTURE = helpers.get_shopozor_fixture(self._INPUT_DIR)
+        self.__USERS_FIXTURE = helpers.get_users_fixture(self._INPUT_DIR)
 
     def _product_data(self):
         product_catalogues = {}
