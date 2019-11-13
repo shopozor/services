@@ -10,7 +10,7 @@ wait_for_port() {
     do
         echo "waiting for graphql engine"
         version=$(curl -s http://$HOST:$PORT/v1/version | jq ".version")
-        [ "$version" == "" ] && sleep 1 || return
+        [ "$version" == "" ] && sleep 1 || exit 0
     done
     echo "failed waiting for $PORT on host $HOST" && exit 1
 }
