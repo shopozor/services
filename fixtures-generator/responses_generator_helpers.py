@@ -29,15 +29,15 @@ def shop_node(shop):
     }
 
 
-def category_node(category_id, category_fields):
+def category_node(category):
     return {
         'node': {
-            'id': category_id,
-            'name': category_fields['name'],
-            'description': category_fields['description'],
+            'id': category['id'],
+            'name': category['name'],
+            'description': category['description'],
             'backgroundImage': {
-                'alt': category_fields['background_image_alt'],
-                'url': urllib.parse.urljoin(MEDIA_URL, '%s-thumbnail-%dx%d.%s' % (category_fields['background_image'].split('.')[0], CATEGORY_THUMBNAIL_SIZE, CATEGORY_THUMBNAIL_SIZE, category_fields['background_image'].split('.')[1]))
+                'alt': category['background_image_alt'],
+                'url': urllib.parse.urljoin(MEDIA_URL, '%s-thumbnail-%dx%d.%s' % (category['background_image'].split('.')[0], CATEGORY_THUMBNAIL_SIZE, CATEGORY_THUMBNAIL_SIZE, category['background_image'].split('.')[1]))
             }
         }
     }

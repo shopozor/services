@@ -8,8 +8,9 @@ def generate_responses_for_fixture_set(output_folder, fixtures_folder, fixture_s
     generator = ShopListsGenerator(fixtures_folder, output_folder, fixture_set)
     generator.generate()
 
-    # generator = ShopCategoriesGenerator(fixtures_folder, output_folder, fixture_set)
-    # generator.generate()
+    generator = ShopCategoriesGenerator(
+        fixtures_folder, output_folder, fixture_set)
+    generator.generate()
 
     # generator = ProductListsGenerator(fixtures_folder, output_folder, fixture_set)
     # generator.generate()

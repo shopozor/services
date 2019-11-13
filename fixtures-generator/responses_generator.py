@@ -60,7 +60,7 @@ class ShopCategoriesGenerator(ResponsesGenerator):
         return {
             'data': {
                 'categories': {
-                    'edges': [helpers.category_node(category['pk'], category['fields']) for category in [item for item in self.__SHOPS_FIXTURE if item['model'] == 'product.category']],
+                    'edges': [helpers.category_node(category) for category in self.__SHOPS_FIXTURE['product_categories']],
                 }
             }
         }
