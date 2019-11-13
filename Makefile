@@ -1,7 +1,7 @@
 HASURA_ENDPOINT = http://localhost:8080
 HASURA_MIGRATE_APPLY = hasura migrate apply --endpoint $(HASURA_ENDPOINT)
 HASURA_STATUS_APPLY = hasura migrate apply --endpoint $(HASURA_ENDPOINT)
-FIXTURES_FOLDER = ./fixtures
+FIXTURES_FOLDER = ./fixtures/small
 FIXTURES_MIGRATIONS_FOLDER = $(FIXTURES_FOLDER)/migrations
 
 dev.start: up fixtures
