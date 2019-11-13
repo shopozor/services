@@ -2,3 +2,6 @@ version: "3.6"
 services:
   fixtures-service:
     user: "root"
+  graphql-engine:
+    ports:
+      - "8080:8080"

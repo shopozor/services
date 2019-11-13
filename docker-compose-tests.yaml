@@ -7,8 +7,6 @@ services:
       - db_data:/var/lib/postgresql-test/data
   graphql-engine:
     image: hasura/graphql-engine:v1.0.0-beta.9
-    ports:
-      - 9000:8080
     depends_on:
       - postgres
     restart: "always"
