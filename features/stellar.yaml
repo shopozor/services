@@ -1,0 +1,7 @@
+logging: 30
+migrate_from_0_3_2: false
+project_name: shopozor
+stellar_url: postgres://postgres:@postgres:5432/stellar_data
+tracked_databases:
+- postgres
+url: postgres://postgres:@postgres:5432/template1

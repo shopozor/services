@@ -3,6 +3,7 @@ from behave.fixture import use_composite_fixture_with, fixture_call_params
 from test_utils import json_helpers
 from test_utils.migrations import HasuraClient
 from utils.graphql_client import GraphQLClient
+from utils.stellar_client import StellarClient
 
 import settings
 
@@ -31,6 +32,17 @@ def database_seed(context):
     yield client
     client.rollback_migrations(fixtures_project)
     client.rollback_migrations(shopozor_project)
+
+
+@fixture
+def stellar_snapshot(context):
+    client = StellarClient('shopozor-features')
+    client.create_snapshot()
+    has_worked = client.list_snapshots()
+    assert has_worked is True
+    yield
+    client.restore_snapshot()
+    client.remove_snapshot()
 
 
 @fixture
