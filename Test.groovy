@@ -1,9 +1,9 @@
 pipeline {
   agent any
+  environment {
+    API_PORT = 8081
+  }
   stages {
-    environment {
-      API_PORT = 8081
-    }
     stage('Build the docker images') {
       steps {
         sh "docker-compose -f docker-compose-tests.yaml build"
