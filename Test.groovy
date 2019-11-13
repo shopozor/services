@@ -32,11 +32,11 @@ pipeline {
         sh "docker-compose -f docker-compose-tests.yaml up hasura-service-tests"
       }
     }
-    stage('Perform acceptance tests') {
-      steps {
-        sh "docker-compose -f docker-compose-tests.yaml up feature-tests"
-      }
-    }
+    // stage('Perform acceptance tests') {
+    //   steps {
+    //     sh "docker-compose -f docker-compose-tests.yaml up feature-tests"
+    //   }
+    // }
     stage('Building specification') {
       environment {
         SOFTOZOR_CREDENTIALS = credentials('softozor-credentials')
