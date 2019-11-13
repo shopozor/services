@@ -1,6 +1,9 @@
 pipeline {
   agent any
   stages {
+    environment {
+      API_PORT = 8081
+    }
     stage('Build the docker images') {
       steps {
         sh "docker-compose -f docker-compose-tests.yaml build"
@@ -17,9 +20,6 @@ pipeline {
       }
     }
     stage('Start GraphQL engine') {
-      environment {
-        API_PORT = 8081
-      }
       steps {
         sh "docker-compose -f docker-compose-tests.yaml up -d postgres graphql-engine"
         sh "chmod u+x ./database-service/scripts/waitForService.sh && ./database-service/scripts/waitForService.sh localhost ${API_PORT}"
