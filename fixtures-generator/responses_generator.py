@@ -81,10 +81,11 @@ class ProductListsGenerator(ResponsesGenerator):
 
     def _product_data(self):
         product_catalogues = {}
-        for shop in [shop for shop in self.__SHOPS_FIXTURE if shop['model'] == 'shopozor.shop']:
-            product_catalogues[shop['pk']] = {}
-            for category in [item['pk'] for item in self.__SHOPS_FIXTURE if item['model'] == 'product.category']:
-                product_catalogues[shop['pk']][category] = {
+        for shop in self.__SHOPS_FIXTURE['shops']:
+            product_catalogues[shop['id']] = {}
+            for category in self.__SHOPS_FIXTURE['product_categories']:
+                category_id = category['id']
+                product_catalogues[shop['id']][category_id] = {
                     'data': {
                         'products': {
                             'edges': []
@@ -92,44 +93,37 @@ class ProductListsGenerator(ResponsesGenerator):
                     }
                 }
                 totalCount = 0
-                catalogue_edges = product_catalogues[shop['pk']
-                                                     ][category]['data']['products']['edges']
-                for variant_id in shop['fields']['product_variants']:
-                    variant = [entry for entry in self.__SHOPS_FIXTURE if entry['model']
-                               == 'product.productvariant' and entry['pk'] == variant_id][0]
+                catalogue_edges = product_catalogues[shop['id']
+                                                     ][category_id]['data']['products']['edges']
+                for variant_id in [item['productvariant_id'] for item in self.__SHOPS_FIXTURE['shop_productvariant'] if item['shop_id'] == shop['id']]:
+                    variant = [
+                        entry for entry in self.__SHOPS_FIXTURE['productvariants'] if entry['id'] == variant_id][0]
                     # TODO: why isn't this working: shops_fixture.remove(variant)?
-                    product_in_category = [entry for entry in self.__SHOPS_FIXTURE if entry['model'] ==
-                                           'product.product' and entry['pk'] == variant['fields']['product'] and entry['fields']['category'] == category]
+                    product_in_category = [entry for entry in self.__SHOPS_FIXTURE['products']
+                                           if entry['id'] == variant['product_id'] and entry['category_id'] == category_id]
                     if len(product_in_category) == 0:
                         continue
                     product = product_in_category[0]
-                    is_published = product['fields']['is_published']
+                    product_state = product['state']
                     # TODO: do the job even if the product isn't published; only increment totalCount if is_published == True
-                    if not is_published:
+                    if product_state != 'VISIBLE':
                         continue
                     edges_with_product_id = [
-                        edge for edge in catalogue_edges if edge['node']['id'] == product['pk']]
+                        edge for edge in catalogue_edges if edge['node']['id'] == product['id']]
 
-                    shopozor_product = [item['fields'] for item in self.__SHOPS_FIXTURE if item['model']
-                                        == 'shopozor.product' and item['fields']['product_id'] == product['pk']][0]
-
-                    new_variant = helpers.variant_node(
-                        variant_id, variant['fields'], product['fields'], shopozor_product)
+                    new_variant = helpers.variant_node(variant)
 
                     if edges_with_product_id:
                         edge = edges_with_product_id[0]
-                        helpers.append_variant_to_existing_product(
-                            edge['node'], new_variant, variant, product, shopozor_product)
+                        edge['node']['variants'].append(new_variant)
                     else:
                         node = helpers.create_new_product_with_variant(
                             product, variant, new_variant, self.__USERS_FIXTURE, self.__SHOPS_FIXTURE)
                         catalogue_edges.append(node)
                         totalCount += 1
                 helpers.set_page_info(
-                    product_catalogues[shop['pk']][category]['data']['products'], totalCount)
+                    product_catalogues[shop['id']][category_id]['data']['products'], totalCount)
 
-                helpers.postprocess_is_available_flag(catalogue_edges)
-                helpers.postprocess_margins(catalogue_edges)
         return product_catalogues
 
     def __output_catalogues(self, shop_catalogues):
