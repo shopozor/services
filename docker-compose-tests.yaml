@@ -27,10 +27,11 @@ services:
     volumes:
       - ./database-service:/app
       - ./fixtures:/app/fixtures
+      - ./test-utils:/app/tests/utils
     environment:
       - PYTHONDONTWRITEBYTECODE=1
       - PYTHONPATH=./tests:$PYTHONPATH
-    entrypoint: python -m pytest --hasura-endpoint http://graphql-engine:8080 --root /app -ra --junitxml=test-report.xml
+    entrypoint: pytest --hasura-endpoint http://graphql-engine:8080 --root /app -ra --junitxml=test-report.xml
   fixtures-service:
     build:
       context: ./fixtures-generator
@@ -40,6 +41,7 @@ services:
     volumes:
       - ./fixtures-generator:/app
       - ./fixtures:/app/fixtures
+      - ./test-utils:/app/test_utils
     environment:
       - PYTHONDONTWRITEBYTECODE=1
     entrypoint:
@@ -47,6 +49,23 @@ services:
       - -c
       - |
           ./entrypoint.sh
+  features-tests:
+    build:
+      context: ./features
+      dockerfile: ./Dockerfile
+      target: features-tests
+    restart: "no"
+    depends_on:
+      - graphql-engine
+    volumes:
+      - ./database-service:/db
+      - ./features:/app
+      - ./fixtures:/app/fixtures
+      - ./test-utils:/app/test_utils
+    # entrypoint: behave --junit --junit-directory . --tags ~wip
+    tty: "true"
+    stdin_open: "true"
+    entrypoint: bash
 
 volumes:
   db_data:

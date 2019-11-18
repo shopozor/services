@@ -25,19 +25,37 @@ pipeline {
         sh "chmod u+x ./database-service/scripts/waitForService.sh && ./database-service/scripts/waitForService.sh localhost ${API_PORT}"
       }
     }
-    stage('Test GraphQL engine') {
+    stage('Perform GraphQL engine tests') {
       steps {
         sh "docker-compose -f docker-compose-tests.yaml up hasura-service-tests"
+      }
+    }
+    // stage('Perform acceptance tests') {
+    //   steps {
+    //     sh "docker-compose -f docker-compose-tests.yaml up feature-tests"
+    //   }
+    // }
+    stage('Building specification') {
+      environment {
+        SOFTOZOR_CREDENTIALS = credentials('softozor-credentials')
+      }
+      steps {
+        script {
+          if(GIT_BRANCH == 'origin/dev' || GIT_BRANCH == 'origin/master') {
+            build job: 'backend-spec', parameters: [
+              string(name: 'BRANCH', value: GIT_BRANCH.split('/')[1])
+            ]
+          }
+        }
       }
     }
   }
   post {
     always {
-      script {
-        sh "docker-compose down"
-        sh "rm -Rf fixtures"
-        junit "**/test-report.xml"
-      }
+      sh "docker-compose down"
+      sh "rm -Rf fixtures"
+      // TODO: the behave test reports will probably not be here:
+      junit "**/test-report.xml"
     }
   }
 }

@@ -1,7 +1,7 @@
 HASURA_ENDPOINT = http://localhost:8080
 HASURA_MIGRATE_APPLY = hasura migrate apply --endpoint $(HASURA_ENDPOINT)
 HASURA_STATUS_APPLY = hasura migrate apply --endpoint $(HASURA_ENDPOINT)
-FIXTURES_FOLDER = ./fixtures
+FIXTURES_FOLDER = ./fixtures/small
 FIXTURES_MIGRATIONS_FOLDER = $(FIXTURES_FOLDER)/migrations
 
 dev.start: up fixtures
@@ -58,6 +58,11 @@ fixtures: fixtures.clean fixtures.generate fixtures.up
 test:
 	@docker-compose -f docker-compose-tests.yaml up --abort-on-container-exit postgres graphql-engine hasura-service-tests
 	@docker-compose down
+
+test.behave:
+	@docker-compose -f docker-compose-tests.yaml up -d features-tests
+	@docker exec -it backend_features-tests_1 behave --junit --junit-directory . --tags ~wip
+
 
 %.restart:
 	make $*.down

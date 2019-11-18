@@ -1,4 +1,5 @@
-import json_helpers
+from test_utils import json_helpers
+
 import settings
 
 from copy import deepcopy

@@ -89,3 +89,17 @@ Just run the following command at the root of this repo
 ```bash
 make fixtures
 ```
+
+## Running tests
+
+To run the tests, use the command
+
+```bash
+$ make test
+```
+
+To run acceptance tests, use the command
+
+```
+$ make test.behave
+```
