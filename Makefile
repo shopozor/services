@@ -59,6 +59,11 @@ test:
 	@docker-compose -f docker-compose-tests.yaml up --abort-on-container-exit postgres graphql-engine hasura-service-tests
 	@docker-compose down
 
+test.behave:
+	@docker-compose -f docker-compose-tests.yaml up -d features-tests
+	@docker exec -it backend_features-tests_1 behave --junit --junit-directory . --tags ~wip
+
+
 %.restart:
 	make $*.down
 	make $*.up
