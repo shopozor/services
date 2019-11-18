@@ -30,11 +30,11 @@ pipeline {
         sh "docker-compose -f docker-compose-tests.yaml up hasura-service-tests"
       }
     }
-    // stage('Perform acceptance tests') {
-    //   steps {
-    //     sh "docker-compose -f docker-compose-tests.yaml up feature-tests"
-    //   }
-    // }
+    stage('Perform acceptance tests') {
+      steps {
+        sh "docker-compose -f docker-compose-tests.yaml up feature-tests"
+      }
+    }
     stage('Building specification') {
       environment {
         SOFTOZOR_CREDENTIALS = credentials('softozor-credentials')
@@ -54,8 +54,7 @@ pipeline {
     always {
       sh "docker-compose down"
       sh "rm -Rf fixtures"
-      // TODO: the behave test reports will probably not be here:
-      junit "**/test-report.xml"
+      junit "**/test-reports/*.xml"
     }
   }
 }
