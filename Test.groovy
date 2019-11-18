@@ -53,7 +53,7 @@ pipeline {
   post {
     always {
       sh "docker-compose down"
-      sh "rm -Rf fixtures"
+      // sh "rm -Rf fixtures"
       junit "**/test-reports/*.xml"
     }
   }
