@@ -49,6 +49,9 @@ services:
       - -c
       - |
           ./entrypoint.sh
+    # entrypoint: bash
+    # stdin_open: true
+    # tty: true
   features-tests:
     build:
       context: ./features
