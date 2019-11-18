@@ -42,6 +42,7 @@ services:
       - ./fixtures-generator:/app
       - ./fixtures:/app/fixtures
       - ./test-utils:/app/test_utils
+      - ./graphql/responses:/app/graphql-responses
     environment:
       - PYTHONDONTWRITEBYTECODE=1
     entrypoint:
@@ -49,9 +50,6 @@ services:
       - -c
       - |
           ./entrypoint.sh
-    # entrypoint: bash
-    # stdin_open: true
-    # tty: true
   features-tests:
     build:
       context: ./features
