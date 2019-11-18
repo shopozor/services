@@ -1,6 +1,6 @@
 from test_utils import json_helpers
 
-import responses_generator_helpers as helpers
+import graphql.responses_generator_helpers as helpers
 
 import abc
 import os

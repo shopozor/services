@@ -1,8 +1,8 @@
 from faker import Faker
-from providers.geo import Provider as ShopozorGeoProvider
-from providers.product import Provider as ProductProvider
-from providers.time import Provider as DateTimeProvider
-from providers.user import Provider as UserProvider
+from fixtures_faker.providers.geo import Provider as ShopozorGeoProvider
+from fixtures_faker.providers.product import Provider as ProductProvider
+from fixtures_faker.providers.time import Provider as DateTimeProvider
+from fixtures_faker.providers.user import Provider as UserProvider
 
 import settings
 

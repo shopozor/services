@@ -1,4 +1,4 @@
-from responses_generator import ShopCategoriesGenerator, ShopListsGenerator, ProductListsGenerator
+from graphql.responses_generator import ShopCategoriesGenerator, ShopListsGenerator, ProductListsGenerator
 
 import argparse
 
