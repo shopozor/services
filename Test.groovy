@@ -33,7 +33,7 @@ pipeline {
     }
     stage('Perform acceptance tests') {
       steps {
-        sh "docker-compose -f docker-compose-tests.yaml up feature-tests"
+        sh "docker-compose -f docker-compose-tests.yaml up features-tests"
       }
     }
     stage('Building specification') {
