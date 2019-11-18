@@ -1,4 +1,4 @@
-from fixtures_faker import FakeDataFactory
+from fixtures_faker.fixtures_faker import FakeDataFactory
 from test_utils import json_helpers
 
 import settings

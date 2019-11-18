@@ -21,3 +21,6 @@ for FIXTURES_SET in tiny small medium large ; do
     # without file config.yaml (even empty), hasura migrate apply will fail
     touch ${FIXTURES_FOLDER}/${FIXTURES_SET}/config.yaml
 done
+
+# Generate graphql responses
+python ./generate_graphql_responses.py -o graphql-responses -i fixtures --fixtures-set all

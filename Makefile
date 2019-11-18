@@ -1,8 +1,7 @@
 HASURA_ENDPOINT = http://localhost:8080
 HASURA_MIGRATE_APPLY = hasura migrate apply --endpoint $(HASURA_ENDPOINT)
 HASURA_STATUS_APPLY = hasura migrate apply --endpoint $(HASURA_ENDPOINT)
-FIXTURES_FOLDER = ./fixtures/small
-FIXTURES_MIGRATIONS_FOLDER = $(FIXTURES_FOLDER)/migrations
+FIXTURES_FOLDER = ./fixtures
 
 dev.start: up fixtures
 
@@ -31,27 +30,26 @@ rm:
 
 
 db.migrate.apply:
-	$(HASURA_MIGRATE_APPLY) --project database-service
+	$(HASURA_MIGRATE_APPLY) --project database-service --skip-update-check
 
 db.migrate.status:
-	$(HASURA_MIGRATE_STATUS) --project database-service
+	$(HASURA_MIGRATE_STATUS) --project database-service --skip-update-check
 
 fixtures.generate:
 	@echo "Generating fixtures ..."
 	@if [ -d $(FIXTURES_FOLDER) ]; then rm -rf $(FIXTURES_FOLDER); fi
-	@mkdir $(FIXTURES_FOLDER)
 	@docker-compose -f docker-compose-tests.yaml -f docker-compose-tests-dev.yaml up fixtures-service
 	@docker-compose -f docker-compose-tests.yaml rm -f fixtures-service
 
 fixtures.up:
-	$(HASURA_MIGRATE_APPLY) --project $(FIXTURES_FOLDER) --up all
+	$(HASURA_MIGRATE_APPLY) --project $(FIXTURES_FOLDER) --up all --skip-update-check
 
 fixtures.down:
 	# TODO: get the number of migrations from a truncated $(shell echo $((`ls database-service/migrations | wc -l`/2)))
-	$(HASURA_MIGRATE_APPLY) --project $(FIXTURES_FOLDER) --down 6
+	$(HASURA_MIGRATE_APPLY) --project $(FIXTURES_FOLDER) --down 6 --skip-update-check
 
 fixtures.clean:
-	rm -rf $(FIXTURES_MIGRATIONS_FOLDER)/*
+	rm -rf $(FIXTURES_FOLDER)
 
 fixtures: fixtures.clean fixtures.generate fixtures.up
 
@@ -60,9 +58,7 @@ test:
 	@docker-compose down
 
 test.behave:
-	@docker-compose -f docker-compose-tests.yaml up -d features-tests
-	@docker exec -it backend_features-tests_1 behave --junit --junit-directory . --tags ~wip
-
+	@docker-compose -f docker-compose-tests.yaml up --abort-on-container-exit features-tests
 
 %.restart:
 	make $*.down
