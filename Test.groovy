@@ -13,6 +13,7 @@ pipeline {
       steps {
         script {
           sh "rm -Rf fixtures && mkdir fixtures"
+          sh "rm -Rf graphql && mkdir -p graphql/responses"
           sh "chmod u+x ./fixtures-generator/entrypoint.sh"
           // without that USER variable, it is not possible to delete the generated fixtures folder anymore
           sh "USER=`id -u` docker-compose -f docker-compose-tests.yaml up fixtures-service"
