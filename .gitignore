@@ -9,7 +9,7 @@ __pycache__/
 .pytest_cache/
 
 # test reports
-test-report.xml
+test-reports/
 
 # generated data
 fixtures/
