@@ -1,7 +1,7 @@
 import os
 import pytest
 
-from utils.migrations import HasuraClient
+from utils.hasura_client import HasuraClient
 
 
 def pytest_addoption(parser):

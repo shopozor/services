@@ -1,5 +1,6 @@
 from utils.graphql_client import GraphQLClient
 from utils.stellar_client import StellarClient
+from utils.hasura_client import HasuraClient
 
 import os
 import pytest
@@ -17,6 +18,11 @@ def graphql_client(hasura_endpoint, graphql_endpoint):
     endpoint = urllib.parse.urljoin(hasura_endpoint, graphql_endpoint)
     client = GraphQLClient(endpoint)
     return client
+
+
+@pytest.fixture
+def hasura_client(hasura_endpoint):
+    return HasuraClient(hasura_endpoint)
 
 
 @pytest.fixture(autouse=True)

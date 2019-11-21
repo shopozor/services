@@ -1,7 +1,7 @@
 from behave import fixture
 from behave.fixture import use_composite_fixture_with, fixture_call_params
 from test_utils import json_helpers
-from test_utils.migrations import HasuraClient
+from test_utils.hasura_client import HasuraClient
 from test_utils.graphql_client import GraphQLClient
 from test_utils.stellar_client import StellarClient
 
