@@ -30,7 +30,7 @@ def app_root_folder(request):
 def fixtures_set(request, app_root_folder, hasura_client):
     option = request.config.getoption("--fixtures-set")
     fixtures_project_folder = os.path.join(
-        app_root_folder, 'fixtures', 'small')
+        app_root_folder, 'fixtures', 'database', option)
     yield fixtures_project_folder
     hasura_client.rollback_migrations(fixtures_project_folder)
 
