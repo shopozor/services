@@ -42,11 +42,11 @@ fixtures.generate:
 	@docker-compose -f docker-compose-tests.yaml rm -f fixtures-service
 
 fixtures.up:
-	$(HASURA_MIGRATE_APPLY) --project $(FIXTURES_FOLDER) --up all --skip-update-check
+	$(HASURA_MIGRATE_APPLY) --project $(FIXTURES_FOLDER)/database/small --up all --skip-update-check
 
 fixtures.down:
 	# TODO: get the number of migrations from a truncated $(shell echo $((`ls database-service/migrations | wc -l`/2)))
-	$(HASURA_MIGRATE_APPLY) --project $(FIXTURES_FOLDER) --down 6 --skip-update-check
+	$(HASURA_MIGRATE_APPLY) --project $(FIXTURES_FOLDER)/database/small --down 6 --skip-update-check
 
 fixtures.clean:
 	rm -rf $(FIXTURES_FOLDER)
