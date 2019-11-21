@@ -2,6 +2,7 @@ pipeline {
   agent any
   environment {
     API_PORT = 8081
+    TEST_REPORTS_FOLDER = 'test-reports'
   }
   stages {
     stage('Build the docker images') {
@@ -54,7 +55,7 @@ pipeline {
   post {
     always {
       sh "docker-compose down"
-      junit "**/test-reports/*.xml"
+      junit "**/${TEST_REPORTS_FOLDER}/*.xml"
     }
   }
 }
