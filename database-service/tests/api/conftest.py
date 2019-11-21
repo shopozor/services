@@ -1,7 +1,9 @@
+from utils import json_helpers
 from utils.graphql_client import GraphQLClient
 from utils.graphql_helpers import get_query_from_file
 from utils.hasura_client import HasuraClient
 from utils.stellar_client import StellarClient
+
 
 import os
 import pytest
@@ -47,5 +49,11 @@ def stellar_snapshot():
 
 
 @pytest.fixture
-def shops_query(graphql_calls_folder):
-    return get_query_from_file(graphql_calls_folder, 'shops')
+def shops_query(graphql_folder, fixtures_set_name):
+    call = get_query_from_file(os.path.join(graphql_folder, 'calls'), 'shops')
+    response = json_helpers.load(os.path.join(
+        graphql_folder, 'responses', fixtures_set_name, 'Consumer', 'Shops.json'))
+    return {
+        'call': call,
+        'response': response
+    }
