@@ -27,7 +27,7 @@ services:
     volumes:
       - ./database-service:/app
       - ./fixtures:/app/fixtures
-      - ./graphql/calls:/app/fixtures/graphql/calls
+      - ./graphql:/app/fixtures/graphql/calls
       - ./test-utils:/app/tests/utils
     environment:
       - PYTHONDONTWRITEBYTECODE=1
