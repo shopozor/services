@@ -1,8 +1,10 @@
 from six.moves import urllib
+
 import json
 
 
 class GraphQLClient:
+
     def __init__(self, endpoint):
         self.endpoint = endpoint
         self.token = None

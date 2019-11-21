@@ -1,6 +1,7 @@
 from utils.graphql_client import GraphQLClient
-from utils.stellar_client import StellarClient
+from utils.graphql_helpers import get_query_from_file
 from utils.hasura_client import HasuraClient
+from utils.stellar_client import StellarClient
 
 import os
 import pytest
@@ -43,3 +44,8 @@ def stellar_snapshot():
     yield
     client.restore_snapshot()
     client.remove_snapshot()
+
+
+@pytest.fixture
+def shops_query(graphql_calls_folder):
+    return get_query_from_file(graphql_calls_folder, 'shops')
