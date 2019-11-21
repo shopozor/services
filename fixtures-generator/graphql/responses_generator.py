@@ -63,7 +63,6 @@ class ShopCategoriesGenerator(ResponsesGenerator):
 
     def generate(self):
         expected_categories = self._produce_data()
-        helpers.set_page_info(expected_categories['data']['categories'])
         self._to_json(expected_categories, 'Categories.json')
 
 
