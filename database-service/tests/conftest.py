@@ -27,10 +27,14 @@ def app_root_folder(request):
 
 
 @pytest.fixture
-def fixtures_set(request, app_root_folder, hasura_client):
+def fixtures_project_folder(request, app_root_folder):
     option = request.config.getoption("--fixtures-set")
-    fixtures_project_folder = os.path.join(
+    return os.path.join(
         app_root_folder, 'fixtures', 'database', option)
+
+
+@pytest.fixture
+def fixtures_set(hasura_client, fixtures_project_folder):
     yield fixtures_project_folder
     hasura_client.rollback_migrations(fixtures_project_folder)
 
