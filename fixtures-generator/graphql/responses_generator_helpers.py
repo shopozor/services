@@ -15,30 +15,26 @@ PRODUCT_THUMBNAIL_SIZE = 500
 CATEGORY_THUMBNAIL_SIZE = 250
 
 
-def shop_node(shop):
+def shop_item(shop):
     return {
-        'node': {
-            'id': shop['id'],
-            'name': shop['name'],
-            'description': shop['description'],
-            'geocoordinates': {
-                'latitude': shop['latitude'],
-                'longitude': shop['longitude']
-            }
+        'id': shop['id'],
+        'name': shop['name'],
+        'description': shop['description'],
+        'geocoordinates': {
+            'latitude': shop['latitude'],
+            'longitude': shop['longitude']
         }
     }
 
 
-def category_node(category):
+def category_item(category):
     return {
-        'node': {
-            'id': category['id'],
-            'name': category['name'],
-            'description': category['description'],
-            'backgroundImage': {
-                'alt': category['background_image_alt'],
-                'url': urllib.parse.urljoin(MEDIA_URL, '%s-thumbnail-%dx%d.%s' % (category['background_image'].split('.')[0], CATEGORY_THUMBNAIL_SIZE, CATEGORY_THUMBNAIL_SIZE, category['background_image'].split('.')[1]))
-            }
+        'id': category['id'],
+        'name': category['name'],
+        'description': category['description'],
+        'backgroundImage': {
+            'alt': category['background_image_alt'],
+            'url': urllib.parse.urljoin(MEDIA_URL, '%s-thumbnail-%dx%d.%s' % (category['background_image'].split('.')[0], CATEGORY_THUMBNAIL_SIZE, CATEGORY_THUMBNAIL_SIZE, category['background_image'].split('.')[1]))
         }
     }
 

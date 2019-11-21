@@ -39,9 +39,7 @@ class ShopListsGenerator(ResponsesGenerator):
     def _produce_data(self):
         return {
             'data': {
-                'shops': {
-                    'edges': [helpers.shop_node(shop) for shop in self.__SHOPS_FIXTURE['shops']]
-                }
+                'shops': [helpers.shop_item(shop) for shop in self.__SHOPS_FIXTURE['shops']]
             }
         }
 
@@ -59,9 +57,7 @@ class ShopCategoriesGenerator(ResponsesGenerator):
     def _produce_data(self):
         return {
             'data': {
-                'categories': {
-                    'edges': [helpers.category_node(category) for category in self.__SHOPS_FIXTURE['product_categories']],
-                }
+                'categories': [helpers.category_item(category) for category in self.__SHOPS_FIXTURE['product_categories']]
             }
         }
 
