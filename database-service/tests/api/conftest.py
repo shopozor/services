@@ -57,3 +57,15 @@ def shops_query(graphql_folder, fixtures_set_name):
         'call': call,
         'response': response
     }
+
+
+@pytest.fixture
+def shop_categories_query(graphql_folder, fixtures_set_name):
+    call = get_query_from_file(os.path.join(
+        graphql_folder, 'calls'), 'shopCategories')
+    response = json_helpers.load(os.path.join(
+        graphql_folder, 'responses', fixtures_set_name, 'Consumer', 'Categories.json'))
+    return {
+        'call': call,
+        'response': response
+    }

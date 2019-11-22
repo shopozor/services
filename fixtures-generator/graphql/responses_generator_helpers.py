@@ -9,12 +9,6 @@ import os
 import urllib.parse
 
 
-MEDIA_URL = '/media/'
-STATIC_URL = '/static/'
-PRODUCT_THUMBNAIL_SIZE = 500
-CATEGORY_THUMBNAIL_SIZE = 250
-
-
 def shop_item(shop):
     return {
         'id': shop['id'],
@@ -34,7 +28,7 @@ def category_item(category):
         'description': category['description'],
         'backgroundImage': {
             'alt': category['background_image_alt'],
-            'url': urllib.parse.urljoin(MEDIA_URL, '%s-thumbnail-%dx%d.%s' % (category['background_image'].split('.')[0], CATEGORY_THUMBNAIL_SIZE, CATEGORY_THUMBNAIL_SIZE, category['background_image'].split('.')[1]))
+            'url': category['background_image']
         }
     }
 
@@ -87,14 +81,14 @@ def price_range(start, stop):
 def placeholder_product_thumbnail():
     return {
         'alt': None,
-        'url': urllib.parse.urljoin(STATIC_URL, 'images/placeholder%dx%d.png' % (PRODUCT_THUMBNAIL_SIZE, PRODUCT_THUMBNAIL_SIZE))
+        'url': 'images/placeholder.png'
     }
 
 
 def product_thumbnail(associated_images):
     return {
         'alt': associated_images[0]['alt'],
-        'url': urllib.parse.urljoin(MEDIA_URL, '%s-thumbnail-%dx%d.%s' % (associated_images[0]['url'].split('.')[0], PRODUCT_THUMBNAIL_SIZE, PRODUCT_THUMBNAIL_SIZE, associated_images[0]['url'].split('.')[1]))
+        'url': associated_images[0]['url']
     }
 
 
@@ -135,7 +129,7 @@ def create_new_product_with_variant(product, variant, new_variant, users_fixture
     }
     associated_image = [{
         'alt': item['alt'],
-        'url': urllib.parse.urljoin(MEDIA_URL, item['url']),
+        'url': item['url'],
     } for item in shops_fixture['product_images'] if item['id'] == product['image_id']]
     # TODO: delete those images from the shops_fixture
     thumbnail = product_thumbnail(

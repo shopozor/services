@@ -32,7 +32,7 @@ services:
     environment:
       - PYTHONDONTWRITEBYTECODE=1
       - PYTHONPATH=./tests:$PYTHONPATH
-    entrypoint: pytest -ra --junitxml=${TEST_REPORTS_FOLDER:-test-reports}/test-report.xml
+    entrypoint: pytest -ra --junitxml=${TEST_REPORTS_FOLDER:-test-reports}/test-report.xml -vv
   fixtures-service:
     build:
       context: ./fixtures-generator
