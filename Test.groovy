@@ -36,20 +36,6 @@ pipeline {
         sh "docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up features-tests"
       }
     }
-    stage('Building specification') {
-      environment {
-        SOFTOZOR_CREDENTIALS = credentials('softozor-credentials')
-      }
-      steps {
-        script {
-          if(GIT_BRANCH == 'origin/dev' || GIT_BRANCH == 'origin/master') {
-            build job: 'backend-spec', parameters: [
-              string(name: 'BRANCH', value: GIT_BRANCH.split('/')[1])
-            ]
-          }
-        }
-      }
-    }
   }
   post {
     always {
