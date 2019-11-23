@@ -7,7 +7,7 @@ pipeline {
   stages {
     stage('Build the docker images') {
       steps {
-        sh "docker-compose -f docker-compose-tests.yaml build"
+        sh "docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml build"
       }
     }
     stage('Generate the database fixtures') {
@@ -22,13 +22,13 @@ pipeline {
     }
     stage('Start GraphQL engine') {
       steps {
-        sh "docker-compose -f docker-compose-tests.yaml up -d postgres graphql-engine"
+        sh "docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up -d postgres graphql-engine"
         sh "chmod u+x ./database-service/scripts/waitForService.sh && ./database-service/scripts/waitForService.sh localhost ${API_PORT}"
       }
     }
     stage('Perform GraphQL engine tests') {
       steps {
-        sh "docker-compose -f docker-compose-tests.yaml up hasura-service-tests"
+        sh "docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up hasura-service-tests"
       }
     }
     stage('Perform acceptance tests') {
