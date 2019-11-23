@@ -10,7 +10,7 @@ dev.end: down fixtures.clean rm
 build:
 	@echo "Building images..."
 	@docker-compose build
-	@docker-compose -f docker-compose-tests.yaml build
+	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml build
 
 up: build
 	@echo "Starting containers..."
