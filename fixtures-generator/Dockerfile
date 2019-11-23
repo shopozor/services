@@ -13,7 +13,7 @@ WORKDIR /app
 COPY ./test-utils ./test_utils
 COPY ./fixtures-generator .
 
-RUN chmod u+x entrypoint.sh
+RUN chmod a+x entrypoint.sh
 
 COPY --from=builder /usr/local/lib/python3.8/site-packages /usr/local/lib/python3.8/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
