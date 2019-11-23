@@ -58,7 +58,7 @@ test:
 	@docker-compose down
 
 test.behave:
-	@docker-compose -f docker-compose-tests.yaml up --abort-on-container-exit features-tests
+	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit features-tests
 
 %.restart:
 	make $*.down
