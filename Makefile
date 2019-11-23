@@ -38,8 +38,8 @@ db.migrate.status:
 fixtures.generate:
 	@echo "Generating fixtures ..."
 	@if [ -d $(FIXTURES_FOLDER) ]; then rm -rf $(FIXTURES_FOLDER); fi
-	@docker-compose -f docker-compose-tests.yaml -f docker-compose-tests-dev.yaml up fixtures-service
-	@docker-compose -f docker-compose-tests.yaml rm -f fixtures-service
+	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml -f docker-compose-tests-dev.yaml up fixtures-service
+	@docker-compose -f docker-compose.yaml rm -f fixtures-service
 
 fixtures.up:
 	$(HASURA_MIGRATE_APPLY) --project $(FIXTURES_FOLDER)/database/small --up all --skip-update-check

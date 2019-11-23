@@ -19,5 +19,17 @@ services:
       HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:@postgres:5432/postgres
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+  fixtures-service:
+    build:
+      context: .
+      dockerfile: ./fixtures-generator/Dockerfile
+      target: app
+    restart: "no"
+    volumes:
+      - ./fixtures:/app/fixtures
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+    entrypoint: ./entrypoint.sh
+
 volumes:
   db_data:

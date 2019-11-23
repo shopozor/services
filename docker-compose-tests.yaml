@@ -25,19 +25,12 @@ services:
     build:
       context: ./fixtures-generator
       dockerfile: ./Dockerfile
-    restart: "no"
+      target: builder
     user: $USER
     volumes:
       - ./fixtures-generator:/app
       - ./fixtures:/app/fixtures
       - ./test-utils:/app/test_utils
-    environment:
-      - PYTHONDONTWRITEBYTECODE=1
-    entrypoint:
-      - bash
-      - -c
-      - |
-          ./entrypoint.sh
   features-tests:
     build:
       context: ./features
