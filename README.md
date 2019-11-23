@@ -92,6 +92,20 @@ make fixtures
 
 ## Running tests
 
+### Complete workflow
+
+Starting from a fresh clone:
+
+```
+git clone https://github.com/shopozor/backend
+cd backend
+git submodule init && git submodule update
+make fixtures.generate
+make test
+```
+
+### Useful commands
+
 To run the tests, use the command
 
 ```bash
