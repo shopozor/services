@@ -54,7 +54,7 @@ fixtures.clean:
 fixtures: fixtures.clean fixtures.generate fixtures.up
 
 test:
-	@docker-compose -f docker-compose-tests.yaml up --abort-on-container-exit postgres graphql-engine hasura-service-tests
+	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit postgres graphql-engine hasura-service-tests
 	@docker-compose down
 
 test.behave:
