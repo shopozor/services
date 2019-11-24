@@ -20,3 +20,6 @@ venv/
 
 # editors
 .vscode/
+
+# test stuff
+database-service/test-report.xml

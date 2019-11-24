@@ -10,7 +10,7 @@ dev.end: down fixtures.clean rm
 build:
 	@echo "Building images..."
 	@docker-compose build
-	@docker-compose -f docker-compose-tests.yaml build
+	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml build
 
 up: build
 	@echo "Starting containers..."
@@ -22,11 +22,11 @@ up: build
 
 down:
 	@docker-compose down
-	@docker-compose -f docker-compose-tests.yaml down
+	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml down
 
 rm:
 	@docker-compose rm -f
-	@docker-compose -f docker-compose-tests.yaml rm -f
+	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml rm -f
 
 
 db.migrate.apply:
