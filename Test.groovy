@@ -6,7 +6,7 @@ pipeline {
   stages {
     stage('Build the docker images') {
       steps {
-        sh "docker-compose -f docker-compose-tests.yaml build"
+        sh "docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml build"
       }
     }
     stage('Generate the database fixtures') {
