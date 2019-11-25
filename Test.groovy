@@ -6,54 +6,46 @@ pipeline {
   stages {
     stage('Build the docker images') {
       steps {
-        sh "docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml build"
+        sh "make build"
       }
     }
     stage('Generate the database fixtures') {
       steps {
         script {
-          sh "rm -Rf fixtures && mkdir fixtures"
-          sh "rm -Rf graphql && mkdir -p graphql/responses"
-          sh "chmod u+x ./fixtures-generator/entrypoint.sh"
+          sh "make fixtures.clean"
           // without that USER variable, it is not possible to delete the generated fixtures folder anymore
-          sh "USER=`id -u` docker-compose -f docker-compose-tests.yaml up fixtures-service"
+          sh "USER=`id -u` make fixtures.generate"
         }
       }
     }
-    stage('Start GraphQL engine') {
+    stage('Start services') {
       steps {
-        sh "docker-compose -f docker-compose-tests.yaml up -d postgres graphql-engine"
-        sh "chmod u+x ./database-service/scripts/waitForService.sh && ./database-service/scripts/waitForService.sh localhost ${API_PORT}"
+        sh "make up"
       }
     }
     stage('Perform GraphQL engine tests') {
       steps {
-        sh "docker-compose -f docker-compose-tests.yaml up hasura-service-tests"
+        sh "make test.database-service"
       }
     }
-    stage('Perform backend acceptance tests') {
-      steps {
-        sh "docker-compose -f docker-compose-tests.yaml up features-tests"
-      }
-    }
+    // stage('Perform backend integration tests') {
+    //   steps {
+    //     sh "make test.behave"
+    //   }
+    // }
     stage('Perform ui unit tests') {
       steps {
-        sh "docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up ui-unit-tests"
-      }
-    }
-    stage('Start ui') {
-      steps {
-        sh "docker-compose up -d ui"
+        sh "make test.ui-unit-tests"
       }
     }
     stage('Perform ui integration tests') {
       steps {
-        sh "USER=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up ui-integration-tests"
+        sh "USER=`id -u` make test.ui-integration-tests"
       }
     }
     stage('Perform e2e tests') {
       steps {
-        sh "USER=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up e2e-tests"
+        sh "USER=`id -u` make test.e2e-tests"
       }
     }
     // TODO: this needs rework!
@@ -64,7 +56,7 @@ pipeline {
       steps {
         script {
           if(GIT_BRANCH == 'origin/dev' || GIT_BRANCH == 'origin/master') {
-            build job: 'backend-spec', parameters: [
+            build job: 'specification', parameters: [
               string(name: 'BRANCH', value: GIT_BRANCH.split('/')[1])
             ]
           }
@@ -74,7 +66,7 @@ pipeline {
   }
   post {
     always {
-      sh "docker-compose down"
+      sh "make down"
       junit "**/test-reports/*.xml"
     }
   }
