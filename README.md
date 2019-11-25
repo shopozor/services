@@ -79,6 +79,14 @@ which outputs for example
          });
 ```
 
+### Necessary third-party packages
+
+Some of our scripts use the `jq` tool to interpret json output. Under ubuntu / debian, you will need `jq`:
+```
+sudo apt install -y jq
+```
+Under Windows 10, you want to install [jq](https://github.com/stedolan/jq/releases). Just download the Win64 installer and make it available somewhere in your disk. Add that location to your `PATH` variable. Rename `jq-win64.exe` to `jq.exe`.
+
 ### Setting everything up for development
 
 To start development environment, just enter following command that will take
