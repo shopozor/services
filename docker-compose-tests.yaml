@@ -64,6 +64,57 @@ services:
       - ./fixtures:/app/fixtures
       - ./test-utils:/app/test_utils
     entrypoint: behave --junit --junit-directory test-reports --tags ~wip
+  ui-unit-tests:
+    build:
+      context: ui
+      dockerfile: Dockerfile
+      target: unit-tests
+      args:
+        GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
+    restart: "no"
+    volumes:
+      - .:/app
+    entrypoint: yarn test:unit:ci
+  ui-integration-tests:
+    build:
+      context: ui
+      dockerfile: Dockerfile
+      target: cypress-tests
+      args:
+        GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
+    user: $USER
+    environment:
+      CYPRESS_baseUrl: http://ui:4000/#
+    depends_on:
+      - ui
+    restart: "no"
+    volumes:
+      - .:/app
+    entrypoint:
+      - bash
+      - -c
+      - |
+        npx cypress run --env configFile=integration
+  e2e-tests:
+    build:
+      context: ui
+      dockerfile: Dockerfile
+      target: cypress-tests
+      args:
+        GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
+    user: $USER
+    environment:
+      CYPRESS_baseUrl: http://ui:4000/#
+    depends_on:
+      - ui
+    restart: "no"
+    volumes:
+      - .:/app
+    entrypoint:
+      - bash
+      - -c
+      - |
+        npx cypress run --env configFile=e2e
 
 volumes:
   db_data:

@@ -31,11 +31,32 @@ pipeline {
         sh "docker-compose -f docker-compose-tests.yaml up hasura-service-tests"
       }
     }
-    stage('Perform acceptance tests') {
+    stage('Perform backend acceptance tests') {
       steps {
         sh "docker-compose -f docker-compose-tests.yaml up features-tests"
       }
     }
+    stage('Perform ui unit tests') {
+      steps {
+        sh "docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up ui-unit-tests"
+      }
+    }
+    stage('Start ui') {
+      steps {
+        sh "docker-compose up -d ui"
+      }
+    }
+    stage('Perform ui integration tests') {
+      steps {
+        sh "USER=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up ui-integration-tests"
+      }
+    }
+    stage('Perform e2e tests') {
+      steps {
+        sh "USER=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up e2e-tests"
+      }
+    }
+    // TODO: this needs rework!
     stage('Building specification') {
       environment {
         SOFTOZOR_CREDENTIALS = credentials('softozor-credentials')

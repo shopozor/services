@@ -1,0 +1,11 @@
+query Shops {
+  shops {
+    description
+    geocoordinates {
+      latitude
+      longitude
+    }
+    id
+    name
+  }
+}
