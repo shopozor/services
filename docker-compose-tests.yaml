@@ -73,7 +73,7 @@ services:
         GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
     restart: "no"
     volumes:
-      - .:/app
+      - ./ui:/app
     entrypoint: yarn test:unit:ci
   ui-integration-tests:
     build:
@@ -89,7 +89,7 @@ services:
       - ui
     restart: "no"
     volumes:
-      - .:/app
+      - ./ui:/app
     entrypoint:
       - bash
       - -c
@@ -109,7 +109,7 @@ services:
       - ui
     restart: "no"
     volumes:
-      - .:/app
+      - ./ui:/app
     entrypoint:
       - bash
       - -c
