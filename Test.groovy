@@ -16,9 +16,9 @@ pipeline {
           sh "make fixtures.clean"
           sh "mkdir fixtures && mkdir graphql/responses"
           // without that USER variable, it is not possible to delete the generated fixtures folder anymore
-          // sh "make fixtures.generate"
-          sh "chmod u+x ./fixtures-generator/entrypoint.sh"
-          sh "docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up fixtures-service"
+          sh "make fixtures.generate"
+          // sh "chmod u+x ./fixtures-generator/entrypoint.sh"
+          // sh "docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up fixtures-service"
         }
       }
     }
@@ -34,17 +34,17 @@ pipeline {
     }
     stage('Perform ui unit tests') {
       steps {
-        sh "make test.ui-unit-tests"
+        sh "make test.ui-unit"
       }
     }
     stage('Perform ui integration tests') {
       steps {
-        sh "make test.ui-integration-tests"
+        sh "make test.ui-integration"
       }
     }
     stage('Perform e2e tests') {
       steps {
-        sh "make test.e2e-tests"
+        sh "make test.e2e"
       }
     }
   }

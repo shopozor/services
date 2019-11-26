@@ -56,13 +56,13 @@ fixtures: fixtures.clean fixtures.generate fixtures.up
 test.database-service:
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit hasura-service-tests
 
-test.ui-unit-tests:
+test.ui-unit:
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit ui-unit-tests
 
-test.ui-integration-tests:
+test.ui-integration:
 	@USER=${USER} docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit ui-integration-tests
 
-test.e2e-tests:
+test.e2e:
 	@USER=${USER} docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit e2e-tests
 
 test.behave:
