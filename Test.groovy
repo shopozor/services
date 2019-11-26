@@ -2,6 +2,7 @@ pipeline {
   agent any
   environment {
     API_PORT = 8081
+    USER=1000
   }
   stages {
     stage('Build the docker images') {
@@ -15,35 +16,35 @@ pipeline {
           sh "make fixtures.clean"
           sh "mkdir fixtures && mkdir graphql/responses"
           // without that USER variable, it is not possible to delete the generated fixtures folder anymore
-          sh "make USER=`id -u` fixtures.generate"
-          // sh "chmod u+x ./fixtures-generator/entrypoint.sh"
-          // sh "USER=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up fixtures-service"
+          // sh "make fixtures.generate"
+          sh "chmod u+x ./fixtures-generator/entrypoint.sh"
+          sh "docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up fixtures-service"
         }
       }
     }
     stage('Start services') {
       steps {
-        sh "API_PORT=${API_PORT} make up"
+        sh "make up"
       }
     }
     stage('Perform GraphQL engine tests') {
       steps {
-        sh "API_PORT=${API_PORT} make test.database-service"
+        sh "make test.database-service"
       }
     }
     stage('Perform ui unit tests') {
       steps {
-        sh "API_PORT=${API_PORT} make test.ui-unit-tests"
+        sh "make test.ui-unit-tests"
       }
     }
     stage('Perform ui integration tests') {
       steps {
-        sh "API_PORT=${API_PORT} USER=`id -u` make test.ui-integration-tests"
+        sh "make test.ui-integration-tests"
       }
     }
     stage('Perform e2e tests') {
       steps {
-        sh "API_PORT=${API_PORT} USER=`id -u` make test.e2e-tests"
+        sh "make test.e2e-tests"
       }
     }
   }
