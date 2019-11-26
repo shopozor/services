@@ -14,7 +14,8 @@ pipeline {
         script {
           sh "make fixtures.clean"
           // without that USER variable, it is not possible to delete the generated fixtures folder anymore
-          sh "USER=`id -u` make fixtures.generate"
+          // sh "make fixtures.generate"
+          sh "USER=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml -f docker-compose-tests-dev.yaml up fixtures-service"
         }
       }
     }
