@@ -2,10 +2,6 @@ ifndef API_PORT
 	API_PORT=8080
 endif
 
-ifndef USER 
-	USER=1000
-endif
-
 HASURA_ENDPOINT = http://localhost:${API_PORT}
 HASURA_MIGRATE_APPLY = hasura migrate apply --endpoint $(HASURA_ENDPOINT)
 HASURA_MIGRATE_STATUS = hasura migrate apply --endpoint $(HASURA_ENDPOINT)
