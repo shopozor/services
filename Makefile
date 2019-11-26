@@ -2,6 +2,10 @@ ifndef API_PORT
 	API_PORT=8080
 endif
 
+ifndef USER 
+	USER=1000
+endif
+
 HASURA_ENDPOINT = http://localhost:${API_PORT}
 HASURA_MIGRATE_APPLY = hasura migrate apply --endpoint $(HASURA_ENDPOINT)
 HASURA_MIGRATE_STATUS = hasura migrate apply --endpoint $(HASURA_ENDPOINT)
@@ -37,7 +41,7 @@ db.migrate.status:
 fixtures.generate:
 	@echo "Generating fixtures ..."
 	@chmod u+x ./fixtures-generator/entrypoint.sh
-	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml -f docker-compose-tests-dev.yaml up fixtures-service
+	@USER=${USER} docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml -f docker-compose-tests-dev.yaml up fixtures-service
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml rm -f fixtures-service
 
 fixtures.up:
@@ -60,10 +64,10 @@ test.ui-unit-tests:
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit ui-unit-tests
 
 test.ui-integration-tests:
-	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit ui-integration-tests
+	@USER=${USER} docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit ui-integration-tests
 
 test.e2e-tests:
-	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit e2e-tests
+	@USER=${USER} docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit e2e-tests
 
 test.behave:
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit features-tests
