@@ -24,7 +24,9 @@ pipeline {
     }
     stage('Start services') {
       steps {
-        sh "make up"
+        // sh "make up"
+        sh "docker-compose -f docker-compose-tests.yaml up -d postgres graphql-engine"
+        sh "chmod u+x ./database-service/scripts/waitForService.sh && ./database-service/scripts/waitForService.sh localhost ${API_PORT}"
       }
     }
     stage('Perform GraphQL engine tests') {
