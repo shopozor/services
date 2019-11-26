@@ -20,27 +20,27 @@ pipeline {
     }
     stage('Start services') {
       steps {
-        sh "make up"
+        sh "API_PORT=${API_PORT} make up"
       }
     }
     stage('Perform GraphQL engine tests') {
       steps {
-        sh "make test.database-service"
+        sh "API_PORT=${API_PORT} make test.database-service"
       }
     }
     stage('Perform ui unit tests') {
       steps {
-        sh "make test.ui-unit-tests"
+        sh "API_PORT=${API_PORT} make test.ui-unit-tests"
       }
     }
     stage('Perform ui integration tests') {
       steps {
-        sh "USER=`id -u` make test.ui-integration-tests"
+        sh "API_PORT=${API_PORT} USER=`id -u` make test.ui-integration-tests"
       }
     }
     stage('Perform e2e tests') {
       steps {
-        sh "USER=`id -u` make test.e2e-tests"
+        sh "API_PORT=${API_PORT} USER=`id -u` make test.e2e-tests"
       }
     }
   }
