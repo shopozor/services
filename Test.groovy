@@ -13,8 +13,10 @@ pipeline {
       steps {
         script {
           sh "make fixtures.clean"
+          sh "mkdir fixtures && mkdir graphql/responses"
           // without that USER variable, it is not possible to delete the generated fixtures folder anymore
           // sh "USER=`id -u` make fixtures.generate"
+          sh "chmod u+x ./fixtures-generator/entrypoint.sh"
           sh "USER=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up fixtures-service"
         }
       }
