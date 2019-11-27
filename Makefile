@@ -34,8 +34,6 @@ db.migrate.apply:
 db.migrate.status:
 	$(HASURA_MIGRATE_STATUS) --project database-service --skip-update-check
 
-fixtures.generate: export USER = ${USER}
-
 fixtures.generate:
 	@echo "Generating fixtures ..."
 	@chmod u+x ./fixtures-generator/entrypoint.sh
