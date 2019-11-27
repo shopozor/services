@@ -16,7 +16,7 @@ pipeline {
           sh "make fixtures.clean"
           sh "mkdir fixtures"
           // without that USER variable, it is not possible to delete the generated fixtures folder anymore
-          sh "make fixtures.generate"
+          sh "make USER=$USER fixtures.generate"
           // sh "chmod u+x ./fixtures-generator/entrypoint.sh"
           // sh "docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up fixtures-service"
         }
