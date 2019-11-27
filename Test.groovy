@@ -14,7 +14,7 @@ pipeline {
       steps {
         script {
           sh "make fixtures.clean"
-          sh "mkdir fixtures"
+          sh "mkdir fixtures && mkdir -p graphql/responses"
           // without that USER variable, it is not possible to delete the generated fixtures folder anymore
           sh "make USER=$USER fixtures.generate"
           // sh "chmod u+x ./fixtures-generator/entrypoint.sh"
