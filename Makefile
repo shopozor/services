@@ -54,6 +54,7 @@ fixtures.clean:
 fixtures: fixtures.clean fixtures.generate fixtures.up
 
 test.database-service:
+	@chmod u+x ./database-service/tests/entrypoint.sh
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit hasura-service-tests
 
 test.ui-unit:
