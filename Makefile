@@ -34,12 +34,13 @@ db.migrate.apply:
 db.migrate.status:
 	$(HASURA_MIGRATE_STATUS) --project database-service --skip-update-check
 
+fixtures.generate: export USER = ${USER}
+
 fixtures.generate:
 	@echo "Generating fixtures ..."
 	@chmod u+x ./fixtures-generator/entrypoint.sh
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml -f docker-compose-tests-dev.yaml up fixtures-service
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml rm -f fixtures-service
-	@chown ${USER} -R fixtures
 
 fixtures.up:
 	$(HASURA_MIGRATE_APPLY) --project $(FIXTURES_FOLDER) --up all --skip-update-check
