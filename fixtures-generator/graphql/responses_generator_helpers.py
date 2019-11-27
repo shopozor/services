@@ -14,10 +14,8 @@ def shop_item(shop):
         'id': shop['id'],
         'name': shop['name'],
         'description': shop['description'],
-        'geocoordinates': {
-            'latitude': shop['latitude'],
-            'longitude': shop['longitude']
-        }
+        'latitude': shop['latitude'],
+        'longitude': shop['longitude']
     }
 
 
