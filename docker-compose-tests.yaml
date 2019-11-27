@@ -74,7 +74,7 @@ services:
     restart: "no"
     volumes:
       - ./ui:/app
-    entrypoint: yarn test:unit:ci
+    entrypoint: yarn test:unit:ci --modules-folder /home/node/node_modules
   ui-integration-tests:
     build:
       context: ui
@@ -90,11 +90,7 @@ services:
     restart: "no"
     volumes:
       - ./ui:/app
-    entrypoint:
-      - bash
-      - -c
-      - |
-        npx cypress run --env configFile=integration
+    entrypoint: yarn cypress:integration:ci --modules-folder /home/node/node_modules
   e2e-tests:
     build:
       context: ui
@@ -110,11 +106,7 @@ services:
     restart: "no"
     volumes:
       - ./ui:/app
-    entrypoint:
-      - bash
-      - -c
-      - |
-        npx cypress run --env configFile=e2e
+    entrypoint: yarn cypress:e2e:ci --modules-folder /home/node/node_modules
 
 volumes:
   db_data:

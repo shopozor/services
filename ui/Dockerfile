@@ -1,37 +1,40 @@
 FROM node:12.10.0-slim AS builder
 
+WORKDIR /home/node
+
+COPY ./package.json ./package.json
+
+RUN yarn 
+
 WORKDIR /app
 
 COPY . .
 
 ARG GRAPHQL_API
 
-RUN yarn && yarn build
+RUN yarn build --modules-folder /home/node/node_modules
 
 FROM node:12.10.0-slim AS unit-tests
 
-COPY --from=builder /root/.cache /home/node/.cache
-RUN chown node -R /home/node/.cache
+WORKDIR /app
+
+COPY --from=builder /home/node /home/node
+
+FROM cypress/base:12.13.0 AS cypress-tests
 
 WORKDIR /app
 
-FROM cypress/base:12.1.0 AS cypress-tests
+COPY --from=builder /home/node /home/node
 
-COPY --from=builder /root/.cache /home/node/.cache
-RUN chown node -R /home/node/.cache
-
-WORKDIR /app
-
-FROM cypress/base:12.1.0 AS e2e
-
-WORKDIR /app
+FROM cypress/base:12.13.0 AS e2e
 
 RUN yarn global add @quasar/cli
 
+WORKDIR /app
+
 COPY --from=builder /app/package.json ./package.json
 COPY --from=builder /app/dist ./dist
-COPY --from=builder /root/.cache /home/node/.cache
-RUN chown node -R /home/node/.cache
+COPY --from=builder /home/node /home/node
 
 FROM node:12.10.0-slim AS app
 
