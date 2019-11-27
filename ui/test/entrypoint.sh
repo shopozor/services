@@ -2,4 +2,7 @@
 
 ln -s /home/node/node_modules/ node_modules 
 yarn test:unit:ci 
+EXIT_CODE=$?
 rm -f node_modules
+
+exit ${EXIT_CODE}
