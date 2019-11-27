@@ -7,7 +7,9 @@
   "fixturesFolder": "cypress/fixtures",
   "ignoreTestFiles": [
     "*.js",
-    "*.gif"
+    "*.gif",
+    "*.sh",
+    "*.jps"
   ],
   "integrationFolder": "cypress/e2e",
   "projectId": "g6v5sw",
