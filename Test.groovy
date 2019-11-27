@@ -28,7 +28,9 @@ pipeline {
     stage('Perform GraphQL engine tests') {
       steps {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-          sh "make test.database-service"
+          // sh "make test.database-service"
+          sh "chmod u+x ./database-service/tests/entrypoint.sh"
+          sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit hasura-service-tests"
         }
       }
     }
