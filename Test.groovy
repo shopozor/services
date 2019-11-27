@@ -2,6 +2,7 @@ pipeline {
   agent any
   environment {
     API_PORT = 8081
+    USER_ID = 1000
   }
   stages {
     stage('Build the docker images') {
@@ -16,9 +17,9 @@ pipeline {
           sh "make fixtures.clean"
           sh "mkdir fixtures && mkdir -p graphql/responses"
           // without that USER variable, it is not possible to delete the generated fixtures folder anymore
-          // sh "make USER=`id -u` fixtures.generate"
-          sh "chmod u+x ./fixtures-generator/entrypoint.sh"
-          sh "USER=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up fixtures-service"
+          sh "make fixtures.generate"
+          // sh "chmod u+x ./fixtures-generator/entrypoint.sh"
+          // sh "USER=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up fixtures-service"
         }
       }
     }

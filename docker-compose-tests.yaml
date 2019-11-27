@@ -37,7 +37,7 @@ services:
       context: ./fixtures-generator
       dockerfile: ./Dockerfile
     restart: "no"
-    user: $USER
+    user: ${USER_ID}
     volumes:
       - ./fixtures-generator:/app
       - ./fixtures:/app/fixtures
@@ -82,7 +82,7 @@ services:
       target: cypress-tests
       args:
         GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
-    user: $USER
+    user: ${USER_ID}
     environment:
       CYPRESS_baseUrl: http://ui:4000/#
     depends_on:
@@ -98,7 +98,7 @@ services:
       target: cypress-tests
       args:
         GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
-    user: $USER
+    user: ${USER_ID}
     environment:
       CYPRESS_baseUrl: http://ui:4000/#
     depends_on:
