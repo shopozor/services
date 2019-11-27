@@ -27,7 +27,6 @@ services:
     user: $USER
     volumes:
       - ./fixtures-generator:/app
-      - ./fixtures:/app/fixtures
       - ./test-utils:/app/test_utils
   features-tests:
     build:
