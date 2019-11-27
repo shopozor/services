@@ -37,7 +37,7 @@ db.migrate.status:
 fixtures.generate:
 	@echo "Generating fixtures ..."
 	@chmod u+x ./fixtures-generator/entrypoint.sh
-	$(shell USER_ID=1000 docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml -f docker-compose-tests-dev.yaml up fixtures-service)
+	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml -f docker-compose-tests-dev.yaml up fixtures-service
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml rm -f fixtures-service
 
 fixtures.up:
