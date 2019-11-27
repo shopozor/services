@@ -6,7 +6,6 @@ pipeline {
   stages {
     stage('Build the docker images') {
       steps {
-        sh "env"
         sh "make build"
       }
     }
