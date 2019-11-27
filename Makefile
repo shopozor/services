@@ -19,7 +19,7 @@ build:
 up:
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up -d postgres graphql-engine ui
 	@chmod u+x ./database-service/scripts/waitForService.sh
-	./database-service/scripts/waitForService.sh localhost ${API_PORT}
+	@./database-service/scripts/waitForService.sh localhost ${API_PORT}
 
 down:
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml down
@@ -57,12 +57,15 @@ test.database-service:
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit hasura-service-tests
 
 test.ui-unit:
+	@chmod u+x ./ui/test/entrypoint.sh
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit ui-unit-tests
 
 test.ui-integration:
+	@chmod u+x ./ui/cypress/integration/entrypoint.sh
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit ui-integration-tests
 
 test.e2e:
+	@chmod u+x ./ui/cypress/e2e/entrypoint.sh
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit e2e-tests
 
 test.behave:
