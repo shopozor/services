@@ -33,6 +33,5 @@ export const apolloProvider = new VueApollo({
 
 export default ({ app, Vue }) => {
   Vue.use(VueApollo)
-  // this makes apolloProvider available through this.$apolloProvider
-  app.provide = apolloProvider.provide()
+  app.apolloProvider = apolloProvider
 }

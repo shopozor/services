@@ -18,6 +18,9 @@ responses/
 # virtualenv
 venv/
 
+# node stuff
+.eslintcache
+.npm
 .quasar
 .DS_Store
 .thumbs.db
@@ -43,3 +46,6 @@ specification/
 
 # Jest unit tests
 */test/jest/coverage/
+
+# Nuxt
+.nuxt
