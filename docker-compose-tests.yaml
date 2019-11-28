@@ -23,8 +23,8 @@ services:
     entrypoint: ./tests/entrypoint.sh
   fixtures-service:
     build:
-      context: ./fixtures-generator
-      dockerfile: ./Dockerfile
+      context: .
+      dockerfile: ./fixtures-generator/Dockerfile
       target: builder
     user: ${USER_ID}
     volumes:

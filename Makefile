@@ -73,7 +73,7 @@ test.e2e:
 test.behave:
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit features-tests
 
-test: test.database-service test.ui-unit-test test.ui-integration-tests test.e2e-tests
+test: test.database-service test.ui-unit test.ui-integration test.e2e
 
 %.restart:
 	make $*.down
