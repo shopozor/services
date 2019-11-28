@@ -12,6 +12,18 @@ dev.start: build up db.migrate.apply fixtures
 
 dev.end: down fixtures.clean rm
 
+ui.down:
+ui.stop:
+ui.restart:
+ui.build:
+ui.%:
+	@echo "Do docker-compose $* of Admin UI image ..."
+	@docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml $* ui
+
+ui.up: ui.build
+	@echo "Do docker-compose $* of Admin UI image ..."
+	@docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml up -d ui
+
 build:
 	@echo "Building images..."
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml build
@@ -83,7 +95,7 @@ logs:
 	docker-compose logs -f
 
 console:
-	hasura console --project database-service 
+	hasura console --project database-service
 
 %.logs:
 	docker-compose logs -f $*
