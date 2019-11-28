@@ -40,7 +40,7 @@ pipeline {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
         //  sh "make test.ui-unit"
          sh "chmod u+x ./ui/test/entrypoint.sh"
-         sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit ui-unit-tests"
+         sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit ui-unit-tests"
         }
       }
     }
