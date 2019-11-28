@@ -1,4 +1,4 @@
-query productCategories {
+query shopCategories {
   product_categories {
     background_image_src: background_image
     background_image_alt
