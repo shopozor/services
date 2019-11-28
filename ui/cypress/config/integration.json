@@ -9,7 +9,7 @@
   },
   "execTimeout": 60000,
   "fileServerFolder": "",
-  "fixturesFolder": "graphql/responses",
+  "fixturesFolder": "fixtures/graphql/responses",
   "hosts": null,
   "ignoreTestFiles": "*.hot-update.js",
   "integrationFolder": "cypress/integration",
