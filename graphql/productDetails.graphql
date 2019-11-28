@@ -1,0 +1,182 @@
+query ProductDetails($productId: ID!) {
+  product(id: $productId) {
+    conservation {
+      mode
+      until
+    }
+    description
+    images {
+      alt
+      url
+    }
+    margin {
+      manager {
+        start {
+          amount
+          currency
+        }
+        stop {
+          amount
+          currency
+        }
+      }
+      rex {
+        start {
+          amount
+          currency
+        }
+        stop {
+          amount
+          currency
+        }
+      }
+      softozor {
+        start {
+          amount
+          currency
+        }
+        stop {
+          amount
+          currency
+        }
+      }
+    }
+    name
+    pricing {
+      priceRange {
+        start {
+          gross {
+            amount
+            currency
+          }
+          net {
+            amount
+            currency
+          }
+          productTax {
+            amount
+            currency
+          }
+          serviceTax {
+            amount
+            currency
+          }
+        }
+        stop {
+          gross {
+            amount
+            currency
+          }
+          net {
+            amount
+            currency
+          }
+          productTax {
+            amount
+            currency
+          }
+          serviceTax {
+            amount
+            currency
+          }
+        }
+      }
+    }
+    producer {
+      address {
+        city
+        country
+        postalCode
+        streetAddress1
+      }
+      description
+      firstName
+	  id
+      lastName
+    }
+    purchaseCost {
+      start {
+        amount
+        currency
+      }
+      stop {
+        amount
+        currency
+      }
+    }
+    variants {
+      costPrice {
+        amount
+        currency
+      }
+      id
+      isAvailable
+      margin {
+        manager {
+          gross {
+            amount
+            currency
+          }
+          net {
+            amount
+            currency
+          }
+          tax {
+            amount
+            currency
+          }
+        }
+        rex {
+          gross {
+            amount
+            currency
+          }
+          net {
+            amount
+            currency
+          }
+          tax {
+            amount
+            currency
+          }
+        }
+        softozor {
+          gross {
+            amount
+            currency
+          }
+          net {
+            amount
+            currency
+          }
+          tax {
+            amount
+            currency
+          }
+        }
+      }
+      name
+      pricing {
+        price {
+          gross {
+            amount
+            currency
+          }
+          net {
+            amount
+            currency
+          }
+          productTax {
+            amount
+            currency
+          }
+          serviceTax {
+            amount
+            currency
+          }
+        }
+      }
+      stockQuantity
+    }
+  }
+}

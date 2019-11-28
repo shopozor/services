@@ -1,0 +1,11 @@
+query ShopCategories {
+  categories {
+    backgroundImage {
+      alt
+      url
+    }
+    description
+    id
+    name
+  }
+}
