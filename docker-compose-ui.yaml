@@ -13,3 +13,5 @@ services:
       - graphql-engine
     restart: "no"
     entrypoint: yarn start
+    networks:
+      - default

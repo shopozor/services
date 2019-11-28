@@ -5,6 +5,8 @@ services:
     restart: "no"
     volumes:
       - db_data:/var/lib/postgresql-11.2/data
+    networks:
+      - default
   graphql-engine:
     build:
       context: ./database-service
@@ -19,6 +21,8 @@ services:
       HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:@postgres:5432/postgres
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+    networks:
+      - default
   fixtures-service:
     build:
       context: .
@@ -30,6 +34,8 @@ services:
     environment:
       - PYTHONDONTWRITEBYTECODE=1
     entrypoint: ./entrypoint.sh
+    networks:
+      - default
 
 volumes:
   db_data:
