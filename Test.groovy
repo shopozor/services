@@ -2,6 +2,7 @@ pipeline {
   agent any
   environment {
     API_PORT = 8081
+    UI_PORT = 4000
     TEST_REPORTS_FOLDER = 'test-reports'
   }
   stages {
