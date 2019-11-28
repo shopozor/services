@@ -1,0 +1,56 @@
+query ShopCatalogue(
+  $shopId: ID!
+  $categoryId: ID!
+  $first: Int!
+  $after: String = ""
+  $thumbnailSize: Int!
+) {
+  products(
+    first: $first
+    after: $after
+    filter: { isPublished: true, category: $categoryId, shop: $shopId }
+  ) {
+    edges {
+      node {
+        id
+        name
+        pricing {
+          priceRange {
+            start {
+              gross {
+                amount
+                currency
+              }
+            }
+            stop {
+              gross {
+                amount
+                currency
+              }
+            }
+          }
+        }
+        producer {
+          id
+          firstName
+          lastName
+        }
+        thumbnail(size: $thumbnailSize) {
+          alt
+          url
+        }
+        variants {
+          id
+          isAvailable
+          name
+          stockQuantity
+        }
+      }
+    }
+    pageInfo {
+      startCursor
+      endCursor
+    }
+    totalCount
+  }
+}

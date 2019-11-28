@@ -1,4 +1,8 @@
-# Backend micro-services
+# Shopozor micro-services
+
+## Build statuses
+
+[![Tests Build Status](http://shopozor-ci.hidora.com/buildStatus/icon?job=tests-pr&subject=tests)](http://shopozor-ci.hidora.com/job/tests-pr/)
 
 ## Introduction
 
@@ -16,6 +20,12 @@ However, `saleor` is written in python and builds up its graphql API with graphe
 
 ## Development setup
 
+### Useful links
+
+* [Quasar testing](https://testing.quasar.dev/)
+* [Vue testing handbook](https://lmiller1990.github.io/vue-testing-handbook/)
+* Testing Vue.js applications in our google drive
+
 ### Pre-commit hooks
 
 As it is not trivial to enforce automatic installation of the pre-commit hooks, just install them yourself:
@@ -26,6 +36,56 @@ pre-commit install
 
 That pre-supposes that you have the `pre-commit` module installed in your python
 environment.
+
+### VSCode configuration
+
+Make sure you run the script
+```
+.vscode/install-extensions.sh
+```
+
+### Gherkin step skeletons
+
+It is pretty handy to get the skeleton code for each step of a feature file. That can be reached with the following command for the `LogAUserIn` feature
+```
+cd ui/cypress/integration/Authentication
+npx cucumber-js LogAUserIn.feature
+```
+which outputs for example
+```
+1) Scenario: Le membre du staff n'est pas encore enregistré # LogAUserIn.feature:13
+   ? Etant donné un utilisateur non identifié
+       Undefined. Implement with the following snippet:
+
+         Given('un utilisateur non identifié', function () {
+           // Write code here that turns the phrase above into concrete actions
+           return 'pending';
+         });
+
+   ? Lorsqu'un utilisateur s'identifie avec un e-mail et un mot de passe invalides
+       Undefined. Implement with the following snippet:
+
+         When('un utilisateur s\'identifie avec un e-mail et un mot de passe invalides', function () {
+           // Write code here that turns the phrase above into concrete actions
+           return 'pending';
+         });
+
+   ? Alors il obtient un message d'erreur stipulant que ses identifiants sont incorrects
+       Undefined. Implement with the following snippet:
+
+         Then('il obtient un message d\'erreur stipulant que ses identifiants sont incorrects', function () {
+           // Write code here that turns the phrase above into concrete actions
+           return 'pending';
+         });
+```
+
+### Necessary third-party packages
+
+Some of our scripts use the `jq` tool to interpret json output. Under ubuntu / debian, you will need `jq`:
+```
+sudo apt install -y jq
+```
+Under Windows 10, you want to install [jq](https://github.com/stedolan/jq/releases). Just download the Win64 installer and make it available somewhere in your disk. Add that location to your `PATH` variable. Rename `jq-win64.exe` to `jq.exe`.
 
 ### Setting everything up for development
 
@@ -116,4 +176,17 @@ To run acceptance tests, use the command
 
 ```
 $ make test.behave
+```
+
+## Troubleshooting
+
+### Ui unit tests
+
+Upon running the ui unit tests, you might get an error of the kind (especially on Windows machines):
+```
+Cannot find module '[..]/ui/node_modules/@quasar/babel-preset-app/node_modules/@babel/runtime/helpers/interopRequireDefault' from 'jest.setup.js'
+```
+Following [this advice](https://forum.quasar-framework.org/topic/3760/fix-babel-error-after-update-from-v1-0-0-beta22-to-v1-0-0-rc4), you can fix it this way:
+```
+cd node_modules/@quasar/babel-preset-app && yarn
 ```

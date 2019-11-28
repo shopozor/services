@@ -20,11 +20,13 @@ services:
     environment:
       - PYTHONDONTWRITEBYTECODE=1
       - PYTHONPATH=./tests:$PYTHONPATH
-    entrypoint: pytest -ra --junitxml=${TEST_REPORTS_FOLDER:-test-reports}/test-report.xml -vv
+    entrypoint: ./tests/entrypoint.sh
   fixtures-service:
     build:
+      context: ./fixtures-generator
+      dockerfile: ./Dockerfile
       target: builder
-    user: $USER
+    user: ${USER_ID}
     volumes:
       - ./fixtures-generator:/app
       - ./test-utils:/app/test_utils
@@ -42,6 +44,53 @@ services:
       - ./fixtures:/app/fixtures
       - ./test-utils:/app/test_utils
     entrypoint: behave --junit --junit-directory ${TEST_REPORTS_FOLDER:-test-reports} --tags ~wip
+  ui-unit-tests:
+    build:
+      context: ui
+      dockerfile: Dockerfile
+      target: unit-tests
+      args:
+        GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
+    restart: "no"
+    volumes:
+      - ./ui:/app
+    entrypoint: ./test/entrypoint.sh
+  ui-integration-tests:
+    build:
+      context: ui
+      dockerfile: Dockerfile
+      target: cypress-tests
+      args:
+        GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
+    user: ${USER_ID}
+    environment:
+      CYPRESS_baseUrl: http://ui:4000/#
+    depends_on:
+      - ui
+    restart: "no"
+    volumes:
+      - ./ui:/app
+    entrypoint: ./cypress/integration/entrypoint.sh
+  e2e-tests:
+    build:
+      context: ui
+      dockerfile: Dockerfile
+      target: cypress-tests
+      args:
+        GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
+    user: ${USER_ID}
+    environment:
+      CYPRESS_baseUrl: http://ui:4000/#
+    depends_on:
+      - ui
+    restart: "no"
+    volumes:
+      - ./ui:/app
+    entrypoint: ./cypress/e2e/entrypoint.sh
 
 volumes:
   db_data:
+
+networks:
+  default:
+    name: default-network

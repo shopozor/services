@@ -30,6 +30,19 @@ services:
     environment:
       - PYTHONDONTWRITEBYTECODE=1
     entrypoint: ./entrypoint.sh
+  ui:
+    build:
+      context: ui
+      dockerfile: ./Dockerfile
+      target: app
+      args:
+        GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
+    ports:
+      - 4000:4000
+    depends_on:
+      - graphql-engine
+    restart: "no"
+    entrypoint: yarn start
 
 volumes:
   db_data:

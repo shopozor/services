@@ -7,40 +7,66 @@ pipeline {
   stages {
     stage('Build the docker images') {
       steps {
-        sh "docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml build"
+        sh "make build"
       }
     }
     stage('Generate the database fixtures') {
       steps {
         script {
-          sh "rm -Rf fixtures && mkdir fixtures"
+          sh "make fixtures.clean"
+          sh "mkdir fixtures && mkdir -p graphql/responses"
+          // without that USER_ID variable, it is not possible to delete the generated fixtures folder anymore
           sh "chmod u+x ./fixtures-generator/entrypoint.sh"
-          // without that USER variable, it is not possible to delete the generated fixtures folder anymore
-          sh "USER=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up fixtures-service"
+          sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up fixtures-service"
         }
       }
     }
-    stage('Start GraphQL engine') {
+    stage('Start services') {
       steps {
-        sh "docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up -d postgres graphql-engine"
-        sh "chmod u+x ./database-service/scripts/waitForService.sh && ./database-service/scripts/waitForService.sh localhost ${API_PORT}"
+        sh "make up"
       }
     }
     stage('Perform GraphQL engine tests') {
       steps {
-        sh "docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up hasura-service-tests"
+        catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+          // sh "make test.database-service"
+          sh "chmod u+x ./database-service/tests/entrypoint.sh"
+          sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit hasura-service-tests"
+        }
       }
     }
-    stage('Perform acceptance tests') {
+    stage('Perform ui unit tests') {
       steps {
-        sh "docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up features-tests"
+        catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+        //  sh "make test.ui-unit"
+         sh "chmod u+x ./ui/test/entrypoint.sh"
+         sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit ui-unit-tests"
+        }
+      }
+    }
+    stage('Perform ui integration tests') {
+      steps {
+        catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+          // sh "make test.ui-integration"
+          sh "chmod u+x ./ui/cypress/integration/entrypoint.sh"
+	        sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit ui-integration-tests"
+        }
+      }
+    }
+    stage('Perform e2e tests') {
+      steps {
+        catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+          // sh "make test.e2e"
+          sh "chmod u+x ./ui/cypress/e2e/entrypoint.sh"
+        	sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit e2e-tests"
+        }
       }
     }
   }
   post {
     always {
-      sh "docker-compose down"
-      junit "**/${TEST_REPORTS_FOLDER}/*.xml"
+      sh "make down"
+      junit "**/test-reports/*.xml"
     }
   }
 }

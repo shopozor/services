@@ -1,24 +1,25 @@
-HASURA_ENDPOINT = http://localhost:8080
-HASURA_MIGRATE_APPLY = hasura migrate apply --endpoint $(HASURA_ENDPOINT)
-HASURA_STATUS_APPLY = hasura migrate apply --endpoint $(HASURA_ENDPOINT)
-FIXTURES_FOLDER = ./fixtures
+ifndef API_PORT
+	API_PORT=8080
+endif
 
-dev.start: up fixtures
+HASURA_ENDPOINT = http://localhost:${API_PORT}
+HASURA_MIGRATE_APPLY = hasura migrate apply --endpoint $(HASURA_ENDPOINT)
+HASURA_MIGRATE_STATUS = hasura migrate apply --endpoint $(HASURA_ENDPOINT)
+FIXTURES_FOLDER = ./fixtures
+GRAPHQL_RESPONSES_FOLDER = ./graphql/responses
+
+dev.start: build up db.migrate.apply fixtures
 
 dev.end: down fixtures.clean rm
 
 build:
 	@echo "Building images..."
-	@docker-compose build
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml build
 
-up: build
-	@echo "Starting containers..."
-	@docker-compose up -d postgres
-	@sleep 1s
-	@docker-compose up -d graphql-engine
-	@echo "Waiting for postgres to be ready for loading migrations..."
-	@until make db.migrate.apply 2>&1 /dev/null; do echo "Waiting for database to be ready ..."; sleep 2s; done
+up:
+	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up -d postgres graphql-engine ui
+	@chmod u+x ./database-service/scripts/waitForService.sh
+	@./database-service/scripts/waitForService.sh localhost ${API_PORT}
 
 down:
 	@docker-compose down
@@ -28,7 +29,6 @@ rm:
 	@docker-compose rm -f
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml rm -f
 
-
 db.migrate.apply:
 	$(HASURA_MIGRATE_APPLY) --project database-service --skip-update-check
 
@@ -37,9 +37,9 @@ db.migrate.status:
 
 fixtures.generate:
 	@echo "Generating fixtures ..."
-	@if [ -d $(FIXTURES_FOLDER) ]; then rm -rf $(FIXTURES_FOLDER); fi
+	@chmod u+x ./fixtures-generator/entrypoint.sh
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml -f docker-compose-tests-dev.yaml up fixtures-service
-	@docker-compose -f docker-compose.yaml rm -f fixtures-service
+	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml rm -f fixtures-service
 
 fixtures.up:
 	$(HASURA_MIGRATE_APPLY) --project $(FIXTURES_FOLDER)/database/small --up all --skip-update-check
@@ -50,15 +50,30 @@ fixtures.down:
 
 fixtures.clean:
 	rm -rf $(FIXTURES_FOLDER)
+	rm -rf $(GRAPHQL_RESPONSES_FOLDER)
 
 fixtures: fixtures.clean fixtures.generate fixtures.up
 
-test:
-	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit postgres graphql-engine hasura-service-tests
-	@docker-compose down
+test.database-service:
+	@chmod u+x ./database-service/tests/entrypoint.sh
+	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit hasura-service-tests
+
+test.ui-unit:
+	@chmod u+x ./ui/test/entrypoint.sh
+	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit ui-unit-tests
+
+test.ui-integration:
+	@chmod u+x ./ui/cypress/integration/entrypoint.sh
+	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit ui-integration-tests
+
+test.e2e:
+	@chmod u+x ./ui/cypress/e2e/entrypoint.sh
+	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit e2e-tests
 
 test.behave:
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit features-tests
+
+test: test.database-service test.ui-unit-test test.ui-integration-tests test.e2e-tests
 
 %.restart:
 	make $*.down
@@ -68,7 +83,7 @@ logs:
 	docker-compose logs -f
 
 console:
-	cd database-service && hasura console
+	hasura console --project database-service 
 
 %.logs:
 	docker-compose logs -f $*
