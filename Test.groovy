@@ -40,7 +40,7 @@ pipeline {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
         //  sh "make test.ui-unit"
          sh "chmod u+x ./ui/test/entrypoint.sh"
-         sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit ui-unit-tests"
+         sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit ui-unit-tests"
         }
       }
     }
@@ -49,7 +49,7 @@ pipeline {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
           // sh "make test.ui-integration"
           sh "chmod u+x ./ui/cypress/integration/entrypoint.sh"
-	        sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml -f docker-compose-tests.yaml up --abort-on-container-exit ui-integration-tests"
+	        sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit ui-integration-tests"
         }
       }
     }
@@ -58,7 +58,7 @@ pipeline {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
           // sh "make test.e2e"
           sh "chmod u+x ./ui/cypress/e2e/entrypoint.sh"
-        	sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml -f docker-compose-tests.yaml up --abort-on-container-exit e2e-tests"
+        	sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit e2e-tests"
         }
       }
     }

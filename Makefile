@@ -72,20 +72,25 @@ test.database-service:
 
 test.ui-unit:
 	@chmod u+x ./ui/test/entrypoint.sh
-	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit ui-unit-tests
+	@docker-compose -f docker-compose.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit ui-unit-tests
 
 test.ui-integration:
 	@chmod u+x ./ui/cypress/integration/entrypoint.sh
-	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit ui-integration-tests
+	@docker-compose -f docker-compose.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit ui-integration-tests
 
 test.e2e:
 	@chmod u+x ./ui/cypress/e2e/entrypoint.sh
-	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit e2e-tests
+	@docker-compose -f docker-compose.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit e2e-tests
 
 test.behave:
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit features-tests
 
-test: test.database-service test.ui-unit test.ui-integration test.e2e
+ui.test: test.ui-unit test.ui-integration test.e2e
+
+test: backend.test ui.test
+
+backend.test: test.database-service
+
 
 %.restart:
 	make $*.down

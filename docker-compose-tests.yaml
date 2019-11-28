@@ -1,4 +1,4 @@
-version: '3.6'
+version: "3.6"
 services:
   postgres:
     restart: "always"
@@ -55,38 +55,6 @@ services:
     volumes:
       - ./ui:/app
     entrypoint: ./test/entrypoint.sh
-  ui-integration-tests:
-    build:
-      context: ui
-      dockerfile: Dockerfile
-      target: cypress-tests
-      args:
-        GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
-    user: ${USER_ID}
-    environment:
-      CYPRESS_baseUrl: http://ui:4000/#
-    depends_on:
-      - ui
-    restart: "no"
-    volumes:
-      - ./ui:/app
-    entrypoint: ./cypress/integration/entrypoint.sh
-  e2e-tests:
-    build:
-      context: ui
-      dockerfile: Dockerfile
-      target: cypress-tests
-      args:
-        GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
-    user: ${USER_ID}
-    environment:
-      CYPRESS_baseUrl: http://ui:4000/#
-    depends_on:
-      - ui
-    restart: "no"
-    volumes:
-      - ./ui:/app
-    entrypoint: ./cypress/e2e/entrypoint.sh
 
 volumes:
   db_data:
