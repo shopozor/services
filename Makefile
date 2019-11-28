@@ -22,7 +22,7 @@ up:
 	@./database-service/scripts/waitForService.sh localhost ${API_PORT}
 
 down:
-	@docker-compose down
+	@docker-compose down --remove-orphans
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml down
 
 rm:
