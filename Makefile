@@ -29,7 +29,7 @@ build:
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml build
 
 up:
-	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up -d postgres graphql-engine ui
+	@docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml up -d postgres graphql-engine ui
 	@chmod u+x ./database-service/scripts/waitForService.sh
 	@./database-service/scripts/waitForService.sh localhost ${API_PORT}
 
