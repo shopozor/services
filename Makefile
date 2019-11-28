@@ -17,7 +17,7 @@ build:
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml build
 
 up:
-	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up -d postgres graphql-engine ui
+	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up -d postgres graphql-engine admin-ui
 	@chmod u+x ./database-service/scripts/waitForService.sh
 	@./database-service/scripts/waitForService.sh localhost ${API_PORT}
 
@@ -57,22 +57,22 @@ test.database-service:
 	@chmod u+x ./database-service/tests/entrypoint.sh
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit hasura-service-tests
 
-test.ui-unit:
-	@chmod u+x ./ui/test/entrypoint.sh
-	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit ui-unit-tests
+test.admin-ui-unit:
+	@chmod u+x ./admin-ui/test/entrypoint.sh
+	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit admin-ui-unit-tests
 
-test.ui-integration:
-	@chmod u+x ./ui/cypress/integration/entrypoint.sh
-	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit ui-integration-tests
+test.admin-ui-integration:
+	@chmod u+x ./admin-ui/cypress/integration/entrypoint.sh
+	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit admin-ui-integration-tests
 
-test.e2e:
-	@chmod u+x ./ui/cypress/e2e/entrypoint.sh
-	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit e2e-tests
+test.admin-e2e:
+	@chmod u+x ./admin-ui/cypress/e2e/entrypoint.sh
+	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit admin-e2e-tests
 
 test.behave:
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit features-tests
 
-test: test.database-service test.ui-unit-test test.ui-integration-tests test.e2e-tests
+test: test.database-service test.admin-ui-unit-test test.admin-ui-integration-tests test.admin-e2e-tests
 
 %.restart:
 	make $*.down
