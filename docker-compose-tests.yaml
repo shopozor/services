@@ -1,9 +1,5 @@
 version: "3.6"
 services:
-  postgres:
-    restart: "always"
-  graphql-engine:
-    restart: "always"
   hasura-service-tests:
     build:
       context: ./database-service
@@ -44,17 +40,6 @@ services:
       - ./fixtures:/app/fixtures
       - ./test-utils:/app/test_utils
     entrypoint: behave --junit --junit-directory ${TEST_REPORTS_FOLDER:-test-reports} --tags ~wip
-  ui-unit-tests:
-    build:
-      context: ui
-      dockerfile: Dockerfile
-      target: unit-tests
-      args:
-        GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
-    restart: "no"
-    volumes:
-      - ./ui:/app
-    entrypoint: ./test/entrypoint.sh
 
 volumes:
   db_data:

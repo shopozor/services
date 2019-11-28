@@ -32,3 +32,14 @@ services:
     volumes:
       - ./ui:/app
     entrypoint: ./cypress/e2e/entrypoint.sh
+  ui-unit-tests:
+    build:
+      context: ui
+      dockerfile: Dockerfile
+      target: unit-tests
+      args:
+        GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
+    restart: "no"
+    volumes:
+      - ./ui:/app
+    entrypoint: ./test/entrypoint.sh
