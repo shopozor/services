@@ -2,7 +2,7 @@ version: "3.6"
 services:
   ui:
     build:
-      context: admin-ui
+      context: ./frontend/admin-ui
       dockerfile: ./Dockerfile
       target: app
       args:

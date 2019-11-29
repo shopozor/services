@@ -1,7 +1,7 @@
 #! /bin/bash
 
-ln -s /home/node/node_modules/ node_modules 
-yarn test:unit:ci 
+ln -s /home/node/node_modules/ node_modules
+yarn cypress:e2e:ci
 EXIT_CODE=$?
 rm -f node_modules
 

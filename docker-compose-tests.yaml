@@ -2,17 +2,17 @@ version: "3.6"
 services:
   hasura-service-tests:
     build:
-      context: ./database-service
+      context: ./backend/database-service
       dockerfile: ./Dockerfile
       target: integration-test
     restart: "no"
     depends_on:
       - graphql-engine
     volumes:
-      - ./database-service:/app
-      - ./fixtures:/app/fixtures
-      - ./graphql:/app/fixtures/graphql/calls
-      - ./test-utils:/app/tests/utils
+      - ./backend/database-service:/app
+      - ./shared/fixtures:/app/fixtures
+      - ./shared/graphql:/app/fixtures/graphql/calls
+      - ./backend/test-utils:/app/tests/utils
     environment:
       - PYTHONDONTWRITEBYTECODE=1
       - PYTHONPATH=./tests:$PYTHONPATH
@@ -20,25 +20,25 @@ services:
   fixtures-service:
     build:
       context: .
-      dockerfile: ./fixtures-generator/Dockerfile
+      dockerfile: ./backend/fixtures-generator/Dockerfile
       target: builder
     user: ${USER_ID}
     volumes:
-      - ./fixtures-generator:/app
-      - ./test-utils:/app/test_utils
+      - ./backend/fixtures-generator:/app
+      - ./backend/test-utils:/app/test_utils
   features-tests:
     build:
-      context: ./features
+      context: ./backend/features
       dockerfile: ./Dockerfile
       target: features-tests
     restart: "no"
     depends_on:
       - graphql-engine
     volumes:
-      - ./database-service:/db
-      - ./features:/app
-      - ./fixtures:/app/fixtures
-      - ./test-utils:/app/test_utils
+      - ./backend/database-service:/db
+      - ./backend/features:/app
+      - ./shared/fixtures:/app/fixtures
+      - ./backend/test-utils:/app/test_utils
     entrypoint: behave --junit --junit-directory ${TEST_REPORTS_FOLDER:-test-reports} --tags ~wip
 
 volumes:

@@ -1,0 +1,89 @@
+{
+  "author": "Praveen",
+  "cypress-cucumber-preprocessor": {
+    "nonGlobalStepDefinitions": true
+  },
+  "dependencies": {
+    "@nuxtjs/apollo": "^4.0.0-rc2.3",
+    "apollo-cache-inmemory": "^1.6.3",
+    "core-js": "^2.6.3",
+    "cross-env": "^6.0.3",
+    "graphql-tag": "^2.10.1",
+    "nuxt": "^2.10.2"
+  },
+  "description": "My epic Nuxt.js project",
+  "devDependencies": {
+    "@babel/core": "^7.7.4",
+    "@babel/plugin-syntax-dynamic-import": "^7.7.4",
+    "@cypress/webpack-preprocessor": "^4.1.1",
+    "@nuxtjs/eslint-config": "^2.0.0",
+    "@nuxtjs/eslint-module": "^1.1.0",
+    "@vue/cli-plugin-unit-jest": "^4.1.1",
+    "@vue/test-utils": "1.0.0-beta.29",
+    "babel-eslint": "^10.0.3",
+    "babel-jest": "^24.9.0",
+    "cypress": "^3.7.0",
+    "cypress-cucumber-preprocessor": "^1.16.2",
+    "eslint": "^6.7.1",
+    "eslint-config-vue": "^2.0.2",
+    "eslint-friendly-formatter": "^4.0.1",
+    "eslint-loader": "^3.0.2",
+    "eslint-plugin-chai-friendly": "^0.5.0",
+    "eslint-plugin-cucumber": "^1.4.0",
+    "eslint-plugin-cypress": "^2.7.0",
+    "eslint-plugin-html": "^6.0.0",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-jest": "^23.0.5",
+    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-nuxt": ">=0.5.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-vue": "^6.0.1",
+    "husky": "^3.1.0",
+    "jest": "^24.9.0",
+    "jest-junit": "^9.0.0",
+    "majestic": "^1.6.1",
+    "nodemon": "^2.0.1",
+    "vue-jest": "^3.0.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn lint-staged",
+      "pre-push": "yarn lint-staged"
+    }
+  },
+  "jest-junit": {
+    "outputDirectory": "./test-reports",
+    "outputName": "unit-test-report.xml"
+  },
+  "lint-staged": {
+    "*.js|*.vue": "yarn lint --fix"
+  },
+  "name": "hasura-nuxtjs",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "concurrently:dev:jest": "concurrently \"nuxt\" \"jest --watch\"",
+    "cypress:e2e": "wait-on http://localhost:3000 && cross-env CYPRESS_baseUrl=http://localhost:3000/# cypress run --env configFile=e2e",
+    "cypress:e2e:ci": "cypress run --env configFile=e2e",
+    "cypress:integration": "wait-on http://localhost:3000 && cross-env CYPRESS_baseUrl=http://localhost:3000/# cypress run --env configFile=integration",
+    "cypress:integration:ci": "cypress run --env configFile=integration",
+    "cypress:integration:dev": "yarn cypress:integration",
+    "cypress:open": "cross-env CYPRESS_baseUrl=http://localhost:3000/# cypress open",
+    "cypress:open:dev": "cross-env CYPRESS_baseUrl=http://localhost:3000/# NODE_ENV=development cypress open",
+    "generate": "nuxt generate",
+    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "start": "nuxt start",
+    "start:dev": "nuxt",
+    "start:e2e": "concurrently \"yarn cypress:e2e\" --kill-others \"yarn start\" --success first",
+    "start:integration": "concurrently \"yarn cypress:integration\" --kill-others \"yarn start\" --success first",
+    "start:integration:dev": "concurrently \"yarn cypress:integration:dev\" --kill-others \"yarn start:dev\" --success first",
+    "test": "echo \"See package.json => scripts for available tests.\" && exit 0",
+    "test:unit": "jest --updateSnapshot",
+    "test:unit:ci": "jest --updateSnapshot --ci --reporters=default --reporters=jest-junit",
+    "test:unit:coverage": "jest --coverage",
+    "test:unit:ui": "majestic --port 3001",
+    "test:unit:watch": "jest --watch",
+    "test:unit:watchAll": "jest --watchAll"
+  },
+  "version": "1.0.0"
+}

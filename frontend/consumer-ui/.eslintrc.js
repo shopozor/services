@@ -1,45 +1,31 @@
 module.exports = {
   root: true,
-
+  env: {
+    browser: true
+  },
   parserOptions: {
     parser: 'babel-eslint',
     sourceType: 'module'
   },
-
-  env: {
-    browser: true,
-    jest: true
-  },
-
   extends: [
-    // https://github.com/vuejs/eslint-plugin-vue#priority-a-essential-error-prevention
-    // consider switching to `plugin:vue/strongly-recommended` or `plugin:vue/recommended` for stricter rules.
-    '@vue/standard',
+    '@nuxtjs',
     'plugin:chai-friendly/recommended',
     'plugin:cypress/recommended',
-    'plugin:vue/essential'
+    'plugin:vue/essential',
+    'plugin:jest/recommended'
   ],
-
-  // required to lint *.vue files
+  globals: {
+    'defineParameterType': true // cypress-cucumber-preprocessor
+  },
   plugins: [
     'chai-friendly',
     'cucumber',
     'cypress',
     'vue'
   ],
-
-  globals: {
-    'ga': true, // Google Analytics
-    'cordova': true,
-    '__statics': true,
-    'process': true,
-    'Capacitor': true,
-    'chrome': true,
-    'defineParameterType': true // cypress-cucumber-preprocessor
-  },
-
   // add your custom rules here
   rules: {
+    'nuxt/no-cjs-in-config': 'off',
     // allow async-await
     'generator-star-spacing': 'off',
     // allow paren-less arrow functions

@@ -9,13 +9,14 @@ pipeline {
         sh "docker login -u $DOCKER_CREDENTIALS_USR -p $DOCKER_CREDENTIALS_PSW"
       }
     }
+    // TODO: see if we can't take the images build in the docker-compose build step in the tests pipeline!
     stage('Build and publish fixtures generator') {
       steps {
         script {
           if(BUILD_TYPE == 'production') {
             serviceName = 'fixtures-generator'
             dockerRepoName = "$DOCKER_CREDENTIALS_USR/$serviceName:${TAG}"
-            sh "docker build -t $dockerRepoName --file ./$serviceName/Dockerfile ."
+            sh "docker build -t $dockerRepoName --file ./backend/$serviceName/Dockerfile ."
             sh "docker push $dockerRepoName"
           }
         }
@@ -27,7 +28,7 @@ pipeline {
           if(BUILD_TYPE == 'production') {
             serviceName = 'database-service'
             dockerRepoName = "$DOCKER_CREDENTIALS_USR/$serviceName:${TAG}"
-            sh "docker build -t $dockerRepoName --target app --file ./$serviceName/Dockerfile ."
+            sh "docker build -t $dockerRepoName --target app --file ./backend/$serviceName/Dockerfile ."
             sh "docker push $dockerRepoName"
           }
         }

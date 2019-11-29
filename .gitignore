@@ -37,15 +37,15 @@ yarn-debug.log*
 yarn-error.log*
 
 # Cypress test results
-*/cypress/screenshots
-*/cypress/videos
-*/junit-reports
+screenshots
+videos
+junit-reports
 
 # Generated spec
 specification/
 
 # Jest unit tests
-*/test/jest/coverage/
+coverage
 
 # Nuxt
 .nuxt
