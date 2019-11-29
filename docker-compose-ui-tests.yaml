@@ -9,7 +9,7 @@ services:
         GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
     user: ${USER_ID}
     environment:
-      CYPRESS_baseUrl: http://ui:4000/#
+      CYPRESS_baseUrl: http://ui:${UI_PORT:-4000}/#
     depends_on:
       - ui
     restart: "no"
@@ -25,7 +25,7 @@ services:
         GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
     user: ${USER_ID}
     environment:
-      CYPRESS_baseUrl: http://ui:4000/#
+      CYPRESS_baseUrl: http://ui:${UI_PORT:-4000}/#
     depends_on:
       - ui
     restart: "no"
