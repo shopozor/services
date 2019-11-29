@@ -55,9 +55,10 @@ class ShopCategoriesGenerator(ResponsesGenerator):
         self.__SHOPS_FIXTURE = helpers.get_shopozor_fixture(self._INPUT_DIR)
 
     def _produce_data(self):
+        images = [item for item in self.__SHOPS_FIXTURE['images']]
         return {
             'data': {
-                'categories': [helpers.category_item(category) for category in self.__SHOPS_FIXTURE['product_categories']]
+                'product_categories': [helpers.category_item(category, images) for category in self.__SHOPS_FIXTURE['product_categories']]
             }
         }
 

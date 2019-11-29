@@ -19,15 +19,17 @@ def shop_item(shop):
     }
 
 
-def category_item(category):
+def category_item(category, images):
+    associated_image = [{
+        'alt': item['alt'],
+        'url': item['url'],
+    } for item in images if item['id'] == category['image_id']][0]
+
     return {
         'id': category['id'],
         'name': category['name'],
         'description': category['description'],
-        'backgroundImage': {
-            'alt': category['background_image_alt'],
-            'url': category['background_image']
-        }
+        'image': associated_image
     }
 
 
@@ -128,7 +130,7 @@ def create_new_product_with_variant(product, variant, new_variant, users_fixture
     associated_image = [{
         'alt': item['alt'],
         'url': item['url'],
-    } for item in shops_fixture['product_images'] if item['id'] == product['image_id']]
+    } for item in shops_fixture['images'] if item['id'] == product['image_id']]
     # TODO: delete those images from the shops_fixture
     thumbnail = product_thumbnail(
         associated_image) if associated_image else placeholder_product_thumbnail()
