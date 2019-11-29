@@ -33,22 +33,6 @@ pipeline {
         }
       }
     }
-    stage('Build and publish ui service') {
-      steps {
-        script {
-          serviceName = 'ui'
-          dockerRepoName = "$DOCKER_CREDENTIALS_USR/$serviceName:${TAG}"
-          if(BUILD_TYPE == 'production') {
-            sh "docker build --build-arg GRAPHQL_API=${GRAPHQL_API_URL} -t $dockerRepoName --target app --file ./$serviceName/Dockerfile ."
-          } else {
-            dockerRepoName += '-e2e'
-            split_url = GRAPHQL_API_URL.split('.')
-            staging_url = split_url[0] + '-staging' + split_url[1:-1]
-            sh "docker build --build-arg GRAPHQL_API=$staging_url -t $dockerRepoName --target e2e --file ./$serviceName/Dockerfile ."
-          }
-          sh "docker push $dockerRepoName"
-        }
-      }
-    }
+    // we don't publish any ui docker image as they will never be used (we deploy static content or SPAs)
   }
 }

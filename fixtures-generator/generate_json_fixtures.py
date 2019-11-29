@@ -109,15 +109,23 @@ def generate_variant(variant_name, output_folder):
     shops = factory.create_shops(variant['#shops'])
     shopozor.update(shops)
 
-    categories = factory.create_categories()
+    nb_category_images = len(FakeDataFactory.category_types)
+    category_images = factory.create_images(
+        'category-backgrounds', 1, nb_category_images)
+    nb_product_images = variant['#shops'] * \
+        variant['#max(producers/shop)'] * variant['#max(products/producer)']
+    product_images = factory.create_images(
+        'products', nb_category_images + 1, nb_product_images)
+    images = {
+        'images': category_images['images']
+    }
+    images['images'].extend(product_images['images'])
+    shopozor.update(images)
+
+    categories = factory.create_categories(category_images)
     shopozor.update(categories)
 
-    nb_images = variant['#shops'] * \
-        variant['#max(producers/shop)'] * variant['#max(products/producer)']
-    productimages = factory.create_productimages(nb_images)
-    shopozor.update(productimages)
-
-    products = factory.create_products(categories, producers, productimages)
+    products = factory.create_products(categories, producers, product_images)
     shopozor.update(products)
 
     productvariants = factory.create_productvariants(products)

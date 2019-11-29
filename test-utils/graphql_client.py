@@ -1,8 +1,10 @@
 from six.moves import urllib
+
 import json
 
 
 class GraphQLClient:
+
     def __init__(self, endpoint):
         self.endpoint = endpoint
         self.token = None
@@ -29,7 +31,7 @@ class GraphQLClient:
 
         try:
             response = urllib.request.urlopen(req)
-            return response.read().decode('utf-8')
+            return json.loads(response.read().decode('utf-8'))
         except urllib.error.HTTPError as e:
             print((e.read()))
             print('')

@@ -19,9 +19,6 @@ class Provider(LoremProvider):
     def __random_money_amount(self, min, max):
         return round(self.generator.random.uniform(min, max) * 2, 1) / 2
 
-    def category_image_url(self):
-        return os.path.join('category-backgrounds', '%s.png' % ''.join(self.random_letters()))
-
     def conservation_days(self):
         return self.random_int(min=0, max=360)
 
@@ -39,8 +36,8 @@ class Provider(LoremProvider):
             [('FREE', 0.25), ('AUTO_UNIT', 0.25), ('AUTO_PRICE', 0.25), ('BULK', 0.25)])
         return self.random_element(distro)
 
-    def product_image_url(self):
-        return os.path.join('products', '%s.png' % ''.join(self.random_letters()))
+    def image_url(self, image_folder):
+        return os.path.join(image_folder, '%s.png' % ''.join(self.random_letters()))
 
     def product_name(self):
         return self.sentence(nb_words=3, variable_nb_words=True)

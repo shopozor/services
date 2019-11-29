@@ -1,0 +1,45 @@
+version: "3.6"
+services:
+  admin-ui-unit-tests:
+    build:
+      context: admin-ui
+      dockerfile: Dockerfile
+      target: unit-tests
+      args:
+        GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
+    restart: "no"
+    volumes:
+      - ./admin-ui:/app
+    entrypoint: ./test/entrypoint.sh
+  admin-ui-integration-tests:
+    build:
+      context: admin-ui
+      dockerfile: Dockerfile
+      target: cypress-tests
+      args:
+        GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
+    user: ${USER_ID}
+    environment:
+      CYPRESS_baseUrl: http://admin-ui:${UI_PORT:-4000}/#
+    depends_on:
+      - admin-ui
+    restart: "no"
+    volumes:
+      - ./admin-ui:/app
+    entrypoint: ./cypress/integration/entrypoint.sh
+  admin-e2e-tests:
+    build:
+      context: admin-ui
+      dockerfile: Dockerfile
+      target: cypress-tests
+      args:
+        GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
+    user: ${USER_ID}
+    environment:
+      CYPRESS_baseUrl: http://admin-ui:${UI_PORT:-4000}/#
+    depends_on:
+      - admin-ui
+    restart: "no"
+    volumes:
+      - ./admin-ui:/app
+    entrypoint: ./cypress/e2e/entrypoint.sh

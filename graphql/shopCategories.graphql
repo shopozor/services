@@ -1,11 +1,11 @@
-query ShopCategories {
-  categories {
-    backgroundImage {
+query shopCategories {
+  product_categories {
+    description
+    id
+    image {
       alt
       url
     }
-    description
-    id
     name
   }
 }
