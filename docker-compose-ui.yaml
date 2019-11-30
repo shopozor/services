@@ -1,9 +1,9 @@
 version: "3.6"
 services:
-  ui:
+  admin-ui:
     build:
-      context: ./frontend/admin-ui
-      dockerfile: ./Dockerfile
+      context: .
+      dockerfile: ./frontend/admin-ui/Dockerfile
       target: app
       args:
         GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/

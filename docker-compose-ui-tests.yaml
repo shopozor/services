@@ -2,8 +2,8 @@ version: "3.6"
 services:
   admin-ui-unit-tests:
     build:
-      context: ./frontend/admin-ui
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./frontend/admin-ui/Dockerfile
       target: unit-tests
       args:
         GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
@@ -13,8 +13,8 @@ services:
     entrypoint: ./test/entrypoint.sh
   admin-ui-integration-tests:
     build:
-      context: ./frontend/admin-ui
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./frontend/admin-ui/Dockerfile
       target: cypress-tests
       args:
         GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
@@ -29,8 +29,8 @@ services:
     entrypoint: ./cypress/integration/entrypoint.sh
   admin-e2e-tests:
     build:
-      context: ./frontend/admin-ui
-      dockerfile: Dockerfile
+      context: .
+      dockerfile: ./frontend/admin-ui/Dockerfile
       target: cypress-tests
       args:
         GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
