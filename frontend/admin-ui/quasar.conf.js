@@ -1,5 +1,5 @@
-const helpers = require('./quasar.helpers')
 const path = require('path')
+const helpers = require('./quasar.helpers')
 
 // Configuration for your app
 // https://quasar.dev/quasar-cli/quasar-conf-js

@@ -52,7 +52,7 @@ export const mountQuasar = (component, options = {}) => {
   const $d = () => {}
 
   return shallowMount(component, {
-    localVue: localVue,
+    localVue,
     store,
     router,
     mocks: { $t, $tc, $n, $d },

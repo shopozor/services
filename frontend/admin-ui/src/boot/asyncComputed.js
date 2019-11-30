@@ -1,5 +1,5 @@
 import AsyncComputed from 'vue-async-computed'
 
-export default async ({ Vue }) => {
+export default ({ Vue }) => {
   Vue.use(AsyncComputed)
 }

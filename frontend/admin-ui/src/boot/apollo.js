@@ -6,7 +6,7 @@ import { createHttpLink } from 'apollo-link-http'
 
 const httpLink = createHttpLink({
   uri: process.env.API,
-  fetch: fetch
+  fetch
 })
 
 export const apolloClient = new ApolloClient({
