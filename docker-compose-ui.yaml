@@ -13,3 +13,16 @@ services:
       - graphql-engine
     restart: "no"
     entrypoint: lerna run start --scope admin-ui
+  consumer-ui:
+    build:
+      context: .
+      dockerfile: ./frontend/Dockerfile
+      target: app
+      args:
+        GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
+    ports:
+      - ${UI_PORT:-3000}:3000
+    depends_on:
+      - graphql-engine
+    restart: "no"
+    entrypoint: lerna run start --scope consumer-ui
