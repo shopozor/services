@@ -11,6 +11,11 @@ pipeline {
         sh "make build"
       }
     }
+    stage('Fetch node dependencies') {
+      steps {
+        sh "yarn && yarn bootstrap"
+      }
+    }
     stage('Generate the database fixtures') {
       steps {
         script {
@@ -38,7 +43,7 @@ pipeline {
     stage('Perform ui unit tests') {
       steps {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-         sh "chmod u+x ./frontend/admin-ui/test/entrypoint.sh"
+         sh "chmod u+x ./frontend/tests/entrypoint-unit.sh"
          sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit admin-ui-unit-tests"
         }
       }
@@ -46,7 +51,7 @@ pipeline {
     stage('Perform ui integration tests') {
       steps {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-          sh "chmod u+x ./frontend/admin-ui/cypress/integration/entrypoint.sh"
+          sh "chmod u+x ./frontend/entrypoint-integration.sh"
 	        sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit admin-ui-integration-tests"
         }
       }
@@ -54,7 +59,7 @@ pipeline {
     stage('Perform e2e tests') {
       steps {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-          sh "chmod u+x ./frontend/admin-ui/cypress/e2e/entrypoint.sh"
+          sh "chmod u+x ./frontend/entrypoint-e2e.sh"
         	sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit admin-e2e-tests"
         }
       }

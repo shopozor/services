@@ -26,7 +26,7 @@ ui.up: ui.build
 
 build:
 	@echo "Building images..."
-	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml build
+	@docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml -f docker-compose-tests.yaml -f docker-compose-ui-tests.yaml build
 
 up:
 	@docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml up -d postgres graphql-engine admin-ui
@@ -70,23 +70,23 @@ test.database-service:
 	@chmod u+x ./backend/database-service/tests/entrypoint.sh
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit hasura-service-tests
 
-test.admin-ui-unit:
-	@chmod u+x ./frontend/admin-ui/test/entrypoint.sh
-	@docker-compose -f docker-compose.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit admin-ui-unit-tests
+test.ui-unit:
+	@chmod u+x ./frontend/tests/entrypoint-unit.sh
+	@docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit ui-unit-tests
 
-test.admin-ui-integration:
-	@chmod u+x ./frontend/admin-ui/cypress/integration/entrypoint.sh
-	@docker-compose -f docker-compose.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit admin-ui-integration-tests
+test.ui-integration:
+	@chmod u+x ./frontend/tests/entrypoint-integration.sh
+	@docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit ui-integration-tests
 
-test.admin-e2e:
-	@chmod u+x ./frontend/admin-ui/cypress/e2e/entrypoint.sh
-	@docker-compose -f docker-compose.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit admin-e2e-tests
+test.e2e:
+	@chmod u+x ./frontend/tests/entrypoint-e2e.sh
+	@docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit e2e-tests
 
 test.behave:
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit features-tests
 
 backend.test: test.database-service
-ui.test: test.admin-ui-unit test.admin-ui-integration test.admin-e2e
+ui.test: test.ui-unit test.ui-integration test.e2e
 test: backend.test ui.test
 
 %.restart:

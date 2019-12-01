@@ -41,9 +41,9 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-vue": "^6.0.1",
-    "husky": "^3.1.0",
     "jest": "^24.9.0",
     "jest-junit": "^9.0.0",
+    "lerna": "^3.19.0",
     "majestic": "^1.6.1",
     "nodemon": "^2.0.1",
     "sinon": "^7.5.0",
@@ -60,5 +60,12 @@
   "name": "services",
   "private": true,
   "productName": "Shopozor",
+  "scripts": {
+    "bootstrap": "lerna bootstrap",
+    "build": "lerna run build",
+    "cypress:e2e:ci": "lerna run cypress:e2e:ci",
+    "cypress:integration:ci": "lerna run cypress:integration:ci",
+    "test:unit:ci": "lerna run test:unit:ci"
+  },
   "version": "0.0.1"
 }

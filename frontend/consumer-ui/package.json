@@ -12,12 +12,6 @@
     "nuxt": "^2.10.2"
   },
   "description": "My epic Nuxt.js project",
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn lint-staged",
-      "pre-push": "yarn lint-staged"
-    }
-  },
   "jest-junit": {
     "outputDirectory": "./test-reports",
     "outputName": "unit-test-report.xml"
@@ -25,7 +19,7 @@
   "lint-staged": {
     "*.js|*.vue": "yarn lint --fix"
   },
-  "name": "hasura-nuxtjs",
+  "name": "consumer-ui",
   "private": true,
   "scripts": {
     "build": "nuxt build",
