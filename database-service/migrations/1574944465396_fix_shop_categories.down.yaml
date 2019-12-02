@@ -1,0 +1,31 @@
+- args:
+    relationship: image
+    table:
+      name: product_categories
+      schema: public
+  type: drop_relationship
+- args:
+    sql: "\n          alter table \"public\".\"product_categories\" drop constraint
+      \"product_categories_image_id_fkey\"\n      "
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."product_categories" DROP COLUMN "image_id";
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."product_categories" ADD COLUMN "background_image_alt"
+      varchar
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."product_categories" ALTER COLUMN "background_image_alt"
+      DROP NOT NULL
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."product_categories" ADD COLUMN "background_image" varchar
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."product_categories" ALTER COLUMN "background_image"
+      DROP NOT NULL
+  type: run_sql
+- args:
+    sql: alter table "public"."images" rename to "product_images";
+  type: run_sql

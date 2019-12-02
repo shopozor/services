@@ -178,34 +178,34 @@ class FakeDataFactory:
             'shops': result
         }
 
-    def __category(self, pk, name):
+    def __image(self, pk, image_folder):
         return {
-            'background_image': self.__fake.category_image_url(),
-            'background_image_alt': self.__fake.image_alt(),
+            'id': pk,
+            'url': self.__fake.image_url(image_folder),
+            'alt': self.__fake.image_alt()
+        }
+
+    def create_images(self, image_folder, start_pk=1, list_size=1):
+        result = [self.__image(pk, image_folder)
+                  for pk in range(start_pk, start_pk + list_size)]
+        return {
+            'images': result
+        }
+
+    def __category(self, pk, name, image_id):
+        return {
+            'image_id': image_id,
             'description': self.__fake.description(),
             'name': name,
             'id': pk
         }
 
-    def create_categories(self):
+    def create_categories(self, images):
         start_pk = 1
-        result = [self.__category(pk, category) for pk, category in enumerate(
+        result = [self.__category(pk, category, images['images'][pk - 1]['id']) for pk, category in enumerate(
             self.category_types, start_pk)]
         return {
             'product_categories': result
-        }
-
-    def __productimage(self, pk):
-        return {
-            'id': pk,
-            'url': self.__fake.product_image_url(),
-            'alt': self.__fake.image_alt()
-        }
-
-    def create_productimages(self, list_size=1):
-        result = [self.__productimage(pk) for pk in range(1, list_size + 1)]
-        return {
-            'product_images': result
         }
 
     def __product(self, pk, categories, producer_id, image_id):
@@ -240,7 +240,7 @@ class FakeDataFactory:
                 1, self.__MAX_NB_PRODUCTS_PER_PRODUCER)
             for i in range(0, nb_products):
                 product_id = i + product_index
-                image_id = images['product_images'][product_id - 1]['id']
+                image_id = images['images'][product_id - 1]['id']
                 product = self.__product(
                     product_id, categories['product_categories'], producer_id, image_id)
                 nb_visible_products += int(product['state'] == 'VISIBLE')

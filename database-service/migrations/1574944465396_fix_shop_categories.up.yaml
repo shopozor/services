@@ -1,0 +1,28 @@
+- args:
+    sql: alter table "public"."product_images" rename to "images";
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."product_categories" DROP COLUMN "background_image"
+      CASCADE
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."product_categories" DROP COLUMN "background_image_alt"
+      CASCADE
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."product_categories" ADD COLUMN "image_id" integer NULL;
+  type: run_sql
+- args:
+    sql: "\n           alter table \"public\".\"product_categories\"\n           add
+      constraint \"product_categories_image_id_fkey\"\n           foreign key (\"image_id\")\n
+      \          references \"public\".\"images\"\n           (\"id\") on update restrict
+      on delete restrict;\n      "
+  type: run_sql
+- args:
+    name: image
+    table:
+      name: product_categories
+      schema: public
+    using:
+      foreign_key_constraint_on: image_id
+  type: create_object_relationship

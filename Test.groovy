@@ -2,6 +2,8 @@ pipeline {
   agent any
   environment {
     API_PORT = 8081
+    UI_PORT = 4000
+    TEST_REPORTS_FOLDER = 'test-reports'
   }
   stages {
     stage('Build the docker images') {
@@ -13,7 +15,7 @@ pipeline {
       steps {
         script {
           sh "make fixtures.clean"
-          sh "mkdir fixtures && mkdir -p graphql/responses"
+          sh "mkdir fixtures"
           // without that USER_ID variable, it is not possible to delete the generated fixtures folder anymore
           sh "chmod u+x ./fixtures-generator/entrypoint.sh"
           sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up fixtures-service"
@@ -39,7 +41,7 @@ pipeline {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
         //  sh "make test.ui-unit"
          sh "chmod u+x ./ui/test/entrypoint.sh"
-         sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit ui-unit-tests"
+         sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit ui-unit-tests"
         }
       }
     }
@@ -48,7 +50,7 @@ pipeline {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
           // sh "make test.ui-integration"
           sh "chmod u+x ./ui/cypress/integration/entrypoint.sh"
-	        sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit ui-integration-tests"
+	        sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit ui-integration-tests"
         }
       }
     }
@@ -57,7 +59,7 @@ pipeline {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
           // sh "make test.e2e"
           sh "chmod u+x ./ui/cypress/e2e/entrypoint.sh"
-        	sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit e2e-tests"
+        	sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit e2e-tests"
         }
       }
     }

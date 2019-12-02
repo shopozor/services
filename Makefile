@@ -12,21 +12,34 @@ dev.start: build up db.migrate.apply fixtures
 
 dev.end: down fixtures.clean rm
 
+ui.down:
+ui.stop:
+ui.restart:
+ui.build:
+ui.%:
+	@echo "Do docker-compose $* of Admin UI image ..."
+	@docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml $* ui
+
+ui.up: ui.build
+	@echo "Do docker-compose $* of Admin UI image ..."
+	@docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml up -d ui
+
 build:
 	@echo "Building images..."
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml build
 
 up:
-	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up -d postgres graphql-engine ui
+	@docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml up -d postgres graphql-engine ui
 	@chmod u+x ./database-service/scripts/waitForService.sh
 	@./database-service/scripts/waitForService.sh localhost ${API_PORT}
 
 down:
+	@docker-compose down --remove-orphans
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml down
 
 rm:
 	@docker-compose rm -f
-	@docker-compose -f docker-compose-tests.yaml rm -f
+	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml rm -f
 
 db.migrate.apply:
 	$(HASURA_MIGRATE_APPLY) --project database-service --skip-update-check
@@ -41,11 +54,11 @@ fixtures.generate:
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml rm -f fixtures-service
 
 fixtures.up:
-	$(HASURA_MIGRATE_APPLY) --project $(FIXTURES_FOLDER) --up all --skip-update-check
+	$(HASURA_MIGRATE_APPLY) --project $(FIXTURES_FOLDER)/database/small --up all --skip-update-check
 
 fixtures.down:
 	# TODO: get the number of migrations from a truncated $(shell echo $((`ls database-service/migrations | wc -l`/2)))
-	$(HASURA_MIGRATE_APPLY) --project $(FIXTURES_FOLDER) --down 6 --skip-update-check
+	$(HASURA_MIGRATE_APPLY) --project $(FIXTURES_FOLDER)/database/small --down 6 --skip-update-check
 
 fixtures.clean:
 	rm -rf $(FIXTURES_FOLDER)
@@ -59,20 +72,25 @@ test.database-service:
 
 test.ui-unit:
 	@chmod u+x ./ui/test/entrypoint.sh
-	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit ui-unit-tests
+	@docker-compose -f docker-compose.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit ui-unit-tests
 
 test.ui-integration:
 	@chmod u+x ./ui/cypress/integration/entrypoint.sh
-	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit ui-integration-tests
+	@docker-compose -f docker-compose.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit ui-integration-tests
 
 test.e2e:
 	@chmod u+x ./ui/cypress/e2e/entrypoint.sh
-	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit e2e-tests
+	@docker-compose -f docker-compose.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit e2e-tests
 
 test.behave:
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit features-tests
 
-test: test.database-service test.ui-unit-test test.ui-integration-tests test.e2e-tests
+ui.test: test.ui-unit test.ui-integration test.e2e
+
+test: backend.test ui.test
+
+backend.test: test.database-service
+
 
 %.restart:
 	make $*.down
@@ -82,7 +100,7 @@ logs:
 	docker-compose logs -f
 
 console:
-	hasura console --project database-service 
+	hasura console --project database-service
 
 %.logs:
 	docker-compose logs -f $*
