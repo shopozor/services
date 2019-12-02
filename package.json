@@ -23,6 +23,7 @@
     "babel-jest": "^24.9.0",
     "concurrently": "^5.0.0",
     "cross-env": "^6.0.0",
+    "cross-var": "^1.1.0",
     "cypress": "^3.7.0",
     "cypress-cucumber-preprocessor": "^1.16.2",
     "eslint": "^6.7.1",

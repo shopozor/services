@@ -4,6 +4,9 @@ WORKDIR /app
 
 FROM cypress/base:12.13.0 AS cypress-tests
 
+ENV CYPRESS_CACHE_FOLDER /home/node/.cache/Cypress
+RUN yarn build
+# RUN cypress install
 WORKDIR /app
 
 FROM node:12.10.0-slim AS app

@@ -15,10 +15,9 @@ services:
       dockerfile: ./frontend/Dockerfile
       target: cypress-tests
     user: ${USER_ID}
-    environment:
-      CYPRESS_baseUrl: http://admin-ui:${UI_PORT:-4000}/#
     depends_on:
       - admin-ui
+      - consumer-ui
     restart: "no"
     volumes:
       - .:/app
@@ -29,10 +28,9 @@ services:
       dockerfile: ./frontend/Dockerfile
       target: cypress-tests
     user: ${USER_ID}
-    environment:
-      CYPRESS_baseUrl: http://admin-ui:${UI_PORT:-4000}/#
     depends_on:
       - admin-ui
+      - consumer-ui
     restart: "no"
     volumes:
       - .:/app

@@ -2,7 +2,6 @@ pipeline {
   agent any
   environment {
     API_PORT = 8081
-    UI_PORT = 4000
     TEST_REPORTS_FOLDER = 'test-reports'
   }
   stages {
@@ -44,7 +43,7 @@ pipeline {
       steps {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
          sh "chmod u+x ./frontend/tests/entrypoint-unit.sh"
-         sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit admin-ui-unit-tests"
+         sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit ui-unit-tests"
         }
       }
     }
@@ -52,7 +51,7 @@ pipeline {
       steps {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
           sh "chmod u+x ./frontend/entrypoint-integration.sh"
-	        sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit admin-ui-integration-tests"
+	        sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit ui-integration-tests"
         }
       }
     }
@@ -60,7 +59,7 @@ pipeline {
       steps {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
           sh "chmod u+x ./frontend/entrypoint-e2e.sh"
-        	sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit admin-e2e-tests"
+        	sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit e2e-tests"
         }
       }
     }
