@@ -1,0 +1,9 @@
+{
+  "npmClient": "yarn",
+  "packages": [
+    "frontend/*",
+    "backend/*",
+    "shared/*"
+  ],
+  "version": "0.0.0"
+}

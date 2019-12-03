@@ -7,7 +7,7 @@ services:
       - db_data:/var/lib/postgresql-11.2/data
   graphql-engine:
     build:
-      context: ./database-service
+      context: ./backend/database-service
       dockerfile: ./Dockerfile
       target: app
     ports:
@@ -22,11 +22,11 @@ services:
   fixtures-service:
     build:
       context: .
-      dockerfile: ./fixtures-generator/Dockerfile
+      dockerfile: ./backend/fixtures-generator/Dockerfile
       target: app
     restart: "no"
     volumes:
-      - ./fixtures:/app/fixtures
+      - ./shared/fixtures:/app/fixtures
     environment:
       - PYTHONDONTWRITEBYTECODE=1
     entrypoint: ./entrypoint.sh
