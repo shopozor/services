@@ -1,0 +1,44 @@
+version: "3.6"
+services:
+  hasura-service-tests:
+    build:
+      context: database-service
+      dockerfile: Dockerfile
+      target: integration-test
+    restart: "no"
+    depends_on:
+      - graphql-engine
+    volumes:
+      - ./database-service:/app
+      - ../shared/fixtures:/app/fixtures
+      - ../shared/graphql:/app/fixtures/graphql/calls
+      - ./test-utils:/app/tests/utils
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONPATH=./tests:$PYTHONPATH
+    entrypoint: ./tests/entrypoint.sh
+  fixtures-service:
+    build:
+      context: .
+      dockerfile: fixtures-generator/Dockerfile
+      target: builder
+    volumes:
+      - ./fixtures-generator:/app
+      - ./test-utils:/app/test_utils
+  features-tests:
+    build:
+      context: features
+      dockerfile: Dockerfile
+      target: features-tests
+    restart: "no"
+    depends_on:
+      - graphql-engine
+    volumes:
+      - ./database-service:/db
+      - ./features:/app
+      - ../shared/fixtures:/app/fixtures
+      - ./test-utils:/app/test_utils
+    entrypoint: ./entrypoint.sh test-reports
+
+volumes:
+  db_data:

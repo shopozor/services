@@ -1,6 +1,6 @@
 FROM python:3.8-slim AS builder
 
-COPY ./backend/fixtures-generator/requirements.txt .
+COPY ./fixtures-generator/requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
@@ -10,8 +10,8 @@ FROM python:3.8-slim AS app
 
 WORKDIR /app
 
-COPY ./backend/test-utils ./test_utils
-COPY ./backend/fixtures-generator .
+COPY ./test-utils ./test_utils
+COPY ./fixtures-generator .
 
 RUN chmod a+x entrypoint.sh
 
