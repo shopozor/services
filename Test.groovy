@@ -50,7 +50,7 @@ pipeline {
     stage('Perform ui integration tests') {
       steps {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-          sh "chmod u+x ./frontend/tests/entrypoint-integration.sh"
+          sh "chmod u+x ./frontend/tests/entrypoint-cypress.sh"
 	        sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit ui-integration-tests"
         }
       }
@@ -58,7 +58,7 @@ pipeline {
     stage('Perform e2e tests') {
       steps {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-          sh "chmod u+x ./frontend/tests/entrypoint-e2e.sh"
+          sh "chmod u+x ./frontend/tests/entrypoint-cypress.sh"
         	sh "USER_ID=`id -u` docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit e2e-tests"
         }
       }
