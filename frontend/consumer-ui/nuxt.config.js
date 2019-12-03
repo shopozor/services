@@ -65,14 +65,5 @@ module.exports = {
     extend (config, ctx) {
 
     }
-  },
-
-  generate: {
-    html: {
-      minify: {
-        minifyJS: false,
-        minifyCSS: false
-      }
-    }
   }
 }

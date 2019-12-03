@@ -20,8 +20,11 @@ services:
       target: app
       args:
         GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
+    environment:
+      NUXT_PORT: 4000
+      NUXT_HOST: "0.0.0.0"
     ports:
-      - ${CONSUMER_UI_PORT:-3000}:3000
+      - ${CONSUMER_UI_PORT:-3000}:4000
     depends_on:
       - graphql-engine
     restart: "no"

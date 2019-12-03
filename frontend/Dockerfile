@@ -2,7 +2,7 @@ FROM node:12.10.0-slim AS unit-tests
 
 WORKDIR /app
 
-FROM cypress/base:12.13.0 AS cypress-tests
+FROM cypress/included:3.3.2 AS cypress-tests
 
 WORKDIR /app
 
