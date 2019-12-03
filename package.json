@@ -1,8 +1,8 @@
 {
   "author": "info@softozor.ch",
   "dependencies": {
-    "frontend": "file:frontend\\admin-ui",
-    "hasura-nuxtjs": "file:frontend\\consumer-ui"
+    "admin-ui": "file:frontend\\admin-ui",
+    "consumer-ui": "file:frontend\\consumer-ui"
   },
   "description": "Shopozor services",
   "devDependencies": {
