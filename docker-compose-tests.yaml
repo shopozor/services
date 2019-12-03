@@ -22,7 +22,6 @@ services:
       context: .
       dockerfile: ./backend/fixtures-generator/Dockerfile
       target: builder
-    user: ${USER_ID}
     volumes:
       - ./backend/fixtures-generator:/app
       - ./backend/test-utils:/app/test_utils

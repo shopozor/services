@@ -16,7 +16,6 @@ services:
       target: cypress-tests
       args:
         CYPRESS_VERSION: 3.7.0
-    user: ${USER_ID}
     depends_on:
       - admin-ui
       - consumer-ui
@@ -31,7 +30,6 @@ services:
       target: cypress-tests
       args:
         CYPRESS_VERSION: 3.7.0
-    user: ${USER_ID}
     depends_on:
       - admin-ui
       - consumer-ui

@@ -18,9 +18,6 @@ pipeline {
     stage('Generate the database fixtures') {
       steps {
         script {
-          // sh "make fixtures.clean"
-          // sh "mkdir shared/fixtures"
-          // without that USER_ID variable, it is not possible to delete the generated fixtures folder anymore
           sh "chmod u+x ./backend/fixtures-generator/entrypoint.sh"
           sh "docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up fixtures-service"
         }
