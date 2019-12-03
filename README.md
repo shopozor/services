@@ -44,6 +44,42 @@ Make sure you run the script
 .vscode/install-extensions.sh
 ```
 
+### Necessary third-party packages
+
+Some of our scripts use the `jq` tool to interpret json output. Under ubuntu / debian, you will need `jq`:
+```
+sudo apt install -y jq
+```
+Under Windows 10, you want to install [jq](https://github.com/stedolan/jq/releases). Just download the Win64 installer and make it available somewhere in your disk. Add that location to your `PATH` variable. Rename `jq-win64.exe` to `jq.exe`.
+
+### Setting everything up for development
+
+To start development environment, just enter following command that will take
+care of everything, including applying migrations and loading fixtures
+
+```bash
+make dev.start
+```
+
+This command handles the case where the `graphql-engine` cannot connect to the `postgres` service for a moment and retries to apply migrations until it works. Therefore, this command can take up to 30 seconds to be successful. Just ignore the error messages on the console.
+
+### Tearing everything down when development is finished
+
+When you are over with development (or when you checkout another branch) and
+want your environment to be clean, just do
+
+```bash
+make dev.stop
+```
+
+### Lauching hasura console
+
+To launch console, enter following command from the root of the repo
+
+```bash
+make console
+```
+
 ### Gherkin step skeletons
 
 It is pretty handy to get the skeleton code for each step of a feature file. That can be reached with the following command for the `LogAUserIn` feature
@@ -77,42 +113,6 @@ which outputs for example
            // Write code here that turns the phrase above into concrete actions
            return 'pending';
          });
-```
-
-### Necessary third-party packages
-
-Some of our scripts use the `jq` tool to interpret json output. Under ubuntu / debian, you will need `jq`:
-```
-sudo apt install -y jq
-```
-Under Windows 10, you want to install [jq](https://github.com/stedolan/jq/releases). Just download the Win64 installer and make it available somewhere in your disk. Add that location to your `PATH` variable. Rename `jq-win64.exe` to `jq.exe`.
-
-### Setting everything up for development
-
-To start development environment, just enter following command that will take
-care of everything, including applying migrations and loading fixtures
-
-```bash
-make dev.start
-```
-
-This command handles the case where the `graphql-engine` cannot connect to the `postgres` service for a moment and retries to apply migrations until it works. Therefore, this command can take up to 30 seconds to be successful. Just ignore the error messages on the console.
-
-### Tearing everything down when development is finished
-
-When you are over with development (or when you checkout another branch) and
-want your environment to be clean, just do
-
-```bash
-make dev.stop
-```
-
-### Lauching console
-
-To launch console, enter following command from the root of the repo
-
-```bash
-make console
 ```
 
 ## More fine-grained control ...
