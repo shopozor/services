@@ -23,7 +23,7 @@ services:
     restart: "no"
     volumes:
       - .:/app
-    entrypoint: ./frontend/tests/entrypoint-integration.sh
+    entrypoint: ./frontend/tests/entrypoint-cypress.sh integration
   e2e-tests:
     build:
       context: .
@@ -38,4 +38,4 @@ services:
     restart: "no"
     volumes:
       - .:/app
-    entrypoint: ./frontend/tests/entrypoint-e2e.sh
+    entrypoint: ./frontend/tests/entrypoint-cypress.sh e2e
