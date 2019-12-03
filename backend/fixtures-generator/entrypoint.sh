@@ -9,8 +9,8 @@ GENERATE_JSON_FIXTURES=${APP_ROOT}/generate_json_fixtures.py
 JSON_TO_SQL=${APP_ROOT}/json2sql.py
 
 # Clean up existing fixtures
-[[ -d ${FIXTURES_FOLDER} ]] && rm -Rf ${FIXTURES_FOLDER}
-[[ -d ${GRAPHQL_RESPONSES_FOLDER} ]] && rm -Rf ${GRAPHQL_RESPONSES_FOLDER}
+[[ -d ${FIXTURES_FOLDER} ]] && rm -Rf ${FIXTURES_FOLDER}/*
+[[ -d ${GRAPHQL_RESPONSES_FOLDER} ]] && rm -Rf ${GRAPHQL_RESPONSES_FOLDER}/*
 
 # Generate the json fixtures
 python ${GENERATE_JSON_FIXTURES} -o ${DATABASE_FIXTURES_FOLDER}
