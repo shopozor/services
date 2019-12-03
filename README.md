@@ -69,7 +69,7 @@ When you are over with development (or when you checkout another branch) and
 want your environment to be clean, just do
 
 ```bash
-make dev.stop
+make dev.end
 ```
 
 ### Lauching hasura console
