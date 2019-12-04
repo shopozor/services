@@ -42,6 +42,13 @@ Make sure you run the script
 .vscode/install-extensions.sh
 ```
 
+### Docker and docker-compose
+
+Most of the backend stuff and the whole frontend validation are performed on docker containers:
+
+* on Ubuntu, follow [these instructions](https://docs.docker.com/install/linux/docker-ce/ubuntu/)  
+* on Windows 10, follow [these instructions](https://docs.docker.com/docker-for-windows/install/) and make sure you read [this blog](https://nickjanetakis.com/blog/setting-up-docker-for-windows-and-wsl-to-work-flawlessly) if you work with WSL
+
 ## Backend development setup
 
 ### Necessary third-party packages
@@ -115,7 +122,17 @@ make fixtures
 
 ## Frontend development setup
 
-Install [lerna](https://lerna.js.org/) globally
+### Necessary third-party packages
+
+You will need to have `yarn` and `nodejs` installed:
+```bash
+curl -sL https://deb.nodesource.com/setup_10.x | bash -
+curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
+echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
+apt update
+apt install -y yarn nodejs
+```
+In addition, install [lerna](https://lerna.js.org/) globally
 ```bash
 yarn global add lerna
 ```

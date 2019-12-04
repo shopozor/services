@@ -22,18 +22,16 @@ up:
 	@./database-service/scripts/waitForService.sh localhost ${API_PORT}
 
 down:
-	@docker-compose down --remove-orphans
-	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml down
+	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml down --remove-orphans
 
 rm:
-	@docker-compose rm -f
 	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml rm -f
 
 db.migrate.up:
 	$(HASURA_MIGRATE_APPLY) --project database-service --skip-update-check
 
 db.migrate.down:
-	# this doesn't work!
+	# TODO: this doesn't work!
 	$(HASURA_MIGRATE_APPLY) --project database-service --down all --skip-update-check
 
 db.migrate.status:
