@@ -1,6 +1,6 @@
 version: "3.6"
 services:
-  hasura-service-tests:
+  service-integration-tests:
     build:
       context: backend
       dockerfile: tests/Dockerfile

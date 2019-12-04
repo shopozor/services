@@ -53,7 +53,7 @@ fixtures.clean:
 fixtures: fixtures.clean fixtures.generate fixtures.up
 
 test.database-service:
-	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-backend-tests.yaml up --abort-on-container-exit hasura-service-tests
+	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-backend-tests.yaml up --abort-on-container-exit service-integration-tests
 
 test.behave:
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-backend-tests.yaml up --abort-on-container-exit features-tests
