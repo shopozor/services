@@ -1,6 +1,6 @@
 bootstrap:
 	@yarn
-	@lerna bootstrap
+	@yarn bootstrap
 
 %:
 	make --directory backend $*
