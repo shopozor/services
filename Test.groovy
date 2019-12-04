@@ -37,9 +37,9 @@ pipeline {
     stage('Perform backend services integration tests') {
       steps {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-          sh "make --directory backend db.migrate.up fixtures.up"
+          sh "make --directory backend seed-database"
           sh "make --directory backend test.integration"
-          sh "make --directory backend fixtures.down db.migrate.down"
+          sh "make --directory backend unseed-database"
         }
       }
     }
@@ -60,9 +60,9 @@ pipeline {
     stage('Perform e2e tests') {
       steps {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-          sh "make --directory backend db.migrate.up fixtures.up"
+          sh "make --directory backend seed-database"
         	sh "make --directory frontend test.e2e"
-          sh "make --directory backend fixtures.down db.migrate.down"
+          sh "make --directory backend unseed-database"
         }
       }
     }
