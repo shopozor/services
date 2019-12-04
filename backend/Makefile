@@ -14,18 +14,17 @@ dev.end: fixtures.clean down rm
 
 build:
 	@echo "Building images..."
-	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml build
+	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-backend-tests.yaml build
 
 up:
-	@docker-compose -f docker-compose.yaml up -d postgres graphql-engine
-	@chmod u+x ./database-service/scripts/waitForService.sh
+	@docker-compose -f ../docker-compose-backend.yaml up -d postgres graphql-engine
 	@./database-service/scripts/waitForService.sh localhost ${API_PORT}
 
 down:
-	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml down --remove-orphans
+	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-backend-tests.yaml down --remove-orphans
 
 rm:
-	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml rm -f
+	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-backend-tests.yaml rm -f
 
 db.migrate.up:
 	$(HASURA_MIGRATE_APPLY) --project database-service --skip-update-check
@@ -39,8 +38,8 @@ db.migrate.status:
 
 fixtures.generate:
 	@echo "Generating fixtures ..."
-	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up fixtures-service
-	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml rm -f fixtures-service
+	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-backend-tests.yaml up fixtures-service
+	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-backend-tests.yaml rm -f fixtures-service
 
 fixtures.up:
 	$(HASURA_MIGRATE_APPLY) --project $(FIXTURES_FOLDER)/database/small --up all --skip-update-check
@@ -53,11 +52,11 @@ fixtures.clean:
 
 fixtures: fixtures.clean fixtures.generate fixtures.up
 
-test.database-service:
-	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit hasura-service-tests
+test.database-service: down
+	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-backend-tests.yaml up --abort-on-container-exit hasura-service-tests
 
-test.behave:
-	@docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit features-tests
+test.behave: down
+	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-backend-tests.yaml up --abort-on-container-exit features-tests
 
 test: test.database-service
 

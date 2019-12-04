@@ -38,26 +38,24 @@ test.consumer-e2e:
 
 build:
 	@echo "Building images..."
-	@docker-compose -f ../backend/docker-compose.yaml -f docker-compose.yaml -f docker-compose-tests.yaml build
-
-# up: admin-ui.up consumer-ui.up
+	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml -f ../docker-compose-frontend-tests.yaml build
 
 down:
-	@docker-compose -f ../backend/docker-compose.yaml -f docker-compose.yaml -f docker-compose-tests.yaml down --remove-orphans
+	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml -f ../docker-compose-frontend-tests.yaml down --remove-orphans
 
 rm:
-	@docker-compose -f ../backend/docker-compose.yaml -f docker-compose.yaml -f docker-compose-tests.yaml rm -f
+	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml -f ../docker-compose-frontend-tests.yaml rm -f
 
-test.ui-unit:
-	@docker-compose -f ../backend/docker-compose.yaml -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit ui-unit-tests
+test.unit: test.cleanup
+	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml -f ../docker-compose-frontend-tests.yaml up --abort-on-container-exit ui-unit-tests
 
-test.ui-integration:
-	@docker-compose -f ../backend/docker-compose.yaml -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit ui-integration-tests
+test.integration: test.cleanup
+	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml -f ../docker-compose-frontend-tests.yaml up --abort-on-container-exit ui-integration-tests
 
-test.e2e:
-	@docker-compose -f ../backend/docker-compose.yaml -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit e2e-tests
+test.e2e: test.cleanup
+	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml -f ../docker-compose-frontend-tests.yaml up --abort-on-container-exit e2e-tests
 
-test: build test.ui-unit test.ui-integration test.e2e
+test: build test.unit test.integration test.e2e
 test.cleanup: down rm
 
 %.restart:
