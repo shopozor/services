@@ -2,21 +2,22 @@ version: "3.6"
 services:
   hasura-service-tests:
     build:
-      context: backend/database-service
-      dockerfile: Dockerfile
+      context: backend
+      dockerfile: tests/Dockerfile
       target: integration-test
     restart: "no"
     depends_on:
       - graphql-engine
     volumes:
-      - ./backend/database-service:/app
+      - ./backend/tests:/app
+      - ./backend/test-utils:/app/utils
+      - ./backend/database-service:/app/database-service
       - ./shared/fixtures:/app/fixtures
       - ./shared/graphql:/app/fixtures/graphql/calls
-      - ./backend/test-utils:/app/tests/utils
     environment:
       - PYTHONDONTWRITEBYTECODE=1
       - PYTHONPATH=./tests:$PYTHONPATH
-    entrypoint: ./tests/entrypoint.sh
+    entrypoint: ./entrypoint.sh
   fixtures-service:
     build:
       context: backend

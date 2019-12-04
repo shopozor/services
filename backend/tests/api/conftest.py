@@ -29,12 +29,12 @@ def hasura_client(hasura_endpoint):
 
 
 @pytest.fixture(autouse=True)
-def database_seed(app_root_folder, hasura_client, fixtures_project_folder):
-    hasura_client.apply_migrations(app_root_folder)
+def database_seed(database_project_folder, hasura_client, fixtures_project_folder):
+    hasura_client.apply_migrations(database_project_folder)
     hasura_client.apply_migrations(fixtures_project_folder)
     yield
     hasura_client.rollback_migrations(fixtures_project_folder)
-    hasura_client.rollback_migrations(app_root_folder)
+    hasura_client.rollback_migrations(database_project_folder)
 
 
 @pytest.fixture(autouse=True)

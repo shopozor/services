@@ -9,7 +9,10 @@ def pytest_addoption(parser):
         "--hasura-endpoint", action="store", default="http://localhost:8080", help="Hasura endpoint"
     )
     parser.addoption(
-        "--root", action="store", default="/app", help="Database service root folder"
+        "--root", action="store", default="/app", help="Tests root folder"
+    )
+    parser.addoption(
+        "--database-service-folder", action="store", default="/app/database-service", help="Database service folder"
     )
     parser.addoption(
         "--fixtures-set", action="store", default="small", help="Fixtures set (tiny, small, medium, large)"
@@ -30,10 +33,15 @@ def app_root_folder(request):
 
 
 @pytest.fixture
+def database_project_folder(request):
+    return request.config.getoption('--database-service-folder')
+
+
+@pytest.fixture
 def fixtures_set_name(request):
     return request.config.getoption('--fixtures-set')
 
-
+# TODO: use --fixtures-folder instead! and adapt graphql-responses fixture
 @pytest.fixture
 def fixtures_project_folder(app_root_folder, fixtures_set_name):
     return os.path.join(
@@ -52,7 +60,7 @@ def graphql_folder(request):
 
 
 @pytest.fixture
-def hasura_client(hasura_endpoint, app_root_folder):
+def hasura_client(hasura_endpoint, database_project_folder):
     client = HasuraClient(hasura_endpoint)
     yield client
-    client.rollback_migrations(app_root_folder)
+    client.rollback_migrations(database_project_folder)
