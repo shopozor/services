@@ -52,10 +52,10 @@ fixtures.clean:
 
 fixtures: fixtures.clean fixtures.generate fixtures.up
 
-test.database-service: down
+test.database-service:
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-backend-tests.yaml up --abort-on-container-exit hasura-service-tests
 
-test.behave: down
+test.behave:
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-backend-tests.yaml up --abort-on-container-exit features-tests
 
 test: test.database-service

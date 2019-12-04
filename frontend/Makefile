@@ -8,7 +8,7 @@ dev.start.all: init dev.backend.start
 	@lerna run start:dev
 
 init:
-	@make --directory .. dev.start
+	@make --directory .. bootstrap
 
 dev.end: dev.backend.end
 
@@ -36,6 +36,9 @@ test.admin-e2e:
 test.consumer-e2e:
 	@lerna run cypress:e2e --scope consumer-ui
 
+up:
+	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml up -d consumer-ui admin-ui
+
 build:
 	@echo "Building images..."
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml -f ../docker-compose-frontend-tests.yaml build
@@ -46,13 +49,13 @@ down:
 rm:
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml -f ../docker-compose-frontend-tests.yaml rm -f
 
-test.unit: test.cleanup
+test.unit:
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml -f ../docker-compose-frontend-tests.yaml up --abort-on-container-exit ui-unit-tests
 
-test.integration: test.cleanup
+test.integration:
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml -f ../docker-compose-frontend-tests.yaml up --abort-on-container-exit ui-integration-tests
 
-test.e2e: test.cleanup
+test.e2e:
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml -f ../docker-compose-frontend-tests.yaml up --abort-on-container-exit e2e-tests
 
 test: build test.unit test.integration test.e2e
