@@ -29,7 +29,7 @@ services:
       - ./shared/fixtures:/app/fixtures
     environment:
       - PYTHONDONTWRITEBYTECODE=1
-    entrypoint: ./entrypoint.sh
+    entrypoint: ./entrypoint.sh medium
 
 volumes:
   db_data:

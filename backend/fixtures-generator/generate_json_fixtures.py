@@ -62,9 +62,8 @@ def generate_variant(variant_name, output_folder):
     print('Generating data for %s variant' % variant_name)
 
     variant = variants[variant_name]
-    os.makedirs(os.path.join(output_folder, variant_name), exist_ok=True)
-    os.makedirs(os.path.join(output_folder,
-                             variant_name, 'Users'), exist_ok=True)
+    os.makedirs(os.path.join(output_folder), exist_ok=True)
+    os.makedirs(os.path.join(output_folder, 'Users'), exist_ok=True)
 
     factory = FakeDataFactory(
         variant['#max(products/producer)'], variant['#max(producers/shop)'], variant['#max(variants/product)'])
@@ -74,32 +73,32 @@ def generate_variant(variant_name, output_folder):
     consumers = factory.create_consumers(
         start_index, nb_of_consumers)
     json_helpers.dump(consumers, os.path.join(
-        output_folder, variant_name, 'Users', 'consumers.json'))
+        output_folder, 'Users', 'consumers.json'))
 
     nb_of_producers = variant['#producers']
     start_index += nb_of_consumers
     producers = factory.create_producers(
         start_index, nb_of_producers)
     json_helpers.dump(producers, os.path.join(
-        output_folder, variant_name, 'Users', 'producers.json'))
+        output_folder, 'Users', 'producers.json'))
 
     nb_of_managers = variant['#managers']
     start_index += nb_of_producers
     managers = factory.create_managers(start_index, nb_of_managers)
     json_helpers.dump(managers, os.path.join(
-        output_folder, variant_name, 'Users', 'managers.json'))
+        output_folder, 'Users', 'managers.json'))
 
     nb_of_reges = variant['#rex']
     start_index += nb_of_managers
     rex = factory.create_reges(start_index, nb_of_reges)
     json_helpers.dump(rex, os.path.join(
-        output_folder, variant_name, 'Users', 'rex.json'))
+        output_folder, 'Users', 'rex.json'))
 
     nb_of_softozors = variant['#softozor']
     start_index += nb_of_reges
     softozor = factory.create_softozors(start_index, nb_of_softozors)
     json_helpers.dump(softozor, os.path.join(
-        output_folder, variant_name, 'Users', 'softozor.json'))
+        output_folder, 'Users', 'softozor.json'))
 
     shopozor = {}
 
@@ -142,25 +141,21 @@ def generate_variant(variant_name, output_folder):
     shopozor.update(margin_defns)
 
     json_helpers.dump(shopozor, os.path.join(
-        output_folder, variant_name, 'Shopozor.json'), sort_keys=False)
+        output_folder, 'Shopozor.json'), sort_keys=False)
 
     print('#############################################')
 
 
-def main(output_folder, fixture_variant):
-    if fixture_variant == 'all':
-        for variant in 'tiny', 'small', 'medium', 'large':
-            generate_variant(variant, output_folder)
-    else:
-        generate_variant(fixture_variant, output_folder)
+def main(output_folder, fixtures_set):
+    generate_variant(fixtures_set, output_folder)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate json fixtures')
     parser.add_argument('-o', '--output-folder', type=str, default=settings.FIXTURE_DIR,
                         help='Folder where to output the JSON files containing the users and passwords')
-    parser.add_argument('--fixture-variant', type=str, default='all',
-                        help='Fixture variant: tiny, small, medium, large, or all')
+    parser.add_argument('--fixtures-set', type=str, default='medium',
+                        help='Fixture set: tiny, small, medium, large')
     args = parser.parse_args()
 
-    main(args.output_folder, args.fixture_variant)
+    main(args.output_folder, args.fixtures_set)

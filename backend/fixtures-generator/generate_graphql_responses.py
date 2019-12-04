@@ -3,28 +3,20 @@ from graphql.responses_generator import ShopCategoriesGenerator, ShopListsGenera
 import argparse
 
 
-def generate_responses_for_fixture_set(output_folder, fixtures_folder, fixture_set):
+def generate_responses_for_fixture_set(output_folder, fixtures_folder):
 
-    generator = ShopListsGenerator(fixtures_folder, output_folder, fixture_set)
+    generator = ShopListsGenerator(fixtures_folder, output_folder)
     generator.generate()
 
-    generator = ShopCategoriesGenerator(
-        fixtures_folder, output_folder, fixture_set)
+    generator = ShopCategoriesGenerator(fixtures_folder, output_folder)
     generator.generate()
 
-    generator = ProductListsGenerator(
-        fixtures_folder, output_folder, fixture_set)
+    generator = ProductListsGenerator(fixtures_folder, output_folder)
     generator.generate()
 
 
-def main(output_folder, fixtures_folder, fixtures_set):
-    if fixtures_set == 'all':
-        for set in 'tiny', 'small', 'medium', 'large':
-            generate_responses_for_fixture_set(
-                output_folder, fixtures_folder, set)
-    else:
-        generate_responses_for_fixture_set(
-            output_folder, fixtures_folder, fixtures_set)
+def main(output_folder, fixtures_folder):
+    generate_responses_for_fixture_set(output_folder, fixtures_folder)
 
 
 if __name__ == '__main__':
@@ -34,8 +26,6 @@ if __name__ == '__main__':
                         help='Folder where to output the JSON files')
     parser.add_argument('-i', '--fixtures-folder', type=str, default='./fixtures',
                         help='Folder containing the input json fixtures')
-    parser.add_argument('--fixtures-set', type=str, default='all',
-                        help='Fixtures set: tiny, small, medium, large, or all')
     args = parser.parse_args()
 
-    main(args.output_folder, args.fixtures_folder, args.fixtures_set)
+    main(args.output_folder, args.fixtures_folder)

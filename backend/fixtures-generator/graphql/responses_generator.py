@@ -10,9 +10,9 @@ class ResponsesGenerator():
 
     __metaclass__ = abc.ABCMeta
 
-    def __init__(self, fixtures_dir, output_dir, fixtures_set):
+    def __init__(self, fixtures_dir, output_dir):
         self._OUTPUT_DIR = output_dir
-        self._INPUT_DIR = os.path.join(fixtures_dir, fixtures_set)
+        self._INPUT_DIR = os.path.join(fixtures_dir)
 
     @abc.abstractmethod
     def _produce_data(self):
@@ -31,9 +31,9 @@ class ResponsesGenerator():
 
 class ShopListsGenerator(ResponsesGenerator):
 
-    def __init__(self, fixtures_dir, output_dir, fixtures_set):
+    def __init__(self, fixtures_dir, output_dir):
         super().__init__(fixtures_dir, os.path.join(
-            output_dir, fixtures_set, 'Consumer'), fixtures_set)
+            output_dir, 'Consumer'))
         self.__SHOPS_FIXTURE = helpers.get_shopozor_fixture(self._INPUT_DIR)
 
     def _produce_data(self):
@@ -49,9 +49,9 @@ class ShopListsGenerator(ResponsesGenerator):
 
 class ShopCategoriesGenerator(ResponsesGenerator):
 
-    def __init__(self, fixtures_dir, output_dir, fixtures_set):
+    def __init__(self, fixtures_dir, output_dir):
         super().__init__(fixtures_dir, os.path.join(
-            output_dir, fixtures_set, 'Consumer'), fixtures_set)
+            output_dir, 'Consumer'))
         self.__SHOPS_FIXTURE = helpers.get_shopozor_fixture(self._INPUT_DIR)
 
     def _produce_data(self):
@@ -69,9 +69,9 @@ class ShopCategoriesGenerator(ResponsesGenerator):
 
 class ProductListsGenerator(ResponsesGenerator):
 
-    def __init__(self, fixtures_dir, output_dir, fixtures_set):
+    def __init__(self, fixtures_dir, output_dir):
         super().__init__(fixtures_dir, os.path.join(
-            output_dir, fixtures_set, 'Consumer'), fixtures_set)
+            output_dir, 'Consumer'))
         self.__SHOPS_FIXTURE = helpers.get_shopozor_fixture(self._INPUT_DIR)
         self.__USERS_FIXTURE = helpers.get_users_fixture(self._INPUT_DIR)
 

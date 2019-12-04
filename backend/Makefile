@@ -42,7 +42,7 @@ fixtures.generate:
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-backend-tests.yaml rm -f fixtures-service
 
 fixtures.up:
-	$(HASURA_MIGRATE_APPLY) --project $(FIXTURES_FOLDER)/database/small --up all --skip-update-check
+	$(HASURA_MIGRATE_APPLY) --project $(FIXTURES_FOLDER)/database --up all --skip-update-check
 
 fixtures.down: db.migrate.down
 
@@ -53,12 +53,15 @@ fixtures.clean:
 fixtures: fixtures.clean fixtures.generate fixtures.up
 
 test.database-service:
+	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-backend-tests.yaml up --abort-on-container-exit database-service-tests
+
+test.integration:
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-backend-tests.yaml up --abort-on-container-exit service-integration-tests
 
 test.behave:
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-backend-tests.yaml up --abort-on-container-exit features-tests
 
-test: test.database-service
+test: test.database-service test.integration
 
 %.restart:
 	make $*.down

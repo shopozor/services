@@ -4,3 +4,17 @@ COPY migrations /app/migrations
 COPY config.yaml /app
 
 WORKDIR /app
+
+FROM python:3.8-slim AS build
+
+COPY tests/requirements.txt .
+
+RUN pip install --no-cache-dir -r requirements.txt
+
+FROM python:3.8-slim AS test
+
+COPY --from=build /usr/local/lib/python3.8/site-packages /usr/local/lib/python3.8/site-packages
+COPY --from=build /usr/local/bin /usr/local/bin
+COPY --from=app /bin/hasura-cli /usr/local/bin/hasura
+
+WORKDIR /app
