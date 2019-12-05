@@ -24,7 +24,7 @@ pipeline {
     stage('Build and publish database service') {
       steps {
         script {
-          serviceName = 'database-service'
+          serviceName = 'graphql-engine'
           if(BUILD_TYPE == 'production') {
             sh "docker-compose -f docker-compose-backend.yaml build ${serviceName}"
             sh "docker push ${PRODUCT}/${serviceName}:${TAG}"
