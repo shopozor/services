@@ -10,7 +10,7 @@ services:
       context: backend/database-service
       dockerfile: Dockerfile
       target: app
-    image: ${PRODUCT:-shopozor}/database-service:${TAG:-local}
+    image: ${PRODUCT:-shopozor}/graphql-engine:${TAG:-local}
     ports:
       - "${API_PORT:-8080}:8080"
     depends_on:
