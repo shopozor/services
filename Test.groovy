@@ -11,15 +11,7 @@ pipeline {
       }
       steps {
         script {
-          sh "pre-commit run --all-files"
-          sh "git config user.email $GITHUB_CREDENTIALS_USR@softozor.ch"
-          sh "git config user.name $GITHUB_CREDENTIALS_USR"
-          sh "git add ."
-          originUrl = "https://$GITHUB_CREDENTIALS_USR:$GITHUB_CREDENTIALS_PSW@" + GIT_URL.drop(8)
-          sh "git remote rm origin"
-          sh "git remote add origin $originUrl"
-          sh "git commit -m 'automatic linting'"
-          sh "git push"
+          sh "./scripts/check_linting.sh"
         }
       }
     }
