@@ -1,22 +1,20 @@
-dev.start.admin: init dev.backend.start
+dev.start.admin: init
+	@make --directory .. dev.backend.start
 	@lerna run start:dev --scope admin-ui
 
-dev.start.consumer: init dev.backend.start
+dev.start.consumer: init
+	@make --directory .. dev.backend.start
 	@lerna run start:dev --scope consumer-ui
 
-dev.start.all: init dev.backend.start
+dev.start.all: init
+	@make --directory .. dev.backend.start
 	@lerna run start:dev
 
 init:
 	@make --directory .. bootstrap
 
-dev.end: dev.backend.end
-
-dev.backend.start:
-	@make --directory ../backend dev.start
-
-dev.backend.end:
-	@make --directory ../backend dev.end
+dev.end:
+	@make --directory .. dev.backend.end
 
 test.admin-unit:
 	@lerna run test:unit --scope admin-ui
