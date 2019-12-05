@@ -6,9 +6,6 @@ pipeline {
   }
   stages {
     stage('Lint code') {
-      environment {
-        GITHUB_CREDENTIALS = credentials('github-credentials')
-      }
       steps {
         script {
           sh "./scripts/check_linting.sh"
