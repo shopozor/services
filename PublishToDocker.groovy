@@ -9,7 +9,6 @@ pipeline {
         sh "docker login -u $DOCKER_CREDENTIALS_USR -p $DOCKER_CREDENTIALS_PSW"
       }
     }
-    // TODO: see if we can't take the images build in the docker-compose build step in the tests pipeline!
     stage('Build and publish fixtures generator') {
       steps {
         script {
