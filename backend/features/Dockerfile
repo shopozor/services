@@ -1,4 +1,4 @@
-FROM hasura/graphql-engine:v1.0.0-beta.9.cli-migrations AS hasura-image
+FROM hasura/graphql-engine:v1.0.0-rc.1.cli-migrations AS hasura-image
 
 FROM python:3.8-slim AS build
 
