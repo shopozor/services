@@ -7,8 +7,8 @@ def test_pricing_modes_enum(database_project_folder, expected_pricing_modes, has
     # When I ask for the pricing_modes
     cursor = postgres_connection.cursor()
     cursor.execute('SELECT mode FROM pricing_modes')
-    actual = [item[0] for item in cursor.fetchall()].sort()
+    actual = [item[0] for item in cursor.fetchall()]
     cursor.close()
 
     # Then
-    assert expected_pricing_modes == actual
+    assert expected_pricing_modes.sort() == actual.sort()

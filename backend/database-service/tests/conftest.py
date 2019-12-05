@@ -61,4 +61,4 @@ def postgres_connection():
 
 @pytest.fixture
 def expected_pricing_modes():
-    return ['AUTO_PRICE', 'AUTO_UNIT', 'BULK', 'FREE'].sort()
+    return ['AUTO_PRICE', 'AUTO_UNIT', 'BULK', 'FREE']
