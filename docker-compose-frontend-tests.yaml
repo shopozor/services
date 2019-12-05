@@ -2,8 +2,8 @@ version: "3.6"
 services:
   ui-unit-tests:
     build:
-      context: .
-      dockerfile: ./frontend/Dockerfile
+      context: frontend
+      dockerfile: Dockerfile
       target: unit-tests
     restart: "no"
     volumes:
@@ -11,8 +11,8 @@ services:
     entrypoint: ./frontend/tests/entrypoint-unit.sh
   ui-integration-tests:
     build:
-      context: .
-      dockerfile: ./frontend/Dockerfile
+      context: frontend
+      dockerfile: Dockerfile
       target: cypress-tests
       args:
         CYPRESS_VERSION: 3.7.0
@@ -25,8 +25,8 @@ services:
     entrypoint: ./frontend/tests/entrypoint-cypress.sh integration
   e2e-tests:
     build:
-      context: .
-      dockerfile: ./frontend/Dockerfile
+      context: frontend
+      dockerfile: Dockerfile
       target: cypress-tests
       args:
         CYPRESS_VERSION: 3.7.0

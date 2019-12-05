@@ -12,13 +12,13 @@ pipeline {
     }
     stage('Fetch node dependencies') {
       steps {
-        sh "yarn && yarn bootstrap"
+        sh "make bootstrap"
       }
     }
     stage('Generate the database fixtures') {
       steps {
         script {
-          sh "docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up fixtures-service"
+          sh "make --directory backend fixtures.generate"
         }
       }
     }
@@ -27,31 +27,42 @@ pipeline {
         sh "make up"
       }
     }
-    stage('Perform GraphQL engine tests') {
+    stage('Perform database tests') {
       steps {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-          sh "docker-compose -f docker-compose.yaml -f docker-compose-tests.yaml up --abort-on-container-exit hasura-service-tests"
+          sh "make --directory backend test.database-service"
+        }
+      }
+    }
+    stage('Perform backend services integration tests') {
+      steps {
+        catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+          sh "make --directory backend seed-database"
+          sh "make --directory backend test.integration"
+          sh "make --directory backend unseed-database"
         }
       }
     }
     stage('Perform ui unit tests') {
       steps {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-         sh "docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit ui-unit-tests"
+         sh "make --directory frontend test.unit"
         }
       }
     }
     stage('Perform ui integration tests') {
       steps {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-	        sh "docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit ui-integration-tests"
+	        sh "make --directory frontend test.integration"
         }
       }
     }
     stage('Perform e2e tests') {
       steps {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-        	sh "docker-compose -f docker-compose.yaml -f docker-compose-ui.yaml -f docker-compose-ui-tests.yaml up --abort-on-container-exit e2e-tests"
+          sh "make --directory backend seed-database"
+        	sh "make --directory frontend test.e2e"
+          sh "make --directory backend unseed-database"
         }
       }
     }

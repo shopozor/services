@@ -7,8 +7,8 @@ services:
       - db_data:/var/lib/postgresql-11.2/data
   graphql-engine:
     build:
-      context: ./backend/database-service
-      dockerfile: ./Dockerfile
+      context: backend/database-service
+      dockerfile: Dockerfile
       target: app
     ports:
       - "${API_PORT:-8080}:8080"
@@ -21,15 +21,15 @@ services:
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
   fixtures-service:
     build:
-      context: .
-      dockerfile: ./backend/fixtures-generator/Dockerfile
+      context: backend
+      dockerfile: fixtures-generator/Dockerfile
       target: app
     restart: "no"
     volumes:
       - ./shared/fixtures:/app/fixtures
     environment:
       - PYTHONDONTWRITEBYTECODE=1
-    entrypoint: ./entrypoint.sh
+    entrypoint: ./entrypoint.sh medium
 
 volumes:
   db_data:
