@@ -16,7 +16,7 @@ pipeline {
           serviceName = 'fixtures-service'
           if(BUILD_TYPE == 'production') {
             sh "docker-compose -f docker-compose-backend.yaml ${serviceName}"
-            sh "docker push $${PRODUCT}/${serviceName}:${TAG}"
+            sh "docker push ${PRODUCT}/${serviceName}:${TAG}"
           }
         }
       }
@@ -27,7 +27,7 @@ pipeline {
           serviceName = 'database-service'
           if(BUILD_TYPE == 'production') {
             sh "docker-compose -f docker-compose-backend.yaml ${serviceName}"
-            sh "docker push $${PRODUCT}/${serviceName}:${TAG}"
+            sh "docker push ${PRODUCT}/${serviceName}:${TAG}"
           }
         }
       }
