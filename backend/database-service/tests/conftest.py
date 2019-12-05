@@ -62,3 +62,23 @@ def postgres_connection():
 @pytest.fixture
 def expected_pricing_modes():
     return ['AUTO_PRICE', 'AUTO_UNIT', 'BULK', 'FREE']
+
+
+@pytest.fixture
+def expected_product_states():
+    return ['VISIBLE', 'INVISIBLE', 'DELETED']
+
+
+@pytest.fixture
+def expected_productvariant_states():
+    return ['VISIBLE', 'INVISIBLE', 'DELETED', 'CHANGE_ASAP']
+
+
+@pytest.fixture
+def expected_roles():
+    return ['REX', 'MANAGER', 'SOFTOZOR']
+
+
+@pytest.fixture
+def expected_vat_types():
+    return ['SERVICES', 'PRODUCTS', 'SPECIAL']
