@@ -6,16 +6,13 @@ from utils.hasura_client import HasuraClient
 
 def pytest_addoption(parser):
     parser.addoption(
+        "--database-service-folder", action="store", default="/app/database-service", help="Database service folder"
+    )
+    parser.addoption(
+        "--fixtures-folder", action="store", default="/app/fixtures", help="Fixtures folder"
+    )
+    parser.addoption(
         "--hasura-endpoint", action="store", default="http://localhost:8080", help="Hasura endpoint"
-    )
-    parser.addoption(
-        "--root", action="store", default="/app", help="Database service root folder"
-    )
-    parser.addoption(
-        "--fixtures-set", action="store", default="small", help="Fixtures set (tiny, small, medium, large)"
-    )
-    parser.addoption(
-        "--graphql-folder", action="store", default="/app/fixtures/graphql", help="Folder containing the graphql calls and responses"
     )
 
 
@@ -25,19 +22,19 @@ def hasura_endpoint(request):
 
 
 @pytest.fixture
-def app_root_folder(request):
-    return request.config.getoption('--root')
+def database_project_folder(request):
+    return request.config.getoption('--database-service-folder')
 
 
 @pytest.fixture
-def fixtures_set_name(request):
-    return request.config.getoption('--fixtures-set')
+def fixtures_folder(request):
+    return request.config.getoption('--fixtures-folder')
 
 
 @pytest.fixture
-def fixtures_project_folder(app_root_folder, fixtures_set_name):
+def fixtures_project_folder(fixtures_folder):
     return os.path.join(
-        app_root_folder, 'fixtures', 'database', fixtures_set_name)
+        fixtures_folder, 'database')
 
 
 @pytest.fixture
@@ -47,12 +44,7 @@ def fixtures_set(hasura_client, fixtures_project_folder):
 
 
 @pytest.fixture
-def graphql_folder(request):
-    return request.config.getoption('--graphql-folder')
-
-
-@pytest.fixture
-def hasura_client(hasura_endpoint, app_root_folder):
+def hasura_client(hasura_endpoint, database_project_folder):
     client = HasuraClient(hasura_endpoint)
     yield client
-    client.rollback_migrations(app_root_folder)
+    client.rollback_migrations(database_project_folder)
