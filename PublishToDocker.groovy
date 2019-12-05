@@ -2,6 +2,7 @@ pipeline {
   agent any
   environment {
     DOCKER_CREDENTIALS = credentials('docker-credentials')
+    PRODUCT = DOCKER_CREDENTIALS_USR
   }
   stages {
     stage('Log into docker registry') {
@@ -9,15 +10,13 @@ pipeline {
         sh "docker login -u $DOCKER_CREDENTIALS_USR -p $DOCKER_CREDENTIALS_PSW"
       }
     }
-    // TODO: see if we can't take the images build in the docker-compose build step in the tests pipeline!
     stage('Build and publish fixtures generator') {
       steps {
         script {
+          serviceName = 'fixtures-service'
           if(BUILD_TYPE == 'production') {
-            serviceName = 'fixtures-generator'
-            dockerRepoName = "$DOCKER_CREDENTIALS_USR/$serviceName:${TAG}"
-            sh "docker build -t $dockerRepoName --file ./backend/$serviceName/Dockerfile ."
-            sh "docker push $dockerRepoName"
+            sh "docker-compose -f docker-compose-backend.yaml ${serviceName}"
+            sh "docker push $${PRODUCT}/${serviceName}:${TAG}"
           }
         }
       }
@@ -25,11 +24,10 @@ pipeline {
     stage('Build and publish database service') {
       steps {
         script {
+          serviceName = 'database-service'
           if(BUILD_TYPE == 'production') {
-            serviceName = 'database-service'
-            dockerRepoName = "$DOCKER_CREDENTIALS_USR/$serviceName:${TAG}"
-            sh "docker build -t $dockerRepoName --target app --file ./backend/$serviceName/Dockerfile ."
-            sh "docker push $dockerRepoName"
+            sh "docker-compose -f docker-compose-backend.yaml ${serviceName}"
+            sh "docker push $${PRODUCT}/${serviceName}:${TAG}"
           }
         }
       }

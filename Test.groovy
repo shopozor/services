@@ -72,7 +72,7 @@ pipeline {
       sh "make down"
       junit "**/test-reports/*.xml"
     }
-    failure {
+    success {
       build job: 'specification', parameters: [
         string(name: 'BRANCH', value: GIT_BRANCH.split('/')[1])
       ]
