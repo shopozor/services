@@ -2,7 +2,7 @@ pipeline {
   agent any
   environment {
     DOCKER_CREDENTIALS = credentials('docker-credentials')
-    PRODUCT = DOCKER_CREDENTIALS_USR
+    PRODUCT = ${DOCKER_CREDENTIALS_USR}
   }
   stages {
     stage('Log into docker registry') {
