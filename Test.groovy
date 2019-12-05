@@ -6,9 +6,20 @@ pipeline {
   }
   stages {
     stage('Lint code') {
-      // 1. pre-commit run --all-files
-      // 2. git add
-      // 3. git commit -m "" (needs credentials)
+      environment {
+        GITHUB_CREDENTIALS = credentials('github-credentials')
+      }
+      steps {
+        script {
+          sh "pre-commit run --all-files"
+          sh "git add ."
+          originUrl = "https://$GITHUB_CREDENTIALS_USR:$GITHUB_CREDENTIALS_PSW@" + GIT_URL.drop(8)
+          sh "git remote rm origin"
+          sh "git remote add origin $originUrl"
+          sh "git commit -m 'automatic linting'"
+          sh "git push"
+        }
+      }
     }
     stage('Build the docker images') {
       steps {
