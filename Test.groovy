@@ -8,7 +8,7 @@ pipeline {
     stage('Lint code') {
       steps {
         script {
-          sh "./scripts/check_linting.sh"
+          sh "make lint"
         }
       }
     }
