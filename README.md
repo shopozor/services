@@ -26,14 +26,16 @@ However, `saleor` is written in python and builds up its graphql API with graphe
 
 ### Pre-commit hooks
 
-As it is not trivial to enforce automatic installation of the pre-commit hooks, just install them yourself:
-
+The first time you clone this repo, you need to configure `pre-commit` hooks:
 ```
-pre-commit install
+apt install -y python3-pip
+pip install pre-commit
+git clone https://github.com/shopozor/services
+cd services
+git config --global init.templateDir ~/.git-template
+pre-commit init-templatedir ~/.git-template
 ```
-
-That pre-supposes that you have the `pre-commit` module installed in your python
-environment.
+After that, everytime you will clone a new git repository, the `pre-commit` hooks will be enforced automatically.
 
 ### VSCode configuration
 

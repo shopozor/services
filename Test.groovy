@@ -5,6 +5,11 @@ pipeline {
     TEST_REPORTS_FOLDER = 'test-reports'
   }
   stages {
+    stage('Lint code') {
+      // 1. pre-commit run --all-files
+      // 2. git add
+      // 3. git commit -m "" (needs credentials)
+    }
     stage('Build the docker images') {
       steps {
         sh "make build"
