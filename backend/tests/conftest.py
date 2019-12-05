@@ -1,7 +1,7 @@
-from utils import json_helpers
-from utils.graphql_client import GraphQLClient
-from utils.graphql_helpers import get_query_from_file
-from utils.stellar_client import StellarClient
+from common_utils import json_helpers
+from common_utils.graphql_client import GraphQLClient
+from common_utils.graphql_helpers import get_query_from_file
+from common_utils.stellar_client import StellarClient
 
 import os
 import pytest
