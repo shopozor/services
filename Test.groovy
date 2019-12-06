@@ -79,5 +79,18 @@ pipeline {
       sh "make down"
       junit "**/test-reports/*.xml"
     }
+    success {
+      build job: 'specification', parameters: [
+        string(name: 'BRANCH', value: GIT_BRANCH.split('/')[1])
+      ]
+      build job: 'publish-docker-images', parameters: [
+        string(name: 'TAG', value: GIT_BRANCH.split('/')[1]),
+        string(name: 'BUILD_TYPE', value: 'production')
+      ]
+      build job: 'publish-docker-images', parameters: [
+        string(name: 'TAG', value: GIT_BRANCH.split('/')[1]),
+        string(name: 'BUILD_TYPE', value: 'e2e')
+      ]
+    }
   }
 }

@@ -26,7 +26,7 @@ services:
       - graphql-engine
     volumes:
       - ./backend/tests:/app
-      - ./backend/test-utils:/app/utils
+      - ./backend/test-utils:/app/common_utils
       - ./shared/fixtures:/app/fixtures
       - ./shared/graphql:/app/fixtures/graphql/calls
     environment:

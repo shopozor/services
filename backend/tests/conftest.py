@@ -1,5 +1,7 @@
-from utils.graphql_client import GraphQLClient
-from utils.stellar_client import StellarClient
+from common_utils import json_helpers
+from common_utils.graphql_client import GraphQLClient
+from common_utils.graphql_helpers import get_query_from_file
+from common_utils.stellar_client import StellarClient
 
 import os
 import pytest
@@ -49,3 +51,26 @@ def stellar_snapshot():
     yield
     client.restore_snapshot()
     client.remove_snapshot()
+
+
+@pytest.fixture
+def shops_query(graphql_folder):
+    call = get_query_from_file(os.path.join(graphql_folder, 'calls'), 'shops')
+    response = json_helpers.load(os.path.join(
+        graphql_folder, 'responses', 'Consumer', 'Shops.json'))
+    return {
+        'call': call,
+        'response': response
+    }
+
+
+@pytest.fixture
+def shop_categories_query(graphql_folder):
+    call = get_query_from_file(os.path.join(
+        graphql_folder, 'calls'), 'shopCategories')
+    response = json_helpers.load(os.path.join(
+        graphql_folder, 'responses', 'Consumer', 'Categories.json'))
+    return {
+        'call': call,
+        'response': response
+    }
