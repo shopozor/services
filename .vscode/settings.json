@@ -1,5 +1,12 @@
 {
   "editor.detectIndentation": false,
   "editor.fontSize": 14,
-  "editor.tabSize": 2
+  "[python]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 4
+  },
+  "[javascript]": {
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2
+  }
 }
