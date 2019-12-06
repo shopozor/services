@@ -1,5 +1,4 @@
 {
-  "author": "info@softozor.ch",
   "browserslist": [
     "last 1 version, not dead, ie >= 11"
   ],
@@ -27,7 +26,7 @@
     "vue2-leaflet": "^2.2.1",
     "vuelidate": "^0.7.4"
   },
-  "description": "Shopozor user interface",
+  "description": "Shopozor admin dashboards",
   "devDependencies": {
     "@quasar/cli": "^1.0.3"
   },
@@ -39,9 +38,6 @@
   "jest-junit": {
     "outputDirectory": "./test-reports",
     "outputName": "unit-test-report.xml"
-  },
-  "lint-staged": {
-    "*.js|*.vue": "yarn lint --fix"
   },
   "name": "admin-ui",
   "private": true,
