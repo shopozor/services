@@ -2,6 +2,7 @@ pipeline {
   agent any
   environment {
     DOCKER_CREDENTIALS = credentials('docker-credentials')
+    PRODUCT = "${DOCKER_CREDENTIALS_USR}"
   }
   stages {
     stage('Log into docker registry') {
@@ -12,11 +13,10 @@ pipeline {
     stage('Build and publish fixtures generator') {
       steps {
         script {
+          serviceName = 'fixtures-service'
           if(BUILD_TYPE == 'production') {
-            serviceName = 'fixtures-generator'
-            dockerRepoName = "$DOCKER_CREDENTIALS_USR/$serviceName:${TAG}"
-            sh "docker build -t $dockerRepoName --file ./backend/$serviceName/Dockerfile ."
-            sh "docker push $dockerRepoName"
+            sh "docker-compose -f docker-compose-backend.yaml build ${serviceName}"
+            sh "docker push ${PRODUCT}/${serviceName}:${TAG}"
           }
         }
       }
@@ -24,11 +24,10 @@ pipeline {
     stage('Build and publish database service') {
       steps {
         script {
+          serviceName = 'graphql-engine'
           if(BUILD_TYPE == 'production') {
-            serviceName = 'database-service'
-            dockerRepoName = "$DOCKER_CREDENTIALS_USR/$serviceName:${TAG}"
-            sh "docker build -t $dockerRepoName --target app --file ./backend/$serviceName/Dockerfile ."
-            sh "docker push $dockerRepoName"
+            sh "docker-compose -f docker-compose-backend.yaml build ${serviceName}"
+            sh "docker push ${PRODUCT}/${serviceName}:${TAG}"
           }
         }
       }
