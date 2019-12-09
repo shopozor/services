@@ -28,11 +28,6 @@
     "vuelidate": "^0.7.4"
   },
   "description": "Shopozor admin dashboards",
-  "devDependencies": {
-    "@storybook/addon-storyshots": "^5.2.8",
-    "babel-plugin-require-context-hook": "^1.0.0",
-    "jest-vue-preprocessor": "^1.7.0"
-  },
   "engines": {
     "node": ">= 8.9.0",
     "npm": ">= 5.6.0",

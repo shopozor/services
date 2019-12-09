@@ -12,18 +12,6 @@
     "nuxt": "^2.10.2"
   },
   "description": "Shopozor consumer ui",
-  "devDependencies": {
-    "@babel/core": "^7.7.5",
-    "@storybook/addon-actions": "^5.2.8",
-    "@storybook/addon-links": "^5.2.8",
-    "@storybook/addon-storyshots": "^5.2.8",
-    "@storybook/addons": "^5.2.8",
-    "@storybook/vue": "^5.2.8",
-    "babel-loader": "^8.0.6",
-    "babel-plugin-require-context-hook": "^1.0.0",
-    "babel-preset-vue": "^2.0.2",
-    "jest-vue-preprocessor": "^1.7.0"
-  },
   "jest-junit": {
     "outputDirectory": "./test-reports",
     "outputName": "unit-test-report.xml"
