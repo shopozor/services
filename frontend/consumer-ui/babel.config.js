@@ -12,7 +12,7 @@ if (fs.existsSync('./.babelrc')) {
 
 module.exports = api => ({
   presets: [
-    '@quasar/babel-preset-app'
+    '@vue/app'
   ],
   ...(api.env('test') && { plugins: ['require-context-hook'] }),
   extends: extend
