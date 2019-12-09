@@ -75,6 +75,7 @@
     "clean": "lerna clean && rimraf node_modules",
     "cypress:e2e:ci": "lerna run cypress:e2e:ci",
     "cypress:integration:ci": "lerna run cypress:integration:ci",
+    "lint": "lerna run lint -- --fix",
     "test:unit:ci": "lerna run test:unit:ci"
   },
   "version": "0.0.0"
