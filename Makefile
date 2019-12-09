@@ -1,4 +1,5 @@
 bootstrap:
+	@yarn
 	@yarn bootstrap
 
 down:
