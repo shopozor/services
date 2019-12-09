@@ -27,9 +27,6 @@
     "vuelidate": "^0.7.4"
   },
   "description": "Shopozor admin dashboards",
-  "devDependencies": {
-    "@quasar/cli": "^1.0.3"
-  },
   "engines": {
     "node": ">= 8.9.0",
     "npm": ">= 5.6.0",
@@ -53,7 +50,7 @@
     "cypress:open:dev": "cross-env CYPRESS_baseUrl=http://localhost:4000/# NODE_ENV=development cypress open",
     "lint": "eslint --ext .js,.vue src",
     "serve:test:coverage": "quasar serve test/jest/coverage/lcov-report/ --port 8788",
-    "start": "quasar serve dist/spa -H '0.0.0.0' -p 4000",
+    "start": "cross-var quasar serve dist/spa -H $ADMIN_UI_HOST -p $ADMIN_UI_PORT",
     "start:dev": "quasar dev",
     "start:e2e": "concurrently \"yarn cypress:e2e\" --kill-others \"yarn start\" --success first",
     "start:integration": "concurrently \"yarn cypress:integration\" --kill-others \"yarn start\" --success first",

@@ -12,9 +12,9 @@ pipeline {
         }
       }
     }
-    stage('Build the docker images') {
+    stage('Build the services') {
       steps {
-        sh "make build"
+        sh "make --directory backend build"
       }
     }
     stage('Fetch node dependencies') {
@@ -31,7 +31,7 @@ pipeline {
     }
     stage('Start services') {
       steps {
-        sh "make up"
+        sh "make --directory backend up"
       }
     }
     stage('Perform database tests') {
@@ -60,7 +60,10 @@ pipeline {
     stage('Perform ui integration tests') {
       steps {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+          sh "make --directory backend seed-database"
+          sh "make --directory frontend build"
 	        sh "make --directory frontend test.integration"
+          sh "make --directory backend unseed-database"
         }
       }
     }
@@ -68,6 +71,7 @@ pipeline {
       steps {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
           sh "make --directory backend seed-database"
+          sh "make --directory frontend build"
         	sh "make --directory frontend test.e2e"
           sh "make --directory backend unseed-database"
         }

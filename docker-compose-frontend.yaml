@@ -7,6 +7,9 @@ services:
       target: app
       args:
         GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
+    environment:
+      ADMIN_UI_HOST: "0.0.0.0"
+      ADMIN_UI_PORT: 4000
     ports:
       - ${ADMIN_UI_PORT:-4000}:4000
     depends_on:

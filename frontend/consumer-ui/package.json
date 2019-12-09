@@ -1,5 +1,5 @@
 {
-  "author": "Praveen",
+  "author": "info@softozor.ch",
   "cypress-cucumber-preprocessor": {
     "nonGlobalStepDefinitions": true
   },
@@ -11,7 +11,7 @@
     "graphql-tag": "^2.10.1",
     "nuxt": "^2.10.2"
   },
-  "description": "My epic Nuxt.js project",
+  "description": "Shopozor consumer ui",
   "jest-junit": {
     "outputDirectory": "./test-reports",
     "outputName": "unit-test-report.xml"
@@ -23,6 +23,7 @@
   "private": true,
   "scripts": {
     "build": "nuxt build",
+    "build-storybook": "build-storybook",
     "concurrently:dev:jest": "concurrently \"nuxt\" \"jest --watch\"",
     "cypress:e2e": "wait-on http://localhost:3000 && cross-env CYPRESS_baseUrl=http://localhost:3000/# cypress run --env configFile=e2e",
     "cypress:e2e:ci": "cross-env CYPRESS_baseUrl=http://consumer-ui:3000/# cypress run --env configFile=e2e",
@@ -31,12 +32,13 @@
     "cypress:open": "cross-env CYPRESS_baseUrl=http://localhost:3000/# cypress open",
     "cypress:open:dev": "cross-env CYPRESS_baseUrl=http://localhost:3000/# NODE_ENV=development cypress open",
     "generate": "nuxt generate",
-    "lint": "eslint --ext .js,.vue --ignore-path .gitignore .",
+    "lint": "eslint --ext .js,.vue .",
     "start": "nuxt start",
     "start:dev": "nuxt",
     "start:e2e": "concurrently \"yarn cypress:e2e\" --kill-others \"yarn start\" --success first",
     "start:integration": "concurrently \"yarn cypress:integration\" --kill-others \"yarn start\" --success first",
     "start:integration:dev": "concurrently \"yarn cypress:integration:dev\" --kill-others \"yarn start:dev\" --success first",
+    "storybook": "start-storybook -p 6006",
     "test": "echo \"See package.json => scripts for available tests.\" && exit 0",
     "test:unit": "jest --updateSnapshot",
     "test:unit:ci": "jest --updateSnapshot --ci --reporters=default --reporters=jest-junit",
@@ -45,5 +47,5 @@
     "test:unit:watch": "jest --watch",
     "test:unit:watchAll": "jest --watchAll"
   },
-  "version": "1.0.0"
+  "version": "0.0.0"
 }

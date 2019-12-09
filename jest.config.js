@@ -6,12 +6,9 @@ module.exports = {
   moduleFileExtensions: [
     'vue',
     'js',
-    'jsx',
     'json',
-    'ts',
-    'tsx'
+    'ts'
   ],
-  preset: '@vue/cli-plugin-unit-jest/presets/no-babel',
   projects: [
     '<rootDir>/frontend/admin-ui/jest.config.js',
     '<rootDir>/frontend/consumer-ui/jest.config.js'
