@@ -6,7 +6,7 @@
   },
   "description": "Shopozor services",
   "devDependencies": {
-    "@babel/core": "^7.7.4",
+    "@babel/core": "^7.7.5",
     "@babel/plugin-syntax-dynamic-import": "^7.7.4",
     "@babel/runtime-corejs2": "^7.6.2",
     "@cypress/webpack-preprocessor": "^4.1.1",
@@ -54,6 +54,7 @@
     "lerna": "^3.19.0",
     "majestic": "^1.6.1",
     "nodemon": "^2.0.1",
+    "rimraf": "^3.0.0",
     "sinon": "^7.5.0",
     "strip-ansi": "6.0.0",
     "vue-jest": "^3.0.5",
@@ -69,8 +70,9 @@
   "private": true,
   "productName": "Shopozor",
   "scripts": {
-    "bootstrap": "lerna bootstrap",
+    "bootstrap": "lerna bootstrap && lerna exec yarn",
     "build": "lerna run build",
+    "clean": "lerna clean && rimraf node_modules",
     "cypress:e2e:ci": "lerna run cypress:e2e:ci",
     "cypress:integration:ci": "lerna run cypress:integration:ci",
     "test:unit:ci": "lerna run test:unit:ci"
