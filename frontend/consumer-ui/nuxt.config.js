@@ -64,6 +64,12 @@ module.exports = {
   */
   build: {
 
+    postcss: [
+      require('autoprefixer')({
+        browsers: ['> 5%']
+      })
+    ],
+
     /*
     ** You can extend webpack config here
     */
