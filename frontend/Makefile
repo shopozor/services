@@ -16,23 +16,35 @@ init:
 dev.end:
 	@make --directory .. dev.backend.end
 
-test.admin-unit:
+dev-build:
+	@lerna run build
+
+dev-test.admin-unit:
 	@lerna run test:unit --scope admin-ui
 
-test.consumer-unit:
+dev-test.consumer-unit:
 	@lerna run test:unit --scope consumer-ui
 
-test.admin-integration:
+dev-test.unit:
+	@lerna run test:unit
+
+dev-test.admin-integration:
 	@lerna run cypress:integration --scope admin-ui
 
-test.consumer-integration:
+dev-test.consumer-integration:
 	@lerna run cypress:integration --scope consumer-ui
 
-test.admin-e2e:
+dev-test.integration:
+	@lerna run cypress:integration
+
+dev-test.admin-e2e:
 	@lerna run cypress:e2e --scope admin-ui
 
-test.consumer-e2e:
+dev-test.consumer-e2e:
 	@lerna run cypress:e2e --scope consumer-ui
+
+dev-test.e2e:
+	@lerna run cypress:e2e
 
 up:
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml up -d consumer-ui admin-ui

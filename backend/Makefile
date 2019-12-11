@@ -66,7 +66,8 @@ test.integration:
 test.behave:
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-backend-tests.yaml up --abort-on-container-exit features-tests
 
-test: test.database-service test.integration
+test.unit: test.database-service
+test: test.unit test.integration
 
 %.restart:
 	make $*.down

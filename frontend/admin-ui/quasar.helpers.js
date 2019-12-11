@@ -1,6 +1,6 @@
 exports.getAPI = function (isDev) {
   if (isDev) {
-    return process.env.GRAPHQL_API ? JSON.stringify(process.env.GRAPHQL_API) : JSON.stringify('http://localhost:8000/graphql/')
+    return JSON.stringify(process.env.GRAPHQL_API || 'http://localhost:8080/v1/graphql/')
   } else {
     if (process.env.GRAPHQL_API) {
       return JSON.stringify(process.env.GRAPHQL_API)

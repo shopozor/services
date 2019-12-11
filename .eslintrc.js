@@ -11,13 +11,12 @@ module.exports = {
   },
 
   extends: [
-    // https://github.com/vuejs/eslint-plugin-vue#priority-a-essential-error-prevention
-    // consider switching to `plugin:vue/strongly-recommended` or `plugin:vue/recommended` for stricter rules.
     '@nuxtjs',
     'plugin:chai-friendly/recommended',
     'plugin:cypress/recommended',
-    'plugin:vue/essential',
-    'plugin:jest/recommended'
+    'plugin:jest/recommended',
+    'plugin:vue/recommended',
+    'standard'
   ],
 
   // required to lint *.vue files
