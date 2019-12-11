@@ -1,19 +1,36 @@
 <template>
-  <div style="height: 1vh">
-    <!-- <client-only> -->
-    <l-map :zoom="50" :center="[47.413220, -1.219482]">
-      <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png" />
-      <l-marker :lat-lng="[47.413220, -1.219482]" />
-    </l-map>
-    <!-- <input type='text'/> -->
-  <!-- </client-only> -->
+  <div>
+    <!-- <b-button variant="danger" @click="logPosition" >Log position</b-button> -->
+    <client-only>
+      <l-map class="mini-map" :zoom="13" :center="position">
+        <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png" />
+        <l-marker :lat-lng="position" :draggable="draggable">
+          <l-popup :content="popupContent" />
+        </l-marker>
+      </l-map>
+    </client-only>
   </div>
 </template>
 
 <script>
 export default {
-  // data () { },
-  // methods: { },
-  // components: { }
+  data: () => ({
+    position: [55.607741796855734, 13.018133640289308],
+    draggable: true,
+    popupContent: 'Sentian HQ'
+  }),
+  methods: {
+    logPosition () {
+      console.log(this.position)
+    }
+  }
 }
 </script>
+
+<style src="leaflet/dist/leaflet.css"></style>
+<style >
+.mini-map {
+  width: 100%;
+  height: 100vh !important;
+}
+</style>
