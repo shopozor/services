@@ -3,6 +3,10 @@ const pkg = require('./package')
 module.exports = {
   mode: 'universal',
 
+  env: {
+    GRAPHQL_API: process.env.GRAPHQL_API || 'http://localhost:8080/v1/graphql/'
+  },
+
   /*
   ** Headers of the page
   */
@@ -33,7 +37,7 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
-    '~plugins/leaflet.js'
+    { src: '~plugins/leaflet.js', mode: 'client' }
   ],
 
   /*
