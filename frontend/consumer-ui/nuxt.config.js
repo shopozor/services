@@ -37,6 +37,7 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    { src: '~plugins/errorHandling.js' },
     { src: '~plugins/leaflet.js', mode: 'client' }
   ],
 

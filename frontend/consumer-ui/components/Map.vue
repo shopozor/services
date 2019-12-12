@@ -3,20 +3,30 @@
     <client-only>
       <l-map class="mini-map" :zoom="13" :center="position">
         <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png" />
-        <!-- <l-marker :lat-lng="position" :draggable="draggable">
-          <l-popup :content="popupContent" />
-        </l-marker> -->
+        <!-- TODO: we need to loop over the shops here! -->
+        <shop-marker :shop="shop" />
       </l-map>
     </client-only>
   </div>
 </template>
 
 <script>
+import ClientOnly from 'vue-client-only'
+import ShopMarker from './ShopMarker'
+
 export default {
+  components: {
+    'shop-marker': ShopMarker,
+    ClientOnly
+  },
   data: () => ({
-    position: [55.607741796855734, 13.018133640289308],
-    draggable: true,
-    popupContent: 'Sentian HQ'
+    position: [46.775406, 7.037900],
+    shop: {
+      latitude: 46.775406,
+      longitude: 7.037900,
+      name: 'Budzonnerie d\'Onnens',
+      description: 'blablabli blablabla'
+    }
   })
 }
 </script>

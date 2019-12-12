@@ -21,6 +21,7 @@
     "node-fetch": "^2.6.0",
     "quasar": "^1.0.0",
     "vue-apollo": "^3.0.0-rc.6",
+    "vue-client-only": "^2.0.0",
     "vue-i18n": "^8.14.1",
     "vue-simple-calendar": "^4.2.2",
     "vue2-google-maps": "^0.10.7",
@@ -28,6 +29,9 @@
     "vuelidate": "^0.7.4"
   },
   "description": "Shopozor admin dashboards",
+  "devDependencies": {
+    "apollo-storybook-vue": "^0.0.5"
+  },
   "engines": {
     "node": ">= 8.9.0",
     "npm": ">= 5.6.0",

@@ -3,12 +3,18 @@ import { storiesOf } from '@storybook/vue'
 
 import Map from './Map'
 
+const components = {
+  'shops-map': Map
+}
+
 storiesOf('Map', module)
-  .add('default', () => {
+  .add('empty map', () => {
     return {
-      components: {
-        'my-map': Map
-      },
-      template: '<my-map/>'
+      components,
+      template: '<shops-map/>'
     }
   })
+  .add('map with one single marker')
+  // Place one shop marker to see what that looks like
+  // Get shops from database --> place shops markers
+  // Upon clicking a shop marker, the shop card pops up

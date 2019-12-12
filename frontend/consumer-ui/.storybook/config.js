@@ -1,5 +1,6 @@
 import { configure } from '@storybook/vue';
 
+import '../plugins/errorHandling'
 import '../plugins/leaflet'
 
 configure([

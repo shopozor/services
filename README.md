@@ -23,6 +23,8 @@ However, `saleor` is written in python and builds up its graphql API with graphe
 * [Get started with storybook](https://medium.com/@mtiller/testing-react-components-using-storybook-and-cypress-1689a27f55aa)
 * [Storybook for Vue](https://storybook.js.org/docs/guides/guide-vue/)
 * [Storybook and Cypress](https://medium.com/@mtiller/testing-react-components-using-storybook-and-cypress-1689a27f55aa)
+* [Nuxt and apollo link state](https://www.meidev.co/blog/nuxt-and-apollo-link-state/)
+* [Local state management with apollo](https://vue-apollo.netlify.com/guide/local-state.html#why-use-apollo-local-state-management)
 
 # Development setup
 

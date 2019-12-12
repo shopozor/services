@@ -11,6 +11,7 @@
     "graphql-tag": "^2.10.1",
     "leaflet": "^1.6.0",
     "nuxt": "^2.10.2",
+    "vue-client-only": "^2.0.0",
     "vue2-leaflet": "^2.2.1"
   },
   "description": "Shopozor consumer ui",
@@ -20,6 +21,7 @@
     "@storybook/addon-links": "^5.2.8",
     "@storybook/addons": "^5.2.8",
     "@storybook/vue": "^5.2.8",
+    "apollo-storybook-vue": "^0.0.5",
     "babel-loader": "^8.0.6",
     "babel-preset-vue": "^2.0.2"
   },
