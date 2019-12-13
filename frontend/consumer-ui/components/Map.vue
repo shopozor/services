@@ -3,8 +3,7 @@
     <client-only>
       <l-map class="mini-map" :zoom="13" :center="position">
         <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png" />
-        <!-- TODO: we need to loop over the shops here! -->
-        <shop-marker :shop="shop" />
+        <shop-marker v-for="shop in shops" :key="shop.id" :shop="shop" />
       </l-map>
     </client-only>
   </div>
@@ -12,21 +11,36 @@
 
 <script>
 import ClientOnly from 'vue-client-only'
+import gql from 'graphql-tag'
 import ShopMarker from './ShopMarker'
+// TODO: is it possible to use a shortcut like ~/shared/graphql?
+// import shops from '../../../shared/graphql/shops'
+// import author from '../apollo/queries/fetchAuthor.gql'
+
+const shopsQuery = gql`
+  query Shops {
+    shops {
+      description
+      latitude
+      longitude
+      id
+      name
+    }
+  }
+`
 
 export default {
+  apollo: {
+    shops: {
+      query: shopsQuery
+    }
+  },
   components: {
     'shop-marker': ShopMarker,
     ClientOnly
   },
   data: () => ({
-    position: [46.775406, 7.037900],
-    shop: {
-      latitude: 46.775406,
-      longitude: 7.037900,
-      name: 'Budzonnerie d\'Onnens',
-      description: 'blablabli blablabla'
-    }
+    position: [46.775406, 7.037900]
   })
 }
 </script>

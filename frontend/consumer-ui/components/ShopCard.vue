@@ -17,6 +17,7 @@ export default {
       type: String,
       required: true
     }
+    // TODO: id is missing
   }
 }
 </script>

@@ -1,6 +1,5 @@
 import { storiesOf } from '@storybook/vue'
 // import { action } from '@storybook/addon-actions'
-
 import Map from './Map'
 
 const components = {
@@ -18,3 +17,4 @@ storiesOf('Map', module)
   // Place one shop marker to see what that looks like
   // Get shops from database --> place shops markers
   // Upon clicking a shop marker, the shop card pops up
+  // Clicking a Budzo redirects to another page --> maybe test that?
