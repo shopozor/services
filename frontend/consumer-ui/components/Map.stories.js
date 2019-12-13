@@ -1,5 +1,4 @@
 import { storiesOf } from '@storybook/vue'
-// import { action } from '@storybook/addon-actions'
 import Map from './Map'
 
 const components = {
@@ -7,14 +6,9 @@ const components = {
 }
 
 storiesOf('Map', module)
-  .add('empty map', () => {
+  .add('map with shop markers', () => {
     return {
       components,
       template: '<shops-map/>'
     }
   })
-  .add('map with one single marker')
-  // Place one shop marker to see what that looks like
-  // Get shops from database --> place shops markers
-  // Upon clicking a shop marker, the shop card pops up
-  // Clicking a Budzo redirects to another page --> maybe test that?
