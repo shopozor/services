@@ -12,8 +12,7 @@
 <script>
 import ClientOnly from 'vue-client-only'
 import ShopMarker from './ShopMarker'
-// TODO: import shops from '../../../shared/graphql/shops.gql' (and make an alias for that graphql folder)
-import shops from '~/apollo/queries/shops.gql'
+import shops from '~graphql/shops'
 
 export default {
   apollo: {

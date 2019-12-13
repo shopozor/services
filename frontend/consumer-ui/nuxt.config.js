@@ -1,3 +1,4 @@
+const path = require('path')
 const pkg = require('./package')
 
 module.exports = {
@@ -87,7 +88,10 @@ module.exports = {
     ** You can extend webpack config here
     */
     extend (config, ctx) {
-
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        '~graphql': path.resolve(__dirname, '../../shared/graphql/')
+      }
     }
   }
 }

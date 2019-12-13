@@ -1,4 +1,4 @@
-const path = require('path');
+const path = require('path')
 
 module.exports = async ({ config, mode }) => {
 
@@ -11,8 +11,11 @@ module.exports = async ({ config, mode }) => {
 
   config.resolve.alias = {
     ...config.resolve.alias,
-    '~': path.resolve(__dirname, '../')
+    '~': path.resolve(__dirname, '../'),
+    '~graphql': path.resolve(__dirname, '../../../shared/graphql/')
   }
+
+  config.resolve.extensions.push('.gql', '.graphql')
 
   return config
 }
