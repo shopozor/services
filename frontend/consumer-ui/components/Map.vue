@@ -25,7 +25,7 @@ export default {
     ClientOnly
   },
   data: () => ({
-    position: [46.775406, 7.037900]
+    position: [46.7716, 7.0382]
   })
 }
 </script>
