@@ -88,10 +88,7 @@ module.exports = {
     ** You can extend webpack config here
     */
     extend (config, ctx) {
-      config.resolve.alias = {
-        ...config.resolve.alias,
-        '~graphql': path.resolve(__dirname, '../../shared/graphql/')
-      }
+      config.resolve.alias['~graphql'] = path.resolve(__dirname, '../../shared/graphql/')
     }
   }
 }

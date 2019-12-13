@@ -9,11 +9,8 @@ module.exports = async ({ config, mode }) => {
     include: [path.resolve(__dirname, '../'), path.resolve(__dirname, '../../../shared/graphql/')],
   })
 
-  config.resolve.alias = {
-    ...config.resolve.alias,
-    '~': path.resolve(__dirname, '../'),
-    '~graphql': path.resolve(__dirname, '../../../shared/graphql/')
-  }
+  config.resolve.alias['~'] = path.resolve(__dirname, '../')
+  config.resolve.alias['~graphql'] = path.resolve(__dirname, '../../../shared/graphql/')
 
   config.resolve.extensions.push('.gql', '.graphql')
 
