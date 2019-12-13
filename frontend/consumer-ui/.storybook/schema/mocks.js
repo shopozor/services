@@ -1,4 +1,4 @@
-import ShopsData from '../../../../shared/fixtures/graphql/responses/Consumer/Shops'
+import ShopsData from '~fixtures/Consumer/Shops'
 
 export default {
   Query: () => {
