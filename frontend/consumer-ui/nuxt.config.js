@@ -42,6 +42,10 @@ module.exports = {
     { src: '~plugins/leaflet.js', mode: 'client' }
   ],
 
+  buildModules: [
+    '@nuxtjs/tailwindcss'
+  ],
+
   /*
   ** Nuxt.js modules
   */
