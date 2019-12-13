@@ -11,28 +11,14 @@
 
 <script>
 import ClientOnly from 'vue-client-only'
-import gql from 'graphql-tag'
 import ShopMarker from './ShopMarker'
-// TODO: is it possible to use a shortcut like ~/shared/graphql?
-// import shops from '../../../shared/graphql/shops'
-// import author from '../apollo/queries/fetchAuthor.gql'
-
-const shopsQuery = gql`
-  query Shops {
-    shops {
-      description
-      latitude
-      longitude
-      id
-      name
-    }
-  }
-`
+// TODO: import shops from '../../../shared/graphql/shops.gql' (and make an alias for that graphql folder)
+import shops from '~/apollo/queries/shops.gql'
 
 export default {
   apollo: {
     shops: {
-      query: shopsQuery
+      query: shops
     }
   },
   components: {
