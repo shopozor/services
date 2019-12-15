@@ -14,17 +14,14 @@ export default {
   components: {
     'shop-card': ShopCard
   },
-  data: () => ({
-    popupContent: 'trouduc'
-  }),
+  mixins: [
+    ValidatedObjectProp('shop',
+      ['latitude', 'longitude', 'name', 'description'])//, 'image'])
+  ],
   computed: {
     position () {
       return [this.shop.latitude, this.shop.longitude]
     }
-  },
-  mixins: [
-    ValidatedObjectProp('shop',
-      ['latitude', 'longitude', 'name', 'description'])//, 'image'])
-  ]
+  }
 }
 </script>

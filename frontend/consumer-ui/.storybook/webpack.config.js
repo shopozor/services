@@ -19,14 +19,14 @@ module.exports = async ({ config, mode }) => {
           ident: "postcss",
           plugins: [
             require("postcss-import"),
-            tailwindcss('../tailwind.config.js'),
+            tailwindcss('./tailwind.config.js'),
             require("autoprefixer")
           ]
         }
       }
     ],
     include: path.resolve(__dirname, "../")
-  });
+  })
 
   config.resolve.alias['~'] = path.resolve(__dirname, '../')
   config.resolve.alias['~graphql'] = path.resolve(__dirname, '../../../shared/graphql/')
