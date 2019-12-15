@@ -37,7 +37,6 @@ module.exports = {
   /*
   ** Plugins to load before mounting the App
   */
-  // TODO: we need tailwindcss plugin!
   plugins: [
     { src: '~plugins/errorHandling.js' },
     { src: '~plugins/leaflet.js', mode: 'client' }
