@@ -12,3 +12,4 @@ code --install-extension nickdemayo.vscode-json-editor
 code --install-extension octref.vetur
 code --install-extension robinbentley.sass-indented
 code --install-extension sysoev.language-stylus
+code --install-extension bradlc.vscode-tailwindcss
