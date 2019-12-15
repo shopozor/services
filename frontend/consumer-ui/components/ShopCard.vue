@@ -1,6 +1,8 @@
 <template>
   <div>
-    <h1>{{ name }}</h1>
+    <h1 class="font-extrabold">
+      {{ name }}
+    </h1>
     {{ description }}
     <!-- TODO: put an image -->
   </div>
@@ -21,3 +23,6 @@ export default {
   }
 }
 </script>
+
+<!-- style src="leaflet/dist/leaflet.css"></style-->
+<style src="~/assets/css/tailwind.css"></style>
