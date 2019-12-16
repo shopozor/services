@@ -22,7 +22,7 @@ module.exports = {
     'vue',
     'js',
     'json',
-    'ts'
+    'graphql'
   ],
   testMatch: [
     '<rootDir>/test/jest/__tests__/**/*.spec.js',
@@ -34,12 +34,18 @@ module.exports = {
     '^vue$': '<rootDir>/node_modules/vue/dist/vue.common.js',
     '^test-utils$': '<rootDir>/node_modules/@vue/test-utils/dist/vue-test-utils.js',
     '^~fixtures/(.*)$': '<rootDir>/../../shared/fixtures/graphql/responses/$1',
+    '^~graphql/(.*)$': '<rootDir>/../../shared/graphql/$1',
     '^~/(.*)$': '<rootDir>/$1',
-    '^src/(.*)$': '<rootDir>/src/$1'
+    '^src/(.*)$': '<rootDir>/src/$1',
+    '.+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$': 'jest-transform-stub'
+    // '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': '<rootDir>/test/__mocks__/fileMock.js',
+    // '\\.(css|less)$': '<rootDir>/test/__mocks__/styleMock.js'
   },
   transform: {
-    '^.+\\.jsx?$': 'babel-jest',
-    '.*\\.(vue)$': '<rootDir>/node_modules/jest-vue-preprocessor'
+    '.*\\.vue$': 'vue-jest',
+    '.*\\.js$': 'babel-jest',
+    '\\.(gql|graphql)$': '@jagi/jest-transform-graphql'
+    // '.*\\.(vue)$': '<rootDir>/node_modules/jest-vue-preprocessor'
   },
   transformIgnorePatterns: [
     '<rootDir>/node_modules/(?!quasar/lang)',

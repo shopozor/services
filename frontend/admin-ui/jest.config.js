@@ -10,9 +10,7 @@ module.exports = {
   coverageDirectory: '<rootDir>/test/jest/coverage',
   collectCoverageFrom: [
     '<rootDir>/src/**/*.vue',
-    '<rootDir>/src/**/*.js',
-    '<rootDir>/src/**/*.ts',
-    '<rootDir>/src/**/*.jsx'
+    '<rootDir>/src/**/*.js'
   ],
   coverageThreshold: {
     global: {
@@ -35,6 +33,9 @@ module.exports = {
     '^~/(.*)$': '<rootDir>/$1',
     '^src/(.*)$': '<rootDir>/src/$1',
     '.*css$': '<rootDir>/test/jest/utils/stub.css'
+  },
+  transform: {
+    '\\.(gql|graphql)$': '@jagi/jest-transform-graphql'
   },
   transformIgnorePatterns: [
     '<rootDir>/node_modules/(?!quasar/lang)',
