@@ -10,6 +10,7 @@
     "@babel/plugin-syntax-dynamic-import": "^7.7.4",
     "@babel/runtime-corejs2": "^7.6.2",
     "@cypress/webpack-preprocessor": "^4.1.1",
+    "@jagi/jest-transform-graphql": "^1.0.2",
     "@nuxtjs/eslint-config": "^2.0.0",
     "@nuxtjs/eslint-module": "^1.1.0",
     "@nuxtjs/tailwindcss": "^1.2.0",
@@ -64,6 +65,7 @@
     "rimraf": "^3.0.0",
     "sinon": "^7.5.0",
     "strip-ansi": "6.0.0",
+    "typescript": "^3.7.3",
     "vue-jest": "^3.0.5",
     "vue-template-compiler": "^2.6.10",
     "wait-on": "^3.3.0"

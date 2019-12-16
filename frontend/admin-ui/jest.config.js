@@ -10,9 +10,7 @@ module.exports = {
   coverageDirectory: '<rootDir>/test/jest/coverage',
   collectCoverageFrom: [
     '<rootDir>/src/**/*.vue',
-    '<rootDir>/src/**/*.js',
-    '<rootDir>/src/**/*.ts',
-    '<rootDir>/src/**/*.jsx'
+    '<rootDir>/src/**/*.js'
   ],
   coverageThreshold: {
     global: {
@@ -36,7 +34,14 @@ module.exports = {
     '^src/(.*)$': '<rootDir>/src/$1',
     '.*css$': '<rootDir>/test/jest/utils/stub.css'
   },
+  transform: {
+    '.*\\.vue$': 'vue-jest',
+    '.*\\.js$': 'babel-jest',
+    '.+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$': 'jest-transform-stub',
+    '\\.(gql|graphql)$': '@jagi/jest-transform-graphql'
+  },
   transformIgnorePatterns: [
-    '<rootDir>/node_modules/(?!quasar/lang)'
+    '<rootDir>/node_modules/(?!quasar/lang)',
+    '/node_modules/(?!(@storybook/.*\\.vue$))'
   ]
 }
