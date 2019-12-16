@@ -2,7 +2,8 @@
   <div>
     <client-only>
       <l-map class="mini-map" :zoom="13" :center="position">
-        <l-tile-layer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png" />
+        <!-- cf. https://sosm.ch/projects/tile-service/ -->
+        <l-tile-layer url="https://tile.osm.ch/osm-swiss-style/{z}/{x}/{y}.png" />
         <shop-marker v-for="shop in shops" :key="shop.id" :shop="shop" />
       </l-map>
     </client-only>
