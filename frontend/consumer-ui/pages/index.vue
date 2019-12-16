@@ -1,32 +1,17 @@
 <template>
   <div>
     <h3>Authors</h3>
-    <!-- <ul>
-      <li v-for="item in author" :key="item.id">
-        <nuxt-link :to="`/article/${item.id}`">
-          {{ item.name }}
-        </nuxt-link>
-      </li>
-    </ul> -->
     <my-map />
   </div>
 </template>
 
 <script>
-// import author from '~/apollo/queries/fetchAuthor'
-
 import Map from '~/components/Map'
 
 export default {
   components: {
     'my-map': Map
   },
-  // apollo: {
-  //   author: {
-  //     prefetch: true,
-  //     query: author
-  //   }
-  // },
   head: {
     title: 'Authors of Blog'
   }
