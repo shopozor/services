@@ -19,7 +19,6 @@ module.exports = {
     'standard'
   ],
 
-  // required to lint *.vue files
   plugins: [
     'chai-friendly',
     'cucumber',

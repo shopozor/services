@@ -1,7 +1,12 @@
+const path = require('path')
 const pkg = require('./package')
 
 module.exports = {
   mode: 'universal',
+
+  env: {
+    GRAPHQL_API: process.env.GRAPHQL_API || 'http://localhost:8080/v1/graphql/'
+  },
 
   /*
   ** Headers of the page
@@ -33,6 +38,8 @@ module.exports = {
   ** Plugins to load before mounting the App
   */
   plugins: [
+    { src: '~plugins/errorHandling.js' },
+    { src: '~plugins/leaflet.js', mode: 'client' }
   ],
 
   /*
@@ -59,11 +66,29 @@ module.exports = {
   */
   build: {
 
+    postcss: {
+      // Add plugin names as key and arguments as value
+      // Install them before as dependencies with npm or yarn
+      plugins: {
+        // Disable a plugin by passing false as value
+        // 'postcss-url': false,
+        // 'postcss-nested': {},
+        // 'postcss-responsive-type': {},
+        // 'postcss-hexrgba': {}
+      },
+      preset: {
+        // Change the postcss-preset-env settings
+        autoprefixer: {
+          grid: true
+        }
+      }
+    },
+
     /*
     ** You can extend webpack config here
     */
     extend (config, ctx) {
-
+      config.resolve.alias['~graphql'] = path.resolve(__dirname, '../../shared/graphql/')
     }
   }
 }

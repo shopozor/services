@@ -1,4 +1,23 @@
-import { configure } from '@storybook/vue';
+import apolloStorybookDecorator from "apollo-storybook-vue"
+import { configure, addDecorator } from '@storybook/vue'
+import Vue from 'vue'
 
-// automatically import all files ending in *.stories.js
-configure(require.context('../src', true, /\.stories\.js$/), module);
+import typeDefs from './schema/typeDefinitions'
+import mocks from './schema/mocks'
+
+import '../plugins/errorHandling'
+import '../plugins/leaflet'
+
+addDecorator(
+  apolloStorybookDecorator({
+    typeDefs,
+    mocks,
+    Vue,
+  })
+)
+
+configure([
+  require.context('../components', true, /\.stories\.js$/),
+  require.context('../layouts', true, /\.stories\.js$/),
+  require.context('../pages', true, /\.stories\.js$/)
+ ], module)

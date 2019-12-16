@@ -6,8 +6,7 @@ module.exports = {
   moduleFileExtensions: [
     'vue',
     'js',
-    'json',
-    'ts'
+    'json'
   ],
   projects: [
     '<rootDir>/frontend/admin-ui/jest.config.js',

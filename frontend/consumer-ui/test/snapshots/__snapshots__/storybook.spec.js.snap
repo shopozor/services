@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Storyshots Map map with shop markers 1`] = `
+<div>
+  <div>
+    <!---->
+  </div>
+</div>
+`;
+
+exports[`Storyshots ShopCard Map marker popup 1`] = `
+<div>
+  <div>
+    <h1>
+      Budzonnerie d'Onnens
+    </h1>
+
+  Obtenir une description fake de nos fixtures
+
+  </div>
+</div>
+`;
