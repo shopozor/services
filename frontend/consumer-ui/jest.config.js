@@ -33,6 +33,7 @@ module.exports = {
   moduleNameMapper: {
     '^vue$': '<rootDir>/node_modules/vue/dist/vue.common.js',
     '^test-utils$': '<rootDir>/node_modules/@vue/test-utils/dist/vue-test-utils.js',
+    '^~fixtures/(.*)$': '<rootDir>/../../shared/fixtures/graphql/responses/$1',
     '^~/(.*)$': '<rootDir>/$1',
     '^src/(.*)$': '<rootDir>/src/$1'
   },
