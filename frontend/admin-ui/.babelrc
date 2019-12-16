@@ -2,7 +2,8 @@
   "env": {
     "test": {
       "plugins": [
-        "dynamic-import-node"
+        "dynamic-import-node",
+        "require-context-hook"
       ],
       "presets": [
         [

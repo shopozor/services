@@ -31,6 +31,10 @@ module.exports = {
     '^src/(.*)$': '<rootDir>/src/$1'
   },
   transformIgnorePatterns: [
-    '<rootDir>/node_modules/(?!quasar/lang)'
+    '<rootDir>/node_modules/(?!quasar/lang)',
+    '/node_modules/(?!(@storybook/.*\\.vue$))'
+  ],
+  setupFiles: [
+    '<rootDir>/test/register-context.js'
   ]
 }

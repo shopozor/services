@@ -14,6 +14,5 @@ module.exports = api => ({
   presets: [
     '@quasar/babel-preset-app'
   ],
-  ...(api.env('test') && { plugins: ['require-context-hook'] }),
   extends: extend
 })
