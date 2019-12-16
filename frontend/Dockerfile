@@ -19,7 +19,6 @@ FROM node:12.10.0-slim AS app
 WORKDIR /app
 COPY ./package.json ./package.json
 COPY ./.eslintrc.js ./.eslintrc.js
-COPY ./.eslintignore ./.eslintignore
 COPY ./lerna.json ./lerna.json
 COPY ./frontend/ ./frontend/
 COPY ./shared ./shared
