@@ -1,4 +1,2 @@
-.quasar
-dist
 /__snapshots__/**
 **/storybook.spec.js.snap
