@@ -10,9 +10,12 @@ if (fs.existsSync('./.babelrc')) {
   extend = './.babelrc'
 }
 
-module.exports = api => ({
-  presets: [
-    '@quasar/babel-preset-app'
-  ],
-  extends: extend
-})
+module.exports = api => {
+  api.cache(true)
+  return {
+    presets: [
+      '@quasar/babel-preset-app'
+    ],
+    extends: extend
+  }
+}

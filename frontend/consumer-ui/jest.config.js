@@ -18,6 +18,12 @@ module.exports = {
     //  statements: 50
     }
   },
+  moduleFileExtensions: [
+    'vue',
+    'js',
+    'json',
+    'ts'
+  ],
   testMatch: [
     '<rootDir>/test/jest/__tests__/**/*.spec.js',
     '<rootDir>/test/jest/__tests__/**/*.test.js',
@@ -29,6 +35,10 @@ module.exports = {
     '^test-utils$': '<rootDir>/node_modules/@vue/test-utils/dist/vue-test-utils.js',
     '^~/(.*)$': '<rootDir>/$1',
     '^src/(.*)$': '<rootDir>/src/$1'
+  },
+  transform: {
+    '^.+\\.jsx?$': 'babel-jest',
+    '.*\\.(vue)$': '<rootDir>/node_modules/jest-vue-preprocessor'
   },
   transformIgnorePatterns: [
     '<rootDir>/node_modules/(?!quasar/lang)',
