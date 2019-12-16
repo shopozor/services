@@ -35,13 +35,13 @@ module.exports = {
     '.*css$': '<rootDir>/test/jest/utils/stub.css'
   },
   transform: {
+    '.*\\.vue$': 'vue-jest',
+    '.*\\.js$': 'babel-jest',
+    '.+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$': 'jest-transform-stub',
     '\\.(gql|graphql)$': '@jagi/jest-transform-graphql'
   },
   transformIgnorePatterns: [
     '<rootDir>/node_modules/(?!quasar/lang)',
     '/node_modules/(?!(@storybook/.*\\.vue$))'
-  ],
-  setupFiles: [
-    '<rootDir>/test/register-context.js'
   ]
 }

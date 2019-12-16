@@ -3,7 +3,7 @@
     "test": {
       "plugins": [
         "dynamic-import-node",
-        "require-context-hook"
+        "babel-plugin-require-context-hook"
       ],
       "presets": [
         [
