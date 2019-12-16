@@ -1,5 +1,5 @@
 <template>
-  <l-marker :lat-lng="position">
+  <l-marker :lat-lng="position" :icon="icon">
     <l-popup>
       <shop-card :name="shop.name" :description="shop.description" />
     </l-popup>
@@ -7,8 +7,10 @@
 </template>
 
 <script>
+import L from 'leaflet'
 import ValidatedObjectProp from '../mixins/ValidatedObjectProp'
 import ShopCard from './ShopCard'
+import Marker from './marker.png'
 
 export default {
   components: {
@@ -21,6 +23,11 @@ export default {
   computed: {
     position () {
       return [this.shop.latitude, this.shop.longitude]
+    },
+    icon () {
+      return L.icon({
+        iconUrl: Marker
+      })
     }
   }
 }
