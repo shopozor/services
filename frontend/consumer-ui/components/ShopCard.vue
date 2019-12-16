@@ -5,6 +5,7 @@
     </h1>
     {{ description }}
     <!-- TODO: put an image -->
+    <!-- TODO: put an address / GPS coordinates -->
   </div>
 </template>
 
