@@ -7,7 +7,6 @@
 </template>
 
 <script>
-import L from 'leaflet'
 import ValidatedObjectProp from '../mixins/ValidatedObjectProp'
 import ShopCard from './ShopCard'
 import Marker from './marker.png'
@@ -18,13 +17,18 @@ export default {
   },
   mixins: [
     ValidatedObjectProp('shop',
-      ['latitude', 'longitude', 'name', 'description'])//, 'image'])
+      ['latitude', 'longitude', 'name', 'description'])//, 'image']) + address
   ],
   computed: {
     position () {
       return [this.shop.latitude, this.shop.longitude]
     },
     icon () {
+      // if we don't disable the following eslint error,
+      // then we need to import { L } from 'leaflet'
+      // which must not be done on the server-side and is more
+      // difficult to setup as just disabling the eslint error
+      // eslint-disable-next-line no-undef
       return L.icon({
         iconUrl: Marker
       })

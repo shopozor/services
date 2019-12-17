@@ -1,7 +1,6 @@
 <template>
   <div>
-    <h3>Authors</h3>
-    <my-map />
+    <shops-map :center="center" :zoom="zoom" />
   </div>
 </template>
 
@@ -10,26 +9,14 @@ import Map from '~/components/Map'
 
 export default {
   components: {
-    'my-map': Map
+    'shops-map': Map
   },
+  data: () => ({
+    center: [46.718852, 7.097669],
+    zoom: 11
+  }),
   head: {
-    title: 'Authors of Blog'
+    title: 'La Budzonnerie'
   }
 }
 </script>
-
-<style>
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  line-height: 1.6;
-}
-a {
-  text-decoration: none;
-  color: #3498DB;
-}
-a:hover {
-  border-bottom: 1px solid;
-}
-</style>

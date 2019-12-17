@@ -6,12 +6,13 @@ const components = {
 }
 
 storiesOf('Map', module)
-  .add('map with shop markers', () => {
+  .add('map with shop markers centered on the canton Fribourg', () => {
     return {
       components,
-      template: '<shops-map/>'
+      template: '<shops-map :center="center" :zoom="zoom"/>',
+      data: () => ({
+        center: [46.718852, 7.097669],
+        zoom: 11
+      })
     }
   })
-  // TODO: need to test what happens in case there is no data
-  // TODO: by default --> max zoom out to see the whole switzerland
-  // TODO: later: if a consumer has an account, center on her location
