@@ -7,9 +7,9 @@
 </template>
 
 <script>
-import ValidatedObjectProp from '../mixins/ValidatedObjectProp'
-import ShopCard from './ShopCard'
-import Marker from './marker.png'
+import Marker from '~/assets/img/marker.png'
+import ValidatedObjectProp from '~/mixins/ValidatedObjectProp'
+import ShopCard from '~/components/Map/ShopCard'
 
 export default {
   components: {

@@ -14,7 +14,7 @@
 <script>
 import ClientOnly from 'vue-client-only'
 import Loading from 'vue-loading-overlay'
-import ShopMarker from './ShopMarker'
+import ShopMarker from '~/components/Map/ShopMarker'
 import shops from '~graphql/shops'
 
 export default {
