@@ -1,5 +1,5 @@
 import { storiesOf } from '@storybook/vue'
-import Map from './Map'
+import Map from '../Map'
 
 const components = {
   'shops-map': Map
