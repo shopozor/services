@@ -1,8 +1,11 @@
 <template>
   <div>
-    <h1>{{ name }}</h1>
+    <h1 class="font-extrabold">
+      {{ name }}
+    </h1>
     {{ description }}
     <!-- TODO: put an image -->
+    <!-- TODO: put an address / GPS coordinates -->
   </div>
 </template>
 
@@ -21,3 +24,5 @@ export default {
   }
 }
 </script>
+
+<style src="~/assets/css/tailwind.css"></style>

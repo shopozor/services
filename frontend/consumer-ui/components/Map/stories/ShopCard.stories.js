@@ -1,6 +1,6 @@
 import { storiesOf } from '@storybook/vue'
 
-import ShopCard from './ShopCard'
+import ShopCard from '../ShopCard'
 
 const components = {
   'shop-card': ShopCard

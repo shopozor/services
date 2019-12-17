@@ -1,50 +1,22 @@
 <template>
   <div>
-    <h3>Authors</h3>
-    <!-- <ul>
-      <li v-for="item in author" :key="item.id">
-        <nuxt-link :to="`/article/${item.id}`">
-          {{ item.name }}
-        </nuxt-link>
-      </li>
-    </ul> -->
-    <my-map />
+    <shops-map :center="center" :zoom="zoom" />
   </div>
 </template>
 
 <script>
-// import author from '~/apollo/queries/fetchAuthor'
-
-import Map from '~/components/Map'
+import Map from '~/components/Map/Map'
 
 export default {
   components: {
-    'my-map': Map
+    'shops-map': Map
   },
-  // apollo: {
-  //   author: {
-  //     prefetch: true,
-  //     query: author
-  //   }
-  // },
+  data: () => ({
+    center: [46.718852, 7.097669],
+    zoom: 11
+  }),
   head: {
-    title: 'Authors of Blog'
+    title: 'La Budzonnerie'
   }
 }
 </script>
-
-<style>
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  line-height: 1.6;
-}
-a {
-  text-decoration: none;
-  color: #3498DB;
-}
-a:hover {
-  border-bottom: 1px solid;
-}
-</style>

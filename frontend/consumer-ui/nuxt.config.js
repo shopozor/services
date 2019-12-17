@@ -42,10 +42,17 @@ module.exports = {
     { src: '~plugins/leaflet.js', mode: 'client' }
   ],
 
+  buildModules: [
+    '@nuxtjs/tailwindcss'
+  ],
+
   /*
   ** Nuxt.js modules
   */
-  modules: ['@nuxtjs/apollo'],
+  modules: ['@nuxtjs/apollo', 'nuxt-purgecss'],
+
+  purgeCSS: {},
+
   // Give apollo module options
   apollo: {
     tokenExpires: 10, // optional, default: 7 (days)
@@ -65,7 +72,7 @@ module.exports = {
   ** Build configuration
   */
   build: {
-
+    extractCSS: true,
     postcss: {
       // Add plugin names as key and arguments as value
       // Install them before as dependencies with npm or yarn
