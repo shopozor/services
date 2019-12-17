@@ -17,6 +17,7 @@ export default {
   }),
   head: {
     title: 'La Budzonnerie'
-  }
+  },
+  layout: 'default'
 }
 </script>
