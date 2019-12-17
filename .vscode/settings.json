@@ -1,4 +1,7 @@
 {
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
   "editor.detectIndentation": false,
   "editor.fontSize": 14,
   "editor.insertSpaces": true,
