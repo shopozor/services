@@ -25,5 +25,4 @@ export default {
 }
 </script>
 
-<!-- style src="leaflet/dist/leaflet.css"></style-->
 <style src="~/assets/css/tailwind.css"></style>
