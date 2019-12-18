@@ -1,23 +1,15 @@
 <template>
-  <l-marker :lat-lng="position" :icon="icon">
-    <l-popup>
-      <shop-card :name="shop.name" :description="shop.description" />
-    </l-popup>
-  </l-marker>
+  <l-marker :lat-lng="position" :icon="icon" @click="onClick" />
 </template>
 
 <script>
 import Marker from '~/assets/img/marker.png'
 import ValidatedObjectProp from '~/mixins/ValidatedObjectProp'
-import ShopCard from '~/components/Map/ShopCard'
 
 export default {
-  components: {
-    'shop-card': ShopCard
-  },
   mixins: [
     ValidatedObjectProp('shop',
-      ['latitude', 'longitude', 'name', 'description'])//, 'image']) + address
+      ['description', 'id', 'latitude', 'longitude', 'name'])//, 'image']) + address
   ],
   computed: {
     position () {
@@ -32,6 +24,11 @@ export default {
       return L.icon({
         iconUrl: Marker
       })
+    }
+  },
+  methods: {
+    onClick () {
+      this.$emit('display-description', this.shop.id)
     }
   }
 }

@@ -1,19 +1,20 @@
 import { storiesOf } from '@storybook/vue'
-
 import ShopCard from '../ShopCard'
+import ShopsData from '~fixtures/Consumer/Shops'
 
 const components = {
   'shop-card': ShopCard
 }
 
+const shop = ShopsData.data.shops[0]
+
 storiesOf('ShopCard', module)
   .add('Map marker popup', () => {
     return {
       components,
-      template: '<shop-card :name="name" :description="description"/>',
+      template: '<shop-card :shop="shop"/>',
       data: () => ({
-        name: 'Budzonnerie d\'Onnens',
-        description: 'Obtenir une description fake de nos fixtures'
+        shop
       })
     }
   })
