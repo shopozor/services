@@ -48,7 +48,7 @@
 
       <div class="h-auto mt-8 md:mt-0 md:ml-8">
         <span class="font-bold mb-2">
-          Conditions
+          Légal
         </span>
         <ul>
           <li>
