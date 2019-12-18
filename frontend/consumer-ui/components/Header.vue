@@ -1,6 +1,6 @@
 <template>
   <nav class="flex flex-no-wrap justify-start bg-orange-800 p-6">
-    <div class="flex-grow-0">
+    <div class="flex-grow-0 mr-4">
       <svg width="100" height="125" viewBox="50 75 110 125" xmlns="http://www.w3.org/2000/svg">
         <path
           id="budzi"
@@ -10,12 +10,12 @@
       </svg>
     </div>
     <div class="flex flex-col justify-between flex-grow text-white">
-      <div class="w-auto flex flex-row-reverse justify-start">
+      <div class="hidden md:w-auto md:flex md:flex-row-reverse md:justify-start">
         <a href="/" class="font-hairline border-b">Rejoindre les producteurs</a>
         <a href="/" class="mr-4 font-hairline border-b">Ouvrir une Budzonnerie</a>
       </div>
-      <div class="w-auto flex flex-row justify-between items-baseline">
-        <div class="font-semibold text-6xl font-extrabold">
+      <div class="w-auto flex flex-col md:flex-row md:justify-between md:items-baseline">
+        <div class="font-extrabold xs:text-2xl sm:text-4xl md:text-5xl lg:text-6xl">
           La Budzonnerie
         </div>
         <div class="">
@@ -24,13 +24,6 @@
           </button>
         </div>
       </div>
-    </div>
-    <div class="block lg:hidden">
-      <button class="flex items-center px-3 py-2 border rounded text-teal-lighter border-teal-light hover:text-white hover:border-white">
-        <svg class="h-3 w-3" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-          <path d="M0 3h20v2H0V3zm0 6h20v2H0V9zm0 6h20v2H0v-2z" :style="burgerStyle" />
-        </svg>
-      </button>
     </div>
   </nav>
 </template>
