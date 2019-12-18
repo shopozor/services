@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import { LMap, LMarker, LPopup, LTileLayer } from 'vue2-leaflet'
+// eslint-disable-next-line no-unused-vars
+import { GestureHandling } from 'leaflet-gesture-handling'
 
 import { Icon } from 'leaflet'
 delete Icon.Default.prototype._getIconUrl

@@ -17,6 +17,9 @@ export default {
   }),
   head: {
     title: 'La Budzonnerie'
-  }
+  },
+  layout: 'default'
 }
 </script>
+
+<style src="~/assets/css/tailwind.css"></style>
