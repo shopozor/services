@@ -1,16 +1,19 @@
 <template>
   <div>
-    <my-header />
+    <shopozor-header />
     <nuxt />
+    <shopozor-footer />
   </div>
 </template>
 
 <script>
-import Header from '~/components/Header'
+import ShopozorHeader from '~/components/Header'
+import ShopozorFooter from '~/components/Footer'
 
 export default {
   components: {
-    'my-header': Header
+    ShopozorHeader,
+    ShopozorFooter
   }
 }
 </script>
