@@ -38,6 +38,11 @@ export default {
     zoom: {
       type: Number,
       required: true
+    },
+    tilesUrl: {
+      type: String,
+      // cf. https://sosm.ch/projects/tile-service/
+      default: 'https://tile.osm.ch/switzerland/{z}/{x}/{y}.png'
     }
   },
   // TODO: test the value of the map's options!
@@ -48,9 +53,7 @@ export default {
     },
     // TODO: test that shop is initialized with undefined
     shop: undefined,
-    spinnerColor: '#e78000ff',
-    // cf. https://sosm.ch/projects/tile-service/
-    tilesUrl: 'https://tile.osm.ch/osm-swiss-style/{z}/{x}/{y}.png'
+    spinnerColor: '#e78000ff'
   }),
   methods: {
     onDisplayDescription (id) {
@@ -64,10 +67,10 @@ export default {
 <style src="leaflet/dist/leaflet.css"></style>
 <style src="leaflet-gesture-handling/dist/leaflet-gesture-handling.css"></style>
 <style>
-.leaflet-tile-pane {
+/* .leaflet-tile-pane {
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
-}
+} */
 .shop-card {
   right: 0px;
   top: 0px;

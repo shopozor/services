@@ -5,14 +5,73 @@ const components = {
   'shops-map': Map
 }
 
+const center = [46.718852, 7.097669]
+const zoom = 11
+
 storiesOf('Map', module)
-  .add('map with shop markers centered on the canton Fribourg', () => {
+  .add('OpenStreetMap Carto with some customizations', () => {
     return {
       components,
-      template: '<shops-map :center="center" :zoom="zoom"/>',
+      template: '<shops-map :center="center" :zoom="zoom" :tilesUrl="tilesUrl"/>',
       data: () => ({
-        center: [46.718852, 7.097669],
-        zoom: 11
+        center,
+        zoom,
+        tilesUrl: 'https://tile.osm.ch/switzerland/{z}/{x}/{y}.png'
+      })
+    }
+  })
+  .add('Swiss lv03 projection (epsg:21781)', () => {
+    return {
+      components,
+      template: '<shops-map :center="center" :zoom="zoom" :tilesUrl="tilesUrl"/>',
+      data: () => ({
+        center,
+        zoom,
+        tilesUrl: 'https://tile.osm.ch/21781/{z}/{x}/{y}.png'
+      })
+    }
+  })
+  .add('Swiss lv95 projection (epsg:2056)', () => {
+    return {
+      components,
+      template: '<shops-map :center="center" :zoom="zoom" :tilesUrl="tilesUrl"/>',
+      data: () => ({
+        center,
+        zoom,
+        tilesUrl: 'https://tile.osm.ch/2056/{z}/{x}/{y}.png'
+      })
+    }
+  })
+  .add('Swiss Style from xyztobixyz', () => {
+    return {
+      components,
+      template: '<shops-map :center="center" :zoom="zoom" :tilesUrl="tilesUrl"/>',
+      data: () => ({
+        center,
+        zoom,
+        tilesUrl: 'https://tile.osm.ch/osm-swiss-style/{z}/{x}/{y}.png'
+      })
+    }
+  })
+  .add('French language map', () => {
+    return {
+      components,
+      template: '<shops-map :center="center" :zoom="zoom" :tilesUrl="tilesUrl"/>',
+      data: () => ({
+        center,
+        zoom,
+        tilesUrl: 'https://tile.osm.ch/name-fr/{z}/{x}/{y}.png'
+      })
+    }
+  })
+  .add('Transparent layer of contour lines', () => {
+    return {
+      components,
+      template: '<shops-map :center="center" :zoom="zoom" :tilesUrl="tilesUrl"/>',
+      data: () => ({
+        center,
+        zoom,
+        tilesUrl: 'https://tile.osm.ch/switzerland/{z}/{x}/{y}.png'
       })
     }
   })
