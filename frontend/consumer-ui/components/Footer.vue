@@ -1,0 +1,48 @@
+<template>
+  <div class="bg-green-300 p-8">
+    <div class="sm:flex sm:justify-start mb-4">
+      <div class="h-auto">
+        <span class="font-bold mb-2">
+          Qui sommes-nous ?
+        </span>
+        <ul>
+          <li>
+            <a href="/">La Budzonnerie</a>
+          </li>
+          <li>
+            Softozor
+          </li>
+          <li>
+            Contact
+          </li>
+        </ul>
+      </div>
+      <div class="h-auto mt-8 sm:mt-0 sm:ml-8">
+        <span class="font-bold mb-2">
+          Politiques
+        </span>
+        <ul>
+          <li>
+            Cookies
+          </li>
+          <li>
+            Mots de passe
+          </li>
+        </ul>
+      </div>
+
+      <div class="h-auto mt-8 sm:mt-0 sm:ml-8">
+        <span class="font-bold mb-2">
+          Conditions
+        </span>
+        <ul>
+          <li>
+            Conditions générales d'utilisation
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</template>
+
+<style src="~/assets/css/tailwind.css"></style>
