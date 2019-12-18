@@ -10,6 +10,7 @@
     "cross-env": "^6.0.3",
     "graphql-tag": "^2.10.1",
     "leaflet": "^1.6.0",
+    "leaflet-gesture-handling": "^1.1.8",
     "nuxt": "^2.10.2",
     "tailwindcss": "^1.1.4",
     "vue-client-only": "^2.0.0",

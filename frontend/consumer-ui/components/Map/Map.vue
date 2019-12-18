@@ -2,7 +2,7 @@
   <div>
     <client-only>
       <loading :active="!shops" :can-cancel="true" :is-full-page="false" :color="spinnerColor" />
-      <l-map class="mini-map" :zoom="zoom" :center="center" :options="options">
+      <l-map class="block w-full h-screen" :zoom="zoom" :center="center" :options="options">
         <l-tile-layer :url="tilesUrl" />
         <shop-marker v-for="shop in shops" :key="shop.id" :shop="shop" />
       </l-map>
@@ -39,7 +39,7 @@ export default {
   },
   data: () => ({
     options: {
-      scrollWheelZoom: false
+      gestureHandling: true
     },
     spinnerColor: '#e78000ff',
     // cf. https://sosm.ch/projects/tile-service/
@@ -50,11 +50,8 @@ export default {
 
 <style src="vue-loading-overlay/dist/vue-loading.css"></style>
 <style src="leaflet/dist/leaflet.css"></style>
+<style src="leaflet-gesture-handling/dist/leaflet-gesture-handling.css"></style>
 <style>
-.mini-map {
-  width: 100%;
-  height: 100vh !important;
-}
 .leaflet-tile-pane {
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);

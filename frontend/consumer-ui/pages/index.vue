@@ -21,3 +21,5 @@ export default {
   layout: 'default'
 }
 </script>
+
+<style src="~/assets/css/tailwind.css"></style>
