@@ -2,8 +2,7 @@
   <div>
     <client-only>
       <loading :active="!shops" :can-cancel="true" :is-full-page="false" :color="spinnerColor" />
-      <l-map class="mini-map" :zoom="zoom" :center="center">
-        <!-- cf. https://sosm.ch/projects/tile-service/ -->
+      <l-map class="mini-map" :zoom="zoom" :center="center" :options="options">
         <l-tile-layer :url="tilesUrl" />
         <shop-marker v-for="shop in shops" :key="shop.id" :shop="shop" />
       </l-map>
@@ -39,7 +38,11 @@ export default {
     }
   },
   data: () => ({
+    options: {
+      scrollWheelZoom: false
+    },
     spinnerColor: '#e78000ff',
+    // cf. https://sosm.ch/projects/tile-service/
     tilesUrl: 'https://tile.osm.ch/osm-swiss-style/{z}/{x}/{y}.png'
   })
 }
