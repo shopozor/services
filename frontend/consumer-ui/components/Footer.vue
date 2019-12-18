@@ -13,17 +13,14 @@
             Softozor
           </li>
           <li>
-            Rejoindre l'équipe de développement
-          </li>
-          <li>
             Contact
           </li>
         </ul>
       </div>
 
-      <div class="md:hidden h-auto mt-8 md:mt-0 md:ml-8">
+      <div class="h-auto mt-8 md:mt-0 md:ml-8">
         <span class="font-bold mb-2">
-          La Budzonnerie
+          Nous rejoindre
         </span>
         <ul>
           <li>
@@ -31,6 +28,9 @@
           </li>
           <li>
             Ouvrir une Budzonnerie
+          </li>
+          <li>
+            Rejoindre l'équipe de développement
           </li>
         </ul>
       </div>
