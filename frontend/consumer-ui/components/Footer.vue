@@ -13,6 +13,9 @@
             Softozor
           </li>
           <li>
+            Rejoindre l'équipe de développement
+          </li>
+          <li>
             Contact
           </li>
         </ul>

@@ -11,7 +11,7 @@
     </div>
     <div class="flex flex-col justify-between flex-grow text-white">
       <div class="hidden md:w-auto md:flex md:flex-row-reverse md:justify-start">
-        <a href="/" class="font-hairline border-b">Rejoindre les producteurs</a>
+        <a href="/" class="mr-4 font-hairline border-b">Rejoindre les producteurs</a>
         <a href="/" class="mr-4 font-hairline border-b">Ouvrir une Budzonnerie</a>
       </div>
       <div class="w-auto flex flex-col md:flex-row md:justify-between md:items-baseline">
