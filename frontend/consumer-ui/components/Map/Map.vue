@@ -1,7 +1,7 @@
 <template>
   <div>
     <client-only>
-      <loading :active="!shops" :can-cancel="true" :is-full-page="false" :color="spinnerColor" />
+      <loading :active="loadingMapData" :can-cancel="true" :is-full-page="false" :color="spinnerColor" />
       <l-map class="w-full fill-partial-height" :zoom="zoom" :center="center" :options="options" @click="clearDescription">
         <shop-card v-if="shop" :shop="shop" class="absolute left-0 bottom-0 z-999" />
         <l-tile-layer :url="tilesUrl" />
@@ -64,6 +64,11 @@ export default {
     shop: undefined,
     spinnerColor: '#e78000ff'
   }),
+  computed: {
+    loadingMapData () {
+      return this.$apollo.queries.shops.loading
+    }
+  },
   methods: {
     displayDescription (id) {
       this.shop = this.shops.find(item => item.id === id)
