@@ -28,7 +28,7 @@ module.exports = {
     '<rootDir>/test/jest/__tests__/**/*.spec.js',
     '<rootDir>/test/jest/__tests__/**/*.test.js',
     '<rootDir>/test/snapshots/**/*.spec.js',
-    '<rootDir>/src/**/__tests__/*_jest.spec.js'
+    '<rootDir>/**/__tests__/*.spec.js'
   ],
   moduleNameMapper: {
     '^vue$': '<rootDir>/node_modules/vue/dist/vue.common.js',
