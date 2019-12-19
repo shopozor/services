@@ -3,6 +3,8 @@ import { LMap, LMarker, LTileLayer } from 'vue2-leaflet'
 // eslint-disable-next-line no-unused-vars
 import { GestureHandling } from 'leaflet-gesture-handling'
 import Map from '../Map'
+import ShopMarker from '../ShopMarker'
+import ShopsData from '~fixtures/Consumer/Shops'
 
 function getLocalVue () {
   const localVue = createLocalVue()
@@ -107,11 +109,87 @@ describe('Map', () => {
     expect(zoomControl.exists()).toBeFalsy()
   })
 
-  /*
-  it('is initialized with no shop description popup')
+  it('is initialized with no shop description popup', () => {
+    const wrapper = shallowMount(Map, {
+      localVue,
+      propsData: {
+        center,
+        zoom
+      },
+      mocks: {
+        $apollo: {
+          queries: {
+            shops: {
+              loading: false
+            }
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.shop).toBeUndefined()
+  })
 
-  it('clears shop description popup upon clicking the map')
+  it('displays the selected shop description', () => {
+    // Given I have shops data and am not loading server data
+    const wrapper = mount(Map, {
+      localVue,
+      propsData: {
+        center,
+        zoom
+      },
+      data: () => ({
+        shops: ShopsData.data.shops
+      }),
+      mocks: {
+        $apollo: {
+          queries: {
+            shops: {
+              loading: false
+            }
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.shop).toBeUndefined()
 
-  // TODO: test displaying of the description
-  */
+    // When a child marker emits the display-description event
+    const expectedShop = ShopsData.data.shops[0]
+    const marker = wrapper.find(ShopMarker)
+    marker.vm.$emit('display-description', expectedShop.id)
+
+    // Then a shop is selected to display its description
+    expect(wrapper.vm.shop).toBe(expectedShop)
+  })
+
+  it('clears shop description popup upon clicking the map', () => {
+    // Given I have a shop selected for description
+    const wrapper = mount(Map, {
+      localVue,
+      propsData: {
+        center,
+        zoom
+      },
+      data: () => ({
+        shops: ShopsData.data.shops,
+        shop: ShopsData.data.shops[0]
+      }),
+      mocks: {
+        $apollo: {
+          queries: {
+            shops: {
+              loading: false
+            }
+          }
+        }
+      }
+    })
+    expect(wrapper.vm.shop).toBeDefined()
+
+    // When I click the map
+    const map = wrapper.find(LMap)
+    map.trigger('click')
+
+    // Then I have no shop selected anymore
+    expect(wrapper.vm.shop).toBeUndefined()
+  })
 })
