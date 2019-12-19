@@ -35,7 +35,8 @@ describe('Map', () => {
       }
     })
     await localVue.nextTick()
-    expect(wrapper.element).toMatchSnapshot()
+    const overlayElement = wrapper.find('.vld-overlay')
+    expect(overlayElement.isVisible()).toBeTruthy()
   })
 
   // TODO: get rid of this test in the very near future
