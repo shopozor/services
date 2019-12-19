@@ -13,15 +13,23 @@ describe('ShopMarker', () => {
   const localVue = getLocalVue()
 
   it('emits display-description with shop id event upon click', () => {
+    // Given I have a shop marker
     const wrapper = shallowMount(ShopMarker, {
       localVue,
       propsData: {
         shop: ShopsData.data.shops[0]
       }
     })
-    // TODO: is there a way to emit the click event without MOUNTING the component?
-    //       here we can only shallowMount
+
+    // When I click on it
+    // Because we can't mount the component completely (we need to shallow mount),
+    // there is no way to trigger the click event with something like
+    //   const marker = wrapper.find(LMarker)
+    //   marker.trigger('click')
+    // Therefore we call the onClick method directly
     wrapper.vm.onClick()
+
+    // Then the display-description event is emitted with the corresponding shop's id
     const emitted = wrapper.emitted()
     const displayDescriptionEvent = emitted['display-description']
     expect(displayDescriptionEvent).toBeTruthy()
