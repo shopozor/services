@@ -2,10 +2,10 @@
   <div>
     <client-only>
       <loading :active="!shops" :can-cancel="true" :is-full-page="false" :color="spinnerColor" />
-      <l-map class="w-full mini-map" :zoom="zoom" :center="center" :options="options">
-        <shop-card v-if="shop" :shop="shop" class="shop-card" />
+      <l-map class="w-full fill-partial-height" :zoom="zoom" :center="center" :options="options" @click="clearDescription">
+        <shop-card v-if="shop" :shop="shop" class="absolute left-0 bottom-0 z-999" />
         <l-tile-layer :url="tilesUrl" />
-        <shop-marker v-for="shop in shops" :key="shop.id" :shop="shop" @display-description="onDisplayDescription" />
+        <shop-marker v-for="shop in shops" :key="shop.id" :shop="shop" @display-description="displayDescription" />
       </l-map>
     </client-only>
   </div>
@@ -49,6 +49,15 @@ export default {
   data: () => ({
     options: {
       gestureHandling: true,
+      gestureHandlingOptions: {
+        // TODO: put the following text in a file for the sake of translations
+        text: {
+          touch: 'Utiliser 2 doigts pour bouger la carte',
+          scroll: 'CTRL + scroll pour zoomer',
+          scrollMac: '\u2318 + scroll pour zoomer'
+        },
+        duration: 2000
+      },
       zoomControl: false
     },
     // TODO: test that shop is initialized with undefined
@@ -56,8 +65,11 @@ export default {
     spinnerColor: '#e78000ff'
   }),
   methods: {
-    onDisplayDescription (id) {
+    displayDescription (id) {
       this.shop = this.shops.find(item => item.id === id)
+    },
+    clearDescription () {
+      this.shop = undefined
     }
   }
 }
@@ -71,13 +83,10 @@ export default {
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
 } */
-.shop-card {
-  right: 0px;
-  top: 0px;
-  position: absolute;
+.z-999 {
   z-index: 999;
 }
-.mini-map {
+.fill-partial-height {
   height: 75vh !important;
 }
 </style>

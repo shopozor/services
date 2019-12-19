@@ -1,23 +1,26 @@
 <template>
-  <div class="w-1/4 h-full justify-between flex flex-col bg-white">
+  <div class="flex bg-white justify-between w-full h-64 flex-row md:w-64 md:h-full md:flex-col">
     <!-- TODO: we need to put both the url (background-image) and the alt (title) here! -->
     <div
-      class="h-64 w-full bg-cover"
+      class="h-auto w-48 md:h-64 md:w-full bg-cover"
       style="background-image: url('https://www.bulledeculture.ch/event_img/5d5fb1d4cf93d699209171.jpg')"
       title="Shop description"
     />
-    <div class="mb-8 px-4">
-      <div class="text-black font-bold text-xl mb-2">
-        {{ shop.name }}
+    <div class="p-4">
+      <div class="mb-8">
+        <div class="text-black font-bold text-xl mb-2">
+          {{ shop.name }}
+        </div>
+        <p class="text-grey-darker text-base">
+          {{ shop.description }}
+        </p>
       </div>
-      <p class="text-grey-darker text-base">
-        {{ shop.description }}
-      </p>
-    </div>
-    <div class="flex items-center px-4">
-      <img class="mr-4" src="../../assets/img/marker.png" alt="GPS coordinates">
-      <div class="text-sm italic">
-        {{ gpsCoordinates }}
+      <div class="flex items-center">
+        <!-- TODO: fix this path with the usual ~assets/img/marker.png -->
+        <img class="mr-4" src="../../assets/img/marker.png" alt="GPS coordinates">
+        <div class="text-sm italic">
+          {{ gpsCoordinates }}
+        </div>
       </div>
     </div>
   </div>
