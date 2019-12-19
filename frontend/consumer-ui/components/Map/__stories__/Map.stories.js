@@ -8,6 +8,9 @@ const components = {
 const center = [46.718852, 7.097669]
 const zoom = 11
 
+// TODO: we want to be able to snapshot test what happens upon data loading
+// --> https://vue-apollo.netlify.com/guide/testing.html#testing-loading-state-with-mocking-apollo
+// That implies we generalize our mocking
 storiesOf('Map', module)
   .add('OpenStreetMap Carto with some customizations', () => {
     return {
