@@ -86,9 +86,28 @@ describe('Map', () => {
     wrapper.destroy()
   }) */
 
-  /*
-  it('does not show zoom control')
+  it('does not show zoom control', () => {
+    const wrapper = mount(Map, {
+      localVue,
+      propsData: {
+        center,
+        zoom
+      },
+      mocks: {
+        $apollo: {
+          queries: {
+            shops: {
+              loading: false
+            }
+          }
+        }
+      }
+    })
+    const zoomControl = wrapper.find('.leaflet-control-zoom')
+    expect(zoomControl.exists()).toBeFalsy()
+  })
 
+  /*
   it('is initialized with no shop description popup')
 
   it('clears shop description popup upon clicking the map')
