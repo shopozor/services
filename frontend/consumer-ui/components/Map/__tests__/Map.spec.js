@@ -1,4 +1,4 @@
-import { createLocalVue, mount } from '@vue/test-utils'
+import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { LMap, LMarker, LTileLayer } from 'vue2-leaflet'
 // eslint-disable-next-line no-unused-vars
 import { GestureHandling } from 'leaflet-gesture-handling'
@@ -17,7 +17,7 @@ describe('Map', () => {
   const zoom = 11
   const localVue = getLocalVue()
 
-  it('renders correctly when loading shops', () => {
+  it('renders spinner when loading shops', async () => {
     const wrapper = mount(Map, {
       localVue,
       propsData: {
@@ -34,6 +34,64 @@ describe('Map', () => {
         }
       }
     })
+    await localVue.nextTick()
     expect(wrapper.element).toMatchSnapshot()
   })
+
+  // TODO: get rid of this test in the very near future
+  it('is initialized with gesture handling', () => {
+    const wrapper = shallowMount(Map, {
+      localVue,
+      mocks: {
+        $apollo: {
+          queries: {
+            shops: {
+              loading: false
+            }
+          }
+        }
+      },
+      propsData: {
+        center,
+        zoom
+      }
+    })
+    expect(wrapper.vm.options.gestureHandling).toBeTruthy()
+  })
+
+  // TODO: transform this test into a cypress test, maybe it'll work
+  /* it('has gesture handling enabled', async () => {
+    const wrapper = mount(Map, {
+      attachToDocument: true,
+      localVue,
+      mocks: {
+        $apollo: {
+          queries: {
+            shops: {
+              loading: false
+            }
+          }
+        }
+      },
+      propsData: {
+        center,
+        zoom
+      }
+    })
+    // const map = wrapper.find('.vue2leaflet-map')
+    window.dispatchEvent(new CustomEvent('scroll'))
+    await localVue.nextTick()
+    expect(wrapper.element).toMatchSnapshot()
+    wrapper.destroy()
+  }) */
+
+  /*
+  it('does not show zoom control')
+
+  it('is initialized with no shop description popup')
+
+  it('clears shop description popup upon clicking the map')
+
+  // TODO: test displaying of the description
+  */
 })

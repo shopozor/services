@@ -1,7 +1,7 @@
 <template>
   <div>
     <client-only>
-      <loading :active="loadingMapData" :can-cancel="true" :is-full-page="false" :color="spinnerColor" />
+      <loading class="z-999" :active="loadingMapData" :can-cancel="true" :is-full-page="false" :color="spinnerColor" />
       <l-map class="w-full fill-partial-height" :zoom="zoom" :center="center" :options="options" @click="clearDescription">
         <shop-card v-if="shop" :shop="shop" class="absolute left-0 bottom-0 z-999" />
         <l-tile-layer :url="tilesUrl" />
@@ -45,7 +45,6 @@ export default {
       default: 'https://tile.osm.ch/switzerland/{z}/{x}/{y}.png'
     }
   },
-  // TODO: test the value of the map's options!
   data: () => ({
     options: {
       gestureHandling: true,
@@ -60,7 +59,6 @@ export default {
       },
       zoomControl: false
     },
-    // TODO: test that shop is initialized with undefined
     shop: undefined,
     spinnerColor: '#e78000ff'
   }),
