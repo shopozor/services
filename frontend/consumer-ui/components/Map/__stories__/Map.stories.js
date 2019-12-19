@@ -1,12 +1,16 @@
 import { storiesOf } from '@storybook/vue'
 import Map from '../Map'
+import ShopCard from '../ShopCard'
+import ShopsData from '~fixtures/Consumer/Shops'
 
 const components = {
+  ShopCard,
   'shops-map': Map
 }
 
 const center = [46.718852, 7.097669]
 const zoom = 11
+const shop = ShopsData.data.shops[0]
 
 // TODO: we want to be able to snapshot test what happens upon data loading
 // --> https://vue-apollo.netlify.com/guide/testing.html#testing-loading-state-with-mocking-apollo
@@ -75,6 +79,15 @@ storiesOf('Map', module)
         center,
         zoom,
         tilesUrl: 'https://tile.osm.ch/switzerland/{z}/{x}/{y}.png'
+      })
+    }
+  })
+  .add('Shop description', () => {
+    return {
+      components,
+      template: '<shop-card :shop="shop"/>',
+      data: () => ({
+        shop
       })
     }
   })
