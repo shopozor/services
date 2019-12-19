@@ -87,7 +87,8 @@
     "cypress:integration:ci": "lerna run cypress:integration:ci",
     "lint": "lerna run lint -- --fix",
     "storybook": "lerna run storybook --stream",
-    "test:unit:ci": "lerna run test:unit:ci"
+    "test:unit:ci": "lerna run test:unit:ci",
+    "test:unit:updateSnapshot": "lerna run test:unit:updateSnapshot"
   },
   "version": "0.0.0"
 }

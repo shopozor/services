@@ -64,6 +64,7 @@
     "test:unit:ci": "jest --ci --reporters=default --reporters=jest-junit",
     "test:unit:coverage": "jest --coverage",
     "test:unit:ui": "majestic --port 4001",
+    "test:unit:updateSnapshot": "jest --updateSnapshot",
     "test:unit:watch": "jest --watch",
     "test:unit:watchAll": "jest --watchAll"
   },
