@@ -71,32 +71,6 @@ describe('Map', () => {
     expect(hasGestureHandling).toBeTruthy()
   })
 
-  // TODO: transform this test into a cypress test, maybe it'll work
-  /* it('has gesture handling enabled', async () => {
-    const wrapper = mount(Map, {
-      attachToDocument: true,
-      localVue,
-      mocks: {
-        $apollo: {
-          queries: {
-            shops: {
-              loading: false
-            }
-          }
-        }
-      },
-      propsData: {
-        center,
-        zoom
-      }
-    })
-    // const map = wrapper.find('.vue2leaflet-map')
-    window.dispatchEvent(new CustomEvent('scroll'))
-    await localVue.nextTick()
-    expect(wrapper.element).toMatchSnapshot()
-    wrapper.destroy()
-  }) */
-
   it('does not show zoom control', () => {
     const wrapper = mount(Map, {
       localVue,
