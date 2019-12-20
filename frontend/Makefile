@@ -20,31 +20,31 @@ dev-build:
 	@lerna run build
 
 dev-test.admin-unit:
-	@lerna run test:unit --scope admin-ui
+	@lerna run test:unit --scope admin-ui --stream
 
 dev-test.consumer-unit:
-	@lerna run test:unit --scope consumer-ui
+	@lerna run test:unit --scope consumer-ui --stream
 
 dev-test.unit:
-	@lerna run test:unit
+	@lerna run test:unit --stream
 
 dev-test.admin-integration:
-	@lerna run cypress:integration --scope admin-ui
+	@lerna run cypress:integration --scope admin-ui --stream
 
 dev-test.consumer-integration:
-	@lerna run cypress:integration --scope consumer-ui
+	@lerna run cypress:integration --scope consumer-ui --stream
 
 dev-test.integration:
-	@lerna run cypress:integration
+	@lerna run cypress:integration --stream
 
 dev-test.admin-e2e:
-	@lerna run cypress:e2e --scope admin-ui
+	@lerna run cypress:e2e --scope admin-ui --stream
 
 dev-test.consumer-e2e:
-	@lerna run cypress:e2e --scope consumer-ui
+	@lerna run cypress:e2e --scope consumer-ui --stream
 
 dev-test.e2e:
-	@lerna run cypress:e2e
+	@lerna run cypress:e2e --stream
 
 up:
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml up -d consumer-ui admin-ui
