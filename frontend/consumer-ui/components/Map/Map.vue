@@ -86,6 +86,7 @@ export default {
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
 } */
+/* TODO: add the following utilities to tailwindcss */
 .z-999 {
   z-index: 999;
 }
