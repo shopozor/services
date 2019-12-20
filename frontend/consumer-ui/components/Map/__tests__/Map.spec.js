@@ -2,12 +2,14 @@ import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { LMap, LMarker, LTileLayer } from 'vue2-leaflet'
 // eslint-disable-next-line no-unused-vars
 import { GestureHandling } from 'leaflet-gesture-handling'
+import VueI18n from 'vue-i18n'
 import Map from '../Map'
 import ShopMarker from '../ShopMarker'
 import ShopsData from '~fixtures/Consumer/Shops'
 
 function getLocalVue () {
   const localVue = createLocalVue()
+  localVue.use(VueI18n)
   localVue.component('l-map', LMap)
   localVue.component('l-tile-layer', LTileLayer)
   localVue.component('l-marker', LMarker)
@@ -19,14 +21,24 @@ describe('Map', () => {
   const zoom = 11
   const localVue = getLocalVue()
 
+  const i18n = new VueI18n({
+    locale: 'fr',
+    messages: {
+      fr: {
+        gestureHandling: {
+          touch: 'Utiliser 2 doigts pour bouger la carte',
+          scroll: 'CTRL + scroll pour zoomer',
+          scrollMac: '\u2318 + scroll pour zoomer'
+        }
+      }
+    }
+  })
+
   it('indicates loading shops', async () => {
     // Given I have a loading map
     const wrapper = mount(Map, {
+      i18n,
       localVue,
-      propsData: {
-        center,
-        zoom
-      },
       mocks: {
         $apollo: {
           queries: {
@@ -35,6 +47,10 @@ describe('Map', () => {
             }
           }
         }
+      },
+      propsData: {
+        center,
+        zoom
       }
     })
 
@@ -47,6 +63,7 @@ describe('Map', () => {
   it('is initialized with gesture handling', () => {
     // Given I have a loaded map
     const wrapper = mount(Map, {
+      i18n,
       localVue,
       mocks: {
         $apollo: {
@@ -73,11 +90,8 @@ describe('Map', () => {
 
   it('does not show zoom control', () => {
     const wrapper = mount(Map, {
+      i18n,
       localVue,
-      propsData: {
-        center,
-        zoom
-      },
       mocks: {
         $apollo: {
           queries: {
@@ -86,6 +100,10 @@ describe('Map', () => {
             }
           }
         }
+      },
+      propsData: {
+        center,
+        zoom
       }
     })
     const zoomControl = wrapper.find('.leaflet-control-zoom')
@@ -94,11 +112,8 @@ describe('Map', () => {
 
   it('is initialized with no shop description popup', () => {
     const wrapper = shallowMount(Map, {
+      i18n,
       localVue,
-      propsData: {
-        center,
-        zoom
-      },
       mocks: {
         $apollo: {
           queries: {
@@ -107,6 +122,10 @@ describe('Map', () => {
             }
           }
         }
+      },
+      propsData: {
+        center,
+        zoom
       }
     })
     expect(wrapper.vm.shop).toBeUndefined()
@@ -115,14 +134,11 @@ describe('Map', () => {
   it('displays the selected shop description', () => {
     // Given I have shops data and am not loading server data
     const wrapper = mount(Map, {
-      localVue,
-      propsData: {
-        center,
-        zoom
-      },
       data: () => ({
         shops: ShopsData.data.shops
       }),
+      i18n,
+      localVue,
       mocks: {
         $apollo: {
           queries: {
@@ -131,6 +147,10 @@ describe('Map', () => {
             }
           }
         }
+      },
+      propsData: {
+        center,
+        zoom
       }
     })
     expect(wrapper.vm.shop).toBeUndefined()
@@ -147,15 +167,12 @@ describe('Map', () => {
   it('clears shop description popup upon clicking the map', () => {
     // Given I have a shop selected for description
     const wrapper = mount(Map, {
-      localVue,
-      propsData: {
-        center,
-        zoom
-      },
       data: () => ({
         shops: ShopsData.data.shops,
         shop: ShopsData.data.shops[0]
       }),
+      i18n,
+      localVue,
       mocks: {
         $apollo: {
           queries: {
@@ -164,6 +181,10 @@ describe('Map', () => {
             }
           }
         }
+      },
+      propsData: {
+        center,
+        zoom
       }
     })
     expect(wrapper.vm.shop).toBeDefined()
