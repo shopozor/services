@@ -46,25 +46,26 @@ export default {
     }
   },
   data: () => ({
-    options: {
-      gestureHandling: true,
-      gestureHandlingOptions: {
-        // TODO: put the following text in a file for the sake of translations
-        text: {
-          touch: 'Utiliser 2 doigts pour bouger la carte',
-          scroll: 'CTRL + scroll pour zoomer',
-          scrollMac: '\u2318 + scroll pour zoomer'
-        },
-        duration: 2000
-      },
-      zoomControl: false
-    },
     shop: undefined,
     spinnerColor: '#e78000ff'
   }),
   computed: {
     loadingMapData () {
       return this.$apollo.queries.shops.loading
+    },
+    options () {
+      return {
+        gestureHandling: true,
+        gestureHandlingOptions: {
+          text: {
+            touch: this.$i18n.t('gestureHandling.touch'),
+            scroll: this.$i18n.t('gestureHandling.scroll'),
+            scrollMac: this.$i18n.t('gestureHandling.scrollMac')
+          },
+          duration: 2000
+        },
+        zoomControl: false
+      }
     }
   },
   methods: {

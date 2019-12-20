@@ -12,6 +12,7 @@
     "leaflet": "^1.6.0",
     "leaflet-gesture-handling": "^1.1.8",
     "nuxt": "^2.10.2",
+    "nuxt-i18n": "^6.4.1",
     "tailwindcss": "^1.1.4",
     "vue-client-only": "^2.0.0",
     "vue-loading-overlay": "^3.2.0",
