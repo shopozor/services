@@ -2,7 +2,7 @@
   <div>
     <client-only>
       <loading class="z-999" :active="loadingMapData" :can-cancel="true" :is-full-page="false" :color="spinnerColor" />
-      <l-map class="w-full fill-partial-height" :zoom="zoom" :center="center" :options="options" @click="clearDescription">
+      <l-map class="w-full h-3/4" :zoom="zoom" :center="center" :options="options" @click="clearDescription">
         <shop-card v-if="shop" :shop="shop" class="absolute left-0 bottom-0 z-999" />
         <l-tile-layer :url="tilesUrl" />
         <shop-marker v-for="shop in shops" :key="shop.id" :shop="shop" @display-description="displayDescription" />
@@ -78,6 +78,7 @@ export default {
 }
 </script>
 
+<style src="~/assets/css/tailwind.css"></style>
 <style src="vue-loading-overlay/dist/vue-loading.css"></style>
 <style src="leaflet/dist/leaflet.css"></style>
 <style src="leaflet-gesture-handling/dist/leaflet-gesture-handling.css"></style>
@@ -86,11 +87,4 @@ export default {
   -webkit-filter: grayscale(100%);
   filter: grayscale(100%);
 } */
-/* TODO: add the following utilities to tailwindcss */
-.z-999 {
-  z-index: 999;
-}
-.fill-partial-height {
-  height: 75vh !important;
-}
 </style>
