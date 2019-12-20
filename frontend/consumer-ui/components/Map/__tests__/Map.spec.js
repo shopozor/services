@@ -19,7 +19,8 @@ describe('Map', () => {
   const zoom = 11
   const localVue = getLocalVue()
 
-  it('renders spinner when loading shops', async () => {
+  it('indicates loading shops', async () => {
+    // Given I have a loading map
     const wrapper = mount(Map, {
       localVue,
       propsData: {
@@ -36,14 +37,16 @@ describe('Map', () => {
         }
       }
     })
+
+    // Then it is overlayed by a loading spinner or something equivalent
     await localVue.nextTick()
     const overlayElement = wrapper.find('.vld-overlay')
     expect(overlayElement.isVisible()).toBeTruthy()
   })
 
-  // TODO: get rid of this test in the very near future
   it('is initialized with gesture handling', () => {
-    const wrapper = shallowMount(Map, {
+    // Given I have a loaded map
+    const wrapper = mount(Map, {
       localVue,
       mocks: {
         $apollo: {
@@ -59,7 +62,13 @@ describe('Map', () => {
         zoom
       }
     })
-    expect(wrapper.vm.options.gestureHandling).toBeTruthy()
+
+    // Then the gesture handling is enabled
+    const leafletMap = wrapper.find('.vue2leaflet-map')
+    const attributes = leafletMap.attributes()
+    const expectedGestureHandlingAttributes = ['data-gesture-handling-touch-content', 'data-gesture-handling-scroll-content']
+    const hasGestureHandling = expectedGestureHandlingAttributes.some(r => Object.keys(attributes).includes(r))
+    expect(hasGestureHandling).toBeTruthy()
   })
 
   // TODO: transform this test into a cypress test, maybe it'll work
