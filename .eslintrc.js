@@ -56,7 +56,7 @@ module.exports = {
     'import/no-extraneous-dependencies': 'off',
     'prefer-promise-reject-errors': 'off',
 
-    "cucumber/async-then": 2,
+    "cucumber/async-then": 'off',
     "cucumber/expression-type": 2,
     "cucumber/no-restricted-tags": [2, "wip", "broken", "foo"],
     "cucumber/no-arrow-functions": 2,

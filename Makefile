@@ -33,10 +33,7 @@ dev-test.run-frontend:
 	# Unit tests
 	@make --directory frontend dev-test.unit
 	# Integration tests
-	@make --directory backend seed-database
-	@make --directory frontend dev-build
 	@make --directory frontend dev-test.integration
-	@make --directory backend unseed-database
 	# E2e tests
 	@make --directory backend seed-database
 	@make --directory frontend dev-build

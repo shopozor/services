@@ -14,7 +14,7 @@ RUN cypress cache path
 RUN cypress cache list
 WORKDIR /app
 
-FROM node:12.10.0-slim AS app
+FROM node:12.10.0-slim AS storybook
 
 WORKDIR /app
 COPY ./package.json ./package.json
@@ -22,8 +22,13 @@ COPY ./.eslintrc.js ./.eslintrc.js
 COPY ./lerna.json ./lerna.json
 COPY ./frontend/ ./frontend/
 COPY ./shared ./shared
-ARG GRAPHQL_API
 RUN yarn global add lerna \
   && yarn \
-  && lerna bootstrap \
-  && lerna run build
+  && lerna bootstrap
+
+FROM node:12.10.0-slim AS app
+
+COPY --from=storybook /app /app
+WORKDIR /app
+ARG GRAPHQL_API
+RUN lerna run build
