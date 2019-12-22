@@ -20,11 +20,6 @@
     "vue2-leaflet": "^2.4.1"
   },
   "description": "Shopozor consumer ui",
-  "devDependencies": {
-    "@cypress/webpack-preprocessor": "4.1.0",
-    "cypress": "3.4.1",
-    "cypress-cucumber-preprocessor": "1.16.0"
-  },
   "jest-junit": {
     "outputDirectory": "./test-reports",
     "outputName": "unit-test-report.xml"
