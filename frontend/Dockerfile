@@ -31,4 +31,4 @@ FROM node:12.10.0-slim AS app
 COPY --from=storybook /app /app
 WORKDIR /app
 ARG GRAPHQL_API
-RUN lerna run build
+RUN yarn global add lerna && yarn build

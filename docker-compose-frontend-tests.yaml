@@ -39,10 +39,11 @@ services:
       dockerfile: Dockerfile
       target: cypress-tests
       args:
-        CYPRESS_VERSION: 3.7.0
+        CYPRESS_VERSION: 3.8.0
     depends_on:
       - admin-storybook
       - consumer-storybook
+    user: root
     restart: "no"
     volumes:
       - .:/app
@@ -53,7 +54,7 @@ services:
       dockerfile: Dockerfile
       target: cypress-tests
       args:
-        CYPRESS_VERSION: 3.7.0
+        CYPRESS_VERSION: 3.8.0
     depends_on:
       - admin-ui
       - consumer-ui

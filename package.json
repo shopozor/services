@@ -83,6 +83,7 @@
     "bootstrap": "lerna bootstrap && lerna exec yarn",
     "build": "lerna run build",
     "clean": "lerna clean && rimraf node_modules",
+    "cypress:clean": "lerna run cypress:clean",
     "cypress:e2e:ci": "lerna run cypress:e2e:ci",
     "cypress:integration:ci": "lerna run cypress:integration:ci",
     "lint": "lerna run lint -- --fix",

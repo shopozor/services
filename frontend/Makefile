@@ -55,7 +55,7 @@ build.app:
 
 build.integration:
 	@echo "Building images..."
-	@docker-compose -f ../docker-compose-frontend-tests.yaml build admin-storybook consumer-storybook ui-integration-tests
+	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml -f ../docker-compose-frontend-tests.yaml build admin-storybook consumer-storybook ui-integration-tests
 
 down:
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml -f ../docker-compose-frontend-tests.yaml down --remove-orphans
@@ -67,7 +67,7 @@ test.unit:
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml -f ../docker-compose-frontend-tests.yaml up --abort-on-container-exit ui-unit-tests
 
 test.integration:
-	@docker-compose -f ../docker-compose-frontend-tests.yaml up --abort-on-container-exit ui-integration-tests
+	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml -f ../docker-compose-frontend-tests.yaml up --abort-on-container-exit ui-integration-tests
 
 test.e2e:
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml -f ../docker-compose-frontend-tests.yaml up --abort-on-container-exit e2e-tests

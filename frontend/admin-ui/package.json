@@ -45,6 +45,7 @@
     "build": "quasar build",
     "build-storybook": "build-storybook",
     "concurrently:dev:jest": "concurrently \"quasar dev\" \"jest --watch\"",
+    "cypress:clean": "rimraf cypress/screenshots/* cypress/videos/*",
     "cypress:e2e": "wait-on http://localhost:4000 && cross-env CYPRESS_baseUrl=http://localhost:4000/# cypress run --env configFile=e2e",
     "cypress:e2e:ci": "cross-env CYPRESS_baseUrl=http://admin-ui:4000/# cypress run --env configFile=e2e",
     "cypress:integration": "wait-on http://localhost:7006 && cross-env CYPRESS_baseUrl=http://localhost:7006 cypress run --env configFile=integration",
