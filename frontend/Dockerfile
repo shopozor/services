@@ -18,6 +18,7 @@ FROM node:12.10.0-slim AS storybook
 
 WORKDIR /app
 COPY ./package.json ./package.json
+COPY ./yarn.lock ./yarn.lock
 COPY ./.eslintrc.js ./.eslintrc.js
 COPY ./lerna.json ./lerna.json
 COPY ./frontend/ ./frontend/
