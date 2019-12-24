@@ -2,6 +2,10 @@ bootstrap:
 	@yarn
 	@yarn bootstrap
 
+build:
+	make --directory backend build
+	make --directory frontend build
+
 down:
 	make --directory backend down
 	make --directory frontend down

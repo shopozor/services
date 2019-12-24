@@ -14,7 +14,7 @@ pipeline {
     }
     stage('Build the services') {
       steps {
-        sh "make --directory backend build"
+        sh "make build"
       }
     }
     stage('Fetch node dependencies') {
@@ -60,7 +60,6 @@ pipeline {
     stage('Perform ui integration tests') {
       steps {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-          sh "make --directory frontend build.integration"
 	        sh "make --directory frontend test.integration"
         }
       }
@@ -69,7 +68,7 @@ pipeline {
       steps {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
           sh "make --directory backend seed-database"
-          sh "make --directory frontend build.app"
+          // TODO: add a command to generate the static sites
         	sh "make --directory frontend test.e2e"
           sh "make --directory backend unseed-database"
         }
