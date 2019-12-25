@@ -8,9 +8,9 @@
   integrity sha512-xRXoIl0ZtRjQbTt6iLsvLMMOy8nyroeh2bahDlQmF14dkIU+gKQqKH7pMyn5as9xJq+Vubyw6957rbyasa8WOQ==
 
 "@types/node@>=6":
-  version "12.12.21"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-12.12.21.tgz#aa44a6363291c7037111c47e4661ad210aded23f"
-  integrity sha512-8sRGhbpU+ck1n0PGAUgVrWrWdjSW2aqNeyC15W88GRsMpSwzv6RJGlLhE7s2RhVSOdyDmxbqlWSeThq4/7xqlA==
+  version "13.1.0"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.1.0.tgz#225cbaac5fdb2b9ac651b02c070d8aa3c37cc812"
+  integrity sha512-zwrxviZS08kRX40nqBrmERElF2vpw4IUTd5khkhBTfFH8AOaeoLVx48EC4+ZzS2/Iga7NevncqnsUSYjM4OWYA==
 
 "@types/zen-observable@^0.8.0":
   version "0.8.0"
@@ -150,9 +150,9 @@ core-js@^2.4.0, core-js@^2.6.5:
   integrity sha512-5wjnpaT/3dV+XB4borEsnAYQchn00XSgTAWKDkEqv+K8KevjbzmofK6hfJ9TZIlpj2N0xQpazy7PiRQiWHqzWg==
 
 core-js@^3.3.2:
-  version "3.6.0"
-  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.6.0.tgz#2b854e451de1967d1e29896025cdc13a2518d9ea"
-  integrity sha512-AHPTNKzyB+YwgDWoSOCaid9PUSEF6781vsfiK8qUz62zRR448/XgK2NtCbpiUGizbep8Lrpt0Du19PpGGZvw3Q==
+  version "3.6.1"
+  resolved "https://registry.yarnpkg.com/core-js/-/core-js-3.6.1.tgz#39d5e2e346258cc01eb7d44345b1c3c014ca3f05"
+  integrity sha512-186WjSik2iTGfDjfdCZAxv2ormxtKgemjC3SI6PL31qOA0j5LhTDVjHChccoc7brwLvpvLPiMyRlcO88C4l1QQ==
 
 escape-string-regexp@^1.0.5:
   version "1.0.5"
@@ -209,9 +209,9 @@ optimism@^0.10.0:
     "@wry/context" "^0.4.0"
 
 quasar@^1.0.0:
-  version "1.5.9"
-  resolved "https://registry.yarnpkg.com/quasar/-/quasar-1.5.9.tgz#866651eb425911afbbea7176b1d57ba8969f2fee"
-  integrity sha512-QdTiLNCqumBOOkeODZrDmxJY9KjjEEC1Gp4KPM5fRFEpSNvtHF5m68tt5/4mnCrS6V05ZpetYRizmCAnE9kkzw==
+  version "1.5.11"
+  resolved "https://registry.yarnpkg.com/quasar/-/quasar-1.5.11.tgz#a1ff4a9389167eec27d465ddc9b7fdecc71cd2a5"
+  integrity sha512-+gyZYZc6qQRDYzfICmbEca6prRZV+nI9T6y7AczQu55w3C8GUNXZ6IF6OHH2Rwh0ftdeqcbOZ+9k8/IOeJFGLQ==
 
 regenerator-runtime@^0.11.0:
   version "0.11.1"
