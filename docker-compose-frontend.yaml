@@ -10,7 +10,7 @@ services:
       ADMIN_UI_PORT: 4000
       GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
     volumes:
-      .:/app
+      - .:/app
     ports:
       - ${ADMIN_UI_PORT:-4000}:4000
     depends_on:
@@ -27,7 +27,7 @@ services:
       NUXT_PORT: 4000
       NUXT_HOST: "0.0.0.0"
     volumes:
-      .:/app
+      - .:/app
     ports:
       - ${CONSUMER_UI_PORT:-3000}:4000
     depends_on:

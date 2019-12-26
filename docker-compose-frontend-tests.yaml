@@ -18,7 +18,7 @@ services:
       ADMIN_STORYBOOK_HOST: "0.0.0.0"
       ADMIN_STORYBOOK_PORT: 4000
     volumes:
-      .:/app
+      - .:/app
     ports:
       - ${ADMIN_STORYBOOK_PORT:-7006}:4000
     restart: "no"
@@ -32,7 +32,7 @@ services:
       CONSUMER_STORYBOOK_HOST: "0.0.0.0"
       CONSUMER_STORYBOOK_PORT: 4000
     volumes:
-      .:/app
+      - .:/app
     ports:
       - ${CONSUMER_STORYBOOK_PORT:-6006}:4000
     restart: "no"
