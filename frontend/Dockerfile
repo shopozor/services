@@ -8,7 +8,7 @@ ENV CI=1
 ENV CYPRESS_CACHE_FOLDER /home/node/.cache/Cypress
 ARG CYPRESS_VERSION="3.7.0"
 RUN npm config -g set user $(whoami)
-RUN npm install -g "cypress@${CYPRESS_VERSION}"
+RUN npm install -g "cypress@${CYPRESS_VERSION}" lerna
 RUN cypress verify
 RUN cypress cache path
 RUN cypress cache list
