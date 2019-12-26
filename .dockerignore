@@ -2,5 +2,6 @@
 .quasar/
 .git/
 .vscode/
+core.*
 /node_modules/
 /dist/
