@@ -11,3 +11,4 @@ TEST_TYPE=$1
 
 yarn cypress:clean
 yarn cypress:${TEST_TYPE}:ci
+rm -Rf node_modules/@storybook/core/dist/public
