@@ -82,7 +82,8 @@ pipeline {
       sh "make down"
       junit "**/test-reports/*.xml"
     }
-    success {
+    // This doesn't work; maybe we should perform these actions after merging the code
+    /*success {
       build job: 'specification', parameters: [
         string(name: 'BRANCH', value: GIT_COMMIT)
       ]
@@ -94,6 +95,6 @@ pipeline {
         string(name: 'TAG', value: GIT_COMMIT),
         string(name: 'BUILD_TYPE', value: 'e2e')
       ]
-    }
+    }*/
   }
 }
