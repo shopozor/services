@@ -8,7 +8,6 @@ services:
     environment:
       ADMIN_UI_HOST: "0.0.0.0"
       ADMIN_UI_PORT: 4000
-      GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
     volumes:
       - .:/app
     ports:
@@ -23,7 +22,6 @@ services:
       dockerfile: frontend/Dockerfile
       target: app
     environment:
-      GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
       NUXT_PORT: 4000
       NUXT_HOST: "0.0.0.0"
     volumes:

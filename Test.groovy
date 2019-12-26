@@ -2,6 +2,7 @@ pipeline {
   agent any
   environment {
     API_PORT = 8081
+    GRAPHQL_API = "http://localhost:${API_PORT}/v1/graphql/"
     TEST_REPORTS_FOLDER = 'test-reports'
   }
   stages {
