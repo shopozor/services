@@ -10,6 +10,4 @@ fi
 TEST_TYPE=$1
 
 yarn cypress:clean
-for app in admin consumer ; do
-  lerna run cypress:${TEST_TYPE}:ci --scope $app-ui --stream
-done
+yarn cypress:${TEST_TYPE}:ci
