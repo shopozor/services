@@ -84,14 +84,14 @@ pipeline {
     }
     success {
       build job: 'specification', parameters: [
-        string(name: 'BRANCH', value: GIT_BRANCH.split('/')[1..-1])
+        string(name: 'BRANCH', value: GIT_BRANCH.substring(7, -1))
       ]
       build job: 'publish-docker-images', parameters: [
-        string(name: 'TAG', value: GIT_BRANCH.split('/')[1..-1]),
+        string(name: 'TAG', value: GIT_BRANCH.substring(7, -1)),
         string(name: 'BUILD_TYPE', value: 'production')
       ]
       build job: 'publish-docker-images', parameters: [
-        string(name: 'TAG', value: GIT_BRANCH.split('/')[1..-1]),
+        string(name: 'TAG', value: GIT_BRANCH.substring(7, -1)),
         string(name: 'BUILD_TYPE', value: 'e2e')
       ]
     }
