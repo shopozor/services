@@ -9,15 +9,14 @@ pipeline {
     stage('Lint code') {
       steps {
         script {
+          sh "env"
           sh "make lint"
         }
       }
     }
     stage('Build the services') {
       steps {
-        sh "make bootstrap"
         sh "make build"
-        sh "yarn build"
       }
     }
     stage('Generate the database fixtures') {
@@ -30,6 +29,12 @@ pipeline {
     stage('Start services') {
       steps {
         sh "make --directory backend up"
+      }
+    }
+    stage('Build the frontends') {
+      steps {
+        sh "make bootstrap"
+        sh "yarn build"
       }
     }
     stage('Perform database tests') {
@@ -78,7 +83,7 @@ pipeline {
       sh "make down"
       junit "**/test-reports/*.xml"
     }
-    success {
+    /*success {
       build job: 'specification', parameters: [
         string(name: 'BRANCH', value: GIT_BRANCH.split('/')[1])
       ]
@@ -90,6 +95,6 @@ pipeline {
         string(name: 'TAG', value: GIT_BRANCH.split('/')[1]),
         string(name: 'BUILD_TYPE', value: 'e2e')
       ]
-    }
+    }*/
   }
 }
