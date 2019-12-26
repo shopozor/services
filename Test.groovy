@@ -16,6 +16,7 @@ pipeline {
       steps {
         sh "make bootstrap"
         sh "make build"
+        sh "yarn build"
       }
     }
     stage('Generate the database fixtures') {

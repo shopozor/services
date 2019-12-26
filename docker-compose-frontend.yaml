@@ -16,7 +16,7 @@ services:
     depends_on:
       - graphql-engine
     restart: "no"
-    entrypoint: lerna run start:ci --scope admin-ui
+    entrypoint: lerna run start --scope admin-ui
   consumer-ui:
     build:
       context: .
@@ -33,4 +33,4 @@ services:
     depends_on:
       - graphql-engine
     restart: "no"
-    entrypoint: lerna run start:ci --scope consumer-ui
+    entrypoint: lerna run start --scope consumer-ui
