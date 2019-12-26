@@ -5,30 +5,32 @@ services:
       context: .
       dockerfile: frontend/Dockerfile
       target: app
-      args:
-        GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
     environment:
       ADMIN_UI_HOST: "0.0.0.0"
       ADMIN_UI_PORT: 4000
+      GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
+    volumes:
+      .:/app
     ports:
       - ${ADMIN_UI_PORT:-4000}:4000
     depends_on:
       - graphql-engine
     restart: "no"
-    entrypoint: lerna run start --scope admin-ui
+    entrypoint: lerna run start:ci --scope admin-ui
   consumer-ui:
     build:
       context: .
       dockerfile: frontend/Dockerfile
       target: app
-      args:
-        GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
     environment:
+      GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
       NUXT_PORT: 4000
       NUXT_HOST: "0.0.0.0"
+    volumes:
+      .:/app
     ports:
       - ${CONSUMER_UI_PORT:-3000}:4000
     depends_on:
       - graphql-engine
     restart: "no"
-    entrypoint: lerna run start --scope consumer-ui
+    entrypoint: lerna run start:ci --scope consumer-ui

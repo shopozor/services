@@ -13,10 +13,12 @@ services:
     build:
       context: .
       dockerfile: frontend/Dockerfile
-      target: storybook
+      target: app
     environment:
       ADMIN_STORYBOOK_HOST: "0.0.0.0"
       ADMIN_STORYBOOK_PORT: 4000
+    volumes:
+      .:/app
     ports:
       - ${ADMIN_STORYBOOK_PORT:-7006}:4000
     restart: "no"
@@ -25,10 +27,12 @@ services:
     build:
       context: .
       dockerfile: frontend/Dockerfile
-      target: storybook
+      target: app
     environment:
       CONSUMER_STORYBOOK_HOST: "0.0.0.0"
       CONSUMER_STORYBOOK_PORT: 4000
+    volumes:
+      .:/app
     ports:
       - ${CONSUMER_STORYBOOK_PORT:-6006}:4000
     restart: "no"

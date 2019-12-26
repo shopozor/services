@@ -43,6 +43,7 @@
     "generate": "nuxt generate",
     "lint": "eslint --ext .js,.vue .",
     "start": "nuxt start",
+    "start:ci": "yarn build && yarn start",
     "start:dev": "nuxt",
     "start:e2e": "concurrently \"yarn cypress:e2e\" --kill-others \"yarn start\" --success first",
     "start:integration": "concurrently \"yarn cypress:integration\" --kill-others \"yarn start\" --success first",

@@ -14,12 +14,8 @@ pipeline {
     }
     stage('Build the services') {
       steps {
-        sh "make build"
-      }
-    }
-    stage('Fetch node dependencies') {
-      steps {
         sh "make bootstrap"
+        sh "make build"
       }
     }
     stage('Generate the database fixtures') {

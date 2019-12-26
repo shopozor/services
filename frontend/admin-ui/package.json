@@ -55,6 +55,7 @@
     "lint": "eslint --ext .js,.vue src",
     "serve:test:coverage": "quasar serve test/jest/coverage/lcov-report/ --port 8788",
     "start": "cross-var quasar serve dist/spa -H $ADMIN_UI_HOST -p $ADMIN_UI_PORT",
+    "start:ci": "yarn build && yarn start",
     "start:dev": "quasar dev",
     "start:e2e": "concurrently \"yarn cypress:e2e\" --kill-others \"yarn start\" --success first",
     "start:integration": "concurrently \"yarn cypress:integration\" --kill-others \"yarn start\" --success first",
