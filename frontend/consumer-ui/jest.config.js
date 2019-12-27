@@ -34,6 +34,7 @@ module.exports = {
     '^vue$': '<rootDir>/node_modules/vue/dist/vue.common.js',
     '^test-utils$': '<rootDir>/node_modules/@vue/test-utils/dist/vue-test-utils.js',
     '.+\\.(css|styl|less|sass|scss|svg|png|jpg|ttf|woff|woff2)$': 'jest-transform-stub',
+    '^~shared/(.*)$': '<rootDir>/../../shared/$1',
     '^~fixtures/(.*)$': '<rootDir>/../../shared/fixtures/graphql/responses/$1',
     '^~graphql/(.*)$': '<rootDir>/../../shared/graphql/$1',
     '^~/(.*)$': '<rootDir>/$1',
