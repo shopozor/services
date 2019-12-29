@@ -40,7 +40,6 @@ dev-test.run-frontend:
 	@make --directory frontend dev-test.integration
 	# E2e tests
 	@make --directory backend seed-database
-	@make --directory frontend dev-build
 	@make --directory frontend dev-test.e2e
 	@make --directory backend unseed-database
 

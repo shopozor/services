@@ -83,11 +83,12 @@
     "bootstrap": "lerna bootstrap && lerna exec yarn",
     "build": "lerna run build && yarn build-storybook",
     "build-storybook": "build-storybook",
-    "clean": "lerna clean && rimraf node_modules",
+    "clean:node_modules": "lerna clean && rimraf node_modules",
     "cypress:clean": "lerna run cypress:clean",
     "cypress:e2e:ci": "lerna run cypress:e2e:ci --concurrency 1",
     "cypress:integration:ci": "lerna run cypress:integration:ci --concurrency 1",
     "lint": "lerna run lint -- --fix",
+    "start:dev": "lerna run start:dev --stream",
     "storybook": "lerna run storybook --stream",
     "test:unit:ci": "lerna run test:unit:ci",
     "test:unit:updateSnapshot": "lerna run test:unit:updateSnapshot"
