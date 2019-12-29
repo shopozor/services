@@ -29,4 +29,4 @@
       entry: make dev-test.all
       language: system
       pass_filenames: false
-      stages: ['push']
+      stages: [push]
