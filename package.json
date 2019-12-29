@@ -93,5 +93,5 @@
     "test:unit:ci": "lerna run test:unit:ci",
     "test:unit:updateSnapshot": "lerna run test:unit:updateSnapshot"
   },
-  "version": "0.0.1"
+  "version": "0.0.0"
 }
