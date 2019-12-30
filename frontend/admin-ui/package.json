@@ -54,7 +54,7 @@
     "cypress:integration:dev": "cross-env CYPRESS_baseUrl=http://localhost:61000 concurrently \"wait-on http://localhost:61000 && npx cypress run --env configFile=integration\" --kill-others \"yarn storybook -p 61000\" --success first",
     "cypress:open": "cross-env CYPRESS_baseUrl=http://localhost:4000/# cypress open",
     "cypress:open:dev": "cross-env CYPRESS_baseUrl=http://localhost:4000/# NODE_ENV=development cypress open",
-    "lint": "eslint --ext .js,.vue src",
+    "lint": "eslint --ext .js,.vue,.feature src",
     "serve:test:coverage": "quasar serve test/jest/coverage/lcov-report/ --port 8788",
     "start": "cross-var quasar serve dist/spa -H $ADMIN_UI_HOST -p $ADMIN_UI_PORT",
     "start:dev": "quasar dev",

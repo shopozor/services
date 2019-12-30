@@ -43,7 +43,7 @@
     "cypress:open": "cross-env CYPRESS_baseUrl=http://localhost:3000 cypress open",
     "cypress:open:dev": "cross-env CYPRESS_baseUrl=http://localhost:3000 NODE_ENV=development cypress open",
     "generate": "nuxt generate",
-    "lint": "eslint --ext .js,.vue .",
+    "lint": "eslint --ext .js,.vue,.feature .",
     "start": "nuxt start",
     "start:dev": "nuxt",
     "start:e2e": "concurrently \"yarn cypress:e2e\" --kill-others \"yarn start\" --success first",
