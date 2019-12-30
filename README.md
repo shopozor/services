@@ -45,7 +45,7 @@ After that, everytime you will clone a new git repository, the `pre-commit` hook
 ```
 pre-commit install --hook-type pre-push
 ```
-It will essentially run all the tests before pushing. You can then disable that with the following command:
+It will essentially run all the tests before pushing. You can then disable pre-push hooks with the following command:
 ```
 pre-commit uninstall --hook-type pre-push
 ```
