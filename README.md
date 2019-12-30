@@ -49,6 +49,7 @@ It will essentially run all the tests before pushing. You can then disable pre-p
 ```
 pre-commit uninstall --hook-type pre-push
 ```
+Note that the pre-push hooks will not work on git bash under Windows. Under Windows, you will need to work with WSL to let that happen.
 
 ### VSCode configuration
 
