@@ -20,31 +20,33 @@ dev-build:
 	@lerna run build
 
 dev-test.admin-unit:
-	@lerna run test:unit --scope admin-ui
+	@lerna run test:unit --scope admin-ui --stream
 
 dev-test.consumer-unit:
-	@lerna run test:unit --scope consumer-ui
+	@lerna run test:unit --scope consumer-ui --stream
 
 dev-test.unit:
-	@lerna run test:unit
+	@lerna run test:unit --stream
 
 dev-test.admin-integration:
-	@lerna run cypress:integration --scope admin-ui
+	@lerna run cypress:integration:dev --scope admin-ui --stream
 
 dev-test.consumer-integration:
-	@lerna run cypress:integration --scope consumer-ui
+	@lerna run cypress:integration:dev --scope consumer-ui --stream
 
 dev-test.integration:
-	@lerna run cypress:integration
+	@lerna run cypress:integration:dev --stream --concurrency 1
 
 dev-test.admin-e2e:
-	@lerna run cypress:e2e --scope admin-ui
+  # TODO: find a solution for this GRAPHQL_API variable; at least define it from an env variable
+	@GRAPHQL_API=http://localhost:8080/v1/graphql lerna run cypress:e2e:dev --scope admin-ui --stream
 
 dev-test.consumer-e2e:
-	@lerna run cypress:e2e --scope consumer-ui
+	@lerna run cypress:e2e:dev --scope consumer-ui --stream
 
 dev-test.e2e:
-	@lerna run cypress:e2e
+  # TODO: find a solution for this GRAPHQL_API variable; at least define it from an env variable
+	@GRAPHQL_API=http://localhost:8080/v1/graphql lerna run cypress:e2e:dev --stream --concurrency 1
 
 up:
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml up -d consumer-ui admin-ui
@@ -63,12 +65,11 @@ test.unit:
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml -f ../docker-compose-frontend-tests.yaml up --abort-on-container-exit ui-unit-tests
 
 test.integration:
-	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml -f ../docker-compose-frontend-tests.yaml up --abort-on-container-exit ui-integration-tests
+	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml -f ../docker-compose-frontend-tests.yaml up --abort-on-container-exit consumer-storybook admin-storybook ui-integration-tests
 
 test.e2e:
-	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml -f ../docker-compose-frontend-tests.yaml up --abort-on-container-exit e2e-tests
+	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml -f ../docker-compose-frontend-tests.yaml up --abort-on-container-exit consumer-ui admin-ui e2e-tests
 
-test: build test.unit test.integration test.e2e
 test.cleanup: down rm
 
 %.restart:

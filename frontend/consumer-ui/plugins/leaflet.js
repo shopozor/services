@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { LMap, LMarker, LPopup, LTileLayer } from 'vue2-leaflet'
+import { LMap, LMarker, LTileLayer } from 'vue2-leaflet'
 // eslint-disable-next-line no-unused-vars
 import { GestureHandling } from 'leaflet-gesture-handling'
 
@@ -15,4 +15,3 @@ Icon.Default.mergeOptions({
 Vue.component('l-map', LMap)
 Vue.component('l-tile-layer', LTileLayer)
 Vue.component('l-marker', LMarker)
-Vue.component('l-popup', LPopup)

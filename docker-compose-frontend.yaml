@@ -5,11 +5,11 @@ services:
       context: .
       dockerfile: frontend/Dockerfile
       target: app
-      args:
-        GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
     environment:
       ADMIN_UI_HOST: "0.0.0.0"
       ADMIN_UI_PORT: 4000
+    volumes:
+      - .:/app
     ports:
       - ${ADMIN_UI_PORT:-4000}:4000
     depends_on:
@@ -21,11 +21,11 @@ services:
       context: .
       dockerfile: frontend/Dockerfile
       target: app
-      args:
-        GRAPHQL_API: http://graphql-engine:${API_PORT:-8080}/v1/graphql/
     environment:
       NUXT_PORT: 4000
       NUXT_HOST: "0.0.0.0"
+    volumes:
+      - .:/app
     ports:
       - ${CONSUMER_UI_PORT:-3000}:4000
     depends_on:

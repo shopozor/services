@@ -1,3 +1,4 @@
+import i18n from './i18n'
 const path = require('path')
 const pkg = require('./package')
 
@@ -49,9 +50,13 @@ module.exports = {
   /*
   ** Nuxt.js modules
   */
-  modules: ['@nuxtjs/apollo', 'nuxt-purgecss'],
+  modules: ['@nuxtjs/apollo', 'nuxt-purgecss', ['nuxt-i18n', i18n]],
 
-  purgeCSS: {},
+  purgeCSS: {
+    paths: [
+      'i18n/**/*.js'
+    ]
+  },
 
   // Give apollo module options
   apollo: {

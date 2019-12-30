@@ -7,7 +7,8 @@ module.exports = {
   },
 
   env: {
-    browser: true
+    browser: true,
+    jest: true
   },
 
   extends: [
@@ -56,9 +57,9 @@ module.exports = {
     'import/no-extraneous-dependencies': 'off',
     'prefer-promise-reject-errors': 'off',
 
-    "cucumber/async-then": 2,
+    "cucumber/async-then": 'off',
     "cucumber/expression-type": 2,
-    "cucumber/no-restricted-tags": [2, "wip", "broken", "foo"],
+    "cucumber/no-restricted-tags": [2, "current", "focus"],
     "cucumber/no-arrow-functions": 2,
 
     // allow debugger during development only

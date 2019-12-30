@@ -28,7 +28,9 @@ module.exports = async ({ config, mode }) => {
     include: path.resolve(__dirname, "../")
   })
 
+  config.resolve.alias['~assets'] = path.resolve(__dirname, '../assets/')
   config.resolve.alias['~'] = path.resolve(__dirname, '../')
+  config.resolve.alias['~shared'] = path.resolve(__dirname, '../../../shared/')
   config.resolve.alias['~graphql'] = path.resolve(__dirname, '../../../shared/graphql/')
   config.resolve.alias['~fixtures'] = path.resolve(__dirname, '../../../shared/fixtures/graphql/responses/')
 

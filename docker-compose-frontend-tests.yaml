@@ -9,16 +9,45 @@ services:
     volumes:
       - .:/app
     entrypoint: ./frontend/tests/entrypoint-unit.sh
+  admin-storybook:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      target: app
+    environment:
+      ADMIN_STORYBOOK_HOST: "0.0.0.0"
+      ADMIN_STORYBOOK_PORT: 4000
+    volumes:
+      - .:/app
+    ports:
+      - ${ADMIN_STORYBOOK_PORT:-7006}:4000
+    restart: "no"
+    entrypoint: lerna run storybook:ci --scope admin-ui
+  consumer-storybook:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+      target: app
+    environment:
+      CONSUMER_STORYBOOK_HOST: "0.0.0.0"
+      CONSUMER_STORYBOOK_PORT: 4000
+    volumes:
+      - .:/app
+    ports:
+      - ${CONSUMER_STORYBOOK_PORT:-6006}:4000
+    restart: "no"
+    entrypoint: lerna run storybook:ci --scope consumer-ui
   ui-integration-tests:
     build:
       context: frontend
       dockerfile: Dockerfile
       target: cypress-tests
       args:
-        CYPRESS_VERSION: 3.7.0
+        CYPRESS_VERSION: 3.8.0
     depends_on:
-      - admin-ui
-      - consumer-ui
+      - admin-storybook
+      - consumer-storybook
+    user: root
     restart: "no"
     volumes:
       - .:/app
@@ -29,7 +58,7 @@ services:
       dockerfile: Dockerfile
       target: cypress-tests
       args:
-        CYPRESS_VERSION: 3.7.0
+        CYPRESS_VERSION: 3.8.0
     depends_on:
       - admin-ui
       - consumer-ui

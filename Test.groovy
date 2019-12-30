@@ -2,6 +2,7 @@ pipeline {
   agent any
   environment {
     API_PORT = 8081
+    GRAPHQL_API = "http://localhost:${API_PORT}/v1/graphql/"
     TEST_REPORTS_FOLDER = 'test-reports'
   }
   stages {
@@ -14,12 +15,7 @@ pipeline {
     }
     stage('Build the services') {
       steps {
-        sh "make --directory backend build"
-      }
-    }
-    stage('Fetch node dependencies') {
-      steps {
-        sh "make bootstrap"
+        sh "make build"
       }
     }
     stage('Generate the database fixtures') {
@@ -32,6 +28,12 @@ pipeline {
     stage('Start services') {
       steps {
         sh "make --directory backend up"
+      }
+    }
+    stage('Build the frontends') {
+      steps {
+        sh "make bootstrap"
+        sh "yarn build"
       }
     }
     stage('Perform database tests') {
@@ -60,10 +62,7 @@ pipeline {
     stage('Perform ui integration tests') {
       steps {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-          sh "make --directory backend seed-database"
-          sh "make --directory frontend build"
 	        sh "make --directory frontend test.integration"
-          sh "make --directory backend unseed-database"
         }
       }
     }
@@ -71,7 +70,7 @@ pipeline {
       steps {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
           sh "make --directory backend seed-database"
-          sh "make --directory frontend build"
+          // TODO: add a command to generate the static sites
         	sh "make --directory frontend test.e2e"
           sh "make --directory backend unseed-database"
         }
@@ -83,18 +82,19 @@ pipeline {
       sh "make down"
       junit "**/test-reports/*.xml"
     }
-    success {
+    // This doesn't work; maybe we should perform these actions after merging the code
+    /*success {
       build job: 'specification', parameters: [
-        string(name: 'BRANCH', value: GIT_BRANCH.split('/')[1])
+        string(name: 'BRANCH', value: GIT_COMMIT)
       ]
       build job: 'publish-docker-images', parameters: [
-        string(name: 'TAG', value: GIT_BRANCH.split('/')[1]),
+        string(name: 'TAG', value: GIT_COMMIT),
         string(name: 'BUILD_TYPE', value: 'production')
       ]
       build job: 'publish-docker-images', parameters: [
-        string(name: 'TAG', value: GIT_BRANCH.split('/')[1]),
+        string(name: 'TAG', value: GIT_COMMIT),
         string(name: 'BUILD_TYPE', value: 'e2e')
       ]
-    }
+    }*/
   }
 }
