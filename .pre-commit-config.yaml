@@ -2,6 +2,7 @@
   rev: v1.4.4
   hooks:
   - id: autopep8
+# TODO: we can remove this hook sooner or later because eslint can do it
 - repo: https://github.com/shopozor/pre-commit-hooks
   rev: ab46cd3bffd7c1c17f433eb23682fba6f8cb4a51
   hooks:
