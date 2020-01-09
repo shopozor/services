@@ -5,6 +5,8 @@ application:
   name: Shopozor k8s cluster
   version: 0.0
 
+  baseUrl: https://raw.githubusercontent.com/shopozor/services/dev
+
   settings:
     fields:
       - name: envName
@@ -28,15 +30,14 @@ application:
         envName: ${settings.envName}
         displayName: ${settings.envName}
         settings:
-          deploy: cc
-          # if cmd:
-          # deploy: cmd
-          # cmd: |-
-          #   helm repo add ibm-charts https://raw.githubusercontent.com/IBM/charts/master/repo/stable/
-          #   helm install --name default --set autoscaling.enabled=true --set autoscaling.minReplicas=2 ibm-charts/ibm-open-liberty --version 1.6.0  --debug
-          #   kubectl apply -f https://raw.githubusercontent.com/jelastic-jps/kubernetes/master/addons/openliberty.yaml
+          deploy: cmd
+          cmd: |-
+            curl -fsSL ${baseUrl}/scripts/install_k8s.sh | /bin/bash
           topo: ${settings.topo}
           dashboard: version2
+          ingress-controller: Nginx
           storage: true
           api: true
           monitoring: true
+          version: v1.15.6
+          jaeger: false
