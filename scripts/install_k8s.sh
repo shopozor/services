@@ -8,7 +8,7 @@ mv jx /usr/local/bin
 
 # Install git client
 GIT_RELEASE=$(curl -s https://api.github.com/repos/git/git/tags | jq -r 'first(.[]).name')
-GIT_RELEAE=${GIT_RELEASE#v}
+GIT_RELEASE=${GIT_RELEASE#v}
 wget https://github.com/git/git/archive/v${GIT_RELEASE}.tar.gz
 tar -zxvf v${GIT_RELEASE}.tar.gz
 # Install compilation tool
