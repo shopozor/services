@@ -22,6 +22,7 @@ application:
 
   onInstall:
     - installKubernetes
+    - enableSubDomains
 
   actions:
     installKubernetes:
@@ -41,3 +42,25 @@ application:
           monitoring: true
           version: v1.15.6
           jaeger: false
+    enableSubDomains:
+      - api:
+        - method: jelastic.environment.binder.AddDomains
+          params:
+            domains: chartmuseum-jx
+            subdomain: true
+        - method: jelastic.environment.binder.AddDomains
+          params:
+            domains: deck-jx
+            subdomain: true
+        - method: jelastic.environment.binder.AddDomains
+          params:
+            domains: hook-jx
+            subdomain: true
+        - method: jelastic.environment.binder.AddDomains
+          params:
+            domains: nexus-jx
+            subdomain: true
+        - method: jelastic.environment.binder.AddDomains
+          params:
+            domains: tide-jx
+            subdomain: true
