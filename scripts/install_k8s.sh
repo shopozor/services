@@ -27,3 +27,6 @@ echo "export PATH=\$PATH:/usr/local/git/bin" >> /etc/profile
 source /etc/profile
 
 # Setup Jenkins X configuration
+git clone https://github.com/shopozor/environment-shopozor-dev
+# TODO: in that clone, update the environment's hostname
+# TODO: try to jx boot it
