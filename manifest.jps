@@ -20,6 +20,7 @@ application:
           1-prod: '<b>Production:</b> multi master (3) with API balancers (2+) and scalable workers (2+)'
         default: 0-dev
       - name: version
+        type: string
         caption: Version
         default: v1.15.6
 
