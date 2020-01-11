@@ -1,0 +1,70 @@
+jpsVersion: 1.3
+jpsType: install
+application:
+  id: shopozor-k8s-cluster
+  name: Shopozor k8s cluster
+  version: 0.0
+
+  baseUrl: https://raw.githubusercontent.com/shopozor/services/dev
+
+  settings:
+    fields:
+      - name: envName
+        caption: Env Name
+        type: string
+        default: shopozor
+      - name: topo
+        type: radio-fieldset
+        values:
+          0-dev: '<b>Development:</b> one master (1) and one scalable worker (1+)'
+          1-prod: '<b>Production:</b> multi master (3) with API balancers (2+) and scalable workers (2+)'
+        default: 0-dev
+      - name: version
+        type: string
+        caption: Version
+        default: v1.15.6
+
+  onInstall:
+    - installKubernetes
+    - enableSubDomains
+
+  actions:
+    installKubernetes:
+      install:
+        jps: https://github.com/jelastic-jps/kubernetes/blob/${settings.version}/manifest.jps
+        envName: ${settings.envName}
+        displayName: ${settings.envName}
+        settings:
+          deploy: cmd
+          cmd: |-
+            curl -fsSL ${baseUrl}/scripts/install_k8s.sh | /bin/bash
+          topo: ${settings.topo}
+          dashboard: version2
+          ingress-controller: Nginx
+          storage: true
+          api: true
+          monitoring: true
+          version: ${settings.version}
+          jaeger: false
+    enableSubDomains:
+      - api:
+        - method: jelastic.environment.binder.AddDomains
+          params:
+            domains: chartmuseum-jx
+            subdomain: true
+        - method: jelastic.environment.binder.AddDomains
+          params:
+            domains: deck-jx
+            subdomain: true
+        - method: jelastic.environment.binder.AddDomains
+          params:
+            domains: hook-jx
+            subdomain: true
+        - method: jelastic.environment.binder.AddDomains
+          params:
+            domains: nexus-jx
+            subdomain: true
+        - method: jelastic.environment.binder.AddDomains
+          params:
+            domains: tide-jx
+            subdomain: true
