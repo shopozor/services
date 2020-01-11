@@ -19,6 +19,9 @@ application:
           0-dev: '<b>Development:</b> one master (1) and one scalable worker (1+)'
           1-prod: '<b>Production:</b> multi master (3) with API balancers (2+) and scalable workers (2+)'
         default: 0-dev
+      - name: version
+        caption: Version
+        default: v1.15.6
 
   onInstall:
     - installKubernetes
@@ -27,7 +30,7 @@ application:
   actions:
     installKubernetes:
       install:
-        jps: https://github.com/jelastic-jps/kubernetes/blob/master/manifest.jps
+        jps: https://github.com/jelastic-jps/kubernetes/blob/${settings.version}/manifest.jps
         envName: ${settings.envName}
         displayName: ${settings.envName}
         settings:
@@ -40,7 +43,7 @@ application:
           storage: true
           api: true
           monitoring: true
-          version: v1.15.6
+          version: ${settings.version}
           jaeger: false
     enableSubDomains:
       - api:
