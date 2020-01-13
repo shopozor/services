@@ -95,7 +95,7 @@ want your environment to be clean, just do
 make dev.end
 ```
 
-### Lauching hasura console
+### Launching hasura console
 
 To launch console, which is the only way to automatically generate the corresponding hasura migrations, enter following command from the root of the repo
 
@@ -152,18 +152,107 @@ In addition, install [lerna](https://lerna.js.org/) globally
 ```bash
 yarn global add lerna
 ```
-Bootstrap the node projects
+That tool simplifies management of monorepos. While not strictly necessary in the global environment of our build systems, it's pretty handy to have it globally available on development environments.
+
+Finally, bootstrap the node packages like this:
 ```bash
-lerna bootstrap
-```
-and build them
-```bash
-lerna run build
+make bootstrap
 ```
 
-### Troubleshooting
+### Starting the frontends
 
-#### Ui unit tests
+For the sake of development, you will almost never need to **build** the frontends. Building the frontends will be done for you in the testing commands.
+
+To start the frontends in development mode, just run
+```bash
+yarn start:dev
+```
+at the root of this monorepo. To only start one of the frontends, run the previous command with the `--scope` option:
+```bash
+yarn start:dev --scope consumer-ui
+yarn start:dev --scope admin-ui
+```
+
+### Storybook
+
+[Storybook](storybook.js.org) is a very nice tool allowing devs to develop their components in an isolated environment. You can start storybook the very same way you start the frontends:
+```bash
+yarn storybook
+```
+or
+```bash
+yarn storybook --scope consumer-ui
+yarn storybook --scope admin-ui
+```
+
+### Testing
+
+We defined several kinds of UI tests. We have the unit and integration tests. Unit tests cover both isolated component tests as well as snapshot tests (essentially defined by storybook). Testing is not run exactly the same way on development as on continuous integration environments. On the latter, we run the tests in docker images. On the former, we just run them directly on the development system's OS.
+
+#### Unit tests
+
+In the `frontend` folder, run either one of the following commands, depending on what you want to test:
+```bash
+# Only the admin-ui unit tests
+make dev-test.admin-unit
+# Only the consumer-ui unit tests
+make dev-test.consumer-unit
+# All the frontend unit tests
+make dev-test.unit
+```
+
+#### Integration tests
+
+It's not crystal clear if we really want to have integration tests for our UIs. An integration test would typically use a few components and test their interactions. That would be done within storybook where we would define stories that put those components together. With Cypress, we would then browse the corresponding story and perform the necessary tests. No such test has been defined yet. The necessary code infrastructure is however already in place. To run the initial, dummy integration tests, run the following commands in the `frontend` folder:
+```bash
+make dev-test.admin-integration
+make dev-test.consumer-integration
+make dev-test.integration
+```
+
+## Testing the whole stack
+
+Before pushing your changes to the git server, you may want to check that you broke nothing. You can do that by enabling the corresponding pre-push hook as explained above. In that case, however, it'll be difficult to use your IDE's built-in commands to push your code, which might be annoying. Another way is to just run the tests manually like follows, in the repository's root:
+```bash
+make dev-test.all
+```
+Feel free to have a look at the `Makefile`s to see what happens under the hood. You will discover how to run the whole backend or the whole frontend tests separately too:
+```bash
+make dev-test.run-backend
+make dev-test.run-frontend
+```
+Indeed, if you only changed code on the frontend side, you probably don't want to spend your time testing the backend.
+
+### End-to-end tests
+
+The end-to-end tests are run by command
+```bash
+make dev-test.run-frontend
+```
+Those tests ensure that the whole application flow is working as expected. They need database data. To run them without running the other tests, you need to generate the fixtures, run the backend, seed the database, and then run the e2e tests:
+```bash
+make --directory backend fixtures.generate
+make --directory backend up
+make --directory backend seed-database
+make --directory frontend dev-test.e2e
+```
+Instead of the last line, you might want to only run the e2e tests of one frontend at a time, which you do like this:
+```bash
+make --directory frontend dev-test.admin-e2e
+make --directory frontend dev-test.consumer-e2e
+```
+
+## Troubleshooting
+
+### The database is not reset
+
+It might be that you've followed this introduction and run all the services, tests, etc. Then you rebooted your PC and re-run the stuff and ... ooops, I can't seed the database anymore! Beacuse we develop a lot of features all the time, the fixtures set also evolves a lot and might need to be applied several times a week (or a day). Once the fixtures set has been applied to the database, you can't apply a new one, because the data already exist. When you're done testing, make sure you run in the repository's root
+```bash
+make down
+```
+That shuts down all the backend services. In particular, that shuts down the database. Next time you run the backend, the database will be empty and you can apply the fixtures again.
+
+### Ui unit tests
 
 Upon running the ui unit tests, you might get an error of the kind (especially on Windows machines):
 ```
