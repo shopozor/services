@@ -6,6 +6,12 @@ pipeline {
     TEST_REPORTS_FOLDER = 'test-reports'
   }
   stages {
+    // The code linting stage needs node modules like the linter
+    stage('Bootstrap node packages') {
+      steps {
+        sh "make bootstrap"
+      }
+    }
     stage('Lint code') {
       steps {
         script {
@@ -32,7 +38,6 @@ pipeline {
     }
     stage('Build the frontends') {
       steps {
-        sh "make bootstrap"
         sh "yarn build"
       }
     }
