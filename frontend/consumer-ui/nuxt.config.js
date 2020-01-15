@@ -55,7 +55,8 @@ module.exports = {
   purgeCSS: {
     paths: [
       'i18n/**/*.js'
-    ]
+    ],
+    whitelistPatterns: [/leaflet/, /marker/]
   },
 
   // Give apollo module options

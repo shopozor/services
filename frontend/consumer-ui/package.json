@@ -50,7 +50,7 @@
     "start:integration": "concurrently \"yarn cypress:integration\" --kill-others \"yarn start\" --success first",
     "start:integration:dev": "concurrently \"yarn cypress:integration:dev\" --kill-others \"yarn start:dev\" --success first",
     "storybook": "start-storybook -p 6006",
-    "storybook:ci": "cross-var start-storybook -h $CONSUMER_STORYBOOK_HOST -p $CONSUMER_STORYBOOK_PORT",
+    "storybook:ci": "cross-var http-server -a $CONSUMER_STORYBOOK_HOST -p $CONSUMER_STORYBOOK_PORT ./storybook-static",
     "test": "echo \"See package.json => scripts for available tests.\" && exit 0",
     "test:unit": "jest",
     "test:unit:ci": "jest --ci --reporters=default --reporters=jest-junit",

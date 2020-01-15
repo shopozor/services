@@ -56,6 +56,7 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
     "eslint-plugin-vue": "^6.0.1",
+    "http-server": "^0.12.1",
     "jest": "^24.9.0",
     "jest-junit": "^10.0.0",
     "jest-vue-preprocessor": "^1.7.0",
@@ -82,7 +83,7 @@
   "scripts": {
     "bootstrap": "lerna bootstrap && lerna exec yarn",
     "build": "lerna run build && yarn build-storybook",
-    "build-storybook": "build-storybook",
+    "build-storybook": "lerna run build-storybook",
     "clean:node_modules": "lerna clean && rimraf node_modules",
     "cypress:clean": "lerna run cypress:clean",
     "cypress:e2e:ci": "lerna run cypress:e2e:ci --concurrency 1",
@@ -90,6 +91,7 @@
     "lint": "lerna run lint -- --fix",
     "start:dev": "lerna run start:dev --stream",
     "storybook": "lerna run storybook --stream",
+    "storybook:ci": "lerna run storybook:ci --stream",
     "test:unit:ci": "lerna run test:unit:ci",
     "test:unit:updateSnapshot": "lerna run test:unit:updateSnapshot"
   },
