@@ -88,6 +88,7 @@
     "cypress:clean": "lerna run cypress:clean",
     "cypress:e2e:ci": "lerna run cypress:e2e:ci --concurrency 1",
     "cypress:integration:ci": "lerna run cypress:integration:ci --concurrency 1",
+    "generate": "lerna run generate",
     "lint": "lerna run lint -- --fix",
     "start:dev": "lerna run start:dev --stream",
     "storybook": "lerna run storybook --stream",
