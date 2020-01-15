@@ -1,34 +1,20 @@
 version: "3.6"
 services:
   admin-ui:
-    build:
-      context: .
-      dockerfile: frontend/Dockerfile
-      target: app
-    environment:
-      ADMIN_UI_HOST: "0.0.0.0"
-      ADMIN_UI_PORT: 4000
+    image: abiosoft/caddy:latest
     volumes:
-      - .:/app
+      - ./frontend/Caddyfile:/etc/Caddyfile
+      - ./frontend/admin-ui/dist/spa:/srv
     ports:
-      - ${ADMIN_UI_PORT:-4000}:4000
+      - ${ADMIN_UI_PORT:-4000}:8080
     depends_on:
       - graphql-engine
     restart: "no"
-    entrypoint: lerna run start --scope admin-ui
   consumer-ui:
-    build:
-      context: .
-      dockerfile: frontend/Dockerfile
-      target: app
-    environment:
-      NUXT_PORT: 4000
-      NUXT_HOST: "0.0.0.0"
+    image: abiosoft/caddy:latest
     volumes:
-      - .:/app
+      - ./frontend/Caddyfile:/etc/Caddyfile
+      - ./frontend/consumer-ui/dist:/srv
     ports:
-      - ${CONSUMER_UI_PORT:-3000}:4000
-    depends_on:
-      - graphql-engine
+      - ${CONSUMER_UI_PORT:-3000}:8080
     restart: "no"
-    entrypoint: lerna run start --scope consumer-ui

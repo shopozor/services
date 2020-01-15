@@ -10,33 +10,21 @@ services:
       - .:/app
     entrypoint: ./frontend/tests/entrypoint-unit.sh
   admin-storybook:
-    build:
-      context: .
-      dockerfile: frontend/Dockerfile
-      target: app
-    environment:
-      ADMIN_STORYBOOK_HOST: "0.0.0.0"
-      ADMIN_STORYBOOK_PORT: 4000
+    image: abiosoft/caddy:latest
     volumes:
-      - .:/app
+      - ./frontend/Caddyfile:/etc/Caddyfile
+      - ./frontend/admin-ui/storybook-static:/srv
     ports:
-      - ${ADMIN_STORYBOOK_PORT:-7006}:4000
+      - ${ADMIN_STORYBOOK_PORT:-7006}:8080
     restart: "no"
-    entrypoint: lerna run storybook:ci --scope admin-ui
   consumer-storybook:
-    build:
-      context: .
-      dockerfile: frontend/Dockerfile
-      target: app
-    environment:
-      CONSUMER_STORYBOOK_HOST: "0.0.0.0"
-      CONSUMER_STORYBOOK_PORT: 4000
+    image: abiosoft/caddy:latest
     volumes:
-      - .:/app
+      - ./frontend/Caddyfile:/etc/Caddyfile
+      - ./frontend/consumer-ui/storybook-static:/srv
     ports:
-      - ${CONSUMER_STORYBOOK_PORT:-6006}:4000
+      - ${CONSUMER_STORYBOOK_PORT:-6006}:8080
     restart: "no"
-    entrypoint: lerna run storybook:ci --scope consumer-ui
   ui-integration-tests:
     build:
       context: frontend
