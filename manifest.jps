@@ -47,24 +47,13 @@ application:
           version: ${settings.version}
           jaeger: false
     enableSubDomains:
-      - api:
-        - method: jelastic.environment.binder.AddDomains
-          params:
-            domains: chartmuseum-jx
-            subdomain: true
-        - method: jelastic.environment.binder.AddDomains
-          params:
-            domains: deck-jx
-            subdomain: true
-        - method: jelastic.environment.binder.AddDomains
-          params:
-            domains: hook-jx
-            subdomain: true
-        - method: jelastic.environment.binder.AddDomains
-          params:
-            domains: nexus-jx
-            subdomain: true
-        - method: jelastic.environment.binder.AddDomains
-          params:
-            domains: tide-jx
-            subdomain: true
+      - jelastic.env.binder.AddDomains[cp]:
+          domains: chartmuseum-jx
+      - jelastic.env.binder.AddDomains[cp]:
+          domains: deck-jx
+      - jelastic.env.binder.AddDomains[cp]:
+          domains: hook-jx
+      - jelastic.env.binder.AddDomains[cp]:
+          domains: nexus-jx
+      - jelastic.env.binder.AddDomains[cp]:
+          domains: tide-jx
