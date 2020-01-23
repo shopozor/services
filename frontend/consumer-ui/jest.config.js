@@ -1,3 +1,5 @@
+require('dotenv').config({ path: './test/.env' })
+
 module.exports = {
   // noStackTrace: true,
   // bail: true,

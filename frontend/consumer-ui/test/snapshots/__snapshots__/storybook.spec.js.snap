@@ -15,6 +15,36 @@ exports[`Storyshots Budzons Budzons 1`] = `
 </div>
 `;
 
+exports[`Storyshots Budzons Person details 1`] = `
+<div>
+  <div
+    class="bg-white p-6 md:flex md:items-center"
+  >
+    <img
+      alt="Dignissimos eaque ullam voluptatem cum."
+      class="w-32 rounded-full mx-auto md:mx-0 md:w-48 md:mr-6"
+      src="http://assets-service/people/face_1.jpg"
+    />
+     
+    <div
+      class="text-center md:text-justify"
+    >
+      <h3
+        class="text-lg font-bold"
+      >
+        
+      Nathalie Droz
+    
+      </h3>
+       
+      <span>
+        Quisquam similique impedit occaecati amet hic. Nostrum laboriosam quibusdam eum dolorem. Laboriosam debitis reprehenderit delectus deleniti minima.
+      </span>
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Storyshots Budzons Project overview 1`] = `
 <div>
   <div>

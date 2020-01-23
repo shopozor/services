@@ -29,7 +29,6 @@ export default {
   computed: {
     imageUrl () {
       // TODO: refactor this: there must be a helper method taking the image url, that's it
-      console.log('ASSETS_API = ', process.env.ASSETS_API)
       return urljoin(process.env.ASSETS_API, this.person.image.url)
     }
   }
