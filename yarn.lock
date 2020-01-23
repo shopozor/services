@@ -8066,6 +8066,7 @@ constants-browserify@^1.0.0, constants-browserify@~1.0.0:
     nuxt "^2.11.0"
     nuxt-i18n "^6.4.1"
     tailwindcss "^1.1.4"
+    url-join "^4.0.1"
     vue-client-only "^2.0.0"
     vue-loading-overlay "^3.2.0"
     vue2-leaflet "^2.4.1"
@@ -21711,6 +21712,11 @@ url-join@^2.0.5:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/url-join/-/url-join-2.0.5.tgz#5af22f18c052a000a48d7b82c5e9c2e2feeda728"
   integrity sha1-WvIvGMBSoACkjXuCxenC4v7tpyg=
+
+url-join@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/url-join/-/url-join-4.0.1.tgz#b642e21a2646808ffa178c4c5fda39844e12cde7"
+  integrity sha512-jk1+QP6ZJqyOiuEI9AEWQfju/nB2Pw466kbA0LEZljHwKeMgd9WrAEgEGxjPDD2+TNbbb37rTyhEfrCXfuKXnA==
 
 url-loader@3.0.0:
   version "3.0.0"
