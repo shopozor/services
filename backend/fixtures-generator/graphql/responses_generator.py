@@ -29,6 +29,46 @@ class ResponsesGenerator():
         json_helpers.dump(object, fullpath)
 
 
+class BudzonsListGenerator(ResponsesGenerator):
+
+    def __init__(self, fixtures_dir, output_dir):
+        super().__init__(fixtures_dir, os.path.join(
+            output_dir))
+        self.__BUDZONS_FIXTURE = helpers.get_users_fixture(
+            self._INPUT_DIR, ('rex', 'softozor'))
+        self.__IMAGES_FIXTURE = helpers.get_images_fixture(
+            self._INPUT_DIR)
+
+    def _produce_data(self):
+        images = [item for item in self.__IMAGES_FIXTURE['images']]
+        return {
+            'data': {
+                'users': [helpers.budzon_item(user, helpers.image_item(user, images)) for user in self.__BUDZONS_FIXTURE]
+            }
+        }
+
+    def generate(self):
+        self._to_json(self._produce_data(), 'Budzons.json')
+
+
+class ProjectOverviewGenerator(ResponsesGenerator):
+
+    def __init__(self, fixtures_dir, output_dir):
+        super().__init__(fixtures_dir, os.path.join(
+            output_dir))
+        self.__SHOPS_FIXTURE = helpers.get_shopozor_fixture(self._INPUT_DIR)
+
+    def _produce_data(self):
+        return {
+            'data': {
+                'sites': [helpers.site_item(site) for site in self.__SHOPS_FIXTURE['sites']]
+            }
+        }
+
+    def generate(self):
+        self._to_json(self._produce_data(), 'ProjectOverview.json')
+
+
 class ShopListsGenerator(ResponsesGenerator):
 
     def __init__(self, fixtures_dir, output_dir):
@@ -53,9 +93,10 @@ class ShopCategoriesGenerator(ResponsesGenerator):
         super().__init__(fixtures_dir, os.path.join(
             output_dir, 'Consumer'))
         self.__SHOPS_FIXTURE = helpers.get_shopozor_fixture(self._INPUT_DIR)
+        self.__IMAGES_FIXTURE = helpers.get_images_fixture(self._INPUT_DIR)
 
     def _produce_data(self):
-        images = [item for item in self.__SHOPS_FIXTURE['images']]
+        images = [item for item in self.__IMAGES_FIXTURE['images']]
         return {
             'data': {
                 'product_categories': [helpers.category_item(category, images) for category in self.__SHOPS_FIXTURE['product_categories']]
@@ -73,6 +114,7 @@ class ProductListsGenerator(ResponsesGenerator):
         super().__init__(fixtures_dir, os.path.join(
             output_dir, 'Consumer'))
         self.__SHOPS_FIXTURE = helpers.get_shopozor_fixture(self._INPUT_DIR)
+        self.__IMAGES_FIXTURE = helpers.get_images_fixture(self._INPUT_DIR)
         self.__USERS_FIXTURE = helpers.get_users_fixture(self._INPUT_DIR)
 
     def _product_data(self):
@@ -114,7 +156,7 @@ class ProductListsGenerator(ResponsesGenerator):
                         edge['node']['variants'].append(new_variant)
                     else:
                         node = helpers.create_new_product_with_variant(
-                            product, variant, new_variant, self.__USERS_FIXTURE, self.__SHOPS_FIXTURE)
+                            product, variant, new_variant, self.__USERS_FIXTURE, self.__SHOPS_FIXTURE, self.__IMAGES_FIXTURE)
                         catalogue_edges.append(node)
                         totalCount += 1
                 helpers.set_page_info(

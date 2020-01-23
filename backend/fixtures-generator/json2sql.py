@@ -21,6 +21,9 @@ def generate_up_migration(json_data, output_folder, migration_name, write_mode):
                     map(lambda val: f"'{val}'", data_item.values()))
                 output_file.write(
                     f'INSERT INTO public.{table} ({columns}) VALUES ({values});\n')
+            if 'id' in data_item:
+                output_file.write(
+                    f'SELECT SETVAL((SELECT pg_get_serial_sequence(\'{table}\', \'id\')), {data_item["id"]}, true);\n')
 
 
 def generate_down_migration(json_data, output_folder, migration_name, write_mode):

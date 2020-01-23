@@ -29,9 +29,11 @@ dev-test.run-backend:
 	# Unit tests
 	@make --directory backend test.unit
 	# Integration tests
+	@make --directory backend assets.up
 	@make --directory backend seed-database
 	@make --directory backend test.integration
 	@make --directory backend unseed-database
+	@make --directory backend assets.down
 
 dev-test.run-frontend:
 	# Unit tests
@@ -39,9 +41,11 @@ dev-test.run-frontend:
 	# Integration tests
 	@make --directory frontend dev-test.integration
 	# E2e tests
+	@make --directory backend assets.up
 	@make --directory backend seed-database
 	@make --directory frontend dev-test.e2e
 	@make --directory backend unseed-database
+	@make --directory backend assets.down
 
 dev-test.all: down dev-test.setup dev-test.run-backend dev-test.run-frontend down
 dev-test.backend: down dev-test.setup dev-test.run-backend down

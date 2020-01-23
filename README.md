@@ -65,6 +65,27 @@ Most of the backend stuff and the whole frontend validation are performed on doc
 * on Ubuntu, follow [these instructions](https://docs.docker.com/install/linux/docker-ce/ubuntu/)  
 * on Windows 10, follow [these instructions](https://docs.docker.com/docker-for-windows/install/) and make sure you read [this blog](https://nickjanetakis.com/blog/setting-up-docker-for-windows-and-wsl-to-work-flawlessly) if you work with WSL
 
+Do not use Docker for Desktop 2.2.0.0. It is not working. The last working stable version is, as far as we know, version 2.1.0.5.
+
+### Common third-party packages
+
+In order to play with the assets, you will probably need the [minio client](https://docs.min.io/docs/minio-client-quickstart-guide.html). Under Windows 10,
+
+1. download the [client](https://dl.min.io/client/mc/release/windows-amd64/mc.exe)
+2. run
+```
+export MINIO_ACCESS_KEY=minio
+export MINIO_SECRET_KEY=minio123
+export MINIO_PORT=9001
+mc config host add minio http://localhost:${MINIO_PORT} ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
+```
+Compare with the data set up in the `docker-compose-backend.yaml`. The `MINIO_ACCESS_KEY`, `MINIO_SECRET_KEY`, and the `MINIO_PORT` might be different in your local setup. Some more information here on how to use [min.io](https://min.io) in our frontend applications:
+
+* [minio js store app](https://github.com/minio/minio-js-store-app)
+* [Get permanent URL for object](https://github.com/minio/minio-js/issues/588)
+* [Javascript Client API reference](https://docs.min.io/docs/javascript-client-api-reference.html)
+* [minio client quickstart guide](https://docs.min.io/docs/minio-client-quickstart-guide.html)
+
 ## Backend development setup
 
 ### Necessary third-party packages
@@ -140,7 +161,7 @@ make fixtures
 
 ### Necessary third-party packages
 
-You will need to have `yarn` and `nodejs` installed:
+You will need to have `yarn` and `nodejs` installed. Under WSL or Linux, you can run the following commands (or you can also follow [this advice](https://askubuntu.com/questions/426750/how-can-i-update-my-nodejs-to-the-latest-version)):
 ```bash
 curl -sL https://deb.nodesource.com/setup_10.x | bash -
 curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
@@ -148,6 +169,8 @@ echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/source
 apt update
 apt install -y yarn nodejs
 ```
+If you're not using WSL because `yarn` is still buggy there, you should then [install nodejs](https://nodejs.org/) and [install yarn](https://yarnpkg.com/en/docs/install#windows-stable).
+
 In addition, install [lerna](https://lerna.js.org/) globally
 ```bash
 yarn global add lerna
@@ -184,6 +207,7 @@ or
 yarn storybook --scope consumer-ui
 yarn storybook --scope admin-ui
 ```
+Not only is storybook nice to develop components isolately, it's aslo providing us with out-of-the-box snapshot testing of each of those components. It can be that we have e.g. very simple components like a header or a footer with almost no logic. That component's snapshot will, however, be tested.
 
 ### Testing
 

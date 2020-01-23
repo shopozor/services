@@ -4,9 +4,34 @@ import settings
 
 from copy import deepcopy
 
+import itertools
 import math
 import os
 import urllib.parse
+
+
+def image_item(user, images):
+    image = [{
+        'alt': item['alt'],
+        'url': item['url']
+    } for item in images if item['id'] == user['image_id']]
+    return image[0]
+
+
+def budzon_item(user, image):
+    return {
+        'first_name': user['first_name'],
+        'description': user['description'],
+        'id': user['id'],
+        'image': image,
+        'last_name': user['last_name']
+    }
+
+
+def site_item(site):
+    return {
+        'description': site['description'],
+    }
 
 
 def shop_item(shop):
@@ -42,21 +67,31 @@ def set_page_info(query, totalCount=None):
     }
 
 
-def get_users_fixture(input_dir):
-    users_fixture = json_helpers.load(os.path.join(
-        input_dir, 'Users', 'producers.json'))['users']
-    users_fixture.extend(json_helpers.load(os.path.join(
-        input_dir, 'Users', 'managers.json'))['users'])
-    users_fixture.extend(json_helpers.load(os.path.join(
-        input_dir, 'Users', 'rex.json'))['users'])
-    users_fixture.extend(json_helpers.load(os.path.join(
-        input_dir, 'Users', 'softozor.json'))['users'])
+def get_users_fixture(input_dir, personas=tuple()):
+    users_fixture = []
+    if personas:
+        users_fixture = list(itertools.chain.from_iterable([json_helpers.load(os.path.join(
+            input_dir, 'Users', f'{persona}.json'))['users'] for persona in personas]))
+    else:
+        users_fixture = json_helpers.load(os.path.join(
+            input_dir, 'Users', 'producers.json'))['users']
+        users_fixture.extend(json_helpers.load(os.path.join(
+            input_dir, 'Users', 'managers.json'))['users'])
+        users_fixture.extend(json_helpers.load(os.path.join(
+            input_dir, 'Users', 'rex.json'))['users'])
+        users_fixture.extend(json_helpers.load(os.path.join(
+            input_dir, 'Users', 'softozor.json'))['users'])
     return users_fixture
 
 
 def get_shopozor_fixture(input_dir):
     return json_helpers.load(os.path.join(
         input_dir, 'Shopozor.json'))
+
+
+def get_images_fixture(input_dir):
+    return json_helpers.load(os.path.join(
+        input_dir, 'Images.json'))
 
 
 def variant_node(variant):
@@ -111,7 +146,7 @@ def product_node(product, variant, new_variant, associated_image, associated_pro
     }
 
 
-def create_new_product_with_variant(product, variant, new_variant, users_fixture, shops_fixture):
+def create_new_product_with_variant(product, variant, new_variant, users_fixture, shops_fixture, images_fixture):
     staff_id = product['producer_id']
     user = [item for item in users_fixture if item['id'] == staff_id][0]
     address = [item for item in shops_fixture['addresses']
@@ -130,7 +165,7 @@ def create_new_product_with_variant(product, variant, new_variant, users_fixture
     associated_image = [{
         'alt': item['alt'],
         'url': item['url'],
-    } for item in shops_fixture['images'] if item['id'] == product['image_id']]
+    } for item in images_fixture['images'] if item['id'] == product['image_id']]
     # TODO: delete those images from the shops_fixture
     thumbnail = product_thumbnail(
         associated_image) if associated_image else placeholder_product_thumbnail()

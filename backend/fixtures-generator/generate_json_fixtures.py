@@ -68,37 +68,57 @@ def generate_variant(variant_name, output_folder):
     factory = FakeDataFactory(
         variant['#max(products/producer)'], variant['#max(producers/shop)'], variant['#max(variants/product)'])
 
-    nb_of_consumers = variant['#consumers']
-    start_index = 1
-    consumers = factory.create_consumers(
-        start_index, nb_of_consumers)
-    json_helpers.dump(consumers, os.path.join(
-        output_folder, 'Users', 'consumers.json'))
-
-    nb_of_producers = variant['#producers']
-    start_index += nb_of_consumers
-    producers = factory.create_producers(
-        start_index, nb_of_producers)
-    json_helpers.dump(producers, os.path.join(
-        output_folder, 'Users', 'producers.json'))
-
-    nb_of_managers = variant['#managers']
-    start_index += nb_of_producers
-    managers = factory.create_managers(start_index, nb_of_managers)
-    json_helpers.dump(managers, os.path.join(
-        output_folder, 'Users', 'managers.json'))
+    # TODO: the categories will not be fixtures; we should be able to get them from the database or somehow?
+    nb_category_images = len(FakeDataFactory.category_types)
+    category_images = factory.create_images(
+        'categories', 1, nb_category_images)
+    images = {
+        'images': category_images['images']
+    }
+    last_id = category_images['images'][-1]['id']
+    product_images = factory.create_images('food', last_id + 1)
+    images['images'].extend(product_images['images'])
+    last_id = product_images['images'][-1]['id']
+    user_images = factory.create_images('people', last_id + 1)
+    images['images'].extend(user_images['images'])
+    last_id = user_images['images'][-1]['id']
+    shop_images = factory.create_images('shops', last_id + 1)
+    images['images'].extend(shop_images['images'])
+    json_helpers.dump(images, os.path.join(output_folder, 'Images.json'))
 
     nb_of_reges = variant['#rex']
-    start_index += nb_of_managers
-    rex = factory.create_reges(start_index, nb_of_reges)
+    start_index = 1
+    rex = factory.create_reges(start_index, user_images, nb_of_reges)
     json_helpers.dump(rex, os.path.join(
         output_folder, 'Users', 'rex.json'))
 
     nb_of_softozors = variant['#softozor']
     start_index += nb_of_reges
-    softozor = factory.create_softozors(start_index, nb_of_softozors)
+    softozor = factory.create_softozors(
+        start_index, user_images, nb_of_softozors)
     json_helpers.dump(softozor, os.path.join(
         output_folder, 'Users', 'softozor.json'))
+
+    nb_of_managers = variant['#managers']
+    start_index += nb_of_softozors
+    managers = factory.create_managers(
+        start_index, user_images, nb_of_managers)
+    json_helpers.dump(managers, os.path.join(
+        output_folder, 'Users', 'managers.json'))
+
+    nb_of_producers = variant['#producers']
+    start_index += nb_of_managers
+    producers = factory.create_producers(
+        start_index, user_images, nb_of_producers)
+    json_helpers.dump(producers, os.path.join(
+        output_folder, 'Users', 'producers.json'))
+
+    nb_of_consumers = variant['#consumers']
+    start_index += nb_of_producers
+    consumers = factory.create_consumers(
+        start_index, user_images, nb_of_consumers)
+    json_helpers.dump(consumers, os.path.join(
+        output_folder, 'Users', 'consumers.json'))
 
     shopozor = {}
 
@@ -107,19 +127,6 @@ def generate_variant(variant_name, output_folder):
 
     shops = factory.create_shops(variant['#shops'])
     shopozor.update(shops)
-
-    nb_category_images = len(FakeDataFactory.category_types)
-    category_images = factory.create_images(
-        'category-backgrounds', 1, nb_category_images)
-    nb_product_images = variant['#shops'] * \
-        variant['#max(producers/shop)'] * variant['#max(products/producer)']
-    product_images = factory.create_images(
-        'products', nb_category_images + 1, nb_product_images)
-    images = {
-        'images': category_images['images']
-    }
-    images['images'].extend(product_images['images'])
-    shopozor.update(images)
 
     categories = factory.create_categories(category_images)
     shopozor.update(categories)
@@ -139,6 +146,9 @@ def generate_variant(variant_name, output_folder):
 
     margin_defns = factory.create_margindefns()
     shopozor.update(margin_defns)
+
+    sites = factory.create_sites()
+    shopozor.update(sites)
 
     json_helpers.dump(shopozor, os.path.join(
         output_folder, 'Shopozor.json'), sort_keys=False)
