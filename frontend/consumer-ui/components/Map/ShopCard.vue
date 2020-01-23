@@ -16,8 +16,7 @@
         </p>
       </div>
       <div class="flex items-center">
-        <!-- TODO: fix this path with the usual ~assets/img/marker.png -->
-        <img class="mr-4" src="../../assets/img/marker.png" alt="GPS coordinates">
+        <img class="mr-4" :src="~assets/img/marker.png" alt="GPS coordinates">
         <div class="text-sm italic">
           {{ gpsCoordinates }}
         </div>
@@ -25,9 +24,6 @@
     </div>
   </div>
 </template>
-
-  <!-- TODO: put an image -->
-  <!-- TODO: put an address / GPS coordinates -->
 
 <script>
 import ValidatedObjectProp from '~/mixins/ValidatedObjectProp'
