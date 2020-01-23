@@ -54,8 +54,8 @@ class FakeDataFactory:
         # get rid of any potential French accent from the first and last name
         return unidecode.unidecode('%s.%s@%s' % (first_name, last_name, domain_name)).lower()
 
-    def __get_user_img(self, user_images, id):
-        return user_images['images'][id - 1]['id'] if id - 1 < len(user_images['images']) else None
+    def __get_img(self, images, id):
+        return images['images'][id - 1]['id'] if id - 1 < len(images['images']) else None
 
     def __create_consumer(self, user_images, id):
         return {
@@ -64,7 +64,7 @@ class FakeDataFactory:
             'is_active': self.__fake.is_active(),
             'is_staff': False,
             'is_superuser': False,
-            'image_id': self.__get_user_img(user_images, id)
+            'image_id': self.__get_img(user_images, id)
         }
 
     def create_consumers(self, start_index, user_images, list_size=1):
@@ -86,7 +86,7 @@ class FakeDataFactory:
             'first_name': first_name,
             'last_name': last_name,
             'description': self.__fake.description(),
-            'image_id': self.__get_user_img(user_images, id)
+            'image_id': self.__get_img(user_images, id)
         }
 
     def create_producers(self, start_index, user_images, list_size=1):
@@ -108,7 +108,7 @@ class FakeDataFactory:
             'first_name': first_name,
             'last_name': last_name,
             'description': self.__fake.description(),
-            'image_id': self.__get_user_img(user_images, id)
+            'image_id': self.__get_img(user_images, id)
         }
 
     def create_managers(self, start_index, user_images, list_size=1):
@@ -130,7 +130,7 @@ class FakeDataFactory:
             'first_name': first_name,
             'last_name': last_name,
             'description': self.__fake.description(),
-            'image_id': self.__get_user_img(user_images, id)
+            'image_id': self.__get_img(user_images, id)
         }
 
     def create_reges(self, start_index, user_images, list_size=1):
@@ -152,7 +152,7 @@ class FakeDataFactory:
             'first_name': first_name,
             'last_name': last_name,
             'description': self.__fake.description(),
-            'image_id': self.__get_user_img(user_images, id)
+            'image_id': self.__get_img(user_images, id)
         }
 
     def create_softozors(self, start_index, user_images, list_size=1):
@@ -186,17 +186,19 @@ class FakeDataFactory:
             'addresses': result
         }
 
-    def __shop(self, pk):
+    def __shop(self, shop_images, pk):
         return {
             'id': pk,
             'description': self.__fake.description(),
             'name': self.__fake.sentence(nb_words=5, variable_nb_words=True),
             'latitude': float(self.__fake.local_latitude()),
-            'longitude': float(self.__fake.local_longitude())
+            'longitude': float(self.__fake.local_longitude()),
+            'image_id': self.__get_img(shop_images, pk)
         }
 
-    def create_shops(self, list_size=1):
-        result = [self.__shop(pk + 1) for pk in range(0, list_size)]
+    def create_shops(self, shop_images, list_size=1):
+        result = [self.__shop(shop_images, pk + 1)
+                  for pk in range(0, list_size)]
         return {
             'shops': result
         }
