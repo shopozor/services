@@ -1,0 +1,17 @@
+- args:
+    sql: ALTER TABLE "public"."users" ADD COLUMN "image_id" integer NULL;
+  type: run_sql
+- args:
+    sql: "\n           alter table \"public\".\"users\"\n           add constraint
+      \"users_image_id_fkey\"\n           foreign key (\"image_id\")\n           references
+      \"public\".\"images\"\n           (\"id\") on update restrict on delete restrict;\n
+      \     "
+  type: run_sql
+- args:
+    name: image
+    table:
+      name: users
+      schema: public
+    using:
+      foreign_key_constraint_on: image_id
+  type: create_object_relationship

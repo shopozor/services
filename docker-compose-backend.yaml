@@ -1,5 +1,32 @@
 version: "3.6"
 services:
+  minio:
+    image: minio/minio:latest
+    volumes:
+      - assets_data:/data
+    ports:
+      - 9001:9000
+    environment:
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minio}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minio123}
+    command: server /data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 30s
+      timeout: 20s
+      retries: 3
+  minio-setup:
+    image: minio/mc
+    environment:
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minio}
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minio123}
+      MINIO_ALIAS: ${MINIO_ALIAS:-minio}
+      MINIO_URL: ${MINIO_URL:-http://minio:9000}
+    depends_on:
+      - minio
+    volumes:
+      - ./backend/assets-service:/app
+    entrypoint: /app/scripts/initialization.sh
   postgres:
     image: postgres:11.2-alpine
     restart: "always"
@@ -29,9 +56,11 @@ services:
     restart: "no"
     volumes:
       - ./shared/fixtures:/app/fixtures
+      - ./shared/pictures:/app/pictures
     environment:
       - PYTHONDONTWRITEBYTECODE=1
     entrypoint: ./entrypoint.sh medium
 
 volumes:
   db_data:
+  assets_data:

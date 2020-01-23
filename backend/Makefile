@@ -8,16 +8,16 @@ HASURA_MIGRATE_STATUS = hasura migrate apply --endpoint $(HASURA_ENDPOINT)
 FIXTURES_FOLDER = ../shared/fixtures
 GRAPHQL_RESPONSES_FOLDER = ../shared/graphql/responses
 
-dev.start: build up db.migrate.up fixtures
+dev.start: build up db.migrate.up fixtures assets.up
 
-dev.end: fixtures.clean down rm
+dev.end: fixtures.clean assets.down down rm
 
 build:
 	@echo "Building images..."
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-backend-tests.yaml build
 
 up:
-	@docker-compose -f ../docker-compose-backend.yaml up -d postgres graphql-engine
+	@docker-compose -f ../docker-compose-backend.yaml up -d minio-setup postgres graphql-engine
 	@./database-service/scripts/waitForService.sh localhost ${API_PORT}
 
 down:
@@ -25,6 +25,12 @@ down:
 
 rm:
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-backend-tests.yaml rm -f
+
+assets.up:
+	@./assets-service/scripts/push_fixtures.sh
+
+assets.down:
+	@./assets-service/scripts/cleanup_fixtures.sh
 
 db.migrate.up:
 	$(HASURA_MIGRATE_APPLY) --project database-service --skip-update-check

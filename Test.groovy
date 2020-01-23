@@ -2,6 +2,7 @@ pipeline {
   agent any
   environment {
     API_PORT = 8081
+    ASSETS_API = "http://localhost:9001"
     GRAPHQL_API = "http://localhost:${API_PORT}/v1/graphql/"
     TEST_REPORTS_FOLDER = 'test-reports'
   }
@@ -52,9 +53,11 @@ pipeline {
     stage('Perform backend services integration tests') {
       steps {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+          sh "make --directory backend assets.up"
           sh "make --directory backend seed-database"
           sh "make --directory backend test.integration"
           sh "make --directory backend unseed-database"
+          // sh "make --directory backend assets.down"
         }
       }
     }
@@ -75,9 +78,11 @@ pipeline {
     stage('Perform e2e tests') {
       steps {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
+          sh "make --directory backend assets.up"
           sh "make --directory backend seed-database"
         	sh "make --directory frontend test.e2e"
           sh "make --directory backend unseed-database"
+          // sh "make --directory backend assets.down"
         }
       }
     }

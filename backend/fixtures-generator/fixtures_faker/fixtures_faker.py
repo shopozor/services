@@ -39,50 +39,42 @@ class FakeDataFactory:
         self.__MAX_NB_PRODUCTS_PER_PRODUCER = max_nb_products_per_producer
         self.__MAX_NB_IMAGES_PER_PRODUCT = max_nb_images_per_product
         self.__MAX_NB_VARIANTS_PER_PRODUCT = max_nb_variants_per_product
+        self.__PICTURES_FOLDER = os.path.join('/app', 'pictures')
+
+    def create_sites(self):
+        return {
+            'sites': [{
+                'id': 1,
+                'description': self.__fake.description()
+            }]
+        }
 
     def create_email(self, first_name, last_name):
         domain_name = self.__fake.free_email_domain()
         # get rid of any potential French accent from the first and last name
         return unidecode.unidecode('%s.%s@%s' % (first_name, last_name, domain_name)).lower()
 
-    def __create_consumer(self, id):
+    def __get_user_img(self, user_images, id):
+        return user_images['images'][id - 1]['id'] if id - 1 < len(user_images['images']) else None
+
+    def __create_consumer(self, user_images, id):
         return {
             'id': id,
             'email': self.__fake.email(),
             'is_active': self.__fake.is_active(),
             'is_staff': False,
-            'is_superuser': False
-        }
-
-    def create_consumers(self, start_index, list_size=1):
-        result = [self.__create_consumer(start_index + id)
-                  for id in range(0, list_size)]
-        return {
-            'users': result
-        }
-
-    def __create_producer(self, id):
-        first_name = self.__fake.first_name()
-        last_name = self.__fake.last_name()
-        return {
-            'id': id,
-            'email': self.create_email(first_name, last_name),
-            'is_active': True,
-            'is_staff': True,
             'is_superuser': False,
-            'first_name': first_name,
-            'last_name': last_name,
-            'description': self.__fake.description()
+            'image_id': self.__get_user_img(user_images, id)
         }
 
-    def create_producers(self, start_index, list_size=1):
-        result = [self.__create_producer(start_index + id)
+    def create_consumers(self, start_index, user_images, list_size=1):
+        result = [self.__create_consumer(user_images, start_index + id)
                   for id in range(0, list_size)]
         return {
             'users': result
         }
 
-    def __create_manager(self, id):
+    def __create_producer(self, user_images, id):
         first_name = self.__fake.first_name()
         last_name = self.__fake.last_name()
         return {
@@ -94,16 +86,17 @@ class FakeDataFactory:
             'first_name': first_name,
             'last_name': last_name,
             'description': self.__fake.description(),
+            'image_id': self.__get_user_img(user_images, id)
         }
 
-    def create_managers(self, start_index, list_size=1):
-        result = [self.__create_manager(start_index + id)
+    def create_producers(self, start_index, user_images, list_size=1):
+        result = [self.__create_producer(user_images, start_index + id)
                   for id in range(0, list_size)]
         return {
             'users': result
         }
 
-    def __create_rex(self, id):
+    def __create_manager(self, user_images, id):
         first_name = self.__fake.first_name()
         last_name = self.__fake.last_name()
         return {
@@ -111,17 +104,21 @@ class FakeDataFactory:
             'email': self.create_email(first_name, last_name),
             'is_active': True,
             'is_staff': True,
-            'is_superuser': False
+            'is_superuser': False,
+            'first_name': first_name,
+            'last_name': last_name,
+            'description': self.__fake.description(),
+            'image_id': self.__get_user_img(user_images, id)
         }
 
-    def create_reges(self, start_index, list_size=1):
-        result = [self.__create_rex(start_index + id)
+    def create_managers(self, start_index, user_images, list_size=1):
+        result = [self.__create_manager(user_images, start_index + id)
                   for id in range(0, list_size)]
         return {
             'users': result
         }
 
-    def create_softozor(self, id):
+    def __create_rex(self, user_images, id):
         first_name = self.__fake.first_name()
         last_name = self.__fake.last_name()
         return {
@@ -129,11 +126,37 @@ class FakeDataFactory:
             'email': self.create_email(first_name, last_name),
             'is_active': True,
             'is_staff': True,
-            'is_superuser': True
+            'is_superuser': False,
+            'first_name': first_name,
+            'last_name': last_name,
+            'description': self.__fake.description(),
+            'image_id': self.__get_user_img(user_images, id)
         }
 
-    def create_softozors(self, start_index, list_size=1):
-        result = [self.create_softozor(start_index + id)
+    def create_reges(self, start_index, user_images, list_size=1):
+        result = [self.__create_rex(user_images, start_index + id)
+                  for id in range(0, list_size)]
+        return {
+            'users': result
+        }
+
+    def create_softozor(self, user_images, id):
+        first_name = self.__fake.first_name()
+        last_name = self.__fake.last_name()
+        return {
+            'id': id,
+            'email': self.create_email(first_name, last_name),
+            'is_active': True,
+            'is_staff': True,
+            'is_superuser': True,
+            'first_name': first_name,
+            'last_name': last_name,
+            'description': self.__fake.description(),
+            'image_id': self.__get_user_img(user_images, id)
+        }
+
+    def create_softozors(self, start_index, user_images, list_size=1):
+        result = [self.create_softozor(user_images, start_index + id)
                   for id in range(0, list_size)]
         return {
             'users': result
@@ -178,16 +201,30 @@ class FakeDataFactory:
             'shops': result
         }
 
-    def __image(self, pk, image_folder):
+    def __rnd_image(self, pk, image_folder):
         return {
             'id': pk,
             'url': self.__fake.image_url(image_folder),
             'alt': self.__fake.image_alt()
         }
 
-    def create_images(self, image_folder, start_pk=1, list_size=1):
-        result = [self.__image(pk, image_folder)
-                  for pk in range(start_pk, start_pk + list_size)]
+    def __image(self, pk, image_name):
+        return {
+            'id': pk,
+            'url': image_name,
+            'alt': self.__fake.image_alt()
+        }
+
+    def create_images(self, image_folder, start_pk=1, list_size=None):
+        result = []
+        if list_size == None:
+            pictures = os.listdir(os.path.join(
+                self.__PICTURES_FOLDER, image_folder))
+            result = [self.__image(pk, os.path.join(image_folder, name))
+                      for pk, name in enumerate(pictures, start_pk)]
+        else:
+            result = [self.__rnd_image(pk, image_folder)
+                      for pk in range(start_pk, start_pk + list_size)]
         return {
             'images': result
         }
@@ -240,7 +277,8 @@ class FakeDataFactory:
                 1, self.__MAX_NB_PRODUCTS_PER_PRODUCER)
             for i in range(0, nb_products):
                 product_id = i + product_index
-                image_id = images['images'][product_id - 1]['id']
+                image_id = self.__fake.random_element(images['images'])['id']
+                # image_id = images['images'][product_id - 1]['id']
                 product = self.__product(
                     product_id, categories['product_categories'], producer_id, image_id)
                 nb_visible_products += int(product['state'] == 'VISIBLE')

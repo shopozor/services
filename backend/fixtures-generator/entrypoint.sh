@@ -19,6 +19,7 @@ python ${GENERATE_JSON_FIXTURES} -o ${DATABASE_FIXTURES_FOLDER} --fixtures-set $
 # Generate the sql migrations based on the json fixtures
 FIXTURES_MIGRATIONS_FOLDER=${DATABASE_FIXTURES_FOLDER}/migrations
 if [ ! -d ${FIXTURES_MIGRATIONS_FOLDER} ]; then mkdir -p ${FIXTURES_MIGRATIONS_FOLDER}; fi
+python ${JSON_TO_SQL} -i ${DATABASE_FIXTURES_FOLDER}/Images.json -n shopozor-images -o ${FIXTURES_MIGRATIONS_FOLDER}
 for persona in consumers producers managers rex softozor; do
     python ${JSON_TO_SQL} -i ${DATABASE_FIXTURES_FOLDER}/Users/$persona.json -n shopozor-$persona -o ${FIXTURES_MIGRATIONS_FOLDER}
 done
