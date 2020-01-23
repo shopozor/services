@@ -1,6 +1,6 @@
 <template>
   <div class="bg-white p-6 md:flex md:items-center">
-    <img class="w-32 rounded-full mx-auto md:mx-0 md:w-48 md:mr-6" :src="imageUrl" :alt="person.image.alt">
+    <img class="w-32 rounded-full mx-auto md:mx-0 md:w-48 md:mr-6" :src="assetUrl(person.image.url)" :alt="person.image.alt">
     <div class="text-center md:text-justify">
       <h3 class="text-lg font-bold">
         <!-- TODO: use the full_name!!! https://docs.hasura.io/1.0/graphql/manual/schema/computed-fields.html -->
@@ -12,24 +12,19 @@
 </template>
 
 <script>
-// import ValidatedObjectProp from '~/mixins/ValidatedObjectProp'
-import urljoin from 'url-join'
+import AssetUrl from '~/mixins/AssetUrl'
+import ValidatedObjectProp from '~/mixins/ValidatedObjectProp'
+
 export default {
-  // mixins: [
-  //   ValidatedObjectProp('person',
-  //     ['description', 'full_name', 'img'])
-  // ]
-  // TODO: put more validation here!
+  mixins: [
+    AssetUrl,
+    ValidatedObjectProp('person',
+      ['description', 'first_name', 'last_name', 'image'])
+  ],
   props: {
     person: {
       type: Object,
       required: true
-    }
-  },
-  computed: {
-    imageUrl () {
-      // TODO: refactor this: there must be a helper method taking the image url, that's it
-      return urljoin(process.env.ASSETS_API, this.person.image.url)
     }
   }
 }
