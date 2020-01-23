@@ -159,6 +159,10 @@ make fixtures
 
 ## Frontend development setup
 
+### Caution notice
+
+**Never ever** remove any `yarn.lock` file, if you don't want to lose your time fixing the build.
+
 ### Necessary third-party packages
 
 You will need to have `yarn` and `nodejs` installed. Under WSL or Linux, you can run the following commands (or you can also follow [this advice](https://askubuntu.com/questions/426750/how-can-i-update-my-nodejs-to-the-latest-version)):
