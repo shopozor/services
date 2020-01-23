@@ -1,0 +1,20 @@
+query Budzons {
+  budzons: users(where: {
+    _or: [{
+      email: { _eq: "remi.grandjean@budzonnerie.ch" }
+    }, {
+      email: { _eq: "carlos.rosa@budzonnerie.ch" }
+    }, {
+      email: { _eq: "laurent.michel@softozor.ch" }
+    }]
+  }){
+    description
+    first_name
+    id
+    image {
+      url
+      alt
+    }
+    last_name
+  }
+}

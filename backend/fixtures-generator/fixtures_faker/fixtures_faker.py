@@ -218,8 +218,8 @@ class FakeDataFactory:
     def create_images(self, image_folder, start_pk=1, list_size=None):
         result = []
         if list_size == None:
-            pictures = os.listdir(os.path.join(
-                self.__PICTURES_FOLDER, image_folder))
+            pictures = sorted(os.listdir(os.path.join(
+                self.__PICTURES_FOLDER, image_folder)))
             result = [self.__image(pk, os.path.join(image_folder, name))
                       for pk, name in enumerate(pictures, start_pk)]
         else:
