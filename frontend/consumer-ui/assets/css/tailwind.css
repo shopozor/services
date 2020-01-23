@@ -8,3 +8,6 @@
 .h-3\/4 {
   height: 75vh !important;
 }
+.overview-title {
+  @apply font-extrabold text-3xl text-center;
+}

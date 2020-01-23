@@ -1,15 +1,21 @@
 <template>
+  <!-- TODO: define flex here with spacing instead of putting a py-4 all over the place; make sure the map sticks to the banner though -->
   <div>
     <shops-map :center="center" :zoom="zoom" />
+    <project-overview class="py-4" />
+    <budzons class="py-4" />
   </div>
 </template>
 
 <script>
 import Map from '~/components/Map/Map'
-
+import Budzons from '~/components/ProjectDetails/Budzons'
+import ProjectOverview from '~/components/ProjectDetails/ProjectOverview'
 export default {
   components: {
-    'shops-map': Map
+    Budzons,
+    'shops-map': Map,
+    ProjectOverview
   },
   data: () => ({
     center: [46.718852, 7.097669],
@@ -22,4 +28,5 @@ export default {
 }
 </script>
 
+<!-- TODO: is this import really necessary??? -->
 <style src="~/assets/css/tailwind.css"></style>

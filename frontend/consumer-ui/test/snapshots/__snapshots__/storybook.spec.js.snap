@@ -1,5 +1,40 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
+exports[`Storyshots Budzons Budzons 1`] = `
+<div>
+  <div>
+    <h2
+      class="overview-title"
+    >
+      
+    Les Budzons
+  
+    </h2>
+     
+  </div>
+</div>
+`;
+
+exports[`Storyshots Budzons Project overview 1`] = `
+<div>
+  <div>
+    <h2
+      class="overview-title"
+    >
+      
+    Le concept
+  
+    </h2>
+     
+    <div
+      class="p-6 text-justify"
+    >
+      <span />
+    </div>
+  </div>
+</div>
+`;
+
 exports[`Storyshots Map French language map 1`] = `
 <div>
   <div>

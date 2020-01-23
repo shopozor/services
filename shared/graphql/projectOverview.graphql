@@ -1,0 +1,7 @@
+query ProjectOverview {
+  sites(where: {
+    id: {_eq: 1}
+  }) {
+    description
+  }
+}

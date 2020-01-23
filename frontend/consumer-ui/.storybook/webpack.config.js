@@ -1,5 +1,6 @@
 const path = require('path')
 const tailwindcss = require('tailwindcss')
+const webpack = require('webpack')
 
 module.exports = async ({ config, mode }) => {
 
@@ -27,6 +28,12 @@ module.exports = async ({ config, mode }) => {
     ],
     include: path.resolve(__dirname, "../")
   })
+
+  config.plugins.push(
+    new webpack.DefinePlugin({
+      'process.env.ASSETS_API': JSON.stringify(process.env.ASSETS_API || 'http://localhost:9001/')
+    })
+  )
 
   config.resolve.alias['~assets'] = path.resolve(__dirname, '../assets/')
   config.resolve.alias['~'] = path.resolve(__dirname, '../')
