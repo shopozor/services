@@ -1,0 +1,5952 @@
+schema {
+  query: Query
+  mutation: Mutation
+  subscription: Subscription
+}
+
+# columns and relationships of "addresses"
+type addresses {
+  city: String!
+  postal_code: smallint!
+  street_address: String!
+  user_id: Int!
+}
+
+# aggregated selection of "addresses"
+type addresses_aggregate {
+  aggregate: addresses_aggregate_fields
+  nodes: [addresses!]!
+}
+
+# aggregate fields of "addresses"
+type addresses_aggregate_fields {
+  avg: addresses_avg_fields
+  count(columns: [addresses_select_column!], distinct: Boolean): Int
+  max: addresses_max_fields
+  min: addresses_min_fields
+  stddev: addresses_stddev_fields
+  stddev_pop: addresses_stddev_pop_fields
+  stddev_samp: addresses_stddev_samp_fields
+  sum: addresses_sum_fields
+  var_pop: addresses_var_pop_fields
+  var_samp: addresses_var_samp_fields
+  variance: addresses_variance_fields
+}
+
+# order by aggregate values of table "addresses"
+input addresses_aggregate_order_by {
+  avg: addresses_avg_order_by
+  count: order_by
+  max: addresses_max_order_by
+  min: addresses_min_order_by
+  stddev: addresses_stddev_order_by
+  stddev_pop: addresses_stddev_pop_order_by
+  stddev_samp: addresses_stddev_samp_order_by
+  sum: addresses_sum_order_by
+  var_pop: addresses_var_pop_order_by
+  var_samp: addresses_var_samp_order_by
+  variance: addresses_variance_order_by
+}
+
+# input type for inserting array relation for remote table "addresses"
+input addresses_arr_rel_insert_input {
+  data: [addresses_insert_input!]!
+  on_conflict: addresses_on_conflict
+}
+
+# aggregate avg on columns
+type addresses_avg_fields {
+  postal_code: Float
+  user_id: Float
+}
+
+# order by avg() on columns of table "addresses"
+input addresses_avg_order_by {
+  postal_code: order_by
+  user_id: order_by
+}
+
+# Boolean expression to filter rows from the table "addresses". All fields are combined with a logical 'AND'.
+input addresses_bool_exp {
+  _and: [addresses_bool_exp]
+  _not: addresses_bool_exp
+  _or: [addresses_bool_exp]
+  city: String_comparison_exp
+  postal_code: smallint_comparison_exp
+  street_address: String_comparison_exp
+  user_id: Int_comparison_exp
+}
+
+# unique or primary key constraints on table "addresses"
+enum addresses_constraint {
+  # unique or primary key constraint
+  addresses_pkey
+}
+
+# input type for incrementing integer columne in table "addresses"
+input addresses_inc_input {
+  postal_code: smallint
+  user_id: Int
+}
+
+# input type for inserting data into table "addresses"
+input addresses_insert_input {
+  city: String
+  postal_code: smallint
+  street_address: String
+  user_id: Int
+}
+
+# aggregate max on columns
+type addresses_max_fields {
+  city: String
+  postal_code: smallint
+  street_address: String
+  user_id: Int
+}
+
+# order by max() on columns of table "addresses"
+input addresses_max_order_by {
+  city: order_by
+  postal_code: order_by
+  street_address: order_by
+  user_id: order_by
+}
+
+# aggregate min on columns
+type addresses_min_fields {
+  city: String
+  postal_code: smallint
+  street_address: String
+  user_id: Int
+}
+
+# order by min() on columns of table "addresses"
+input addresses_min_order_by {
+  city: order_by
+  postal_code: order_by
+  street_address: order_by
+  user_id: order_by
+}
+
+# response of any mutation on the table "addresses"
+type addresses_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [addresses!]!
+}
+
+# input type for inserting object relation for remote table "addresses"
+input addresses_obj_rel_insert_input {
+  data: addresses_insert_input!
+  on_conflict: addresses_on_conflict
+}
+
+# on conflict condition type for table "addresses"
+input addresses_on_conflict {
+  constraint: addresses_constraint!
+  update_columns: [addresses_update_column!]!
+  where: addresses_bool_exp
+}
+
+# ordering options when selecting data from "addresses"
+input addresses_order_by {
+  city: order_by
+  postal_code: order_by
+  street_address: order_by
+  user_id: order_by
+}
+
+# select columns of table "addresses"
+enum addresses_select_column {
+  # column name
+  city
+
+  # column name
+  postal_code
+
+  # column name
+  street_address
+
+  # column name
+  user_id
+}
+
+# input type for updating data in table "addresses"
+input addresses_set_input {
+  city: String
+  postal_code: smallint
+  street_address: String
+  user_id: Int
+}
+
+# aggregate stddev on columns
+type addresses_stddev_fields {
+  postal_code: Float
+  user_id: Float
+}
+
+# order by stddev() on columns of table "addresses"
+input addresses_stddev_order_by {
+  postal_code: order_by
+  user_id: order_by
+}
+
+# aggregate stddev_pop on columns
+type addresses_stddev_pop_fields {
+  postal_code: Float
+  user_id: Float
+}
+
+# order by stddev_pop() on columns of table "addresses"
+input addresses_stddev_pop_order_by {
+  postal_code: order_by
+  user_id: order_by
+}
+
+# aggregate stddev_samp on columns
+type addresses_stddev_samp_fields {
+  postal_code: Float
+  user_id: Float
+}
+
+# order by stddev_samp() on columns of table "addresses"
+input addresses_stddev_samp_order_by {
+  postal_code: order_by
+  user_id: order_by
+}
+
+# aggregate sum on columns
+type addresses_sum_fields {
+  postal_code: smallint
+  user_id: Int
+}
+
+# order by sum() on columns of table "addresses"
+input addresses_sum_order_by {
+  postal_code: order_by
+  user_id: order_by
+}
+
+# update columns of table "addresses"
+enum addresses_update_column {
+  # column name
+  city
+
+  # column name
+  postal_code
+
+  # column name
+  street_address
+
+  # column name
+  user_id
+}
+
+# aggregate var_pop on columns
+type addresses_var_pop_fields {
+  postal_code: Float
+  user_id: Float
+}
+
+# order by var_pop() on columns of table "addresses"
+input addresses_var_pop_order_by {
+  postal_code: order_by
+  user_id: order_by
+}
+
+# aggregate var_samp on columns
+type addresses_var_samp_fields {
+  postal_code: Float
+  user_id: Float
+}
+
+# order by var_samp() on columns of table "addresses"
+input addresses_var_samp_order_by {
+  postal_code: order_by
+  user_id: order_by
+}
+
+# aggregate variance on columns
+type addresses_variance_fields {
+  postal_code: Float
+  user_id: Float
+}
+
+# order by variance() on columns of table "addresses"
+input addresses_variance_order_by {
+  postal_code: order_by
+  user_id: order_by
+}
+
+# expression to compare columns of type Boolean. All fields are combined with logical 'AND'.
+input Boolean_comparison_exp {
+  _eq: Boolean
+  _gt: Boolean
+  _gte: Boolean
+  _in: [Boolean!]
+  _is_null: Boolean
+  _lt: Boolean
+  _lte: Boolean
+  _neq: Boolean
+  _nin: [Boolean!]
+}
+
+# expression to compare columns of type Float. All fields are combined with logical 'AND'.
+input Float_comparison_exp {
+  _eq: Float
+  _gt: Float
+  _gte: Float
+  _in: [Float!]
+  _is_null: Boolean
+  _lt: Float
+  _lte: Float
+  _neq: Float
+  _nin: [Float!]
+}
+
+# columns and relationships of "images"
+type images {
+  alt: String
+  id: Int!
+  url: String!
+}
+
+# aggregated selection of "images"
+type images_aggregate {
+  aggregate: images_aggregate_fields
+  nodes: [images!]!
+}
+
+# aggregate fields of "images"
+type images_aggregate_fields {
+  avg: images_avg_fields
+  count(columns: [images_select_column!], distinct: Boolean): Int
+  max: images_max_fields
+  min: images_min_fields
+  stddev: images_stddev_fields
+  stddev_pop: images_stddev_pop_fields
+  stddev_samp: images_stddev_samp_fields
+  sum: images_sum_fields
+  var_pop: images_var_pop_fields
+  var_samp: images_var_samp_fields
+  variance: images_variance_fields
+}
+
+# order by aggregate values of table "images"
+input images_aggregate_order_by {
+  avg: images_avg_order_by
+  count: order_by
+  max: images_max_order_by
+  min: images_min_order_by
+  stddev: images_stddev_order_by
+  stddev_pop: images_stddev_pop_order_by
+  stddev_samp: images_stddev_samp_order_by
+  sum: images_sum_order_by
+  var_pop: images_var_pop_order_by
+  var_samp: images_var_samp_order_by
+  variance: images_variance_order_by
+}
+
+# input type for inserting array relation for remote table "images"
+input images_arr_rel_insert_input {
+  data: [images_insert_input!]!
+  on_conflict: images_on_conflict
+}
+
+# aggregate avg on columns
+type images_avg_fields {
+  id: Float
+}
+
+# order by avg() on columns of table "images"
+input images_avg_order_by {
+  id: order_by
+}
+
+# Boolean expression to filter rows from the table "images". All fields are combined with a logical 'AND'.
+input images_bool_exp {
+  _and: [images_bool_exp]
+  _not: images_bool_exp
+  _or: [images_bool_exp]
+  alt: String_comparison_exp
+  id: Int_comparison_exp
+  url: String_comparison_exp
+}
+
+# unique or primary key constraints on table "images"
+enum images_constraint {
+  # unique or primary key constraint
+  product_images_pkey
+}
+
+# input type for incrementing integer columne in table "images"
+input images_inc_input {
+  id: Int
+}
+
+# input type for inserting data into table "images"
+input images_insert_input {
+  alt: String
+  id: Int
+  url: String
+}
+
+# aggregate max on columns
+type images_max_fields {
+  alt: String
+  id: Int
+  url: String
+}
+
+# order by max() on columns of table "images"
+input images_max_order_by {
+  alt: order_by
+  id: order_by
+  url: order_by
+}
+
+# aggregate min on columns
+type images_min_fields {
+  alt: String
+  id: Int
+  url: String
+}
+
+# order by min() on columns of table "images"
+input images_min_order_by {
+  alt: order_by
+  id: order_by
+  url: order_by
+}
+
+# response of any mutation on the table "images"
+type images_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [images!]!
+}
+
+# input type for inserting object relation for remote table "images"
+input images_obj_rel_insert_input {
+  data: images_insert_input!
+  on_conflict: images_on_conflict
+}
+
+# on conflict condition type for table "images"
+input images_on_conflict {
+  constraint: images_constraint!
+  update_columns: [images_update_column!]!
+  where: images_bool_exp
+}
+
+# ordering options when selecting data from "images"
+input images_order_by {
+  alt: order_by
+  id: order_by
+  url: order_by
+}
+
+# select columns of table "images"
+enum images_select_column {
+  # column name
+  alt
+
+  # column name
+  id
+
+  # column name
+  url
+}
+
+# input type for updating data in table "images"
+input images_set_input {
+  alt: String
+  id: Int
+  url: String
+}
+
+# aggregate stddev on columns
+type images_stddev_fields {
+  id: Float
+}
+
+# order by stddev() on columns of table "images"
+input images_stddev_order_by {
+  id: order_by
+}
+
+# aggregate stddev_pop on columns
+type images_stddev_pop_fields {
+  id: Float
+}
+
+# order by stddev_pop() on columns of table "images"
+input images_stddev_pop_order_by {
+  id: order_by
+}
+
+# aggregate stddev_samp on columns
+type images_stddev_samp_fields {
+  id: Float
+}
+
+# order by stddev_samp() on columns of table "images"
+input images_stddev_samp_order_by {
+  id: order_by
+}
+
+# aggregate sum on columns
+type images_sum_fields {
+  id: Int
+}
+
+# order by sum() on columns of table "images"
+input images_sum_order_by {
+  id: order_by
+}
+
+# update columns of table "images"
+enum images_update_column {
+  # column name
+  alt
+
+  # column name
+  id
+
+  # column name
+  url
+}
+
+# aggregate var_pop on columns
+type images_var_pop_fields {
+  id: Float
+}
+
+# order by var_pop() on columns of table "images"
+input images_var_pop_order_by {
+  id: order_by
+}
+
+# aggregate var_samp on columns
+type images_var_samp_fields {
+  id: Float
+}
+
+# order by var_samp() on columns of table "images"
+input images_var_samp_order_by {
+  id: order_by
+}
+
+# aggregate variance on columns
+type images_variance_fields {
+  id: Float
+}
+
+# order by variance() on columns of table "images"
+input images_variance_order_by {
+  id: order_by
+}
+
+# expression to compare columns of type Int. All fields are combined with logical 'AND'.
+input Int_comparison_exp {
+  _eq: Int
+  _gt: Int
+  _gte: Int
+  _in: [Int!]
+  _is_null: Boolean
+  _lt: Int
+  _lte: Int
+  _neq: Int
+  _nin: [Int!]
+}
+
+# columns and relationships of "margindefinitions"
+type margindefinitions {
+  margin: Float!
+  role: roles_enum!
+}
+
+# aggregated selection of "margindefinitions"
+type margindefinitions_aggregate {
+  aggregate: margindefinitions_aggregate_fields
+  nodes: [margindefinitions!]!
+}
+
+# aggregate fields of "margindefinitions"
+type margindefinitions_aggregate_fields {
+  avg: margindefinitions_avg_fields
+  count(columns: [margindefinitions_select_column!], distinct: Boolean): Int
+  max: margindefinitions_max_fields
+  min: margindefinitions_min_fields
+  stddev: margindefinitions_stddev_fields
+  stddev_pop: margindefinitions_stddev_pop_fields
+  stddev_samp: margindefinitions_stddev_samp_fields
+  sum: margindefinitions_sum_fields
+  var_pop: margindefinitions_var_pop_fields
+  var_samp: margindefinitions_var_samp_fields
+  variance: margindefinitions_variance_fields
+}
+
+# order by aggregate values of table "margindefinitions"
+input margindefinitions_aggregate_order_by {
+  avg: margindefinitions_avg_order_by
+  count: order_by
+  max: margindefinitions_max_order_by
+  min: margindefinitions_min_order_by
+  stddev: margindefinitions_stddev_order_by
+  stddev_pop: margindefinitions_stddev_pop_order_by
+  stddev_samp: margindefinitions_stddev_samp_order_by
+  sum: margindefinitions_sum_order_by
+  var_pop: margindefinitions_var_pop_order_by
+  var_samp: margindefinitions_var_samp_order_by
+  variance: margindefinitions_variance_order_by
+}
+
+# input type for inserting array relation for remote table "margindefinitions"
+input margindefinitions_arr_rel_insert_input {
+  data: [margindefinitions_insert_input!]!
+  on_conflict: margindefinitions_on_conflict
+}
+
+# aggregate avg on columns
+type margindefinitions_avg_fields {
+  margin: Float
+}
+
+# order by avg() on columns of table "margindefinitions"
+input margindefinitions_avg_order_by {
+  margin: order_by
+}
+
+# Boolean expression to filter rows from the table "margindefinitions". All fields are combined with a logical 'AND'.
+input margindefinitions_bool_exp {
+  _and: [margindefinitions_bool_exp]
+  _not: margindefinitions_bool_exp
+  _or: [margindefinitions_bool_exp]
+  margin: Float_comparison_exp
+  role: roles_enum_comparison_exp
+}
+
+# unique or primary key constraints on table "margindefinitions"
+enum margindefinitions_constraint {
+  # unique or primary key constraint
+  margindefinitions_pkey
+}
+
+# input type for inserting data into table "margindefinitions"
+input margindefinitions_insert_input {
+  margin: Float
+  role: roles_enum
+}
+
+# aggregate max on columns
+type margindefinitions_max_fields {
+  margin: Float
+}
+
+# order by max() on columns of table "margindefinitions"
+input margindefinitions_max_order_by {
+  margin: order_by
+}
+
+# aggregate min on columns
+type margindefinitions_min_fields {
+  margin: Float
+}
+
+# order by min() on columns of table "margindefinitions"
+input margindefinitions_min_order_by {
+  margin: order_by
+}
+
+# response of any mutation on the table "margindefinitions"
+type margindefinitions_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [margindefinitions!]!
+}
+
+# input type for inserting object relation for remote table "margindefinitions"
+input margindefinitions_obj_rel_insert_input {
+  data: margindefinitions_insert_input!
+  on_conflict: margindefinitions_on_conflict
+}
+
+# on conflict condition type for table "margindefinitions"
+input margindefinitions_on_conflict {
+  constraint: margindefinitions_constraint!
+  update_columns: [margindefinitions_update_column!]!
+  where: margindefinitions_bool_exp
+}
+
+# ordering options when selecting data from "margindefinitions"
+input margindefinitions_order_by {
+  margin: order_by
+  role: order_by
+}
+
+# select columns of table "margindefinitions"
+enum margindefinitions_select_column {
+  # column name
+  margin
+
+  # column name
+  role
+}
+
+# input type for updating data in table "margindefinitions"
+input margindefinitions_set_input {
+  margin: Float
+  role: roles_enum
+}
+
+# aggregate stddev on columns
+type margindefinitions_stddev_fields {
+  margin: Float
+}
+
+# order by stddev() on columns of table "margindefinitions"
+input margindefinitions_stddev_order_by {
+  margin: order_by
+}
+
+# aggregate stddev_pop on columns
+type margindefinitions_stddev_pop_fields {
+  margin: Float
+}
+
+# order by stddev_pop() on columns of table "margindefinitions"
+input margindefinitions_stddev_pop_order_by {
+  margin: order_by
+}
+
+# aggregate stddev_samp on columns
+type margindefinitions_stddev_samp_fields {
+  margin: Float
+}
+
+# order by stddev_samp() on columns of table "margindefinitions"
+input margindefinitions_stddev_samp_order_by {
+  margin: order_by
+}
+
+# aggregate sum on columns
+type margindefinitions_sum_fields {
+  margin: Float
+}
+
+# order by sum() on columns of table "margindefinitions"
+input margindefinitions_sum_order_by {
+  margin: order_by
+}
+
+# update columns of table "margindefinitions"
+enum margindefinitions_update_column {
+  # column name
+  margin
+
+  # column name
+  role
+}
+
+# aggregate var_pop on columns
+type margindefinitions_var_pop_fields {
+  margin: Float
+}
+
+# order by var_pop() on columns of table "margindefinitions"
+input margindefinitions_var_pop_order_by {
+  margin: order_by
+}
+
+# aggregate var_samp on columns
+type margindefinitions_var_samp_fields {
+  margin: Float
+}
+
+# order by var_samp() on columns of table "margindefinitions"
+input margindefinitions_var_samp_order_by {
+  margin: order_by
+}
+
+# aggregate variance on columns
+type margindefinitions_variance_fields {
+  margin: Float
+}
+
+# order by variance() on columns of table "margindefinitions"
+input margindefinitions_variance_order_by {
+  margin: order_by
+}
+
+scalar money
+
+# expression to compare columns of type money. All fields are combined with logical 'AND'.
+input money_comparison_exp {
+  _eq: money
+  _gt: money
+  _gte: money
+  _in: [money!]
+  _is_null: Boolean
+  _lt: money
+  _lte: money
+  _neq: money
+  _nin: [money!]
+}
+
+# mutation root
+type Mutation {
+  # delete data from the table: "addresses"
+  delete_addresses(
+    # filter the rows which have to be deleted
+    where: addresses_bool_exp!
+  ): addresses_mutation_response
+
+  # delete data from the table: "images"
+  delete_images(
+    # filter the rows which have to be deleted
+    where: images_bool_exp!
+  ): images_mutation_response
+
+  # delete data from the table: "margindefinitions"
+  delete_margindefinitions(
+    # filter the rows which have to be deleted
+    where: margindefinitions_bool_exp!
+  ): margindefinitions_mutation_response
+
+  # delete data from the table: "pricing_modes"
+  delete_pricing_modes(
+    # filter the rows which have to be deleted
+    where: pricing_modes_bool_exp!
+  ): pricing_modes_mutation_response
+
+  # delete data from the table: "product_categories"
+  delete_product_categories(
+    # filter the rows which have to be deleted
+    where: product_categories_bool_exp!
+  ): product_categories_mutation_response
+
+  # delete data from the table: "product_states"
+  delete_product_states(
+    # filter the rows which have to be deleted
+    where: product_states_bool_exp!
+  ): product_states_mutation_response
+
+  # delete data from the table: "products"
+  delete_products(
+    # filter the rows which have to be deleted
+    where: products_bool_exp!
+  ): products_mutation_response
+
+  # delete data from the table: "productvariant_states"
+  delete_productvariant_states(
+    # filter the rows which have to be deleted
+    where: productvariant_states_bool_exp!
+  ): productvariant_states_mutation_response
+
+  # delete data from the table: "productvariants"
+  delete_productvariants(
+    # filter the rows which have to be deleted
+    where: productvariants_bool_exp!
+  ): productvariants_mutation_response
+
+  # delete data from the table: "roles"
+  delete_roles(
+    # filter the rows which have to be deleted
+    where: roles_bool_exp!
+  ): roles_mutation_response
+
+  # delete data from the table: "shop_productvariant"
+  delete_shop_productvariant(
+    # filter the rows which have to be deleted
+    where: shop_productvariant_bool_exp!
+  ): shop_productvariant_mutation_response
+
+  # delete data from the table: "shops"
+  delete_shops(
+    # filter the rows which have to be deleted
+    where: shops_bool_exp!
+  ): shops_mutation_response
+
+  # delete data from the table: "sites"
+  delete_sites(
+    # filter the rows which have to be deleted
+    where: sites_bool_exp!
+  ): sites_mutation_response
+
+  # delete data from the table: "users"
+  delete_users(
+    # filter the rows which have to be deleted
+    where: users_bool_exp!
+  ): users_mutation_response
+
+  # delete data from the table: "vat"
+  delete_vat(
+    # filter the rows which have to be deleted
+    where: vat_bool_exp!
+  ): vat_mutation_response
+
+  # delete data from the table: "vat_types"
+  delete_vat_types(
+    # filter the rows which have to be deleted
+    where: vat_types_bool_exp!
+  ): vat_types_mutation_response
+
+  # insert data into the table: "addresses"
+  insert_addresses(
+    # the rows to be inserted
+    objects: [addresses_insert_input!]!
+
+    # on conflict condition
+    on_conflict: addresses_on_conflict
+  ): addresses_mutation_response
+
+  # insert data into the table: "images"
+  insert_images(
+    # the rows to be inserted
+    objects: [images_insert_input!]!
+
+    # on conflict condition
+    on_conflict: images_on_conflict
+  ): images_mutation_response
+
+  # insert data into the table: "margindefinitions"
+  insert_margindefinitions(
+    # the rows to be inserted
+    objects: [margindefinitions_insert_input!]!
+
+    # on conflict condition
+    on_conflict: margindefinitions_on_conflict
+  ): margindefinitions_mutation_response
+
+  # insert data into the table: "pricing_modes"
+  insert_pricing_modes(
+    # the rows to be inserted
+    objects: [pricing_modes_insert_input!]!
+
+    # on conflict condition
+    on_conflict: pricing_modes_on_conflict
+  ): pricing_modes_mutation_response
+
+  # insert data into the table: "product_categories"
+  insert_product_categories(
+    # the rows to be inserted
+    objects: [product_categories_insert_input!]!
+
+    # on conflict condition
+    on_conflict: product_categories_on_conflict
+  ): product_categories_mutation_response
+
+  # insert data into the table: "product_states"
+  insert_product_states(
+    # the rows to be inserted
+    objects: [product_states_insert_input!]!
+
+    # on conflict condition
+    on_conflict: product_states_on_conflict
+  ): product_states_mutation_response
+
+  # insert data into the table: "products"
+  insert_products(
+    # the rows to be inserted
+    objects: [products_insert_input!]!
+
+    # on conflict condition
+    on_conflict: products_on_conflict
+  ): products_mutation_response
+
+  # insert data into the table: "productvariant_states"
+  insert_productvariant_states(
+    # the rows to be inserted
+    objects: [productvariant_states_insert_input!]!
+
+    # on conflict condition
+    on_conflict: productvariant_states_on_conflict
+  ): productvariant_states_mutation_response
+
+  # insert data into the table: "productvariants"
+  insert_productvariants(
+    # the rows to be inserted
+    objects: [productvariants_insert_input!]!
+
+    # on conflict condition
+    on_conflict: productvariants_on_conflict
+  ): productvariants_mutation_response
+
+  # insert data into the table: "roles"
+  insert_roles(
+    # the rows to be inserted
+    objects: [roles_insert_input!]!
+
+    # on conflict condition
+    on_conflict: roles_on_conflict
+  ): roles_mutation_response
+
+  # insert data into the table: "shop_productvariant"
+  insert_shop_productvariant(
+    # the rows to be inserted
+    objects: [shop_productvariant_insert_input!]!
+
+    # on conflict condition
+    on_conflict: shop_productvariant_on_conflict
+  ): shop_productvariant_mutation_response
+
+  # insert data into the table: "shops"
+  insert_shops(
+    # the rows to be inserted
+    objects: [shops_insert_input!]!
+
+    # on conflict condition
+    on_conflict: shops_on_conflict
+  ): shops_mutation_response
+
+  # insert data into the table: "sites"
+  insert_sites(
+    # the rows to be inserted
+    objects: [sites_insert_input!]!
+
+    # on conflict condition
+    on_conflict: sites_on_conflict
+  ): sites_mutation_response
+
+  # insert data into the table: "users"
+  insert_users(
+    # the rows to be inserted
+    objects: [users_insert_input!]!
+
+    # on conflict condition
+    on_conflict: users_on_conflict
+  ): users_mutation_response
+
+  # insert data into the table: "vat"
+  insert_vat(
+    # the rows to be inserted
+    objects: [vat_insert_input!]!
+
+    # on conflict condition
+    on_conflict: vat_on_conflict
+  ): vat_mutation_response
+
+  # insert data into the table: "vat_types"
+  insert_vat_types(
+    # the rows to be inserted
+    objects: [vat_types_insert_input!]!
+
+    # on conflict condition
+    on_conflict: vat_types_on_conflict
+  ): vat_types_mutation_response
+
+  # update data of the table: "addresses"
+  update_addresses(
+    # increments the integer columns with given value of the filtered values
+    _inc: addresses_inc_input
+
+    # sets the columns of the filtered rows to the given values
+    _set: addresses_set_input
+
+    # filter the rows which have to be updated
+    where: addresses_bool_exp!
+  ): addresses_mutation_response
+
+  # update data of the table: "images"
+  update_images(
+    # increments the integer columns with given value of the filtered values
+    _inc: images_inc_input
+
+    # sets the columns of the filtered rows to the given values
+    _set: images_set_input
+
+    # filter the rows which have to be updated
+    where: images_bool_exp!
+  ): images_mutation_response
+
+  # update data of the table: "margindefinitions"
+  update_margindefinitions(
+    # sets the columns of the filtered rows to the given values
+    _set: margindefinitions_set_input
+
+    # filter the rows which have to be updated
+    where: margindefinitions_bool_exp!
+  ): margindefinitions_mutation_response
+
+  # update data of the table: "pricing_modes"
+  update_pricing_modes(
+    # sets the columns of the filtered rows to the given values
+    _set: pricing_modes_set_input
+
+    # filter the rows which have to be updated
+    where: pricing_modes_bool_exp!
+  ): pricing_modes_mutation_response
+
+  # update data of the table: "product_categories"
+  update_product_categories(
+    # increments the integer columns with given value of the filtered values
+    _inc: product_categories_inc_input
+
+    # sets the columns of the filtered rows to the given values
+    _set: product_categories_set_input
+
+    # filter the rows which have to be updated
+    where: product_categories_bool_exp!
+  ): product_categories_mutation_response
+
+  # update data of the table: "product_states"
+  update_product_states(
+    # sets the columns of the filtered rows to the given values
+    _set: product_states_set_input
+
+    # filter the rows which have to be updated
+    where: product_states_bool_exp!
+  ): product_states_mutation_response
+
+  # update data of the table: "products"
+  update_products(
+    # increments the integer columns with given value of the filtered values
+    _inc: products_inc_input
+
+    # sets the columns of the filtered rows to the given values
+    _set: products_set_input
+
+    # filter the rows which have to be updated
+    where: products_bool_exp!
+  ): products_mutation_response
+
+  # update data of the table: "productvariant_states"
+  update_productvariant_states(
+    # sets the columns of the filtered rows to the given values
+    _set: productvariant_states_set_input
+
+    # filter the rows which have to be updated
+    where: productvariant_states_bool_exp!
+  ): productvariant_states_mutation_response
+
+  # update data of the table: "productvariants"
+  update_productvariants(
+    # increments the integer columns with given value of the filtered values
+    _inc: productvariants_inc_input
+
+    # sets the columns of the filtered rows to the given values
+    _set: productvariants_set_input
+
+    # filter the rows which have to be updated
+    where: productvariants_bool_exp!
+  ): productvariants_mutation_response
+
+  # update data of the table: "roles"
+  update_roles(
+    # sets the columns of the filtered rows to the given values
+    _set: roles_set_input
+
+    # filter the rows which have to be updated
+    where: roles_bool_exp!
+  ): roles_mutation_response
+
+  # update data of the table: "shop_productvariant"
+  update_shop_productvariant(
+    # increments the integer columns with given value of the filtered values
+    _inc: shop_productvariant_inc_input
+
+    # sets the columns of the filtered rows to the given values
+    _set: shop_productvariant_set_input
+
+    # filter the rows which have to be updated
+    where: shop_productvariant_bool_exp!
+  ): shop_productvariant_mutation_response
+
+  # update data of the table: "shops"
+  update_shops(
+    # increments the integer columns with given value of the filtered values
+    _inc: shops_inc_input
+
+    # sets the columns of the filtered rows to the given values
+    _set: shops_set_input
+
+    # filter the rows which have to be updated
+    where: shops_bool_exp!
+  ): shops_mutation_response
+
+  # update data of the table: "sites"
+  update_sites(
+    # increments the integer columns with given value of the filtered values
+    _inc: sites_inc_input
+
+    # sets the columns of the filtered rows to the given values
+    _set: sites_set_input
+
+    # filter the rows which have to be updated
+    where: sites_bool_exp!
+  ): sites_mutation_response
+
+  # update data of the table: "users"
+  update_users(
+    # increments the integer columns with given value of the filtered values
+    _inc: users_inc_input
+
+    # sets the columns of the filtered rows to the given values
+    _set: users_set_input
+
+    # filter the rows which have to be updated
+    where: users_bool_exp!
+  ): users_mutation_response
+
+  # update data of the table: "vat"
+  update_vat(
+    # sets the columns of the filtered rows to the given values
+    _set: vat_set_input
+
+    # filter the rows which have to be updated
+    where: vat_bool_exp!
+  ): vat_mutation_response
+
+  # update data of the table: "vat_types"
+  update_vat_types(
+    # sets the columns of the filtered rows to the given values
+    _set: vat_types_set_input
+
+    # filter the rows which have to be updated
+    where: vat_types_bool_exp!
+  ): vat_types_mutation_response
+}
+
+scalar numeric
+
+# expression to compare columns of type numeric. All fields are combined with logical 'AND'.
+input numeric_comparison_exp {
+  _eq: numeric
+  _gt: numeric
+  _gte: numeric
+  _in: [numeric!]
+  _is_null: Boolean
+  _lt: numeric
+  _lte: numeric
+  _neq: numeric
+  _nin: [numeric!]
+}
+
+# column ordering options
+enum order_by {
+  # in the ascending order, nulls last
+  asc
+
+  # in the ascending order, nulls first
+  asc_nulls_first
+
+  # in the ascending order, nulls last
+  asc_nulls_last
+
+  # in the descending order, nulls first
+  desc
+
+  # in the descending order, nulls first
+  desc_nulls_first
+
+  # in the descending order, nulls last
+  desc_nulls_last
+}
+
+# columns and relationships of "pricing_modes"
+type pricing_modes {
+  mode: String!
+}
+
+# aggregated selection of "pricing_modes"
+type pricing_modes_aggregate {
+  aggregate: pricing_modes_aggregate_fields
+  nodes: [pricing_modes!]!
+}
+
+# aggregate fields of "pricing_modes"
+type pricing_modes_aggregate_fields {
+  count(columns: [pricing_modes_select_column!], distinct: Boolean): Int
+  max: pricing_modes_max_fields
+  min: pricing_modes_min_fields
+}
+
+# order by aggregate values of table "pricing_modes"
+input pricing_modes_aggregate_order_by {
+  count: order_by
+  max: pricing_modes_max_order_by
+  min: pricing_modes_min_order_by
+}
+
+# input type for inserting array relation for remote table "pricing_modes"
+input pricing_modes_arr_rel_insert_input {
+  data: [pricing_modes_insert_input!]!
+  on_conflict: pricing_modes_on_conflict
+}
+
+# Boolean expression to filter rows from the table "pricing_modes". All fields are combined with a logical 'AND'.
+input pricing_modes_bool_exp {
+  _and: [pricing_modes_bool_exp]
+  _not: pricing_modes_bool_exp
+  _or: [pricing_modes_bool_exp]
+  mode: String_comparison_exp
+}
+
+# unique or primary key constraints on table "pricing_modes"
+enum pricing_modes_constraint {
+  # unique or primary key constraint
+  pricing_modes_pkey
+}
+
+enum pricing_modes_enum {
+  AUTO_PRICE
+  AUTO_UNIT
+  BULK
+  FREE
+}
+
+# expression to compare columns of type pricing_modes_enum. All fields are combined with logical 'AND'.
+input pricing_modes_enum_comparison_exp {
+  _eq: pricing_modes_enum
+  _in: [pricing_modes_enum!]
+  _is_null: Boolean
+  _neq: pricing_modes_enum
+  _nin: [pricing_modes_enum!]
+}
+
+# input type for inserting data into table "pricing_modes"
+input pricing_modes_insert_input {
+  mode: String
+}
+
+# aggregate max on columns
+type pricing_modes_max_fields {
+  mode: String
+}
+
+# order by max() on columns of table "pricing_modes"
+input pricing_modes_max_order_by {
+  mode: order_by
+}
+
+# aggregate min on columns
+type pricing_modes_min_fields {
+  mode: String
+}
+
+# order by min() on columns of table "pricing_modes"
+input pricing_modes_min_order_by {
+  mode: order_by
+}
+
+# response of any mutation on the table "pricing_modes"
+type pricing_modes_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [pricing_modes!]!
+}
+
+# input type for inserting object relation for remote table "pricing_modes"
+input pricing_modes_obj_rel_insert_input {
+  data: pricing_modes_insert_input!
+  on_conflict: pricing_modes_on_conflict
+}
+
+# on conflict condition type for table "pricing_modes"
+input pricing_modes_on_conflict {
+  constraint: pricing_modes_constraint!
+  update_columns: [pricing_modes_update_column!]!
+  where: pricing_modes_bool_exp
+}
+
+# ordering options when selecting data from "pricing_modes"
+input pricing_modes_order_by {
+  mode: order_by
+}
+
+# select columns of table "pricing_modes"
+enum pricing_modes_select_column {
+  # column name
+  mode
+}
+
+# input type for updating data in table "pricing_modes"
+input pricing_modes_set_input {
+  mode: String
+}
+
+# update columns of table "pricing_modes"
+enum pricing_modes_update_column {
+  # column name
+  mode
+}
+
+# columns and relationships of "product_categories"
+type product_categories {
+  description: String
+  id: Int!
+
+  # An object relationship
+  image: images
+  image_id: Int
+  name: String!
+
+  # An array relationship
+  products(
+    # distinct select on columns
+    distinct_on: [products_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [products_order_by!]
+
+    # filter the rows returned
+    where: products_bool_exp
+  ): [products!]!
+
+  # An aggregated array relationship
+  products_aggregate(
+    # distinct select on columns
+    distinct_on: [products_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [products_order_by!]
+
+    # filter the rows returned
+    where: products_bool_exp
+  ): products_aggregate!
+}
+
+# aggregated selection of "product_categories"
+type product_categories_aggregate {
+  aggregate: product_categories_aggregate_fields
+  nodes: [product_categories!]!
+}
+
+# aggregate fields of "product_categories"
+type product_categories_aggregate_fields {
+  avg: product_categories_avg_fields
+  count(columns: [product_categories_select_column!], distinct: Boolean): Int
+  max: product_categories_max_fields
+  min: product_categories_min_fields
+  stddev: product_categories_stddev_fields
+  stddev_pop: product_categories_stddev_pop_fields
+  stddev_samp: product_categories_stddev_samp_fields
+  sum: product_categories_sum_fields
+  var_pop: product_categories_var_pop_fields
+  var_samp: product_categories_var_samp_fields
+  variance: product_categories_variance_fields
+}
+
+# order by aggregate values of table "product_categories"
+input product_categories_aggregate_order_by {
+  avg: product_categories_avg_order_by
+  count: order_by
+  max: product_categories_max_order_by
+  min: product_categories_min_order_by
+  stddev: product_categories_stddev_order_by
+  stddev_pop: product_categories_stddev_pop_order_by
+  stddev_samp: product_categories_stddev_samp_order_by
+  sum: product_categories_sum_order_by
+  var_pop: product_categories_var_pop_order_by
+  var_samp: product_categories_var_samp_order_by
+  variance: product_categories_variance_order_by
+}
+
+# input type for inserting array relation for remote table "product_categories"
+input product_categories_arr_rel_insert_input {
+  data: [product_categories_insert_input!]!
+  on_conflict: product_categories_on_conflict
+}
+
+# aggregate avg on columns
+type product_categories_avg_fields {
+  id: Float
+  image_id: Float
+}
+
+# order by avg() on columns of table "product_categories"
+input product_categories_avg_order_by {
+  id: order_by
+  image_id: order_by
+}
+
+# Boolean expression to filter rows from the table "product_categories". All fields are combined with a logical 'AND'.
+input product_categories_bool_exp {
+  _and: [product_categories_bool_exp]
+  _not: product_categories_bool_exp
+  _or: [product_categories_bool_exp]
+  description: String_comparison_exp
+  id: Int_comparison_exp
+  image: images_bool_exp
+  image_id: Int_comparison_exp
+  name: String_comparison_exp
+  products: products_bool_exp
+}
+
+# unique or primary key constraints on table "product_categories"
+enum product_categories_constraint {
+  # unique or primary key constraint
+  product_categories_name_key
+
+  # unique or primary key constraint
+  product_categories_pkey
+}
+
+# input type for incrementing integer columne in table "product_categories"
+input product_categories_inc_input {
+  id: Int
+  image_id: Int
+}
+
+# input type for inserting data into table "product_categories"
+input product_categories_insert_input {
+  description: String
+  id: Int
+  image: images_obj_rel_insert_input
+  image_id: Int
+  name: String
+  products: products_arr_rel_insert_input
+}
+
+# aggregate max on columns
+type product_categories_max_fields {
+  description: String
+  id: Int
+  image_id: Int
+  name: String
+}
+
+# order by max() on columns of table "product_categories"
+input product_categories_max_order_by {
+  description: order_by
+  id: order_by
+  image_id: order_by
+  name: order_by
+}
+
+# aggregate min on columns
+type product_categories_min_fields {
+  description: String
+  id: Int
+  image_id: Int
+  name: String
+}
+
+# order by min() on columns of table "product_categories"
+input product_categories_min_order_by {
+  description: order_by
+  id: order_by
+  image_id: order_by
+  name: order_by
+}
+
+# response of any mutation on the table "product_categories"
+type product_categories_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [product_categories!]!
+}
+
+# input type for inserting object relation for remote table "product_categories"
+input product_categories_obj_rel_insert_input {
+  data: product_categories_insert_input!
+  on_conflict: product_categories_on_conflict
+}
+
+# on conflict condition type for table "product_categories"
+input product_categories_on_conflict {
+  constraint: product_categories_constraint!
+  update_columns: [product_categories_update_column!]!
+  where: product_categories_bool_exp
+}
+
+# ordering options when selecting data from "product_categories"
+input product_categories_order_by {
+  description: order_by
+  id: order_by
+  image: images_order_by
+  image_id: order_by
+  name: order_by
+  products_aggregate: products_aggregate_order_by
+}
+
+# select columns of table "product_categories"
+enum product_categories_select_column {
+  # column name
+  description
+
+  # column name
+  id
+
+  # column name
+  image_id
+
+  # column name
+  name
+}
+
+# input type for updating data in table "product_categories"
+input product_categories_set_input {
+  description: String
+  id: Int
+  image_id: Int
+  name: String
+}
+
+# aggregate stddev on columns
+type product_categories_stddev_fields {
+  id: Float
+  image_id: Float
+}
+
+# order by stddev() on columns of table "product_categories"
+input product_categories_stddev_order_by {
+  id: order_by
+  image_id: order_by
+}
+
+# aggregate stddev_pop on columns
+type product_categories_stddev_pop_fields {
+  id: Float
+  image_id: Float
+}
+
+# order by stddev_pop() on columns of table "product_categories"
+input product_categories_stddev_pop_order_by {
+  id: order_by
+  image_id: order_by
+}
+
+# aggregate stddev_samp on columns
+type product_categories_stddev_samp_fields {
+  id: Float
+  image_id: Float
+}
+
+# order by stddev_samp() on columns of table "product_categories"
+input product_categories_stddev_samp_order_by {
+  id: order_by
+  image_id: order_by
+}
+
+# aggregate sum on columns
+type product_categories_sum_fields {
+  id: Int
+  image_id: Int
+}
+
+# order by sum() on columns of table "product_categories"
+input product_categories_sum_order_by {
+  id: order_by
+  image_id: order_by
+}
+
+# update columns of table "product_categories"
+enum product_categories_update_column {
+  # column name
+  description
+
+  # column name
+  id
+
+  # column name
+  image_id
+
+  # column name
+  name
+}
+
+# aggregate var_pop on columns
+type product_categories_var_pop_fields {
+  id: Float
+  image_id: Float
+}
+
+# order by var_pop() on columns of table "product_categories"
+input product_categories_var_pop_order_by {
+  id: order_by
+  image_id: order_by
+}
+
+# aggregate var_samp on columns
+type product_categories_var_samp_fields {
+  id: Float
+  image_id: Float
+}
+
+# order by var_samp() on columns of table "product_categories"
+input product_categories_var_samp_order_by {
+  id: order_by
+  image_id: order_by
+}
+
+# aggregate variance on columns
+type product_categories_variance_fields {
+  id: Float
+  image_id: Float
+}
+
+# order by variance() on columns of table "product_categories"
+input product_categories_variance_order_by {
+  id: order_by
+  image_id: order_by
+}
+
+# columns and relationships of "product_states"
+type product_states {
+  state: String!
+}
+
+# aggregated selection of "product_states"
+type product_states_aggregate {
+  aggregate: product_states_aggregate_fields
+  nodes: [product_states!]!
+}
+
+# aggregate fields of "product_states"
+type product_states_aggregate_fields {
+  count(columns: [product_states_select_column!], distinct: Boolean): Int
+  max: product_states_max_fields
+  min: product_states_min_fields
+}
+
+# order by aggregate values of table "product_states"
+input product_states_aggregate_order_by {
+  count: order_by
+  max: product_states_max_order_by
+  min: product_states_min_order_by
+}
+
+# input type for inserting array relation for remote table "product_states"
+input product_states_arr_rel_insert_input {
+  data: [product_states_insert_input!]!
+  on_conflict: product_states_on_conflict
+}
+
+# Boolean expression to filter rows from the table "product_states". All fields are combined with a logical 'AND'.
+input product_states_bool_exp {
+  _and: [product_states_bool_exp]
+  _not: product_states_bool_exp
+  _or: [product_states_bool_exp]
+  state: String_comparison_exp
+}
+
+# unique or primary key constraints on table "product_states"
+enum product_states_constraint {
+  # unique or primary key constraint
+  product_states_pkey
+}
+
+enum product_states_enum {
+  DELETED
+  INVISIBLE
+  VISIBLE
+}
+
+# expression to compare columns of type product_states_enum. All fields are combined with logical 'AND'.
+input product_states_enum_comparison_exp {
+  _eq: product_states_enum
+  _in: [product_states_enum!]
+  _is_null: Boolean
+  _neq: product_states_enum
+  _nin: [product_states_enum!]
+}
+
+# input type for inserting data into table "product_states"
+input product_states_insert_input {
+  state: String
+}
+
+# aggregate max on columns
+type product_states_max_fields {
+  state: String
+}
+
+# order by max() on columns of table "product_states"
+input product_states_max_order_by {
+  state: order_by
+}
+
+# aggregate min on columns
+type product_states_min_fields {
+  state: String
+}
+
+# order by min() on columns of table "product_states"
+input product_states_min_order_by {
+  state: order_by
+}
+
+# response of any mutation on the table "product_states"
+type product_states_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [product_states!]!
+}
+
+# input type for inserting object relation for remote table "product_states"
+input product_states_obj_rel_insert_input {
+  data: product_states_insert_input!
+  on_conflict: product_states_on_conflict
+}
+
+# on conflict condition type for table "product_states"
+input product_states_on_conflict {
+  constraint: product_states_constraint!
+  update_columns: [product_states_update_column!]!
+  where: product_states_bool_exp
+}
+
+# ordering options when selecting data from "product_states"
+input product_states_order_by {
+  state: order_by
+}
+
+# select columns of table "product_states"
+enum product_states_select_column {
+  # column name
+  state
+}
+
+# input type for updating data in table "product_states"
+input product_states_set_input {
+  state: String
+}
+
+# update columns of table "product_states"
+enum product_states_update_column {
+  # column name
+  state
+}
+
+# columns and relationships of "products"
+type products {
+  category_id: Int!
+  conservation_days: Int
+  conservation_mode: String
+  description: String!
+  id: Int!
+  image_id: Int
+  name: String!
+
+  # An object relationship
+  producer: users!
+  producer_id: Int!
+
+  # An object relationship
+  product_category: product_categories!
+
+  # An array relationship
+  productvariants(
+    # distinct select on columns
+    distinct_on: [productvariants_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [productvariants_order_by!]
+
+    # filter the rows returned
+    where: productvariants_bool_exp
+  ): [productvariants!]!
+
+  # An aggregated array relationship
+  productvariants_aggregate(
+    # distinct select on columns
+    distinct_on: [productvariants_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [productvariants_order_by!]
+
+    # filter the rows returned
+    where: productvariants_bool_exp
+  ): productvariants_aggregate!
+  publication_date: timestamptz!
+  state: product_states_enum!
+  updated_at: timestamptz!
+  vat_rate: Float
+}
+
+# aggregated selection of "products"
+type products_aggregate {
+  aggregate: products_aggregate_fields
+  nodes: [products!]!
+}
+
+# aggregate fields of "products"
+type products_aggregate_fields {
+  avg: products_avg_fields
+  count(columns: [products_select_column!], distinct: Boolean): Int
+  max: products_max_fields
+  min: products_min_fields
+  stddev: products_stddev_fields
+  stddev_pop: products_stddev_pop_fields
+  stddev_samp: products_stddev_samp_fields
+  sum: products_sum_fields
+  var_pop: products_var_pop_fields
+  var_samp: products_var_samp_fields
+  variance: products_variance_fields
+}
+
+# order by aggregate values of table "products"
+input products_aggregate_order_by {
+  avg: products_avg_order_by
+  count: order_by
+  max: products_max_order_by
+  min: products_min_order_by
+  stddev: products_stddev_order_by
+  stddev_pop: products_stddev_pop_order_by
+  stddev_samp: products_stddev_samp_order_by
+  sum: products_sum_order_by
+  var_pop: products_var_pop_order_by
+  var_samp: products_var_samp_order_by
+  variance: products_variance_order_by
+}
+
+# input type for inserting array relation for remote table "products"
+input products_arr_rel_insert_input {
+  data: [products_insert_input!]!
+  on_conflict: products_on_conflict
+}
+
+# aggregate avg on columns
+type products_avg_fields {
+  category_id: Float
+  conservation_days: Float
+  id: Float
+  image_id: Float
+  producer_id: Float
+  vat_rate: Float
+}
+
+# order by avg() on columns of table "products"
+input products_avg_order_by {
+  category_id: order_by
+  conservation_days: order_by
+  id: order_by
+  image_id: order_by
+  producer_id: order_by
+  vat_rate: order_by
+}
+
+# Boolean expression to filter rows from the table "products". All fields are combined with a logical 'AND'.
+input products_bool_exp {
+  _and: [products_bool_exp]
+  _not: products_bool_exp
+  _or: [products_bool_exp]
+  category_id: Int_comparison_exp
+  conservation_days: Int_comparison_exp
+  conservation_mode: String_comparison_exp
+  description: String_comparison_exp
+  id: Int_comparison_exp
+  image_id: Int_comparison_exp
+  name: String_comparison_exp
+  producer: users_bool_exp
+  producer_id: Int_comparison_exp
+  product_category: product_categories_bool_exp
+  productvariants: productvariants_bool_exp
+  publication_date: timestamptz_comparison_exp
+  state: product_states_enum_comparison_exp
+  updated_at: timestamptz_comparison_exp
+  vat_rate: Float_comparison_exp
+}
+
+# unique or primary key constraints on table "products"
+enum products_constraint {
+  # unique or primary key constraint
+  products_pkey
+}
+
+# input type for incrementing integer columne in table "products"
+input products_inc_input {
+  category_id: Int
+  conservation_days: Int
+  id: Int
+  image_id: Int
+  producer_id: Int
+}
+
+# input type for inserting data into table "products"
+input products_insert_input {
+  category_id: Int
+  conservation_days: Int
+  conservation_mode: String
+  description: String
+  id: Int
+  image_id: Int
+  name: String
+  producer: users_obj_rel_insert_input
+  producer_id: Int
+  product_category: product_categories_obj_rel_insert_input
+  productvariants: productvariants_arr_rel_insert_input
+  publication_date: timestamptz
+  state: product_states_enum
+  updated_at: timestamptz
+  vat_rate: Float
+}
+
+# aggregate max on columns
+type products_max_fields {
+  category_id: Int
+  conservation_days: Int
+  conservation_mode: String
+  description: String
+  id: Int
+  image_id: Int
+  name: String
+  producer_id: Int
+  publication_date: timestamptz
+  updated_at: timestamptz
+  vat_rate: Float
+}
+
+# order by max() on columns of table "products"
+input products_max_order_by {
+  category_id: order_by
+  conservation_days: order_by
+  conservation_mode: order_by
+  description: order_by
+  id: order_by
+  image_id: order_by
+  name: order_by
+  producer_id: order_by
+  publication_date: order_by
+  updated_at: order_by
+  vat_rate: order_by
+}
+
+# aggregate min on columns
+type products_min_fields {
+  category_id: Int
+  conservation_days: Int
+  conservation_mode: String
+  description: String
+  id: Int
+  image_id: Int
+  name: String
+  producer_id: Int
+  publication_date: timestamptz
+  updated_at: timestamptz
+  vat_rate: Float
+}
+
+# order by min() on columns of table "products"
+input products_min_order_by {
+  category_id: order_by
+  conservation_days: order_by
+  conservation_mode: order_by
+  description: order_by
+  id: order_by
+  image_id: order_by
+  name: order_by
+  producer_id: order_by
+  publication_date: order_by
+  updated_at: order_by
+  vat_rate: order_by
+}
+
+# response of any mutation on the table "products"
+type products_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [products!]!
+}
+
+# input type for inserting object relation for remote table "products"
+input products_obj_rel_insert_input {
+  data: products_insert_input!
+  on_conflict: products_on_conflict
+}
+
+# on conflict condition type for table "products"
+input products_on_conflict {
+  constraint: products_constraint!
+  update_columns: [products_update_column!]!
+  where: products_bool_exp
+}
+
+# ordering options when selecting data from "products"
+input products_order_by {
+  category_id: order_by
+  conservation_days: order_by
+  conservation_mode: order_by
+  description: order_by
+  id: order_by
+  image_id: order_by
+  name: order_by
+  producer: users_order_by
+  producer_id: order_by
+  product_category: product_categories_order_by
+  productvariants_aggregate: productvariants_aggregate_order_by
+  publication_date: order_by
+  state: order_by
+  updated_at: order_by
+  vat_rate: order_by
+}
+
+# select columns of table "products"
+enum products_select_column {
+  # column name
+  category_id
+
+  # column name
+  conservation_days
+
+  # column name
+  conservation_mode
+
+  # column name
+  description
+
+  # column name
+  id
+
+  # column name
+  image_id
+
+  # column name
+  name
+
+  # column name
+  producer_id
+
+  # column name
+  publication_date
+
+  # column name
+  state
+
+  # column name
+  updated_at
+
+  # column name
+  vat_rate
+}
+
+# input type for updating data in table "products"
+input products_set_input {
+  category_id: Int
+  conservation_days: Int
+  conservation_mode: String
+  description: String
+  id: Int
+  image_id: Int
+  name: String
+  producer_id: Int
+  publication_date: timestamptz
+  state: product_states_enum
+  updated_at: timestamptz
+  vat_rate: Float
+}
+
+# aggregate stddev on columns
+type products_stddev_fields {
+  category_id: Float
+  conservation_days: Float
+  id: Float
+  image_id: Float
+  producer_id: Float
+  vat_rate: Float
+}
+
+# order by stddev() on columns of table "products"
+input products_stddev_order_by {
+  category_id: order_by
+  conservation_days: order_by
+  id: order_by
+  image_id: order_by
+  producer_id: order_by
+  vat_rate: order_by
+}
+
+# aggregate stddev_pop on columns
+type products_stddev_pop_fields {
+  category_id: Float
+  conservation_days: Float
+  id: Float
+  image_id: Float
+  producer_id: Float
+  vat_rate: Float
+}
+
+# order by stddev_pop() on columns of table "products"
+input products_stddev_pop_order_by {
+  category_id: order_by
+  conservation_days: order_by
+  id: order_by
+  image_id: order_by
+  producer_id: order_by
+  vat_rate: order_by
+}
+
+# aggregate stddev_samp on columns
+type products_stddev_samp_fields {
+  category_id: Float
+  conservation_days: Float
+  id: Float
+  image_id: Float
+  producer_id: Float
+  vat_rate: Float
+}
+
+# order by stddev_samp() on columns of table "products"
+input products_stddev_samp_order_by {
+  category_id: order_by
+  conservation_days: order_by
+  id: order_by
+  image_id: order_by
+  producer_id: order_by
+  vat_rate: order_by
+}
+
+# aggregate sum on columns
+type products_sum_fields {
+  category_id: Int
+  conservation_days: Int
+  id: Int
+  image_id: Int
+  producer_id: Int
+  vat_rate: Float
+}
+
+# order by sum() on columns of table "products"
+input products_sum_order_by {
+  category_id: order_by
+  conservation_days: order_by
+  id: order_by
+  image_id: order_by
+  producer_id: order_by
+  vat_rate: order_by
+}
+
+# update columns of table "products"
+enum products_update_column {
+  # column name
+  category_id
+
+  # column name
+  conservation_days
+
+  # column name
+  conservation_mode
+
+  # column name
+  description
+
+  # column name
+  id
+
+  # column name
+  image_id
+
+  # column name
+  name
+
+  # column name
+  producer_id
+
+  # column name
+  publication_date
+
+  # column name
+  state
+
+  # column name
+  updated_at
+
+  # column name
+  vat_rate
+}
+
+# aggregate var_pop on columns
+type products_var_pop_fields {
+  category_id: Float
+  conservation_days: Float
+  id: Float
+  image_id: Float
+  producer_id: Float
+  vat_rate: Float
+}
+
+# order by var_pop() on columns of table "products"
+input products_var_pop_order_by {
+  category_id: order_by
+  conservation_days: order_by
+  id: order_by
+  image_id: order_by
+  producer_id: order_by
+  vat_rate: order_by
+}
+
+# aggregate var_samp on columns
+type products_var_samp_fields {
+  category_id: Float
+  conservation_days: Float
+  id: Float
+  image_id: Float
+  producer_id: Float
+  vat_rate: Float
+}
+
+# order by var_samp() on columns of table "products"
+input products_var_samp_order_by {
+  category_id: order_by
+  conservation_days: order_by
+  id: order_by
+  image_id: order_by
+  producer_id: order_by
+  vat_rate: order_by
+}
+
+# aggregate variance on columns
+type products_variance_fields {
+  category_id: Float
+  conservation_days: Float
+  id: Float
+  image_id: Float
+  producer_id: Float
+  vat_rate: Float
+}
+
+# order by variance() on columns of table "products"
+input products_variance_order_by {
+  category_id: order_by
+  conservation_days: order_by
+  id: order_by
+  image_id: order_by
+  producer_id: order_by
+  vat_rate: order_by
+}
+
+# columns and relationships of "productvariant_states"
+type productvariant_states {
+  # An array relationship
+  productvariants(
+    # distinct select on columns
+    distinct_on: [productvariants_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [productvariants_order_by!]
+
+    # filter the rows returned
+    where: productvariants_bool_exp
+  ): [productvariants!]!
+
+  # An aggregated array relationship
+  productvariants_aggregate(
+    # distinct select on columns
+    distinct_on: [productvariants_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [productvariants_order_by!]
+
+    # filter the rows returned
+    where: productvariants_bool_exp
+  ): productvariants_aggregate!
+  state: String!
+}
+
+# aggregated selection of "productvariant_states"
+type productvariant_states_aggregate {
+  aggregate: productvariant_states_aggregate_fields
+  nodes: [productvariant_states!]!
+}
+
+# aggregate fields of "productvariant_states"
+type productvariant_states_aggregate_fields {
+  count(columns: [productvariant_states_select_column!], distinct: Boolean): Int
+  max: productvariant_states_max_fields
+  min: productvariant_states_min_fields
+}
+
+# order by aggregate values of table "productvariant_states"
+input productvariant_states_aggregate_order_by {
+  count: order_by
+  max: productvariant_states_max_order_by
+  min: productvariant_states_min_order_by
+}
+
+# input type for inserting array relation for remote table "productvariant_states"
+input productvariant_states_arr_rel_insert_input {
+  data: [productvariant_states_insert_input!]!
+  on_conflict: productvariant_states_on_conflict
+}
+
+# Boolean expression to filter rows from the table "productvariant_states". All fields are combined with a logical 'AND'.
+input productvariant_states_bool_exp {
+  _and: [productvariant_states_bool_exp]
+  _not: productvariant_states_bool_exp
+  _or: [productvariant_states_bool_exp]
+  productvariants: productvariants_bool_exp
+  state: String_comparison_exp
+}
+
+# unique or primary key constraints on table "productvariant_states"
+enum productvariant_states_constraint {
+  # unique or primary key constraint
+  productvariant_states_pkey
+}
+
+enum productvariant_states_enum {
+  CHANGE_ASAP
+  DELETED
+  INVISIBLE
+  VISIBLE
+}
+
+# expression to compare columns of type productvariant_states_enum. All fields are combined with logical 'AND'.
+input productvariant_states_enum_comparison_exp {
+  _eq: productvariant_states_enum
+  _in: [productvariant_states_enum!]
+  _is_null: Boolean
+  _neq: productvariant_states_enum
+  _nin: [productvariant_states_enum!]
+}
+
+# input type for inserting data into table "productvariant_states"
+input productvariant_states_insert_input {
+  productvariants: productvariants_arr_rel_insert_input
+  state: String
+}
+
+# aggregate max on columns
+type productvariant_states_max_fields {
+  state: String
+}
+
+# order by max() on columns of table "productvariant_states"
+input productvariant_states_max_order_by {
+  state: order_by
+}
+
+# aggregate min on columns
+type productvariant_states_min_fields {
+  state: String
+}
+
+# order by min() on columns of table "productvariant_states"
+input productvariant_states_min_order_by {
+  state: order_by
+}
+
+# response of any mutation on the table "productvariant_states"
+type productvariant_states_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [productvariant_states!]!
+}
+
+# input type for inserting object relation for remote table "productvariant_states"
+input productvariant_states_obj_rel_insert_input {
+  data: productvariant_states_insert_input!
+  on_conflict: productvariant_states_on_conflict
+}
+
+# on conflict condition type for table "productvariant_states"
+input productvariant_states_on_conflict {
+  constraint: productvariant_states_constraint!
+  update_columns: [productvariant_states_update_column!]!
+  where: productvariant_states_bool_exp
+}
+
+# ordering options when selecting data from "productvariant_states"
+input productvariant_states_order_by {
+  productvariants_aggregate: productvariants_aggregate_order_by
+  state: order_by
+}
+
+# select columns of table "productvariant_states"
+enum productvariant_states_select_column {
+  # column name
+  state
+}
+
+# input type for updating data in table "productvariant_states"
+input productvariant_states_set_input {
+  state: String
+}
+
+# update columns of table "productvariant_states"
+enum productvariant_states_update_column {
+  # column name
+  state
+}
+
+# columns and relationships of "productvariants"
+type productvariants {
+  gross_cost_price: money!
+  gross_cost_price_unit: String!
+  id: Int!
+  measure: Float!
+  measure_unit: String!
+  name: String!
+
+  # An object relationship
+  pricingModeByPricingMode: pricing_modes!
+  pricing_mode: pricing_modes_enum!
+  product_id: Int!
+
+  # An object relationship
+  productvariant_state: productvariant_states!
+  quantity: Int!
+  quantity_allocated: Int!
+
+  # An array relationship
+  shop_productvariants(
+    # distinct select on columns
+    distinct_on: [shop_productvariant_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [shop_productvariant_order_by!]
+
+    # filter the rows returned
+    where: shop_productvariant_bool_exp
+  ): [shop_productvariant!]!
+
+  # An aggregated array relationship
+  shop_productvariants_aggregate(
+    # distinct select on columns
+    distinct_on: [shop_productvariant_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [shop_productvariant_order_by!]
+
+    # filter the rows returned
+    where: shop_productvariant_bool_exp
+  ): shop_productvariant_aggregate!
+  state: productvariant_states_enum!
+}
+
+# aggregated selection of "productvariants"
+type productvariants_aggregate {
+  aggregate: productvariants_aggregate_fields
+  nodes: [productvariants!]!
+}
+
+# aggregate fields of "productvariants"
+type productvariants_aggregate_fields {
+  avg: productvariants_avg_fields
+  count(columns: [productvariants_select_column!], distinct: Boolean): Int
+  max: productvariants_max_fields
+  min: productvariants_min_fields
+  stddev: productvariants_stddev_fields
+  stddev_pop: productvariants_stddev_pop_fields
+  stddev_samp: productvariants_stddev_samp_fields
+  sum: productvariants_sum_fields
+  var_pop: productvariants_var_pop_fields
+  var_samp: productvariants_var_samp_fields
+  variance: productvariants_variance_fields
+}
+
+# order by aggregate values of table "productvariants"
+input productvariants_aggregate_order_by {
+  avg: productvariants_avg_order_by
+  count: order_by
+  max: productvariants_max_order_by
+  min: productvariants_min_order_by
+  stddev: productvariants_stddev_order_by
+  stddev_pop: productvariants_stddev_pop_order_by
+  stddev_samp: productvariants_stddev_samp_order_by
+  sum: productvariants_sum_order_by
+  var_pop: productvariants_var_pop_order_by
+  var_samp: productvariants_var_samp_order_by
+  variance: productvariants_variance_order_by
+}
+
+# input type for inserting array relation for remote table "productvariants"
+input productvariants_arr_rel_insert_input {
+  data: [productvariants_insert_input!]!
+  on_conflict: productvariants_on_conflict
+}
+
+# aggregate avg on columns
+type productvariants_avg_fields {
+  id: Float
+  measure: Float
+  product_id: Float
+  quantity: Float
+  quantity_allocated: Float
+}
+
+# order by avg() on columns of table "productvariants"
+input productvariants_avg_order_by {
+  id: order_by
+  measure: order_by
+  product_id: order_by
+  quantity: order_by
+  quantity_allocated: order_by
+}
+
+# Boolean expression to filter rows from the table "productvariants". All fields are combined with a logical 'AND'.
+input productvariants_bool_exp {
+  _and: [productvariants_bool_exp]
+  _not: productvariants_bool_exp
+  _or: [productvariants_bool_exp]
+  gross_cost_price: money_comparison_exp
+  gross_cost_price_unit: String_comparison_exp
+  id: Int_comparison_exp
+  measure: Float_comparison_exp
+  measure_unit: String_comparison_exp
+  name: String_comparison_exp
+  pricingModeByPricingMode: pricing_modes_bool_exp
+  pricing_mode: pricing_modes_enum_comparison_exp
+  product_id: Int_comparison_exp
+  productvariant_state: productvariant_states_bool_exp
+  quantity: Int_comparison_exp
+  quantity_allocated: Int_comparison_exp
+  shop_productvariants: shop_productvariant_bool_exp
+  state: productvariant_states_enum_comparison_exp
+}
+
+# unique or primary key constraints on table "productvariants"
+enum productvariants_constraint {
+  # unique or primary key constraint
+  productvariants_pkey
+}
+
+# input type for incrementing integer columne in table "productvariants"
+input productvariants_inc_input {
+  id: Int
+  product_id: Int
+  quantity: Int
+  quantity_allocated: Int
+}
+
+# input type for inserting data into table "productvariants"
+input productvariants_insert_input {
+  gross_cost_price: money
+  gross_cost_price_unit: String
+  id: Int
+  measure: Float
+  measure_unit: String
+  name: String
+  pricingModeByPricingMode: pricing_modes_obj_rel_insert_input
+  pricing_mode: pricing_modes_enum
+  product_id: Int
+  productvariant_state: productvariant_states_obj_rel_insert_input
+  quantity: Int
+  quantity_allocated: Int
+  shop_productvariants: shop_productvariant_arr_rel_insert_input
+  state: productvariant_states_enum
+}
+
+# aggregate max on columns
+type productvariants_max_fields {
+  gross_cost_price_unit: String
+  id: Int
+  measure: Float
+  measure_unit: String
+  name: String
+  product_id: Int
+  quantity: Int
+  quantity_allocated: Int
+}
+
+# order by max() on columns of table "productvariants"
+input productvariants_max_order_by {
+  gross_cost_price_unit: order_by
+  id: order_by
+  measure: order_by
+  measure_unit: order_by
+  name: order_by
+  product_id: order_by
+  quantity: order_by
+  quantity_allocated: order_by
+}
+
+# aggregate min on columns
+type productvariants_min_fields {
+  gross_cost_price_unit: String
+  id: Int
+  measure: Float
+  measure_unit: String
+  name: String
+  product_id: Int
+  quantity: Int
+  quantity_allocated: Int
+}
+
+# order by min() on columns of table "productvariants"
+input productvariants_min_order_by {
+  gross_cost_price_unit: order_by
+  id: order_by
+  measure: order_by
+  measure_unit: order_by
+  name: order_by
+  product_id: order_by
+  quantity: order_by
+  quantity_allocated: order_by
+}
+
+# response of any mutation on the table "productvariants"
+type productvariants_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [productvariants!]!
+}
+
+# input type for inserting object relation for remote table "productvariants"
+input productvariants_obj_rel_insert_input {
+  data: productvariants_insert_input!
+  on_conflict: productvariants_on_conflict
+}
+
+# on conflict condition type for table "productvariants"
+input productvariants_on_conflict {
+  constraint: productvariants_constraint!
+  update_columns: [productvariants_update_column!]!
+  where: productvariants_bool_exp
+}
+
+# ordering options when selecting data from "productvariants"
+input productvariants_order_by {
+  gross_cost_price: order_by
+  gross_cost_price_unit: order_by
+  id: order_by
+  measure: order_by
+  measure_unit: order_by
+  name: order_by
+  pricingModeByPricingMode: pricing_modes_order_by
+  pricing_mode: order_by
+  product_id: order_by
+  productvariant_state: productvariant_states_order_by
+  quantity: order_by
+  quantity_allocated: order_by
+  shop_productvariants_aggregate: shop_productvariant_aggregate_order_by
+  state: order_by
+}
+
+# select columns of table "productvariants"
+enum productvariants_select_column {
+  # column name
+  gross_cost_price
+
+  # column name
+  gross_cost_price_unit
+
+  # column name
+  id
+
+  # column name
+  measure
+
+  # column name
+  measure_unit
+
+  # column name
+  name
+
+  # column name
+  pricing_mode
+
+  # column name
+  product_id
+
+  # column name
+  quantity
+
+  # column name
+  quantity_allocated
+
+  # column name
+  state
+}
+
+# input type for updating data in table "productvariants"
+input productvariants_set_input {
+  gross_cost_price: money
+  gross_cost_price_unit: String
+  id: Int
+  measure: Float
+  measure_unit: String
+  name: String
+  pricing_mode: pricing_modes_enum
+  product_id: Int
+  quantity: Int
+  quantity_allocated: Int
+  state: productvariant_states_enum
+}
+
+# aggregate stddev on columns
+type productvariants_stddev_fields {
+  id: Float
+  measure: Float
+  product_id: Float
+  quantity: Float
+  quantity_allocated: Float
+}
+
+# order by stddev() on columns of table "productvariants"
+input productvariants_stddev_order_by {
+  id: order_by
+  measure: order_by
+  product_id: order_by
+  quantity: order_by
+  quantity_allocated: order_by
+}
+
+# aggregate stddev_pop on columns
+type productvariants_stddev_pop_fields {
+  id: Float
+  measure: Float
+  product_id: Float
+  quantity: Float
+  quantity_allocated: Float
+}
+
+# order by stddev_pop() on columns of table "productvariants"
+input productvariants_stddev_pop_order_by {
+  id: order_by
+  measure: order_by
+  product_id: order_by
+  quantity: order_by
+  quantity_allocated: order_by
+}
+
+# aggregate stddev_samp on columns
+type productvariants_stddev_samp_fields {
+  id: Float
+  measure: Float
+  product_id: Float
+  quantity: Float
+  quantity_allocated: Float
+}
+
+# order by stddev_samp() on columns of table "productvariants"
+input productvariants_stddev_samp_order_by {
+  id: order_by
+  measure: order_by
+  product_id: order_by
+  quantity: order_by
+  quantity_allocated: order_by
+}
+
+# aggregate sum on columns
+type productvariants_sum_fields {
+  id: Int
+  measure: Float
+  product_id: Int
+  quantity: Int
+  quantity_allocated: Int
+}
+
+# order by sum() on columns of table "productvariants"
+input productvariants_sum_order_by {
+  id: order_by
+  measure: order_by
+  product_id: order_by
+  quantity: order_by
+  quantity_allocated: order_by
+}
+
+# update columns of table "productvariants"
+enum productvariants_update_column {
+  # column name
+  gross_cost_price
+
+  # column name
+  gross_cost_price_unit
+
+  # column name
+  id
+
+  # column name
+  measure
+
+  # column name
+  measure_unit
+
+  # column name
+  name
+
+  # column name
+  pricing_mode
+
+  # column name
+  product_id
+
+  # column name
+  quantity
+
+  # column name
+  quantity_allocated
+
+  # column name
+  state
+}
+
+# aggregate var_pop on columns
+type productvariants_var_pop_fields {
+  id: Float
+  measure: Float
+  product_id: Float
+  quantity: Float
+  quantity_allocated: Float
+}
+
+# order by var_pop() on columns of table "productvariants"
+input productvariants_var_pop_order_by {
+  id: order_by
+  measure: order_by
+  product_id: order_by
+  quantity: order_by
+  quantity_allocated: order_by
+}
+
+# aggregate var_samp on columns
+type productvariants_var_samp_fields {
+  id: Float
+  measure: Float
+  product_id: Float
+  quantity: Float
+  quantity_allocated: Float
+}
+
+# order by var_samp() on columns of table "productvariants"
+input productvariants_var_samp_order_by {
+  id: order_by
+  measure: order_by
+  product_id: order_by
+  quantity: order_by
+  quantity_allocated: order_by
+}
+
+# aggregate variance on columns
+type productvariants_variance_fields {
+  id: Float
+  measure: Float
+  product_id: Float
+  quantity: Float
+  quantity_allocated: Float
+}
+
+# order by variance() on columns of table "productvariants"
+input productvariants_variance_order_by {
+  id: order_by
+  measure: order_by
+  product_id: order_by
+  quantity: order_by
+  quantity_allocated: order_by
+}
+
+# query root
+type Query {
+  # fetch data from the table: "addresses"
+  addresses(
+    # distinct select on columns
+    distinct_on: [addresses_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [addresses_order_by!]
+
+    # filter the rows returned
+    where: addresses_bool_exp
+  ): [addresses!]!
+
+  # fetch aggregated fields from the table: "addresses"
+  addresses_aggregate(
+    # distinct select on columns
+    distinct_on: [addresses_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [addresses_order_by!]
+
+    # filter the rows returned
+    where: addresses_bool_exp
+  ): addresses_aggregate!
+
+  # fetch data from the table: "addresses" using primary key columns
+  addresses_by_pk(user_id: Int!): addresses
+
+  # fetch data from the table: "images"
+  images(
+    # distinct select on columns
+    distinct_on: [images_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [images_order_by!]
+
+    # filter the rows returned
+    where: images_bool_exp
+  ): [images!]!
+
+  # fetch aggregated fields from the table: "images"
+  images_aggregate(
+    # distinct select on columns
+    distinct_on: [images_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [images_order_by!]
+
+    # filter the rows returned
+    where: images_bool_exp
+  ): images_aggregate!
+
+  # fetch data from the table: "images" using primary key columns
+  images_by_pk(id: Int!): images
+
+  # fetch data from the table: "margindefinitions"
+  margindefinitions(
+    # distinct select on columns
+    distinct_on: [margindefinitions_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [margindefinitions_order_by!]
+
+    # filter the rows returned
+    where: margindefinitions_bool_exp
+  ): [margindefinitions!]!
+
+  # fetch aggregated fields from the table: "margindefinitions"
+  margindefinitions_aggregate(
+    # distinct select on columns
+    distinct_on: [margindefinitions_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [margindefinitions_order_by!]
+
+    # filter the rows returned
+    where: margindefinitions_bool_exp
+  ): margindefinitions_aggregate!
+
+  # fetch data from the table: "margindefinitions" using primary key columns
+  margindefinitions_by_pk(role: roles_enum!): margindefinitions
+
+  # fetch data from the table: "pricing_modes"
+  pricing_modes(
+    # distinct select on columns
+    distinct_on: [pricing_modes_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [pricing_modes_order_by!]
+
+    # filter the rows returned
+    where: pricing_modes_bool_exp
+  ): [pricing_modes!]!
+
+  # fetch aggregated fields from the table: "pricing_modes"
+  pricing_modes_aggregate(
+    # distinct select on columns
+    distinct_on: [pricing_modes_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [pricing_modes_order_by!]
+
+    # filter the rows returned
+    where: pricing_modes_bool_exp
+  ): pricing_modes_aggregate!
+
+  # fetch data from the table: "pricing_modes" using primary key columns
+  pricing_modes_by_pk(mode: String!): pricing_modes
+
+  # fetch data from the table: "product_categories"
+  product_categories(
+    # distinct select on columns
+    distinct_on: [product_categories_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [product_categories_order_by!]
+
+    # filter the rows returned
+    where: product_categories_bool_exp
+  ): [product_categories!]!
+
+  # fetch aggregated fields from the table: "product_categories"
+  product_categories_aggregate(
+    # distinct select on columns
+    distinct_on: [product_categories_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [product_categories_order_by!]
+
+    # filter the rows returned
+    where: product_categories_bool_exp
+  ): product_categories_aggregate!
+
+  # fetch data from the table: "product_categories" using primary key columns
+  product_categories_by_pk(id: Int!): product_categories
+
+  # fetch data from the table: "product_states"
+  product_states(
+    # distinct select on columns
+    distinct_on: [product_states_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [product_states_order_by!]
+
+    # filter the rows returned
+    where: product_states_bool_exp
+  ): [product_states!]!
+
+  # fetch aggregated fields from the table: "product_states"
+  product_states_aggregate(
+    # distinct select on columns
+    distinct_on: [product_states_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [product_states_order_by!]
+
+    # filter the rows returned
+    where: product_states_bool_exp
+  ): product_states_aggregate!
+
+  # fetch data from the table: "product_states" using primary key columns
+  product_states_by_pk(state: String!): product_states
+
+  # fetch data from the table: "products"
+  products(
+    # distinct select on columns
+    distinct_on: [products_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [products_order_by!]
+
+    # filter the rows returned
+    where: products_bool_exp
+  ): [products!]!
+
+  # fetch aggregated fields from the table: "products"
+  products_aggregate(
+    # distinct select on columns
+    distinct_on: [products_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [products_order_by!]
+
+    # filter the rows returned
+    where: products_bool_exp
+  ): products_aggregate!
+
+  # fetch data from the table: "products" using primary key columns
+  products_by_pk(id: Int!): products
+
+  # fetch data from the table: "productvariant_states"
+  productvariant_states(
+    # distinct select on columns
+    distinct_on: [productvariant_states_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [productvariant_states_order_by!]
+
+    # filter the rows returned
+    where: productvariant_states_bool_exp
+  ): [productvariant_states!]!
+
+  # fetch aggregated fields from the table: "productvariant_states"
+  productvariant_states_aggregate(
+    # distinct select on columns
+    distinct_on: [productvariant_states_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [productvariant_states_order_by!]
+
+    # filter the rows returned
+    where: productvariant_states_bool_exp
+  ): productvariant_states_aggregate!
+
+  # fetch data from the table: "productvariant_states" using primary key columns
+  productvariant_states_by_pk(state: String!): productvariant_states
+
+  # fetch data from the table: "productvariants"
+  productvariants(
+    # distinct select on columns
+    distinct_on: [productvariants_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [productvariants_order_by!]
+
+    # filter the rows returned
+    where: productvariants_bool_exp
+  ): [productvariants!]!
+
+  # fetch aggregated fields from the table: "productvariants"
+  productvariants_aggregate(
+    # distinct select on columns
+    distinct_on: [productvariants_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [productvariants_order_by!]
+
+    # filter the rows returned
+    where: productvariants_bool_exp
+  ): productvariants_aggregate!
+
+  # fetch data from the table: "productvariants" using primary key columns
+  productvariants_by_pk(id: Int!): productvariants
+
+  # fetch data from the table: "roles"
+  roles(
+    # distinct select on columns
+    distinct_on: [roles_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [roles_order_by!]
+
+    # filter the rows returned
+    where: roles_bool_exp
+  ): [roles!]!
+
+  # fetch aggregated fields from the table: "roles"
+  roles_aggregate(
+    # distinct select on columns
+    distinct_on: [roles_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [roles_order_by!]
+
+    # filter the rows returned
+    where: roles_bool_exp
+  ): roles_aggregate!
+
+  # fetch data from the table: "roles" using primary key columns
+  roles_by_pk(role: String!): roles
+
+  # fetch data from the table: "shop_productvariant"
+  shop_productvariant(
+    # distinct select on columns
+    distinct_on: [shop_productvariant_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [shop_productvariant_order_by!]
+
+    # filter the rows returned
+    where: shop_productvariant_bool_exp
+  ): [shop_productvariant!]!
+
+  # fetch aggregated fields from the table: "shop_productvariant"
+  shop_productvariant_aggregate(
+    # distinct select on columns
+    distinct_on: [shop_productvariant_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [shop_productvariant_order_by!]
+
+    # filter the rows returned
+    where: shop_productvariant_bool_exp
+  ): shop_productvariant_aggregate!
+
+  # fetch data from the table: "shop_productvariant" using primary key columns
+  shop_productvariant_by_pk(productvariant_id: Int!, shop_id: Int!): shop_productvariant
+
+  # fetch data from the table: "shops"
+  shops(
+    # distinct select on columns
+    distinct_on: [shops_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [shops_order_by!]
+
+    # filter the rows returned
+    where: shops_bool_exp
+  ): [shops!]!
+
+  # fetch aggregated fields from the table: "shops"
+  shops_aggregate(
+    # distinct select on columns
+    distinct_on: [shops_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [shops_order_by!]
+
+    # filter the rows returned
+    where: shops_bool_exp
+  ): shops_aggregate!
+
+  # fetch data from the table: "shops" using primary key columns
+  shops_by_pk(id: Int!): shops
+
+  # fetch data from the table: "sites"
+  sites(
+    # distinct select on columns
+    distinct_on: [sites_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [sites_order_by!]
+
+    # filter the rows returned
+    where: sites_bool_exp
+  ): [sites!]!
+
+  # fetch aggregated fields from the table: "sites"
+  sites_aggregate(
+    # distinct select on columns
+    distinct_on: [sites_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [sites_order_by!]
+
+    # filter the rows returned
+    where: sites_bool_exp
+  ): sites_aggregate!
+
+  # fetch data from the table: "sites" using primary key columns
+  sites_by_pk(id: Int!): sites
+
+  # fetch data from the table: "users"
+  users(
+    # distinct select on columns
+    distinct_on: [users_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [users_order_by!]
+
+    # filter the rows returned
+    where: users_bool_exp
+  ): [users!]!
+
+  # fetch aggregated fields from the table: "users"
+  users_aggregate(
+    # distinct select on columns
+    distinct_on: [users_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [users_order_by!]
+
+    # filter the rows returned
+    where: users_bool_exp
+  ): users_aggregate!
+
+  # fetch data from the table: "users" using primary key columns
+  users_by_pk(id: Int!): users
+
+  # fetch data from the table: "vat"
+  vat(
+    # distinct select on columns
+    distinct_on: [vat_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [vat_order_by!]
+
+    # filter the rows returned
+    where: vat_bool_exp
+  ): [vat!]!
+
+  # fetch aggregated fields from the table: "vat"
+  vat_aggregate(
+    # distinct select on columns
+    distinct_on: [vat_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [vat_order_by!]
+
+    # filter the rows returned
+    where: vat_bool_exp
+  ): vat_aggregate!
+
+  # fetch data from the table: "vat" using primary key columns
+  vat_by_pk(type: vat_types_enum!): vat
+
+  # fetch data from the table: "vat_types"
+  vat_types(
+    # distinct select on columns
+    distinct_on: [vat_types_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [vat_types_order_by!]
+
+    # filter the rows returned
+    where: vat_types_bool_exp
+  ): [vat_types!]!
+
+  # fetch aggregated fields from the table: "vat_types"
+  vat_types_aggregate(
+    # distinct select on columns
+    distinct_on: [vat_types_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [vat_types_order_by!]
+
+    # filter the rows returned
+    where: vat_types_bool_exp
+  ): vat_types_aggregate!
+
+  # fetch data from the table: "vat_types" using primary key columns
+  vat_types_by_pk(type: String!): vat_types
+}
+
+# columns and relationships of "roles"
+type roles {
+  role: String!
+}
+
+# aggregated selection of "roles"
+type roles_aggregate {
+  aggregate: roles_aggregate_fields
+  nodes: [roles!]!
+}
+
+# aggregate fields of "roles"
+type roles_aggregate_fields {
+  count(columns: [roles_select_column!], distinct: Boolean): Int
+  max: roles_max_fields
+  min: roles_min_fields
+}
+
+# order by aggregate values of table "roles"
+input roles_aggregate_order_by {
+  count: order_by
+  max: roles_max_order_by
+  min: roles_min_order_by
+}
+
+# input type for inserting array relation for remote table "roles"
+input roles_arr_rel_insert_input {
+  data: [roles_insert_input!]!
+  on_conflict: roles_on_conflict
+}
+
+# Boolean expression to filter rows from the table "roles". All fields are combined with a logical 'AND'.
+input roles_bool_exp {
+  _and: [roles_bool_exp]
+  _not: roles_bool_exp
+  _or: [roles_bool_exp]
+  role: String_comparison_exp
+}
+
+# unique or primary key constraints on table "roles"
+enum roles_constraint {
+  # unique or primary key constraint
+  roles_pkey
+}
+
+enum roles_enum {
+  MANAGER
+  REX
+  SOFTOZOR
+}
+
+# expression to compare columns of type roles_enum. All fields are combined with logical 'AND'.
+input roles_enum_comparison_exp {
+  _eq: roles_enum
+  _in: [roles_enum!]
+  _is_null: Boolean
+  _neq: roles_enum
+  _nin: [roles_enum!]
+}
+
+# input type for inserting data into table "roles"
+input roles_insert_input {
+  role: String
+}
+
+# aggregate max on columns
+type roles_max_fields {
+  role: String
+}
+
+# order by max() on columns of table "roles"
+input roles_max_order_by {
+  role: order_by
+}
+
+# aggregate min on columns
+type roles_min_fields {
+  role: String
+}
+
+# order by min() on columns of table "roles"
+input roles_min_order_by {
+  role: order_by
+}
+
+# response of any mutation on the table "roles"
+type roles_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [roles!]!
+}
+
+# input type for inserting object relation for remote table "roles"
+input roles_obj_rel_insert_input {
+  data: roles_insert_input!
+  on_conflict: roles_on_conflict
+}
+
+# on conflict condition type for table "roles"
+input roles_on_conflict {
+  constraint: roles_constraint!
+  update_columns: [roles_update_column!]!
+  where: roles_bool_exp
+}
+
+# ordering options when selecting data from "roles"
+input roles_order_by {
+  role: order_by
+}
+
+# select columns of table "roles"
+enum roles_select_column {
+  # column name
+  role
+}
+
+# input type for updating data in table "roles"
+input roles_set_input {
+  role: String
+}
+
+# update columns of table "roles"
+enum roles_update_column {
+  # column name
+  role
+}
+
+# columns and relationships of "shop_productvariant"
+type shop_productvariant {
+  # An object relationship
+  productvariant: productvariants!
+  productvariant_id: Int!
+
+  # An object relationship
+  shop: shops!
+  shop_id: Int!
+}
+
+# aggregated selection of "shop_productvariant"
+type shop_productvariant_aggregate {
+  aggregate: shop_productvariant_aggregate_fields
+  nodes: [shop_productvariant!]!
+}
+
+# aggregate fields of "shop_productvariant"
+type shop_productvariant_aggregate_fields {
+  avg: shop_productvariant_avg_fields
+  count(columns: [shop_productvariant_select_column!], distinct: Boolean): Int
+  max: shop_productvariant_max_fields
+  min: shop_productvariant_min_fields
+  stddev: shop_productvariant_stddev_fields
+  stddev_pop: shop_productvariant_stddev_pop_fields
+  stddev_samp: shop_productvariant_stddev_samp_fields
+  sum: shop_productvariant_sum_fields
+  var_pop: shop_productvariant_var_pop_fields
+  var_samp: shop_productvariant_var_samp_fields
+  variance: shop_productvariant_variance_fields
+}
+
+# order by aggregate values of table "shop_productvariant"
+input shop_productvariant_aggregate_order_by {
+  avg: shop_productvariant_avg_order_by
+  count: order_by
+  max: shop_productvariant_max_order_by
+  min: shop_productvariant_min_order_by
+  stddev: shop_productvariant_stddev_order_by
+  stddev_pop: shop_productvariant_stddev_pop_order_by
+  stddev_samp: shop_productvariant_stddev_samp_order_by
+  sum: shop_productvariant_sum_order_by
+  var_pop: shop_productvariant_var_pop_order_by
+  var_samp: shop_productvariant_var_samp_order_by
+  variance: shop_productvariant_variance_order_by
+}
+
+# input type for inserting array relation for remote table "shop_productvariant"
+input shop_productvariant_arr_rel_insert_input {
+  data: [shop_productvariant_insert_input!]!
+  on_conflict: shop_productvariant_on_conflict
+}
+
+# aggregate avg on columns
+type shop_productvariant_avg_fields {
+  productvariant_id: Float
+  shop_id: Float
+}
+
+# order by avg() on columns of table "shop_productvariant"
+input shop_productvariant_avg_order_by {
+  productvariant_id: order_by
+  shop_id: order_by
+}
+
+# Boolean expression to filter rows from the table "shop_productvariant". All fields are combined with a logical 'AND'.
+input shop_productvariant_bool_exp {
+  _and: [shop_productvariant_bool_exp]
+  _not: shop_productvariant_bool_exp
+  _or: [shop_productvariant_bool_exp]
+  productvariant: productvariants_bool_exp
+  productvariant_id: Int_comparison_exp
+  shop: shops_bool_exp
+  shop_id: Int_comparison_exp
+}
+
+# unique or primary key constraints on table "shop_productvariant"
+enum shop_productvariant_constraint {
+  # unique or primary key constraint
+  shop_productvariant_pkey
+}
+
+# input type for incrementing integer columne in table "shop_productvariant"
+input shop_productvariant_inc_input {
+  productvariant_id: Int
+  shop_id: Int
+}
+
+# input type for inserting data into table "shop_productvariant"
+input shop_productvariant_insert_input {
+  productvariant: productvariants_obj_rel_insert_input
+  productvariant_id: Int
+  shop: shops_obj_rel_insert_input
+  shop_id: Int
+}
+
+# aggregate max on columns
+type shop_productvariant_max_fields {
+  productvariant_id: Int
+  shop_id: Int
+}
+
+# order by max() on columns of table "shop_productvariant"
+input shop_productvariant_max_order_by {
+  productvariant_id: order_by
+  shop_id: order_by
+}
+
+# aggregate min on columns
+type shop_productvariant_min_fields {
+  productvariant_id: Int
+  shop_id: Int
+}
+
+# order by min() on columns of table "shop_productvariant"
+input shop_productvariant_min_order_by {
+  productvariant_id: order_by
+  shop_id: order_by
+}
+
+# response of any mutation on the table "shop_productvariant"
+type shop_productvariant_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [shop_productvariant!]!
+}
+
+# input type for inserting object relation for remote table "shop_productvariant"
+input shop_productvariant_obj_rel_insert_input {
+  data: shop_productvariant_insert_input!
+  on_conflict: shop_productvariant_on_conflict
+}
+
+# on conflict condition type for table "shop_productvariant"
+input shop_productvariant_on_conflict {
+  constraint: shop_productvariant_constraint!
+  update_columns: [shop_productvariant_update_column!]!
+  where: shop_productvariant_bool_exp
+}
+
+# ordering options when selecting data from "shop_productvariant"
+input shop_productvariant_order_by {
+  productvariant: productvariants_order_by
+  productvariant_id: order_by
+  shop: shops_order_by
+  shop_id: order_by
+}
+
+# select columns of table "shop_productvariant"
+enum shop_productvariant_select_column {
+  # column name
+  productvariant_id
+
+  # column name
+  shop_id
+}
+
+# input type for updating data in table "shop_productvariant"
+input shop_productvariant_set_input {
+  productvariant_id: Int
+  shop_id: Int
+}
+
+# aggregate stddev on columns
+type shop_productvariant_stddev_fields {
+  productvariant_id: Float
+  shop_id: Float
+}
+
+# order by stddev() on columns of table "shop_productvariant"
+input shop_productvariant_stddev_order_by {
+  productvariant_id: order_by
+  shop_id: order_by
+}
+
+# aggregate stddev_pop on columns
+type shop_productvariant_stddev_pop_fields {
+  productvariant_id: Float
+  shop_id: Float
+}
+
+# order by stddev_pop() on columns of table "shop_productvariant"
+input shop_productvariant_stddev_pop_order_by {
+  productvariant_id: order_by
+  shop_id: order_by
+}
+
+# aggregate stddev_samp on columns
+type shop_productvariant_stddev_samp_fields {
+  productvariant_id: Float
+  shop_id: Float
+}
+
+# order by stddev_samp() on columns of table "shop_productvariant"
+input shop_productvariant_stddev_samp_order_by {
+  productvariant_id: order_by
+  shop_id: order_by
+}
+
+# aggregate sum on columns
+type shop_productvariant_sum_fields {
+  productvariant_id: Int
+  shop_id: Int
+}
+
+# order by sum() on columns of table "shop_productvariant"
+input shop_productvariant_sum_order_by {
+  productvariant_id: order_by
+  shop_id: order_by
+}
+
+# update columns of table "shop_productvariant"
+enum shop_productvariant_update_column {
+  # column name
+  productvariant_id
+
+  # column name
+  shop_id
+}
+
+# aggregate var_pop on columns
+type shop_productvariant_var_pop_fields {
+  productvariant_id: Float
+  shop_id: Float
+}
+
+# order by var_pop() on columns of table "shop_productvariant"
+input shop_productvariant_var_pop_order_by {
+  productvariant_id: order_by
+  shop_id: order_by
+}
+
+# aggregate var_samp on columns
+type shop_productvariant_var_samp_fields {
+  productvariant_id: Float
+  shop_id: Float
+}
+
+# order by var_samp() on columns of table "shop_productvariant"
+input shop_productvariant_var_samp_order_by {
+  productvariant_id: order_by
+  shop_id: order_by
+}
+
+# aggregate variance on columns
+type shop_productvariant_variance_fields {
+  productvariant_id: Float
+  shop_id: Float
+}
+
+# order by variance() on columns of table "shop_productvariant"
+input shop_productvariant_variance_order_by {
+  productvariant_id: order_by
+  shop_id: order_by
+}
+
+# columns and relationships of "shops"
+type shops {
+  description: String!
+  id: Int!
+  latitude: numeric!
+  longitude: numeric!
+  name: String!
+
+  # An array relationship
+  shop_productvariants(
+    # distinct select on columns
+    distinct_on: [shop_productvariant_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [shop_productvariant_order_by!]
+
+    # filter the rows returned
+    where: shop_productvariant_bool_exp
+  ): [shop_productvariant!]!
+
+  # An aggregated array relationship
+  shop_productvariants_aggregate(
+    # distinct select on columns
+    distinct_on: [shop_productvariant_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [shop_productvariant_order_by!]
+
+    # filter the rows returned
+    where: shop_productvariant_bool_exp
+  ): shop_productvariant_aggregate!
+}
+
+# aggregated selection of "shops"
+type shops_aggregate {
+  aggregate: shops_aggregate_fields
+  nodes: [shops!]!
+}
+
+# aggregate fields of "shops"
+type shops_aggregate_fields {
+  avg: shops_avg_fields
+  count(columns: [shops_select_column!], distinct: Boolean): Int
+  max: shops_max_fields
+  min: shops_min_fields
+  stddev: shops_stddev_fields
+  stddev_pop: shops_stddev_pop_fields
+  stddev_samp: shops_stddev_samp_fields
+  sum: shops_sum_fields
+  var_pop: shops_var_pop_fields
+  var_samp: shops_var_samp_fields
+  variance: shops_variance_fields
+}
+
+# order by aggregate values of table "shops"
+input shops_aggregate_order_by {
+  avg: shops_avg_order_by
+  count: order_by
+  max: shops_max_order_by
+  min: shops_min_order_by
+  stddev: shops_stddev_order_by
+  stddev_pop: shops_stddev_pop_order_by
+  stddev_samp: shops_stddev_samp_order_by
+  sum: shops_sum_order_by
+  var_pop: shops_var_pop_order_by
+  var_samp: shops_var_samp_order_by
+  variance: shops_variance_order_by
+}
+
+# input type for inserting array relation for remote table "shops"
+input shops_arr_rel_insert_input {
+  data: [shops_insert_input!]!
+  on_conflict: shops_on_conflict
+}
+
+# aggregate avg on columns
+type shops_avg_fields {
+  id: Float
+  latitude: Float
+  longitude: Float
+}
+
+# order by avg() on columns of table "shops"
+input shops_avg_order_by {
+  id: order_by
+  latitude: order_by
+  longitude: order_by
+}
+
+# Boolean expression to filter rows from the table "shops". All fields are combined with a logical 'AND'.
+input shops_bool_exp {
+  _and: [shops_bool_exp]
+  _not: shops_bool_exp
+  _or: [shops_bool_exp]
+  description: String_comparison_exp
+  id: Int_comparison_exp
+  latitude: numeric_comparison_exp
+  longitude: numeric_comparison_exp
+  name: String_comparison_exp
+  shop_productvariants: shop_productvariant_bool_exp
+}
+
+# unique or primary key constraints on table "shops"
+enum shops_constraint {
+  # unique or primary key constraint
+  shops_pkey
+}
+
+# input type for incrementing integer columne in table "shops"
+input shops_inc_input {
+  id: Int
+}
+
+# input type for inserting data into table "shops"
+input shops_insert_input {
+  description: String
+  id: Int
+  latitude: numeric
+  longitude: numeric
+  name: String
+  shop_productvariants: shop_productvariant_arr_rel_insert_input
+}
+
+# aggregate max on columns
+type shops_max_fields {
+  description: String
+  id: Int
+  latitude: numeric
+  longitude: numeric
+  name: String
+}
+
+# order by max() on columns of table "shops"
+input shops_max_order_by {
+  description: order_by
+  id: order_by
+  latitude: order_by
+  longitude: order_by
+  name: order_by
+}
+
+# aggregate min on columns
+type shops_min_fields {
+  description: String
+  id: Int
+  latitude: numeric
+  longitude: numeric
+  name: String
+}
+
+# order by min() on columns of table "shops"
+input shops_min_order_by {
+  description: order_by
+  id: order_by
+  latitude: order_by
+  longitude: order_by
+  name: order_by
+}
+
+# response of any mutation on the table "shops"
+type shops_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [shops!]!
+}
+
+# input type for inserting object relation for remote table "shops"
+input shops_obj_rel_insert_input {
+  data: shops_insert_input!
+  on_conflict: shops_on_conflict
+}
+
+# on conflict condition type for table "shops"
+input shops_on_conflict {
+  constraint: shops_constraint!
+  update_columns: [shops_update_column!]!
+  where: shops_bool_exp
+}
+
+# ordering options when selecting data from "shops"
+input shops_order_by {
+  description: order_by
+  id: order_by
+  latitude: order_by
+  longitude: order_by
+  name: order_by
+  shop_productvariants_aggregate: shop_productvariant_aggregate_order_by
+}
+
+# select columns of table "shops"
+enum shops_select_column {
+  # column name
+  description
+
+  # column name
+  id
+
+  # column name
+  latitude
+
+  # column name
+  longitude
+
+  # column name
+  name
+}
+
+# input type for updating data in table "shops"
+input shops_set_input {
+  description: String
+  id: Int
+  latitude: numeric
+  longitude: numeric
+  name: String
+}
+
+# aggregate stddev on columns
+type shops_stddev_fields {
+  id: Float
+  latitude: Float
+  longitude: Float
+}
+
+# order by stddev() on columns of table "shops"
+input shops_stddev_order_by {
+  id: order_by
+  latitude: order_by
+  longitude: order_by
+}
+
+# aggregate stddev_pop on columns
+type shops_stddev_pop_fields {
+  id: Float
+  latitude: Float
+  longitude: Float
+}
+
+# order by stddev_pop() on columns of table "shops"
+input shops_stddev_pop_order_by {
+  id: order_by
+  latitude: order_by
+  longitude: order_by
+}
+
+# aggregate stddev_samp on columns
+type shops_stddev_samp_fields {
+  id: Float
+  latitude: Float
+  longitude: Float
+}
+
+# order by stddev_samp() on columns of table "shops"
+input shops_stddev_samp_order_by {
+  id: order_by
+  latitude: order_by
+  longitude: order_by
+}
+
+# aggregate sum on columns
+type shops_sum_fields {
+  id: Int
+  latitude: numeric
+  longitude: numeric
+}
+
+# order by sum() on columns of table "shops"
+input shops_sum_order_by {
+  id: order_by
+  latitude: order_by
+  longitude: order_by
+}
+
+# update columns of table "shops"
+enum shops_update_column {
+  # column name
+  description
+
+  # column name
+  id
+
+  # column name
+  latitude
+
+  # column name
+  longitude
+
+  # column name
+  name
+}
+
+# aggregate var_pop on columns
+type shops_var_pop_fields {
+  id: Float
+  latitude: Float
+  longitude: Float
+}
+
+# order by var_pop() on columns of table "shops"
+input shops_var_pop_order_by {
+  id: order_by
+  latitude: order_by
+  longitude: order_by
+}
+
+# aggregate var_samp on columns
+type shops_var_samp_fields {
+  id: Float
+  latitude: Float
+  longitude: Float
+}
+
+# order by var_samp() on columns of table "shops"
+input shops_var_samp_order_by {
+  id: order_by
+  latitude: order_by
+  longitude: order_by
+}
+
+# aggregate variance on columns
+type shops_variance_fields {
+  id: Float
+  latitude: Float
+  longitude: Float
+}
+
+# order by variance() on columns of table "shops"
+input shops_variance_order_by {
+  id: order_by
+  latitude: order_by
+  longitude: order_by
+}
+
+# columns and relationships of "sites"
+type sites {
+  description: String
+  id: Int!
+}
+
+# aggregated selection of "sites"
+type sites_aggregate {
+  aggregate: sites_aggregate_fields
+  nodes: [sites!]!
+}
+
+# aggregate fields of "sites"
+type sites_aggregate_fields {
+  avg: sites_avg_fields
+  count(columns: [sites_select_column!], distinct: Boolean): Int
+  max: sites_max_fields
+  min: sites_min_fields
+  stddev: sites_stddev_fields
+  stddev_pop: sites_stddev_pop_fields
+  stddev_samp: sites_stddev_samp_fields
+  sum: sites_sum_fields
+  var_pop: sites_var_pop_fields
+  var_samp: sites_var_samp_fields
+  variance: sites_variance_fields
+}
+
+# order by aggregate values of table "sites"
+input sites_aggregate_order_by {
+  avg: sites_avg_order_by
+  count: order_by
+  max: sites_max_order_by
+  min: sites_min_order_by
+  stddev: sites_stddev_order_by
+  stddev_pop: sites_stddev_pop_order_by
+  stddev_samp: sites_stddev_samp_order_by
+  sum: sites_sum_order_by
+  var_pop: sites_var_pop_order_by
+  var_samp: sites_var_samp_order_by
+  variance: sites_variance_order_by
+}
+
+# input type for inserting array relation for remote table "sites"
+input sites_arr_rel_insert_input {
+  data: [sites_insert_input!]!
+  on_conflict: sites_on_conflict
+}
+
+# aggregate avg on columns
+type sites_avg_fields {
+  id: Float
+}
+
+# order by avg() on columns of table "sites"
+input sites_avg_order_by {
+  id: order_by
+}
+
+# Boolean expression to filter rows from the table "sites". All fields are combined with a logical 'AND'.
+input sites_bool_exp {
+  _and: [sites_bool_exp]
+  _not: sites_bool_exp
+  _or: [sites_bool_exp]
+  description: String_comparison_exp
+  id: Int_comparison_exp
+}
+
+# unique or primary key constraints on table "sites"
+enum sites_constraint {
+  # unique or primary key constraint
+  sites_pkey
+}
+
+# input type for incrementing integer columne in table "sites"
+input sites_inc_input {
+  id: Int
+}
+
+# input type for inserting data into table "sites"
+input sites_insert_input {
+  description: String
+  id: Int
+}
+
+# aggregate max on columns
+type sites_max_fields {
+  description: String
+  id: Int
+}
+
+# order by max() on columns of table "sites"
+input sites_max_order_by {
+  description: order_by
+  id: order_by
+}
+
+# aggregate min on columns
+type sites_min_fields {
+  description: String
+  id: Int
+}
+
+# order by min() on columns of table "sites"
+input sites_min_order_by {
+  description: order_by
+  id: order_by
+}
+
+# response of any mutation on the table "sites"
+type sites_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [sites!]!
+}
+
+# input type for inserting object relation for remote table "sites"
+input sites_obj_rel_insert_input {
+  data: sites_insert_input!
+  on_conflict: sites_on_conflict
+}
+
+# on conflict condition type for table "sites"
+input sites_on_conflict {
+  constraint: sites_constraint!
+  update_columns: [sites_update_column!]!
+  where: sites_bool_exp
+}
+
+# ordering options when selecting data from "sites"
+input sites_order_by {
+  description: order_by
+  id: order_by
+}
+
+# select columns of table "sites"
+enum sites_select_column {
+  # column name
+  description
+
+  # column name
+  id
+}
+
+# input type for updating data in table "sites"
+input sites_set_input {
+  description: String
+  id: Int
+}
+
+# aggregate stddev on columns
+type sites_stddev_fields {
+  id: Float
+}
+
+# order by stddev() on columns of table "sites"
+input sites_stddev_order_by {
+  id: order_by
+}
+
+# aggregate stddev_pop on columns
+type sites_stddev_pop_fields {
+  id: Float
+}
+
+# order by stddev_pop() on columns of table "sites"
+input sites_stddev_pop_order_by {
+  id: order_by
+}
+
+# aggregate stddev_samp on columns
+type sites_stddev_samp_fields {
+  id: Float
+}
+
+# order by stddev_samp() on columns of table "sites"
+input sites_stddev_samp_order_by {
+  id: order_by
+}
+
+# aggregate sum on columns
+type sites_sum_fields {
+  id: Int
+}
+
+# order by sum() on columns of table "sites"
+input sites_sum_order_by {
+  id: order_by
+}
+
+# update columns of table "sites"
+enum sites_update_column {
+  # column name
+  description
+
+  # column name
+  id
+}
+
+# aggregate var_pop on columns
+type sites_var_pop_fields {
+  id: Float
+}
+
+# order by var_pop() on columns of table "sites"
+input sites_var_pop_order_by {
+  id: order_by
+}
+
+# aggregate var_samp on columns
+type sites_var_samp_fields {
+  id: Float
+}
+
+# order by var_samp() on columns of table "sites"
+input sites_var_samp_order_by {
+  id: order_by
+}
+
+# aggregate variance on columns
+type sites_variance_fields {
+  id: Float
+}
+
+# order by variance() on columns of table "sites"
+input sites_variance_order_by {
+  id: order_by
+}
+
+scalar smallint
+
+# expression to compare columns of type smallint. All fields are combined with logical 'AND'.
+input smallint_comparison_exp {
+  _eq: smallint
+  _gt: smallint
+  _gte: smallint
+  _in: [smallint!]
+  _is_null: Boolean
+  _lt: smallint
+  _lte: smallint
+  _neq: smallint
+  _nin: [smallint!]
+}
+
+# expression to compare columns of type String. All fields are combined with logical 'AND'.
+input String_comparison_exp {
+  _eq: String
+  _gt: String
+  _gte: String
+  _ilike: String
+  _in: [String!]
+  _is_null: Boolean
+  _like: String
+  _lt: String
+  _lte: String
+  _neq: String
+  _nilike: String
+  _nin: [String!]
+  _nlike: String
+  _nsimilar: String
+  _similar: String
+}
+
+# subscription root
+type Subscription {
+  # fetch data from the table: "addresses"
+  addresses(
+    # distinct select on columns
+    distinct_on: [addresses_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [addresses_order_by!]
+
+    # filter the rows returned
+    where: addresses_bool_exp
+  ): [addresses!]!
+
+  # fetch aggregated fields from the table: "addresses"
+  addresses_aggregate(
+    # distinct select on columns
+    distinct_on: [addresses_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [addresses_order_by!]
+
+    # filter the rows returned
+    where: addresses_bool_exp
+  ): addresses_aggregate!
+
+  # fetch data from the table: "addresses" using primary key columns
+  addresses_by_pk(user_id: Int!): addresses
+
+  # fetch data from the table: "images"
+  images(
+    # distinct select on columns
+    distinct_on: [images_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [images_order_by!]
+
+    # filter the rows returned
+    where: images_bool_exp
+  ): [images!]!
+
+  # fetch aggregated fields from the table: "images"
+  images_aggregate(
+    # distinct select on columns
+    distinct_on: [images_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [images_order_by!]
+
+    # filter the rows returned
+    where: images_bool_exp
+  ): images_aggregate!
+
+  # fetch data from the table: "images" using primary key columns
+  images_by_pk(id: Int!): images
+
+  # fetch data from the table: "margindefinitions"
+  margindefinitions(
+    # distinct select on columns
+    distinct_on: [margindefinitions_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [margindefinitions_order_by!]
+
+    # filter the rows returned
+    where: margindefinitions_bool_exp
+  ): [margindefinitions!]!
+
+  # fetch aggregated fields from the table: "margindefinitions"
+  margindefinitions_aggregate(
+    # distinct select on columns
+    distinct_on: [margindefinitions_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [margindefinitions_order_by!]
+
+    # filter the rows returned
+    where: margindefinitions_bool_exp
+  ): margindefinitions_aggregate!
+
+  # fetch data from the table: "margindefinitions" using primary key columns
+  margindefinitions_by_pk(role: roles_enum!): margindefinitions
+
+  # fetch data from the table: "pricing_modes"
+  pricing_modes(
+    # distinct select on columns
+    distinct_on: [pricing_modes_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [pricing_modes_order_by!]
+
+    # filter the rows returned
+    where: pricing_modes_bool_exp
+  ): [pricing_modes!]!
+
+  # fetch aggregated fields from the table: "pricing_modes"
+  pricing_modes_aggregate(
+    # distinct select on columns
+    distinct_on: [pricing_modes_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [pricing_modes_order_by!]
+
+    # filter the rows returned
+    where: pricing_modes_bool_exp
+  ): pricing_modes_aggregate!
+
+  # fetch data from the table: "pricing_modes" using primary key columns
+  pricing_modes_by_pk(mode: String!): pricing_modes
+
+  # fetch data from the table: "product_categories"
+  product_categories(
+    # distinct select on columns
+    distinct_on: [product_categories_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [product_categories_order_by!]
+
+    # filter the rows returned
+    where: product_categories_bool_exp
+  ): [product_categories!]!
+
+  # fetch aggregated fields from the table: "product_categories"
+  product_categories_aggregate(
+    # distinct select on columns
+    distinct_on: [product_categories_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [product_categories_order_by!]
+
+    # filter the rows returned
+    where: product_categories_bool_exp
+  ): product_categories_aggregate!
+
+  # fetch data from the table: "product_categories" using primary key columns
+  product_categories_by_pk(id: Int!): product_categories
+
+  # fetch data from the table: "product_states"
+  product_states(
+    # distinct select on columns
+    distinct_on: [product_states_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [product_states_order_by!]
+
+    # filter the rows returned
+    where: product_states_bool_exp
+  ): [product_states!]!
+
+  # fetch aggregated fields from the table: "product_states"
+  product_states_aggregate(
+    # distinct select on columns
+    distinct_on: [product_states_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [product_states_order_by!]
+
+    # filter the rows returned
+    where: product_states_bool_exp
+  ): product_states_aggregate!
+
+  # fetch data from the table: "product_states" using primary key columns
+  product_states_by_pk(state: String!): product_states
+
+  # fetch data from the table: "products"
+  products(
+    # distinct select on columns
+    distinct_on: [products_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [products_order_by!]
+
+    # filter the rows returned
+    where: products_bool_exp
+  ): [products!]!
+
+  # fetch aggregated fields from the table: "products"
+  products_aggregate(
+    # distinct select on columns
+    distinct_on: [products_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [products_order_by!]
+
+    # filter the rows returned
+    where: products_bool_exp
+  ): products_aggregate!
+
+  # fetch data from the table: "products" using primary key columns
+  products_by_pk(id: Int!): products
+
+  # fetch data from the table: "productvariant_states"
+  productvariant_states(
+    # distinct select on columns
+    distinct_on: [productvariant_states_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [productvariant_states_order_by!]
+
+    # filter the rows returned
+    where: productvariant_states_bool_exp
+  ): [productvariant_states!]!
+
+  # fetch aggregated fields from the table: "productvariant_states"
+  productvariant_states_aggregate(
+    # distinct select on columns
+    distinct_on: [productvariant_states_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [productvariant_states_order_by!]
+
+    # filter the rows returned
+    where: productvariant_states_bool_exp
+  ): productvariant_states_aggregate!
+
+  # fetch data from the table: "productvariant_states" using primary key columns
+  productvariant_states_by_pk(state: String!): productvariant_states
+
+  # fetch data from the table: "productvariants"
+  productvariants(
+    # distinct select on columns
+    distinct_on: [productvariants_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [productvariants_order_by!]
+
+    # filter the rows returned
+    where: productvariants_bool_exp
+  ): [productvariants!]!
+
+  # fetch aggregated fields from the table: "productvariants"
+  productvariants_aggregate(
+    # distinct select on columns
+    distinct_on: [productvariants_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [productvariants_order_by!]
+
+    # filter the rows returned
+    where: productvariants_bool_exp
+  ): productvariants_aggregate!
+
+  # fetch data from the table: "productvariants" using primary key columns
+  productvariants_by_pk(id: Int!): productvariants
+
+  # fetch data from the table: "roles"
+  roles(
+    # distinct select on columns
+    distinct_on: [roles_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [roles_order_by!]
+
+    # filter the rows returned
+    where: roles_bool_exp
+  ): [roles!]!
+
+  # fetch aggregated fields from the table: "roles"
+  roles_aggregate(
+    # distinct select on columns
+    distinct_on: [roles_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [roles_order_by!]
+
+    # filter the rows returned
+    where: roles_bool_exp
+  ): roles_aggregate!
+
+  # fetch data from the table: "roles" using primary key columns
+  roles_by_pk(role: String!): roles
+
+  # fetch data from the table: "shop_productvariant"
+  shop_productvariant(
+    # distinct select on columns
+    distinct_on: [shop_productvariant_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [shop_productvariant_order_by!]
+
+    # filter the rows returned
+    where: shop_productvariant_bool_exp
+  ): [shop_productvariant!]!
+
+  # fetch aggregated fields from the table: "shop_productvariant"
+  shop_productvariant_aggregate(
+    # distinct select on columns
+    distinct_on: [shop_productvariant_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [shop_productvariant_order_by!]
+
+    # filter the rows returned
+    where: shop_productvariant_bool_exp
+  ): shop_productvariant_aggregate!
+
+  # fetch data from the table: "shop_productvariant" using primary key columns
+  shop_productvariant_by_pk(productvariant_id: Int!, shop_id: Int!): shop_productvariant
+
+  # fetch data from the table: "shops"
+  shops(
+    # distinct select on columns
+    distinct_on: [shops_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [shops_order_by!]
+
+    # filter the rows returned
+    where: shops_bool_exp
+  ): [shops!]!
+
+  # fetch aggregated fields from the table: "shops"
+  shops_aggregate(
+    # distinct select on columns
+    distinct_on: [shops_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [shops_order_by!]
+
+    # filter the rows returned
+    where: shops_bool_exp
+  ): shops_aggregate!
+
+  # fetch data from the table: "shops" using primary key columns
+  shops_by_pk(id: Int!): shops
+
+  # fetch data from the table: "sites"
+  sites(
+    # distinct select on columns
+    distinct_on: [sites_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [sites_order_by!]
+
+    # filter the rows returned
+    where: sites_bool_exp
+  ): [sites!]!
+
+  # fetch aggregated fields from the table: "sites"
+  sites_aggregate(
+    # distinct select on columns
+    distinct_on: [sites_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [sites_order_by!]
+
+    # filter the rows returned
+    where: sites_bool_exp
+  ): sites_aggregate!
+
+  # fetch data from the table: "sites" using primary key columns
+  sites_by_pk(id: Int!): sites
+
+  # fetch data from the table: "users"
+  users(
+    # distinct select on columns
+    distinct_on: [users_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [users_order_by!]
+
+    # filter the rows returned
+    where: users_bool_exp
+  ): [users!]!
+
+  # fetch aggregated fields from the table: "users"
+  users_aggregate(
+    # distinct select on columns
+    distinct_on: [users_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [users_order_by!]
+
+    # filter the rows returned
+    where: users_bool_exp
+  ): users_aggregate!
+
+  # fetch data from the table: "users" using primary key columns
+  users_by_pk(id: Int!): users
+
+  # fetch data from the table: "vat"
+  vat(
+    # distinct select on columns
+    distinct_on: [vat_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [vat_order_by!]
+
+    # filter the rows returned
+    where: vat_bool_exp
+  ): [vat!]!
+
+  # fetch aggregated fields from the table: "vat"
+  vat_aggregate(
+    # distinct select on columns
+    distinct_on: [vat_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [vat_order_by!]
+
+    # filter the rows returned
+    where: vat_bool_exp
+  ): vat_aggregate!
+
+  # fetch data from the table: "vat" using primary key columns
+  vat_by_pk(type: vat_types_enum!): vat
+
+  # fetch data from the table: "vat_types"
+  vat_types(
+    # distinct select on columns
+    distinct_on: [vat_types_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [vat_types_order_by!]
+
+    # filter the rows returned
+    where: vat_types_bool_exp
+  ): [vat_types!]!
+
+  # fetch aggregated fields from the table: "vat_types"
+  vat_types_aggregate(
+    # distinct select on columns
+    distinct_on: [vat_types_select_column!]
+
+    # limit the number of rows returned
+    limit: Int
+
+    # skip the first n rows. Use only with order_by
+    offset: Int
+
+    # sort the rows by one or more columns
+    order_by: [vat_types_order_by!]
+
+    # filter the rows returned
+    where: vat_types_bool_exp
+  ): vat_types_aggregate!
+
+  # fetch data from the table: "vat_types" using primary key columns
+  vat_types_by_pk(type: String!): vat_types
+}
+
+scalar timestamptz
+
+# expression to compare columns of type timestamptz. All fields are combined with logical 'AND'.
+input timestamptz_comparison_exp {
+  _eq: timestamptz
+  _gt: timestamptz
+  _gte: timestamptz
+  _in: [timestamptz!]
+  _is_null: Boolean
+  _lt: timestamptz
+  _lte: timestamptz
+  _neq: timestamptz
+  _nin: [timestamptz!]
+}
+
+# columns and relationships of "users"
+type users {
+  description: String
+  email: String!
+  first_name: String
+  id: Int!
+
+  # An object relationship
+  image: images
+  image_id: Int
+  is_active: Boolean!
+  is_staff: Boolean!
+  is_superuser: Boolean!
+  last_name: String
+}
+
+# aggregated selection of "users"
+type users_aggregate {
+  aggregate: users_aggregate_fields
+  nodes: [users!]!
+}
+
+# aggregate fields of "users"
+type users_aggregate_fields {
+  avg: users_avg_fields
+  count(columns: [users_select_column!], distinct: Boolean): Int
+  max: users_max_fields
+  min: users_min_fields
+  stddev: users_stddev_fields
+  stddev_pop: users_stddev_pop_fields
+  stddev_samp: users_stddev_samp_fields
+  sum: users_sum_fields
+  var_pop: users_var_pop_fields
+  var_samp: users_var_samp_fields
+  variance: users_variance_fields
+}
+
+# order by aggregate values of table "users"
+input users_aggregate_order_by {
+  avg: users_avg_order_by
+  count: order_by
+  max: users_max_order_by
+  min: users_min_order_by
+  stddev: users_stddev_order_by
+  stddev_pop: users_stddev_pop_order_by
+  stddev_samp: users_stddev_samp_order_by
+  sum: users_sum_order_by
+  var_pop: users_var_pop_order_by
+  var_samp: users_var_samp_order_by
+  variance: users_variance_order_by
+}
+
+# input type for inserting array relation for remote table "users"
+input users_arr_rel_insert_input {
+  data: [users_insert_input!]!
+  on_conflict: users_on_conflict
+}
+
+# aggregate avg on columns
+type users_avg_fields {
+  id: Float
+  image_id: Float
+}
+
+# order by avg() on columns of table "users"
+input users_avg_order_by {
+  id: order_by
+  image_id: order_by
+}
+
+# Boolean expression to filter rows from the table "users". All fields are combined with a logical 'AND'.
+input users_bool_exp {
+  _and: [users_bool_exp]
+  _not: users_bool_exp
+  _or: [users_bool_exp]
+  description: String_comparison_exp
+  email: String_comparison_exp
+  first_name: String_comparison_exp
+  id: Int_comparison_exp
+  image: images_bool_exp
+  image_id: Int_comparison_exp
+  is_active: Boolean_comparison_exp
+  is_staff: Boolean_comparison_exp
+  is_superuser: Boolean_comparison_exp
+  last_name: String_comparison_exp
+}
+
+# unique or primary key constraints on table "users"
+enum users_constraint {
+  # unique or primary key constraint
+  users_email_key
+
+  # unique or primary key constraint
+  users_pkey
+}
+
+# input type for incrementing integer columne in table "users"
+input users_inc_input {
+  id: Int
+  image_id: Int
+}
+
+# input type for inserting data into table "users"
+input users_insert_input {
+  description: String
+  email: String
+  first_name: String
+  id: Int
+  image: images_obj_rel_insert_input
+  image_id: Int
+  is_active: Boolean
+  is_staff: Boolean
+  is_superuser: Boolean
+  last_name: String
+}
+
+# aggregate max on columns
+type users_max_fields {
+  description: String
+  email: String
+  first_name: String
+  id: Int
+  image_id: Int
+  last_name: String
+}
+
+# order by max() on columns of table "users"
+input users_max_order_by {
+  description: order_by
+  email: order_by
+  first_name: order_by
+  id: order_by
+  image_id: order_by
+  last_name: order_by
+}
+
+# aggregate min on columns
+type users_min_fields {
+  description: String
+  email: String
+  first_name: String
+  id: Int
+  image_id: Int
+  last_name: String
+}
+
+# order by min() on columns of table "users"
+input users_min_order_by {
+  description: order_by
+  email: order_by
+  first_name: order_by
+  id: order_by
+  image_id: order_by
+  last_name: order_by
+}
+
+# response of any mutation on the table "users"
+type users_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [users!]!
+}
+
+# input type for inserting object relation for remote table "users"
+input users_obj_rel_insert_input {
+  data: users_insert_input!
+  on_conflict: users_on_conflict
+}
+
+# on conflict condition type for table "users"
+input users_on_conflict {
+  constraint: users_constraint!
+  update_columns: [users_update_column!]!
+  where: users_bool_exp
+}
+
+# ordering options when selecting data from "users"
+input users_order_by {
+  description: order_by
+  email: order_by
+  first_name: order_by
+  id: order_by
+  image: images_order_by
+  image_id: order_by
+  is_active: order_by
+  is_staff: order_by
+  is_superuser: order_by
+  last_name: order_by
+}
+
+# select columns of table "users"
+enum users_select_column {
+  # column name
+  description
+
+  # column name
+  email
+
+  # column name
+  first_name
+
+  # column name
+  id
+
+  # column name
+  image_id
+
+  # column name
+  is_active
+
+  # column name
+  is_staff
+
+  # column name
+  is_superuser
+
+  # column name
+  last_name
+}
+
+# input type for updating data in table "users"
+input users_set_input {
+  description: String
+  email: String
+  first_name: String
+  id: Int
+  image_id: Int
+  is_active: Boolean
+  is_staff: Boolean
+  is_superuser: Boolean
+  last_name: String
+}
+
+# aggregate stddev on columns
+type users_stddev_fields {
+  id: Float
+  image_id: Float
+}
+
+# order by stddev() on columns of table "users"
+input users_stddev_order_by {
+  id: order_by
+  image_id: order_by
+}
+
+# aggregate stddev_pop on columns
+type users_stddev_pop_fields {
+  id: Float
+  image_id: Float
+}
+
+# order by stddev_pop() on columns of table "users"
+input users_stddev_pop_order_by {
+  id: order_by
+  image_id: order_by
+}
+
+# aggregate stddev_samp on columns
+type users_stddev_samp_fields {
+  id: Float
+  image_id: Float
+}
+
+# order by stddev_samp() on columns of table "users"
+input users_stddev_samp_order_by {
+  id: order_by
+  image_id: order_by
+}
+
+# aggregate sum on columns
+type users_sum_fields {
+  id: Int
+  image_id: Int
+}
+
+# order by sum() on columns of table "users"
+input users_sum_order_by {
+  id: order_by
+  image_id: order_by
+}
+
+# update columns of table "users"
+enum users_update_column {
+  # column name
+  description
+
+  # column name
+  email
+
+  # column name
+  first_name
+
+  # column name
+  id
+
+  # column name
+  image_id
+
+  # column name
+  is_active
+
+  # column name
+  is_staff
+
+  # column name
+  is_superuser
+
+  # column name
+  last_name
+}
+
+# aggregate var_pop on columns
+type users_var_pop_fields {
+  id: Float
+  image_id: Float
+}
+
+# order by var_pop() on columns of table "users"
+input users_var_pop_order_by {
+  id: order_by
+  image_id: order_by
+}
+
+# aggregate var_samp on columns
+type users_var_samp_fields {
+  id: Float
+  image_id: Float
+}
+
+# order by var_samp() on columns of table "users"
+input users_var_samp_order_by {
+  id: order_by
+  image_id: order_by
+}
+
+# aggregate variance on columns
+type users_variance_fields {
+  id: Float
+  image_id: Float
+}
+
+# order by variance() on columns of table "users"
+input users_variance_order_by {
+  id: order_by
+  image_id: order_by
+}
+
+# columns and relationships of "vat"
+type vat {
+  rate: Float!
+  type: vat_types_enum!
+}
+
+# aggregated selection of "vat"
+type vat_aggregate {
+  aggregate: vat_aggregate_fields
+  nodes: [vat!]!
+}
+
+# aggregate fields of "vat"
+type vat_aggregate_fields {
+  avg: vat_avg_fields
+  count(columns: [vat_select_column!], distinct: Boolean): Int
+  max: vat_max_fields
+  min: vat_min_fields
+  stddev: vat_stddev_fields
+  stddev_pop: vat_stddev_pop_fields
+  stddev_samp: vat_stddev_samp_fields
+  sum: vat_sum_fields
+  var_pop: vat_var_pop_fields
+  var_samp: vat_var_samp_fields
+  variance: vat_variance_fields
+}
+
+# order by aggregate values of table "vat"
+input vat_aggregate_order_by {
+  avg: vat_avg_order_by
+  count: order_by
+  max: vat_max_order_by
+  min: vat_min_order_by
+  stddev: vat_stddev_order_by
+  stddev_pop: vat_stddev_pop_order_by
+  stddev_samp: vat_stddev_samp_order_by
+  sum: vat_sum_order_by
+  var_pop: vat_var_pop_order_by
+  var_samp: vat_var_samp_order_by
+  variance: vat_variance_order_by
+}
+
+# input type for inserting array relation for remote table "vat"
+input vat_arr_rel_insert_input {
+  data: [vat_insert_input!]!
+  on_conflict: vat_on_conflict
+}
+
+# aggregate avg on columns
+type vat_avg_fields {
+  rate: Float
+}
+
+# order by avg() on columns of table "vat"
+input vat_avg_order_by {
+  rate: order_by
+}
+
+# Boolean expression to filter rows from the table "vat". All fields are combined with a logical 'AND'.
+input vat_bool_exp {
+  _and: [vat_bool_exp]
+  _not: vat_bool_exp
+  _or: [vat_bool_exp]
+  rate: Float_comparison_exp
+  type: vat_types_enum_comparison_exp
+}
+
+# unique or primary key constraints on table "vat"
+enum vat_constraint {
+  # unique or primary key constraint
+  vat_pkey
+}
+
+# input type for inserting data into table "vat"
+input vat_insert_input {
+  rate: Float
+  type: vat_types_enum
+}
+
+# aggregate max on columns
+type vat_max_fields {
+  rate: Float
+}
+
+# order by max() on columns of table "vat"
+input vat_max_order_by {
+  rate: order_by
+}
+
+# aggregate min on columns
+type vat_min_fields {
+  rate: Float
+}
+
+# order by min() on columns of table "vat"
+input vat_min_order_by {
+  rate: order_by
+}
+
+# response of any mutation on the table "vat"
+type vat_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [vat!]!
+}
+
+# input type for inserting object relation for remote table "vat"
+input vat_obj_rel_insert_input {
+  data: vat_insert_input!
+  on_conflict: vat_on_conflict
+}
+
+# on conflict condition type for table "vat"
+input vat_on_conflict {
+  constraint: vat_constraint!
+  update_columns: [vat_update_column!]!
+  where: vat_bool_exp
+}
+
+# ordering options when selecting data from "vat"
+input vat_order_by {
+  rate: order_by
+  type: order_by
+}
+
+# select columns of table "vat"
+enum vat_select_column {
+  # column name
+  rate
+
+  # column name
+  type
+}
+
+# input type for updating data in table "vat"
+input vat_set_input {
+  rate: Float
+  type: vat_types_enum
+}
+
+# aggregate stddev on columns
+type vat_stddev_fields {
+  rate: Float
+}
+
+# order by stddev() on columns of table "vat"
+input vat_stddev_order_by {
+  rate: order_by
+}
+
+# aggregate stddev_pop on columns
+type vat_stddev_pop_fields {
+  rate: Float
+}
+
+# order by stddev_pop() on columns of table "vat"
+input vat_stddev_pop_order_by {
+  rate: order_by
+}
+
+# aggregate stddev_samp on columns
+type vat_stddev_samp_fields {
+  rate: Float
+}
+
+# order by stddev_samp() on columns of table "vat"
+input vat_stddev_samp_order_by {
+  rate: order_by
+}
+
+# aggregate sum on columns
+type vat_sum_fields {
+  rate: Float
+}
+
+# order by sum() on columns of table "vat"
+input vat_sum_order_by {
+  rate: order_by
+}
+
+# columns and relationships of "vat_types"
+type vat_types {
+  type: String!
+}
+
+# aggregated selection of "vat_types"
+type vat_types_aggregate {
+  aggregate: vat_types_aggregate_fields
+  nodes: [vat_types!]!
+}
+
+# aggregate fields of "vat_types"
+type vat_types_aggregate_fields {
+  count(columns: [vat_types_select_column!], distinct: Boolean): Int
+  max: vat_types_max_fields
+  min: vat_types_min_fields
+}
+
+# order by aggregate values of table "vat_types"
+input vat_types_aggregate_order_by {
+  count: order_by
+  max: vat_types_max_order_by
+  min: vat_types_min_order_by
+}
+
+# input type for inserting array relation for remote table "vat_types"
+input vat_types_arr_rel_insert_input {
+  data: [vat_types_insert_input!]!
+  on_conflict: vat_types_on_conflict
+}
+
+# Boolean expression to filter rows from the table "vat_types". All fields are combined with a logical 'AND'.
+input vat_types_bool_exp {
+  _and: [vat_types_bool_exp]
+  _not: vat_types_bool_exp
+  _or: [vat_types_bool_exp]
+  type: String_comparison_exp
+}
+
+# unique or primary key constraints on table "vat_types"
+enum vat_types_constraint {
+  # unique or primary key constraint
+  vat_types_pkey
+}
+
+enum vat_types_enum {
+  PRODUCTS
+  SERVICES
+  SPECIAL
+}
+
+# expression to compare columns of type vat_types_enum. All fields are combined with logical 'AND'.
+input vat_types_enum_comparison_exp {
+  _eq: vat_types_enum
+  _in: [vat_types_enum!]
+  _is_null: Boolean
+  _neq: vat_types_enum
+  _nin: [vat_types_enum!]
+}
+
+# input type for inserting data into table "vat_types"
+input vat_types_insert_input {
+  type: String
+}
+
+# aggregate max on columns
+type vat_types_max_fields {
+  type: String
+}
+
+# order by max() on columns of table "vat_types"
+input vat_types_max_order_by {
+  type: order_by
+}
+
+# aggregate min on columns
+type vat_types_min_fields {
+  type: String
+}
+
+# order by min() on columns of table "vat_types"
+input vat_types_min_order_by {
+  type: order_by
+}
+
+# response of any mutation on the table "vat_types"
+type vat_types_mutation_response {
+  # number of affected rows by the mutation
+  affected_rows: Int!
+
+  # data of the affected rows by the mutation
+  returning: [vat_types!]!
+}
+
+# input type for inserting object relation for remote table "vat_types"
+input vat_types_obj_rel_insert_input {
+  data: vat_types_insert_input!
+  on_conflict: vat_types_on_conflict
+}
+
+# on conflict condition type for table "vat_types"
+input vat_types_on_conflict {
+  constraint: vat_types_constraint!
+  update_columns: [vat_types_update_column!]!
+  where: vat_types_bool_exp
+}
+
+# ordering options when selecting data from "vat_types"
+input vat_types_order_by {
+  type: order_by
+}
+
+# select columns of table "vat_types"
+enum vat_types_select_column {
+  # column name
+  type
+}
+
+# input type for updating data in table "vat_types"
+input vat_types_set_input {
+  type: String
+}
+
+# update columns of table "vat_types"
+enum vat_types_update_column {
+  # column name
+  type
+}
+
+# update columns of table "vat"
+enum vat_update_column {
+  # column name
+  rate
+
+  # column name
+  type
+}
+
+# aggregate var_pop on columns
+type vat_var_pop_fields {
+  rate: Float
+}
+
+# order by var_pop() on columns of table "vat"
+input vat_var_pop_order_by {
+  rate: order_by
+}
+
+# aggregate var_samp on columns
+type vat_var_samp_fields {
+  rate: Float
+}
+
+# order by var_samp() on columns of table "vat"
+input vat_var_samp_order_by {
+  rate: order_by
+}
+
+# aggregate variance on columns
+type vat_variance_fields {
+  rate: Float
+}
+
+# order by variance() on columns of table "vat"
+input vat_variance_order_by {
+  rate: order_by
+}
+

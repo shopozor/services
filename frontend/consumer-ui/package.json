@@ -15,6 +15,7 @@
     "nuxt": "^2.11.0",
     "nuxt-i18n": "^6.4.1",
     "tailwindcss": "^1.1.4",
+    "url-join": "^4.0.1",
     "vue-client-only": "^2.0.0",
     "vue-loading-overlay": "^3.2.0",
     "vue2-leaflet": "^2.4.1"
