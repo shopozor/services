@@ -4,6 +4,10 @@ query Shops {
     latitude
     longitude
     id
+    image {
+      alt
+      url
+    }
     name
   }
 }
