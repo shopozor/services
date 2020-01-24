@@ -1,10 +1,9 @@
 <template>
   <div class="flex bg-white justify-between w-full h-64 flex-row md:w-64 md:h-full md:flex-col">
-    <!-- TODO: we need to put both the url (background-image) and the alt (title) here! -->
     <div
       class="h-auto w-48 md:h-64 md:w-full bg-cover"
-      style="background-image: url('https://www.bulledeculture.ch/event_img/5d5fb1d4cf93d699209171.jpg')"
-      title="Shop description"
+      :style="{ backgroundImage: 'url(' + assetUrl(shop.image.url) + ')' }"
+      :title="shop.image.alt"
     />
     <div class="p-4">
       <div class="mb-8">
@@ -16,7 +15,7 @@
         </p>
       </div>
       <div class="flex items-center">
-        <img class="mr-4" :src="~assets/img/marker.png" alt="GPS coordinates">
+        <img class="mr-4" :src="markerImgUrl" alt="GPS coordinates">
         <div class="text-sm italic">
           {{ gpsCoordinates }}
         </div>
@@ -26,12 +25,20 @@
 </template>
 
 <script>
+import AssetUrl from '~/mixins/AssetUrl'
 import ValidatedObjectProp from '~/mixins/ValidatedObjectProp'
+import MarkerImg from '~/assets/img/marker.png'
 
 export default {
+  data () {
+    return {
+      markerImgUrl: MarkerImg
+    }
+  },
   mixins: [
+    AssetUrl,
     ValidatedObjectProp('shop',
-      ['latitude', 'longitude', 'name', 'description'])//, 'image']) + address + id
+      ['description', 'image', 'latitude', 'longitude', 'name'])// + address + id
   ],
   computed: {
     gpsCoordinates () {
@@ -41,4 +48,5 @@ export default {
 }
 </script>
 
+<!-- TODO: is this import really necessary???? -->
 <style src="~/assets/css/tailwind.css"></style>
