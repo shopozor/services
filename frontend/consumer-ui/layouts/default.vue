@@ -1,10 +1,6 @@
 <template>
   <div>
-    <client-only>
-      <modal name="hello-world">
-        hello, world
-      </modal>
-    </client-only>
+    <preview-modal />
     <shopozor-header />
     <nuxt />
     <shopozor-footer />
@@ -12,19 +8,19 @@
 </template>
 
 <script>
-import ClientOnly from 'vue-client-only'
+import PreviewModal from '~/components/PreviewModal'
 import ShopozorHeader from '~/components/Header'
 import ShopozorFooter from '~/components/Footer'
 
 export default {
   components: {
-    ClientOnly,
+    PreviewModal,
     ShopozorHeader,
     ShopozorFooter
   },
   mounted () {
     this.$nextTick(function () {
-      this.$modal.show('hello-world')
+      this.$modal.show('preview-modal')
     })
   }
 }
