@@ -1,4 +1,3 @@
-
 #! /bin/sh
 
 TIMEOUT=60
@@ -19,3 +18,4 @@ mc mb ${MINIO_ALIAS}/people
 mc policy set public ${MINIO_ALIAS}/people
 mc mb ${MINIO_ALIAS}/shops
 mc policy set public ${MINIO_ALIAS}/shops
+
