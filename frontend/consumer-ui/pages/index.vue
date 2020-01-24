@@ -27,6 +27,3 @@ export default {
   layout: 'default'
 }
 </script>
-
-<!-- TODO: is this import really necessary??? -->
-<style src="~/assets/css/tailwind.css"></style>

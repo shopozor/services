@@ -11,6 +11,7 @@ import viewports from '~shared/storybook/viewports'
 import typeDefs from './schema/schema.graphql'
 import mocks from './schema/mocks'
 
+import "~assets/css/tailwind.css"
 
 Vue.use(VueI18n)
 

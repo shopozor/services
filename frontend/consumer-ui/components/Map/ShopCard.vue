@@ -30,16 +30,17 @@ import ValidatedObjectProp from '~/mixins/ValidatedObjectProp'
 import MarkerImg from '~/assets/img/marker.png'
 
 export default {
-  data () {
-    return {
-      markerImgUrl: MarkerImg
-    }
-  },
   mixins: [
     AssetUrl,
     ValidatedObjectProp('shop',
       ['description', 'image', 'latitude', 'longitude', 'name'])// + address + id
   ],
+  data () {
+    return {
+      // without this hack, storybook doesn't seem to understand how to get the marker image from the assets location!
+      markerImgUrl: MarkerImg
+    }
+  },
   computed: {
     gpsCoordinates () {
       return `${this.shop.latitude}, ${this.shop.longitude}`
@@ -47,6 +48,3 @@ export default {
   }
 }
 </script>
-
-<!-- TODO: is this import really necessary???? -->
-<style src="~/assets/css/tailwind.css"></style>
