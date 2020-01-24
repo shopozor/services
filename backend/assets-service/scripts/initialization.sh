@@ -13,5 +13,9 @@ do
     [ "$?" == "0" ] && break || sleep 1
 done
 
+mc mb ${MINIO_ALIAS}/food
+mc policy set public ${MINIO_ALIAS}/food
 mc mb ${MINIO_ALIAS}/people
 mc policy set public ${MINIO_ALIAS}/people
+mc mb ${MINIO_ALIAS}/shops
+mc policy set public ${MINIO_ALIAS}/shops
