@@ -8,9 +8,10 @@
 </template>
 
 <script>
-import Map from '~/components/Map/Map'
 import Budzons from '~/components/ProjectDetails/Budzons'
+import Map from '~/components/Map/Map'
 import ProjectOverview from '~/components/ProjectDetails/ProjectOverview'
+
 export default {
   components: {
     Budzons,
