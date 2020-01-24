@@ -79,7 +79,6 @@ export default {
 }
 </script>
 
-<style src="~/assets/css/tailwind.css"></style>
 <style src="vue-loading-overlay/dist/vue-loading.css"></style>
 <style src="leaflet/dist/leaflet.css"></style>
 <style src="leaflet-gesture-handling/dist/leaflet-gesture-handling.css"></style>

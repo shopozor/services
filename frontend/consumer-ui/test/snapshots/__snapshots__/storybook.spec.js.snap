@@ -92,8 +92,8 @@ exports[`Storyshots Map Shop description 1`] = `
   >
     <div
       class="h-auto w-48 md:h-64 md:w-full bg-cover"
-      style="background-image: url(https://www.bulledeculture.ch/event_img/5d5fb1d4cf93d699209171.jpg);"
-      title="Shop description"
+      style="background-image: url(http://assets-service/shops/shop_01.jpg);"
+      title="Ex dicta neque quae doloribus quam."
     />
      
     <div
@@ -126,7 +126,7 @@ Consequuntur reprehenderit sed et error corrupti. Distinctio aut accusantium non
         <img
           alt="GPS coordinates"
           class="mr-4"
-          src="../../assets/img/marker.png"
+          src="[object Object]"
         />
          
         <div

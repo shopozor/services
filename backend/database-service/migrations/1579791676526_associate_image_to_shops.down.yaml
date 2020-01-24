@@ -1,0 +1,13 @@
+- args:
+    relationship: image
+    table:
+      name: shops
+      schema: public
+  type: drop_relationship
+- args:
+    sql: "\n          alter table \"public\".\"shops\" drop constraint \"shops_image_id_fkey\"\n
+      \     "
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."shops" DROP COLUMN "image_id";
+  type: run_sql

@@ -68,7 +68,7 @@ def generate_variant(variant_name, output_folder):
     factory = FakeDataFactory(
         variant['#max(products/producer)'], variant['#max(producers/shop)'], variant['#max(variants/product)'])
 
-    # TODO: the categories will not be fixtures; we should be able to get them from the database or somehow?
+    # TODO: the categories might not be fixtures; we should be able to get them from the database or somehow?
     nb_category_images = len(FakeDataFactory.category_types)
     category_images = factory.create_images(
         'categories', 1, nb_category_images)
@@ -125,7 +125,7 @@ def generate_variant(variant_name, output_folder):
     addresses = factory.create_addresses(producers, managers, rex, softozor)
     shopozor.update(addresses)
 
-    shops = factory.create_shops(variant['#shops'])
+    shops = factory.create_shops(shop_images, variant['#shops'])
     shopozor.update(shops)
 
     categories = factory.create_categories(category_images)

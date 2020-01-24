@@ -10,11 +10,11 @@ import os
 import urllib.parse
 
 
-def image_item(user, images):
+def image_item(object, images):
     image = [{
         'alt': item['alt'],
         'url': item['url']
-    } for item in images if item['id'] == user['image_id']]
+    } for item in images if item['id'] == object['image_id']]
     return image[0]
 
 
@@ -34,11 +34,12 @@ def site_item(site):
     }
 
 
-def shop_item(shop):
+def shop_item(shop, image):
     return {
         'id': shop['id'],
         'name': shop['name'],
         'description': shop['description'],
+        'image': image,
         'latitude': shop['latitude'],
         'longitude': shop['longitude']
     }

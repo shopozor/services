@@ -75,11 +75,13 @@ class ShopListsGenerator(ResponsesGenerator):
         super().__init__(fixtures_dir, os.path.join(
             output_dir, 'Consumer'))
         self.__SHOPS_FIXTURE = helpers.get_shopozor_fixture(self._INPUT_DIR)
+        self.__IMAGES_FIXTURE = helpers.get_images_fixture(self._INPUT_DIR)
 
     def _produce_data(self):
+        images = [item for item in self.__IMAGES_FIXTURE['images']]
         return {
             'data': {
-                'shops': [helpers.shop_item(shop) for shop in self.__SHOPS_FIXTURE['shops']]
+                'shops': [helpers.shop_item(shop, helpers.image_item(shop, images)) for shop in self.__SHOPS_FIXTURE['shops']]
             }
         }
 
