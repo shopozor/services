@@ -1,5 +1,4 @@
 <template>
-  <!-- TODO: define flex here with spacing instead of putting a py-4 all over the place; make sure the map sticks to the banner though -->
   <div>
     <shops-map :center="center" :zoom="zoom" />
     <project-overview class="py-4" />
