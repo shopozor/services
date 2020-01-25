@@ -1,0 +1,9 @@
+- args:
+    sql: ALTER TABLE "public"."users" DROP COLUMN "is_superuser" CASCADE
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."users" DROP COLUMN "is_active" CASCADE
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."users" DROP COLUMN "is_staff" CASCADE
+  type: run_sql

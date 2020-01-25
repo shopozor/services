@@ -61,9 +61,6 @@ class FakeDataFactory:
         return {
             'id': id,
             'email': self.__fake.email(),
-            'is_active': self.__fake.is_active(),
-            'is_staff': False,
-            'is_superuser': False,
             'image_id': self.__get_img(user_images, id)
         }
 
@@ -80,9 +77,6 @@ class FakeDataFactory:
         return {
             'id': id,
             'email': self.create_email(first_name, last_name),
-            'is_active': True,
-            'is_staff': True,
-            'is_superuser': False,
             'first_name': first_name,
             'last_name': last_name,
             'description': self.__fake.description(),
@@ -102,9 +96,6 @@ class FakeDataFactory:
         return {
             'id': id,
             'email': self.create_email(first_name, last_name),
-            'is_active': True,
-            'is_staff': True,
-            'is_superuser': False,
             'first_name': first_name,
             'last_name': last_name,
             'description': self.__fake.description(),
@@ -124,9 +115,6 @@ class FakeDataFactory:
         return {
             'id': id,
             'email': self.create_email(first_name, last_name),
-            'is_active': True,
-            'is_staff': True,
-            'is_superuser': False,
             'first_name': first_name,
             'last_name': last_name,
             'description': self.__fake.description(),
@@ -146,9 +134,6 @@ class FakeDataFactory:
         return {
             'id': id,
             'email': self.create_email(first_name, last_name),
-            'is_active': True,
-            'is_staff': True,
-            'is_superuser': True,
             'first_name': first_name,
             'last_name': last_name,
             'description': self.__fake.description(),

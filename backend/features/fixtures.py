@@ -48,10 +48,7 @@ def stellar_snapshot(context):
 @fixture
 def unknown(context):
     user_data = {
-        "email": "new_consumer@shopozor.ch",
-        "is_active": False,
-        "is_staff": False,
-        "is_superuser": False
+        "email": "new_consumer@shopozor.ch"
     }
     return user_data
 
