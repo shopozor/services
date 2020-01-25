@@ -2,7 +2,8 @@
   "author": "info@softozor.ch",
   "dependencies": {
     "admin-ui": "file:frontend\\admin-ui",
-    "consumer-ui": "file:frontend\\consumer-ui"
+    "consumer-ui": "file:frontend\\consumer-ui",
+    "vue-js-modal": "^1.3.31"
   },
   "description": "Shopozor services",
   "devDependencies": {

@@ -41,7 +41,8 @@ module.exports = {
   */
   plugins: [
     { src: '~plugins/errorHandling.js' },
-    { src: '~plugins/leaflet.js', mode: 'client' }
+    { src: '~plugins/leaflet.js', mode: 'client' },
+    { src: '~plugins/modalDialog.js', mode: 'client' }
   ],
 
   buildModules: [
