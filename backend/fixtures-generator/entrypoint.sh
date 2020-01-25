@@ -20,7 +20,8 @@ python ${GENERATE_JSON_FIXTURES} -o ${DATABASE_FIXTURES_FOLDER} --fixtures-set $
 FIXTURES_MIGRATIONS_FOLDER=${DATABASE_FIXTURES_FOLDER}/migrations
 if [ ! -d ${FIXTURES_MIGRATIONS_FOLDER} ]; then mkdir -p ${FIXTURES_MIGRATIONS_FOLDER}; fi
 python ${JSON_TO_SQL} -i ${DATABASE_FIXTURES_FOLDER}/Images.json -n shopozor-images -o ${FIXTURES_MIGRATIONS_FOLDER}
-for persona in consumers producers managers rex softozor; do
+# The order is important because we reset the auto-incrementation of the users' ids in each sql
+for persona in softozor rex managers producers consumers; do
     python ${JSON_TO_SQL} -i ${DATABASE_FIXTURES_FOLDER}/Users/$persona.json -n shopozor-$persona -o ${FIXTURES_MIGRATIONS_FOLDER}
 done
 python ${JSON_TO_SQL} -i ${DATABASE_FIXTURES_FOLDER}/Shopozor.json -n shopozor-data -o ${FIXTURES_MIGRATIONS_FOLDER}
