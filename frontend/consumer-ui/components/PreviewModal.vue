@@ -10,7 +10,7 @@
       Bienvenue sur l'avant-première de la Budzonnerie ! <span class="font-bold">Cette application est en construction.</span>
       Nous vous encourageons à la visiter régulièrement et nous faire un retour sur ce que vous en pensez au fur et à mesure de son développement. Si vous
       voyez par exemple des bugs, ou si vous pensez que votre expérience utilisateur pourrait être améliorée, n'hésitez pas à nous contacter. Nous adapterons
-      notre <a href="https://github.com/shopozor/services/milestones?direction=asc&sort=due_date&state=open" class="underline" target="_blank">roadmap</a> avec vos inputs.
+      notre <a href="https://github.com/shopozor/services/milestones?direction=asc&sort=due_date&state=open" target="_blank">roadmap</a> avec vos inputs.
     </p>
     <p class="p-4">
       Les informations sur la Budzonnerie qui sont présentées sur la page d'accueil sont réelles. Au contraire, les données sur les Budzonneries, leurs Produits et
