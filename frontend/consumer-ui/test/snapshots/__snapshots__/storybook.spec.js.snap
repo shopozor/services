@@ -26,18 +26,18 @@ exports[`Storyshots Budzons Person details 1`] = `
       src="http://assets-service/people/face_001.jpg"
     />
      
-    <div
-      class="text-center md:text-justify"
-    >
+    <div>
       <h3
-        class="text-lg font-bold"
+        class="text-lg font-bold text-center md:text-justify"
       >
         
       Nathalie Droz
     
       </h3>
        
-      <span>
+      <span
+        class="text-justify"
+      >
         Quisquam similique impedit occaecati amet hic. Nostrum laboriosam quibusdam eum dolorem. Laboriosam debitis reprehenderit delectus deleniti minima.
       </span>
     </div>
@@ -217,7 +217,6 @@ exports[`Storyshots Preview modal Modal content 1`] = `
     voyez par exemple des bugs, ou si vous pensez que votre expérience utilisateur pourrait être améliorée, n'hésitez pas à nous contacter. Nous adapterons
     notre 
       <a
-        class="underline"
         href="https://github.com/shopozor/services/milestones?direction=asc&sort=due_date&state=open"
         target="_blank"
       >
@@ -392,14 +391,14 @@ exports[`Storyshots Shops page layout Header 1`] = `
         class="hidden md:w-auto md:flex md:flex-row-reverse md:justify-start"
       >
         <a
-          class="mr-4 font-hairline border-b"
+          class="header"
           href="/"
         >
           Rejoindre les producteurs
         </a>
          
         <a
-          class="mr-4 font-hairline border-b"
+          class="header"
           href="/"
         >
           Ouvrir une Budzonnerie

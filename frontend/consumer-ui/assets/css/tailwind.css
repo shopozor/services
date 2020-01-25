@@ -11,3 +11,9 @@
 .overview-title {
   @apply font-extrabold text-3xl text-center;
 }
+a {
+  @apply underline;
+}
+a.header {
+  @apply mr-4 font-hairline border-b no-underline;
+}
