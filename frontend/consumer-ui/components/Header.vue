@@ -14,8 +14,11 @@
         <a href="/" class="header">Ouvrir une Budzonnerie</a>
       </div>
       <div class="w-auto flex flex-col md:flex-row md:justify-between md:items-baseline">
-        <div class="font-extrabold xs:text-2xl sm:text-4xl md:text-5xl lg:text-6xl">
-          La Budzonnerie
+        <div class="flex flex-col">
+          <div class="font-extrabold xs:text-2xl sm:text-4xl md:text-5xl lg:text-6xl">
+            La Budzonnerie
+          </div>
+          <span class="font-bold md:text-2xl">Juste d'ici.</span>
         </div>
         <div>
           <button
