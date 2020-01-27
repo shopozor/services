@@ -1,18 +1,15 @@
 <template>
   <div>
-    <client-only>
-      <loading class="z-999" :active="loadingMapData" :can-cancel="true" :is-full-page="false" :color="spinnerColor" />
-      <l-map class="w-full h-3/4" :zoom="zoom" :center="center" :options="options" @click="clearDescription">
-        <shop-card v-if="shop" :shop="shop" class="absolute left-0 bottom-0 z-999" />
-        <l-tile-layer :url="tilesUrl" />
-        <shop-marker v-for="shop in shops" :key="shop.id" :shop="shop" @display-description="displayDescription" />
-      </l-map>
-    </client-only>
+    <loading class="z-999" :active="loadingMapData" :can-cancel="true" :is-full-page="false" :color="spinnerColor" />
+    <l-map class="w-full h-3/4" :zoom="zoom" :center="center" :options="options" @click="clearDescription">
+      <shop-card v-if="shop" :shop="shop" class="absolute left-0 bottom-0 z-999" />
+      <l-tile-layer :url="tilesUrl" />
+      <shop-marker v-for="shop in shops" :key="shop.id" :shop="shop" @display-description="displayDescription" />
+    </l-map>
   </div>
 </template>
 
 <script>
-import ClientOnly from 'vue-client-only'
 import Loading from 'vue-loading-overlay'
 import ShopCard from '~/components/Map/ShopCard'
 import ShopMarker from '~/components/Map/ShopMarker'
@@ -27,7 +24,6 @@ export default {
   components: {
     ShopCard,
     ShopMarker,
-    ClientOnly,
     Loading
   },
   props: {
