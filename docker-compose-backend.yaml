@@ -24,6 +24,7 @@ services:
       MINIO_URL: ${MINIO_URL:-http://minio:9000}
     depends_on:
       - minio
+    restart: "always"
     volumes:
       - ./backend/assets-service:/app
     entrypoint: /app/scripts/initialization.sh
