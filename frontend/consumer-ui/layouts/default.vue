@@ -22,7 +22,6 @@ export default {
         PreviewModal,
         {},
         {
-          // height: '80%'
           scrollable: true
         }
       )
