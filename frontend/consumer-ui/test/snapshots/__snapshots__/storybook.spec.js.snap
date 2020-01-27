@@ -26,18 +26,18 @@ exports[`Storyshots Budzons Person details 1`] = `
       src="http://assets-service/people/face_001.jpg"
     />
      
-    <div
-      class="text-center md:text-justify"
-    >
+    <div>
       <h3
-        class="text-lg font-bold"
+        class="text-lg font-bold text-center md:text-justify"
       >
         
       Nathalie Droz
     
       </h3>
        
-      <span>
+      <span
+        class="text-justify"
+      >
         Quisquam similique impedit occaecati amet hic. Nostrum laboriosam quibusdam eum dolorem. Laboriosam debitis reprehenderit delectus deleniti minima.
       </span>
     </div>
@@ -1033,14 +1033,14 @@ exports[`Storyshots Shops page layout Header 1`] = `
         class="hidden md:w-auto md:flex md:flex-row-reverse md:justify-start"
       >
         <a
-          class="mr-4 font-hairline border-b"
+          class="header"
           href="/"
         >
           Rejoindre les producteurs
         </a>
          
         <a
-          class="mr-4 font-hairline border-b"
+          class="header"
           href="/"
         >
           Ouvrir une Budzonnerie
@@ -1051,11 +1051,21 @@ exports[`Storyshots Shops page layout Header 1`] = `
         class="w-auto flex flex-col md:flex-row md:justify-between md:items-baseline"
       >
         <div
-          class="font-extrabold xs:text-2xl sm:text-4xl md:text-5xl lg:text-6xl"
+          class="flex flex-col"
         >
-          
-        La Budzonnerie
-      
+          <div
+            class="font-extrabold xs:text-2xl sm:text-4xl md:text-5xl lg:text-6xl"
+          >
+            
+          La Budzonnerie
+        
+          </div>
+           
+          <span
+            class="font-bold md:text-2xl"
+          >
+            Juste d'ici.
+          </span>
         </div>
          
         <div>

@@ -10,14 +10,17 @@
     </div>
     <div class="flex flex-col justify-between flex-grow text-white">
       <div class="hidden md:w-auto md:flex md:flex-row-reverse md:justify-start">
-        <a href="/" class="mr-4 font-hairline border-b">Rejoindre les producteurs</a>
-        <a href="/" class="mr-4 font-hairline border-b">Ouvrir une Budzonnerie</a>
+        <a href="/" class="header">Rejoindre les producteurs</a>
+        <a href="/" class="header">Ouvrir une Budzonnerie</a>
       </div>
       <div class="w-auto flex flex-col md:flex-row md:justify-between md:items-baseline">
-        <div class="font-extrabold xs:text-2xl sm:text-4xl md:text-5xl lg:text-6xl">
-          La Budzonnerie
+        <div class="flex flex-col">
+          <div class="font-extrabold xs:text-2xl sm:text-4xl md:text-5xl lg:text-6xl">
+            La Budzonnerie
+          </div>
+          <span class="font-bold md:text-2xl">Juste d'ici.</span>
         </div>
-        <div class="">
+        <div>
           <button
             class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-orange-800 hover:bg-white mt-4 uppercase"
             @click="$emit('login')"
@@ -42,9 +45,6 @@ export default {
   computed: {
     budziStyle () {
       return `fill:${this.budziFill};fill-opacity:1;stroke:#000000;stroke-width:0;stroke-miterlimit:4;stroke-dasharray:none;stroke-opacity:1`
-    },
-    burgerStyle () {
-      return `fill:${this.burgerFill};`
     }
   }
 }
