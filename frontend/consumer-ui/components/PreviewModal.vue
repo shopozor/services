@@ -14,7 +14,7 @@
     </p>
     <p class="p-4">
       Les informations sur la Budzonnerie qui sont présentées sur la page d'accueil sont réelles. Au contraire, les données sur les Budzonneries, leurs Produits et
-      Producteurs sont complètement inventées pour le moment. Avec le temps, nous remplacerons petit à petit ces données de démonstration avec celles correspondant
+      Producteurs sont complètement factices pour le moment. Avec le temps, nous remplacerons petit à petit ces données de démonstration avec celles correspondant
       à l'avancement de notre projet sur le terrain.
     </p>
   </div>
