@@ -81,6 +81,8 @@ Useful documentation on how to work with helm can be found here:
 * [helm quickstart guide](https://helm.sh/docs/intro/quickstart/)
 * [helmfile](https://github.com/roboll/helmfile)
 * [dry k8s with helm](https://blog.mimacom.com/dry-kubernetes-with-helm/)
+* [microservices deployment with helm and skaffold](https://github.com/GoogleCloudPlatform/microservices-demo/blob/master/skaffold.yaml)
+* [example deployment with helm and skaffold](https://github.com/cmcornejocrespo/auvik-helm-skaffold/blob/master/skaffold.yaml)
 
 ### Common third-party packages
 
