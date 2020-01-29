@@ -14,9 +14,6 @@ Fonctionnalité: Incognito visite un Shop
 
   Contexte: L'utilisateur est Incognito
 
-    # Vérifier qu'il n'y a pas de token dans le local storage
-    # et que le bouton "S'identifier" est bien affiché quelque part
-
     Etant donné un utilisateur non identifié
 
   Scénario: Incognito choisit un Shop
