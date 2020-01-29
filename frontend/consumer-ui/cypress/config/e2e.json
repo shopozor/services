@@ -4,7 +4,7 @@
     "timeDeltaInMs": 10,
     "timeoutInMs": 1000
   },
-  "fixturesFolder": "cypress/fixtures",
+  "fixturesFolder": "../../shared/fixtures/graphql/responses",
   "ignoreTestFiles": [
     "*.js",
     "*.gif",

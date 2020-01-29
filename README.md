@@ -270,6 +270,11 @@ make --directory frontend dev-test.admin-e2e
 make --directory frontend dev-test.consumer-e2e
 ```
 
+To run the Cypress UI in order to debug the e2e tests, you might want to run
+```
+lerna run cypress:open --scope consumer-ui --stream -- --env configFile=e2e
+```
+
 ## Troubleshooting
 
 ### The database is not reset

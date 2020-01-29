@@ -1,6 +1,6 @@
 <template>
   <div class="border-solid border-4 border-black h-full w-full overflow-auto">
-    <div class="absolute top-0 left-0 text-black font-extrabold m-2 cursor-pointer" @click="onClose">
+    <div id="close-preview" class="absolute top-0 left-0 text-black font-extrabold m-2 cursor-pointer" @click="onClose">
       &#10008;
     </div>
     <h1 class="font-extrabold text-4xl text-center">
