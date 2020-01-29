@@ -75,6 +75,11 @@ Under linux, install minikube. Under Windows, you can enable kubernetes in Docke
 
 You will want to [install helm](https://helm.sh/docs/intro/install/) too, e.g. with [chocolatey](https://chocolatey.org/packages/kubernetes-helm) under Windows. You will also want to install the kubernetes dashboard, following [this advice](https://collabnix.com/kubernetes-dashboard-on-docker-desktop-for-windows-2-0-0-3-in-2-minutes/) and [this documentation](https://github.com/kubernetes/dashboard).
 
+Useful documentation on how to work with helm can be found here:
+
+* [create your first helm chart](https://docs.bitnami.com/kubernetes/how-to/create-your-first-helm-chart/)
+* [helm quickstart guide](https://helm.sh/docs/intro/quickstart/)
+
 ### Common third-party packages
 
 In order to play with the assets, you will probably need the [minio client](https://docs.min.io/docs/minio-client-quickstart-guide.html). Under Windows 10,
