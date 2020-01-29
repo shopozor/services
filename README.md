@@ -79,6 +79,8 @@ Useful documentation on how to work with helm can be found here:
 
 * [create your first helm chart](https://docs.bitnami.com/kubernetes/how-to/create-your-first-helm-chart/)
 * [helm quickstart guide](https://helm.sh/docs/intro/quickstart/)
+* [helmfile](https://github.com/roboll/helmfile)
+* [dry k8s with helm](https://blog.mimacom.com/dry-kubernetes-with-helm/)
 
 ### Common third-party packages
 
