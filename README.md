@@ -75,16 +75,6 @@ Under linux, install minikube. Under Windows, you can enable kubernetes in Docke
 
 You will want to [install helm](https://helm.sh/docs/intro/install/) too, e.g. with [chocolatey](https://chocolatey.org/packages/kubernetes-helm) under Windows. You will also want to install the kubernetes dashboard, following [this advice](https://collabnix.com/kubernetes-dashboard-on-docker-desktop-for-windows-2-0-0-3-in-2-minutes/) and [this documentation](https://github.com/kubernetes/dashboard).
 
-Useful documentation on how to work with helm can be found here:
-
-* [create your first helm chart](https://docs.bitnami.com/kubernetes/how-to/create-your-first-helm-chart/)
-* [helm quickstart guide](https://helm.sh/docs/intro/quickstart/)
-* [helmfile](https://github.com/roboll/helmfile)
-* [dry k8s with helm](https://blog.mimacom.com/dry-kubernetes-with-helm/)
-* [microservices deployment with helm and skaffold](https://github.com/GoogleCloudPlatform/microservices-demo/blob/master/skaffold.yaml)
-* [example deployment with helm and skaffold](https://github.com/cmcornejocrespo/auvik-helm-skaffold/blob/master/skaffold.yaml)
-* [draft vs skaffold vs garden](https://codefresh.io/howtos/local-k8s-draft-skaffold-garden/)
-
 ### Common third-party packages
 
 In order to play with the assets, you will probably need the [minio client](https://docs.min.io/docs/minio-client-quickstart-guide.html). Under Windows 10,
@@ -345,3 +335,21 @@ which outputs for example
            return 'pending';
          });
 ```
+
+## CI / CD
+
+Useful documentation on how to work with helm can be found here:
+
+* [create your first helm chart](https://docs.bitnami.com/kubernetes/how-to/create-your-first-helm-chart/)
+* [helm quickstart guide](https://helm.sh/docs/intro/quickstart/)
+* [helmfile](https://github.com/roboll/helmfile)
+* [dry k8s with helm](https://blog.mimacom.com/dry-kubernetes-with-helm/)
+* [microservices deployment with helm and skaffold](https://github.com/GoogleCloudPlatform/microservices-demo/blob/master/skaffold.yaml)
+* [example deployment with helm and skaffold](https://github.com/cmcornejocrespo/auvik-helm-skaffold/blob/master/skaffold.yaml)
+* [draft vs skaffold vs garden](https://codefresh.io/howtos/local-k8s-draft-skaffold-garden/)
+* [monorepo cicd helm k8s](https://www.infracloud.io/monorepo-ci-cd-helm-kubernetes/)
+* [gitlab monorepo pipelines](https://aarongorka.com/blog/gitlab-monorepo-pipelines/)
+
+In essence, our CI/CD process amounts to (see [microsoft documentation](https://docs.microsoft.com/en-us/azure/architecture/microservices/ci-cd-kubernetes))
+
+![overall ci / cd process](doc/img/cicd.png)
