@@ -1,0 +1,12 @@
+apiVersion: skaffold/v2alpha2
+kind: Config
+deploy:
+  helm:
+    releases:
+      - name: minio
+        chartPath: stable/minio
+        remote: true
+        namespace: default
+    flags:
+      upgrade:
+        - --install

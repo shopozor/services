@@ -73,7 +73,14 @@ Under linux, install minikube. Under Windows, you can enable kubernetes in Docke
 
 ![k8s settings in docker desktop](doc/img/enable_k8s.png)
 
-You will want to [install helm](https://helm.sh/docs/intro/install/) too, e.g. with [chocolatey](https://chocolatey.org/packages/kubernetes-helm) under Windows. You will also want to install the kubernetes dashboard, following [this advice](https://collabnix.com/kubernetes-dashboard-on-docker-desktop-for-windows-2-0-0-3-in-2-minutes/) and [this documentation](https://github.com/kubernetes/dashboard).
+You will want to
+
+* [install helm](https://helm.sh/docs/intro/install/) too, e.g. with [chocolatey](https://chocolatey.org/packages/kubernetes-helm) under Windows. You will also want to install the kubernetes dashboard, following [this advice](https://collabnix.com/kubernetes-dashboard-on-docker-desktop-for-windows-2-0-0-3-in-2-minutes/) and [this documentation](https://github.com/kubernetes/dashboard)
+* [install skaffold](https://skaffold.dev/docs/install/)
+* [activate the helm charts repo](https://github.com/helm/charts#how-do-i-enable-the-stable-repository-for-helm-3)
+```
+helm repo add stable https://kubernetes-charts.storage.googleapis.com
+```
 
 ### Common third-party packages
 
