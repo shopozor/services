@@ -48,12 +48,4 @@ application:
           jaeger: false
     enableSubDomains:
       - jelastic.env.binder.AddDomains[cp]:
-          domains: chartmuseum-jx
-      - jelastic.env.binder.AddDomains[cp]:
-          domains: deck-jx
-      - jelastic.env.binder.AddDomains[cp]:
-          domains: hook-jx
-      - jelastic.env.binder.AddDomains[cp]:
-          domains: nexus-jx
-      - jelastic.env.binder.AddDomains[cp]:
-          domains: tide-jx
+          domains: staging
