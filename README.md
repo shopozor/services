@@ -75,11 +75,31 @@ Under linux, install minikube. Under Windows, you can enable kubernetes in Docke
 
 You will want to
 
-* [install helm](https://helm.sh/docs/intro/install/) too, e.g. with [chocolatey](https://chocolatey.org/packages/kubernetes-helm) under Windows. You will also want to install the kubernetes dashboard, following [this advice](https://collabnix.com/kubernetes-dashboard-on-docker-desktop-for-windows-2-0-0-3-in-2-minutes/) and [this documentation](https://github.com/kubernetes/dashboard)
+* [install helm](https://helm.sh/docs/intro/install/) too, e.g. with [chocolatey](https://chocolatey.org/packages/kubernetes-helm) under Windows.
+* install the kubernetes dashboard, following [this advice](https://collabnix.com/kubernetes-dashboard-on-docker-desktop-for-windows-2-0-0-3-in-2-minutes/) and [this documentation](https://github.com/kubernetes/dashboard)
 * [install skaffold](https://skaffold.dev/docs/install/)
 * [activate the helm charts repo](https://github.com/helm/charts#how-do-i-enable-the-stable-repository-for-helm-3)
 ```
 helm repo add stable https://kubernetes-charts.storage.googleapis.com
+helm repo add bitnami https://charts.bitnami.com/bitnami
+```
+* [install squash](https://squash.solo.io/overview/) in order to be able to debug your k8s app
+
+#### Kubernetes dashboard
+
+Once installed, you access the k8s dashboard as follows:
+
+1. run
+```
+kubectl proxy
+``
+2. using your favorite browser, navigate to
+
+http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+
+3. on that address, you will need to provide a token; you find it in the following way (under Windows with default kubernetes installation through the docker for desktop):
+```
+kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep default-token | awk '{print $1}')
 ```
 
 ### Common third-party packages

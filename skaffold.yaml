@@ -1,12 +1,71 @@
 apiVersion: skaffold/v2alpha2
 kind: Config
+
 deploy:
   helm:
     releases:
       - name: minio
-        chartPath: stable/minio
+        chartPath: bitnami/minio
         remote: true
         namespace: default
+        values:
+        overrides:
+          fullnameOverride: minio
+          mode: standalone
+          clusterDomain: cluster.local
+          persistence:
+            enabled: false
+            size: 10Gi
+          disableWebUI: false
     flags:
       upgrade:
         - --install
+  kubectl:
+    manifests:
+      - backend/assets-service/k8s/*
+
+profiles:
+  - name: staging
+    deploy:
+      helm:
+        releases:
+          - name: minio
+            chartPath: bitnami/minio
+            remote: true
+            namespace: staging
+            values:
+            overrides:
+              fullnameOverride: minio
+              mode: distributed
+              # clusterDomain: cluster.local
+              persistence:
+                enabled: true
+                storageClass: jelastic-dynamic-volume
+                size: 10Gi
+              disableWebUI: false
+        flags:
+          upgrade:
+            - --install
+      kubectl:
+        manifests:
+          - backend/assets-service/k8s/*
+  - name: production
+    deploy:
+      helm:
+        releases:
+          - name: minio
+            chartPath: bitnami/minio
+            remote: true
+            namespace: production
+            values:
+            overrides:
+              fullnameOverride: minio
+              mode: distributed
+              persistence:
+                enabled: true
+                storageClass: jelastic-dynamic-volume
+                size: 10Gi
+              disableWebUI: true
+        flags:
+          upgrade:
+            - --install

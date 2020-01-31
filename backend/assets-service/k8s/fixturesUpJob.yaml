@@ -1,0 +1,42 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: assets-fixtures-up
+spec:
+  template:
+    spec:
+      containers:
+      - name: assets-fixtures-up
+        image: bitnami/minio-client
+        env:
+          - name: MINIO_SERVER_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                # this is minio.fullname or fullnameOverride
+                name: minio
+                key: access-key
+          - name: MINIO_SERVER_SECRET_KEY
+            valueFrom:
+              secretKeyRef:
+                # this is minio.fullname or fullnameOverride
+                name: minio
+                key: secret-key
+          - name: MINIO_SERVER_HOST
+            # this is minio.fullname or fullnameOverride
+            value: minio
+          - name: MINIO_SERVER_PORT_NUMBER
+            value: "9000"
+          - name: MINIO_ALIAS
+            # the default configuration is such that the alias is minio (cf. https://github.com/bitnami/bitnami-docker-minio-client/blob/master/2020/debian-10/rootfs/libminioclient.sh)
+            value: minio
+        # see https://github.com/bitnami/bitnami-docker-minio-client#how-to-use-this-image for more details!
+        command:
+          - /bin/sh
+          - -c
+          - |
+            mc config host add ${MINIO_ALIAS} http://${MINIO_SERVER_HOST}:${MINIO_SERVER_PORT_NUMBER} ${MINIO_SERVER_ACCESS_KEY} ${MINIO_SERVER_SECRET_KEY}
+            for bucket in food people shops ; do
+              mc mb ${MINIO_ALIAS}/$bucket
+              mc policy set public ${MINIO_ALIAS}/$bucket
+            done
+      restartPolicy: Never
