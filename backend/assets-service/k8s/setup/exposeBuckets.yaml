@@ -3,6 +3,7 @@ kind: Job
 metadata:
   name: expose-assets-buckets
 spec:
+  ttlSecondsAfterFinished: 30
   template:
     spec:
       containers:
@@ -39,4 +40,4 @@ spec:
               mc mb ${MINIO_ALIAS}/$bucket
               mc policy set public ${MINIO_ALIAS}/$bucket
             done
-      restartPolicy: OnFailure
+      restartPolicy: Never

@@ -11,14 +11,13 @@ build:
     push: false
 
 # TODO: for dev purposes, we need all services served on NodePort
-# TODO: use dev namespace
 deploy:
   helm:
     releases:
       - name: minio
         chartPath: bitnami/minio
         remote: true
-        namespace: default
+        namespace: dev
         values:
         overrides:
           fullnameOverride: minio
@@ -36,8 +35,8 @@ deploy:
       - backend/assets-service/k8s/setup/*
       - backend/assets-service/k8s/testing/*
     flags:
-      apply:
-        - --namespace=default
+      global:
+        - --namespace=dev
 
 profiles:
   - name: staging

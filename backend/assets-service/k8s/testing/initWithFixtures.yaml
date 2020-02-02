@@ -3,6 +3,7 @@ kind: Job
 metadata:
   name: initialize-assets-fixtures
 spec:
+  ttlSecondsAfterFinished: 30
   template:
     spec:
       containers:
@@ -39,4 +40,4 @@ spec:
                 mc cp $f ${MINIO_ALIAS}/$category/$(basename $f)
               done
             done
-      restartPolicy: OnFailure
+      restartPolicy: Never
