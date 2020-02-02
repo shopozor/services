@@ -1,8 +1,6 @@
-import { storiesOf } from '@storybook/vue'
+import { storiesOf } from "@storybook/vue";
+import TestComp from "./TestComponent.vue";
 
-storiesOf('First story', module)
-  .add('Test', () => {
-    return {
-      template: '<h1>Petit test</h1>'
-    }
-  })
+storiesOf("Buttons", module).add("MyButton", () => ({
+  render: h => h(TestComp)
+}));
