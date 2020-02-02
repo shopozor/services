@@ -1,6 +1,17 @@
 apiVersion: skaffold/v2alpha2
 kind: Config
 
+build:
+  artifacts:
+    - image: shopozor/assets-fixtures
+      context: .
+      docker:
+        dockerfile: ./backend/assets-service/Dockerfile
+  local:
+    push: false
+
+# TODO: for dev purposes, we need all services served on NodePort
+# TODO: use dev namespace
 deploy:
   helm:
     releases:
@@ -22,7 +33,11 @@ deploy:
         - --install
   kubectl:
     manifests:
-      - backend/assets-service/k8s/*
+      - backend/assets-service/k8s/setup/*
+      - backend/assets-service/k8s/fixtures/*
+    flags:
+      apply:
+        - --namespace=default
 
 profiles:
   - name: staging
@@ -48,7 +63,11 @@ profiles:
             - --install
       kubectl:
         manifests:
-          - backend/assets-service/k8s/*
+          - backend/assets-service/k8s/setup/*
+          - backend/assets-service/k8s/fixtures/*
+        flags:
+          apply:
+            - --namespace=staging
   - name: production
     deploy:
       helm:
@@ -69,3 +88,9 @@ profiles:
         flags:
           upgrade:
             - --install
+      kubectl:
+        manifests:
+          - backend/assets-service/k8s/setup/*
+        flags:
+          apply:
+            - --namespace=production
