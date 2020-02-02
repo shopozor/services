@@ -28,6 +28,10 @@ deploy:
           disableWebUI: false
           service:
             type: NodePort
+          accessKey:
+            password: minio
+          secretKey:
+            password: minio123
     flags:
       upgrade:
         - --install
@@ -71,6 +75,7 @@ profiles:
     deploy:
       helm:
         releases:
+          # TODO: use https://github.com/bitnami/charts/blob/master/bitnami/minio/values-production.yaml
           - name: minio
             chartPath: bitnami/minio
             remote: true
