@@ -85,6 +85,11 @@ helm repo add bitnami https://charts.bitnami.com/bitnami
 ```
 * [install squash](https://squash.solo.io/overview/) in order to be able to debug your k8s app
 
+Install the `dev` namespace on your local k8s cluster like this:
+```
+kubectl create namespace dev
+```
+
 #### Kubernetes dashboard
 
 Once installed, you access the k8s dashboard as follows:
