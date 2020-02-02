@@ -34,7 +34,7 @@ deploy:
   kubectl:
     manifests:
       - backend/assets-service/k8s/setup/*
-      - backend/assets-service/k8s/fixtures/*
+      - backend/assets-service/k8s/testing/*
     flags:
       apply:
         - --namespace=default
@@ -64,7 +64,7 @@ profiles:
       kubectl:
         manifests:
           - backend/assets-service/k8s/setup/*
-          - backend/assets-service/k8s/fixtures/*
+          - backend/assets-service/k8s/testing/*
         flags:
           apply:
             - --namespace=staging
