@@ -10,7 +10,6 @@ build:
   local:
     push: false
 
-# TODO: for dev purposes, we need all services served on NodePort
 deploy:
   helm:
     releases:
@@ -27,6 +26,8 @@ deploy:
             enabled: false
             size: 10Gi
           disableWebUI: false
+          service:
+            type: NodePort
     flags:
       upgrade:
         - --install
@@ -51,7 +52,6 @@ profiles:
             overrides:
               fullnameOverride: minio
               mode: distributed
-              # clusterDomain: cluster.local
               persistence:
                 enabled: true
                 storageClass: jelastic-dynamic-volume
@@ -65,7 +65,7 @@ profiles:
           - backend/assets-service/k8s/setup/*
           - backend/assets-service/k8s/testing/*
         flags:
-          apply:
+          global:
             - --namespace=staging
   - name: production
     deploy:
@@ -91,5 +91,5 @@ profiles:
         manifests:
           - backend/assets-service/k8s/setup/*
         flags:
-          apply:
+          global:
             - --namespace=production
