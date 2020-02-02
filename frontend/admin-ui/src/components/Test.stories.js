@@ -1,6 +1,6 @@
 import { storiesOf } from "@storybook/vue";
 import TestComp from "./TestComponent.vue";
 
-storiesOf("Buttons", module).add("MyButton", () => ({
+storiesOf("Tests", module).add("IconButtons", () => ({
   render: h => h(TestComp)
 }));
