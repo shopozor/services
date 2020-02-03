@@ -66,6 +66,8 @@ profiles:
                 storageClass: jelastic-dynamic-volume
                 size: 10Gi
               disableWebUI: false
+          # TODO: for hasura, look at this: https://v2.helm.sh/docs/chart_template_guide/#creating-a-subchart
+          # https://stackoverflow.com/questions/55748639/set-value-in-dependency-of-helm-chart
         flags:
           upgrade:
             - --install
