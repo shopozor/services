@@ -29,12 +29,19 @@ spec:
             value: "9000"
           - name: MINIO_ALIAS
             value: minio
+          - name: TIMEOUT
+            value: "60"
         command:
           - /bin/sh
           - -c
           - |
-            mc config host add ${MINIO_ALIAS} http://${MINIO_SERVER_HOST}:${MINIO_SERVER_PORT_NUMBER} ${MINIO_SERVER_ACCESS_KEY} ${MINIO_SERVER_SECRET_KEY}
-            [ "$?" -ne "0" ] && exit 1
+            echo "waiting $TIMEOUT seconds for ${MINIO_SERVER_PORT_NUMBER} to be ready on host ${MINIO_SERVER_HOST}"
+            for i in `seq 1 $TIMEOUT`; do
+              echo "waiting for minio service"
+              mc config host add ${MINIO_ALIAS} http://${MINIO_SERVER_HOST}:${MINIO_SERVER_PORT_NUMBER} ${MINIO_SERVER_ACCESS_KEY} ${MINIO_SERVER_SECRET_KEY}
+              [ "$?" -eq "0" ] && break || sleep 1
+            done
+
             for category in `ls`; do
               for f in `ls $category/*` ; do
                 mc cp $f ${MINIO_ALIAS}/$category/$(basename $f)
