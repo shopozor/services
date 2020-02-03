@@ -26,8 +26,6 @@ deploy:
             enabled: false
             size: 10Gi
           disableWebUI: false
-          service:
-            type: NodePort
           accessKey:
             password: minio
           secretKey:
@@ -42,6 +40,13 @@ deploy:
     flags:
       global:
         - --namespace=dev
+
+portForward:
+  - resourceType: service
+    resourceName: minio
+    namespace: dev
+    port: 9000
+    localPort: 9000
 
 profiles:
   - name: staging
