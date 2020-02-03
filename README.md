@@ -75,7 +75,10 @@ Under linux, install minikube. Under Windows, you can enable kubernetes in Docke
 
 You will want to
 
-* [install helm](https://helm.sh/docs/intro/install/) too, e.g. with [chocolatey](https://chocolatey.org/packages/kubernetes-helm) under Windows.
+* [install helm](https://helm.sh/docs/intro/install/) too, e.g. with [chocolatey](https://chocolatey.org/packages/kubernetes-helm) under Windows; currently, when used with [skaffold](http://skaffold.dev), it needs version 2, as skaffold is not yet fully compatible with helm v3. When using helm v2, you need to install tiller on the k8s cluster, which you do like this:
+```
+helm init
+```
 * install the kubernetes dashboard, following [this advice](https://collabnix.com/kubernetes-dashboard-on-docker-desktop-for-windows-2-0-0-3-in-2-minutes/) and [this documentation](https://github.com/kubernetes/dashboard)
 * [install skaffold](https://skaffold.dev/docs/install/)
 * [activate the helm charts repo](https://github.com/helm/charts#how-do-i-enable-the-stable-repository-for-helm-3)
@@ -88,6 +91,17 @@ helm repo add bitnami https://charts.bitnami.com/bitnami
 Install the `dev` namespace on your local k8s cluster like this:
 ```
 kubectl create namespace dev
+```
+
+### Skaffold
+
+Start developping with skaffold like this:
+```
+skaffold dev
+```
+You can enable port-forwarding like this:
+```
+skaffold dev --port-forward
 ```
 
 #### Kubernetes dashboard
