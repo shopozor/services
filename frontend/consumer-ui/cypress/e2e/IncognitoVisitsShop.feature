@@ -19,8 +19,7 @@ Fonctionnalité: Incognito visite un Shop
   Scénario: Incognito choisit un Shop
 
     Etant donné qu'Incognito se trouve sur la page d'accueil
-    # Here we need to check that the Shops represented on the map correspond to those stored in the DB
-    # We also need to make a snapshot image test here to ensure that we really see a map
+    # We need to make a snapshot image test here to ensure that we really see a map
     Alors il voit la carte des Shops
     Lorsqu'il clique sur un Shop
     # Here we need to check that the selected Shop has the properties stored in the DB
