@@ -830,6 +830,7 @@ exports[`Storyshots Preview modal Modal content 1`] = `
   >
     <div
       class="absolute top-0 left-0 text-black font-extrabold m-2 cursor-pointer"
+      id="close-preview"
     >
       
     ✘
@@ -1071,6 +1072,7 @@ exports[`Storyshots Shops page layout Header 1`] = `
         <div>
           <button
             class="inline-block text-sm px-4 py-2 leading-none border rounded text-white border-white hover:border-transparent hover:text-orange-800 hover:bg-white mt-4 uppercase"
+            name="login"
           >
             
           S'identifier
