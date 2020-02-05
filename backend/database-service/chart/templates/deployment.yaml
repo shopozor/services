@@ -44,10 +44,12 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.postgres.secretName }}
+                  # TODO: put this key in the values!
                   key: postgresql-password
             - name: POSTGRES_HOST
               value: {{ .Values.postgres.hostname }}
             - name: HASURA_GRAPHQL_DATABASE_URL
+              # TODO: put the port in the postgres.port value!
               value: postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):5432/$(POSTGRES_DATABASE)
           ports:
             - name: http
