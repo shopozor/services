@@ -9,11 +9,6 @@ build:
       context: .
       docker:
         dockerfile: ./backend/assets-service/Dockerfile
-    # - image: shopozor/graphql-engine
-    #   context: backend/database-service
-    #   docker:
-    #     dockerfile: Dockerfile
-    #     target: app
 
 deploy:
   helm:
@@ -34,6 +29,19 @@ deploy:
             password: minio
           secretKey:
             password: minio123
+      - name: postgres
+        chartPath: bitnami/postgresql-ha
+        remote: true
+        namespace: dev
+        overrides:
+          fullnameOverride: postgres
+          postgresql:
+            username: postgres
+            database: postgres
+          persistence:
+            mountPath: /opt/bitnami/postgresql/data
+          volumePermissions:
+            enabled: true
       - name: hasura
         # TODO: 1. the migrations can applied with a separate Job basing on the hasura image containing the client!
         #       2. we need an init container that waits until postgres is up (https://blog.giantswarm.io/wait-for-it-using-readiness-probes-for-service-dependencies-in-kubernetes/)
