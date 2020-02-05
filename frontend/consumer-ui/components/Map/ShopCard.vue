@@ -7,15 +7,15 @@
     />
     <div class="p-4">
       <div class="mb-8">
-        <div class="text-black font-bold text-xl mb-2">
+        <div id="shop-name" class="text-black font-bold text-xl mb-2">
           {{ shop.name }}
         </div>
-        <p class="text-grey-darker text-base">
+        <p id="shop-description" class="text-grey-darker text-base">
           {{ shop.description }}
         </p>
       </div>
       <div class="flex items-center">
-        <img class="mr-4" :src="markerImgUrl" alt="GPS coordinates">
+        <img id="shop-img" class="mr-4" :src="markerImgUrl" alt="GPS coordinates">
         <div class="text-sm italic">
           {{ gpsCoordinates }}
         </div>

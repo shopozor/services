@@ -29,5 +29,12 @@ Then('il voit la carte des Shops', function () {
 When('il clique sur un Shop', function () {
   cy.get('img.leaflet-marker-icon')
     .first()
-    .click()
+    .click({
+      force: true
+    })
+})
+
+Then('il voit les caractéristiques de ce Shop', function () {
+  cy.get('#shop-name')
+    .should('contain', 'Trouduc')
 })
