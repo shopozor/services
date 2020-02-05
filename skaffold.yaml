@@ -2,13 +2,18 @@ apiVersion: skaffold/v2alpha2
 kind: Config
 
 build:
+  tagPolicy:
+    sha256: {}
   artifacts:
     - image: shopozor/assets-fixtures
       context: .
       docker:
         dockerfile: ./backend/assets-service/Dockerfile
-  local:
-    push: false
+    # - image: shopozor/graphql-engine
+    #   context: backend/database-service
+    #   docker:
+    #     dockerfile: Dockerfile
+    #     target: app
 
 deploy:
   helm:
@@ -17,7 +22,6 @@ deploy:
         chartPath: bitnami/minio
         remote: true
         namespace: dev
-        values:
         overrides:
           fullnameOverride: minio
           mode: standalone
@@ -30,6 +34,12 @@ deploy:
             password: minio
           secretKey:
             password: minio123
+      - name: hasura
+        # TODO: 1. the migrations can applied with a separate Job basing on the hasura image containing the client!
+        #       2. we need an init container that waits until postgres is up (https://blog.giantswarm.io/wait-for-it-using-readiness-probes-for-service-dependencies-in-kubernetes/)
+        #       3. maybe we can use a PodPreset to inject the postgres password into the hasura container
+        chartPath: backend/database-service/chart
+        namespace: dev
     flags:
       upgrade:
         - --install
