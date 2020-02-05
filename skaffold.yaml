@@ -59,13 +59,6 @@ deploy:
       global:
         - --namespace=dev
 
-portForward:
-  - resourceType: service
-    resourceName: minio
-    namespace: dev
-    port: 9000
-    localPort: 9000
-
 profiles:
   - name: staging
     deploy:
