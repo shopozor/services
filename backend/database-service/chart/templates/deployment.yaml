@@ -31,11 +31,24 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
             - name: HASURA_GRAPHQL_ENABLE_CONSOLE
-              value: {{ .Values.console.enabled | quote }}
+              value: {{ .Values.hasura.console.enabled | quote }}
             - name: HASURA_GRAPHQL_ENABLED_LOG_TYPES
-              value: {{ .Values.log.enabled_types }}
+              value: {{ .Values.hasura.log.enabled_types }}
+            - name: HASURA_GRAPHQL_ENABLE_TELEMETRY
+              value: {{ .Values.hasura.telemetry.enabled | quote }}
+            - name: POSTGRES_USER
+              value: {{ .Values.postgres.username }}
+            - name: POSTGRES_DATABASE
+              value: {{ .Values.postgres.database }}
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.postgres.secretName }}
+                  key: postgresql-password
+            - name: POSTGRES_HOST
+              value: {{ .Values.postgres.hostname }}
             - name: HASURA_GRAPHQL_DATABASE_URL
-              value: postgres://postgres:@postgres:5432/postgres
+              value: postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):5432/$(POSTGRES_DATABASE)
           ports:
             - name: http
               containerPort: 80

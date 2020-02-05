@@ -67,8 +67,15 @@ tolerations: []
 
 affinity: {}
 
-console:
-  enabled: true
+hasura:
+  console:
+    enabled: true
+  log:
+    enabled_types: startup, http-log, webhook-log, websocket-log, query-log
+  telemetry:
+    enabled: false
 
-log:
-  enabled_types: startup, http-log, webhook-log, websocket-log, query-log
+postgres:
+  secretName: postgres
+  hostname: postgres-pgpool
+  database: postgres
