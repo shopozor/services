@@ -52,17 +52,17 @@ spec:
               # TODO: put the port in the postgres.port value!
               value: postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):5432/$(POSTGRES_DATABASE)
           ports:
-            - name: http
-              containerPort: 80
+            - name: hasura
+              containerPort: 8080
               protocol: TCP
           livenessProbe:
             httpGet:
               path: /
-              port: http
+              port: hasura
           readinessProbe:
             httpGet:
               path: /
-              port: http
+              port: hasura
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
