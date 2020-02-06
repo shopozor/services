@@ -33,7 +33,7 @@ export default {
   mixins: [
     AssetUrl,
     ValidatedObjectProp('shop',
-      ['description', 'image', 'latitude', 'longitude', 'name'])// + address + id
+      ['description', 'id', 'image', 'latitude', 'longitude', 'name'])// + address
   ],
   data () {
     return {
