@@ -31,6 +31,7 @@ spec:
             value: minio
           - name: TIMEOUT
             value: "60"
+        # TODO: the commands below need to be run only after the buckets have been exposed!
         command:
           - /bin/sh
           - -c
