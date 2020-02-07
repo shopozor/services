@@ -44,13 +44,13 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.postgres.secretName }}
-                  # TODO: put this key in the values!
-                  key: postgresql-password
+                  key: {{ .Values.postgres.secretKey }}
             - name: POSTGRES_HOST
               value: {{ .Values.postgres.hostname }}
+            - name: POSTGRES_PORT
+              value: {{ .Values.postgres.port }}
             - name: HASURA_GRAPHQL_DATABASE_URL
-              # TODO: put the port in the postgres.port value!
-              value: postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):5432/$(POSTGRES_DATABASE)
+              value: postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)
           ports:
             - name: hasura
               containerPort: 8080

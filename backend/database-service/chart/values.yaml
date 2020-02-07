@@ -79,3 +79,5 @@ postgres:
   secretName: postgres
   hostname: postgres-pgpool
   database: postgres
+  port: 5432
+  secretKey: postgresql-password
