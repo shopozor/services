@@ -67,6 +67,8 @@ hasura:
     enabled: true
   log:
     enabled_types: startup, http-log, webhook-log, websocket-log, query-log
+  server:
+    port: 8080
   telemetry:
     enabled: false
 

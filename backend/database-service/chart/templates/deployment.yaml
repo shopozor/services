@@ -1,3 +1,4 @@
+{{- $fullName := include "chart.fullname" . -}}
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -30,6 +31,10 @@ spec:
           image: {{ .Values.image }}
           imagePullPolicy: {{ .Values.pullPolicy }}
           env:
+            - name: HASURA_GRAPHQL_SERVER_PORT
+              value: {{ .Values.hasura.server.port | quote }}
+            # - name: HASURA_GRAPHQL_SERVER_HOST
+            #   value: {{ $fullName }}
             - name: HASURA_GRAPHQL_ENABLE_CONSOLE
               value: {{ .Values.hasura.console.enabled | quote }}
             - name: HASURA_GRAPHQL_ENABLED_LOG_TYPES
@@ -53,7 +58,7 @@ spec:
               value: postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)
           ports:
             - name: hasura
-              containerPort: 8080
+              containerPort: {{ .Values.hasura.server.port }}
               protocol: TCP
           livenessProbe:
             httpGet:
