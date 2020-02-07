@@ -48,7 +48,7 @@ spec:
             - name: POSTGRES_HOST
               value: {{ .Values.postgres.hostname }}
             - name: POSTGRES_PORT
-              value: {{ .Values.postgres.port }}
+              value: {{ .Values.postgres.port | quote }}
             - name: HASURA_GRAPHQL_DATABASE_URL
               value: postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)
           ports:

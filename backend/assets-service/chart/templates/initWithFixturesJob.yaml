@@ -2,7 +2,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "chart.fullname" . }}
+  name: {{ include "chart.fullname" . }}-init-fixtures
   labels:
 {{ include "chart.labels" . | indent 4 }}
 spec:
@@ -10,7 +10,7 @@ spec:
   template:
     spec:
       initContainers:
-      {{- include "wait-for-minio" . | nindent 8 -}}
+      {{- include "wait-for-minio" . | nindent 6 }}
       - name: wait-for-minio-buckets
         image: {{ .Values.minio.client.image }}
         env: {{- include "minio.envvarsblock" . | nindent 10 }}
@@ -25,7 +25,7 @@ spec:
             done
             [ "$EXPECTED_BUCKETS" -eq "3" ] && exit 0 || exit 1
       containers:
-      - name: {{ .Chart.Name }}
+      - name: {{ .Chart.Name }}-init-fixtures
         image: {{ .Values.image }}
         env: {{- include "minio.envvarsblock" . | nindent 10 }}
         command:

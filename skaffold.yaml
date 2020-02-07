@@ -29,6 +29,20 @@ deploy:
             password: minio
           secretKey:
             password: minio123
+      - name: minio-initialization
+        chartPath: backend/assets-service/chart
+        namespace: dev
+        values:
+          image: shopozor/assets-fixtures
+        overrides:
+          fixtures:
+            enabled: true
+          minio:
+            fullname: minio
+            client:
+              alias: minio
+            server:
+              port: 9000
       - name: postgres
         chartPath: bitnami/postgresql-ha
         remote: true
@@ -43,7 +57,7 @@ deploy:
           volumePermissions:
             enabled: true
       - name: hasura
-        # TODO: 1. the migrations can applied with a separate Job basing on the hasura image containing the client!
+        # TODO: 1. the migrations can be applied with a separate Job basing on the hasura image containing the client!
         #       2. we need an init container that waits until postgres is up (https://blog.giantswarm.io/wait-for-it-using-readiness-probes-for-service-dependencies-in-kubernetes/)
         #       3. maybe we can use a PodPreset to inject the postgres password into the hasura container
         chartPath: backend/database-service/chart
@@ -57,13 +71,6 @@ deploy:
     flags:
       upgrade:
         - --install
-  kubectl:
-    manifests:
-      - backend/assets-service/k8s/setup/*
-      - backend/assets-service/k8s/testing/*
-    flags:
-      global:
-        - --namespace=dev
 
 profiles:
   - name: staging

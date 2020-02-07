@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "chart.fullname" . }}
+  name: {{ include "chart.fullname" . }}-expose-buckets
   labels:
 {{ include "chart.labels" . | indent 4 }}
 spec:
@@ -9,9 +9,9 @@ spec:
   template:
     spec:
       initContainers:
-      {{- include "wait-for-minio" . | nindent 8 -}}
+      {{- include "wait-for-minio" . | nindent 6 }}
       containers:
-      - name: {{ .Chart.Name }}
+      - name: {{ .Chart.Name }}-expose-buckets
         image: {{ .Values.minio.client.image }}
         env: {{- include "minio.envvarsblock" . | nindent 10 }}
         command:
