@@ -6,7 +6,6 @@ metadata:
   labels:
 {{ include "chart.labels" . | indent 4 }}
 spec:
-  ttlSecondsAfterFinished: 30
   template:
     spec:
       initContainers:
@@ -18,12 +17,19 @@ spec:
           - /bin/sh
           - -c
           - |
-            mc config host add ${MINIO_ALIAS} http://${MINIO_SERVER_HOST}:${MINIO_SERVER_PORT_NUMBER} ${MINIO_SERVER_ACCESS_KEY} ${MINIO_SERVER_SECRET_KEY}
-            EXPECTED_BUCKETS=0
-            for bucket in food people shops ; do
-              EXPECTED_BUCKETS=$(($EXPECTED_BUCKETS + $(mc ls ${MINIO_ALIAS} | grep $bucket | wc -l)))
+            TIMEOUT=60
+            echo "waiting $TIMEOUT seconds for buckets to be there"
+            for ATTEMPT in `seq 1 $TIMEOUT`; do
+              mc config host add ${MINIO_ALIAS} http://${MINIO_SERVER_HOST}:${MINIO_SERVER_PORT_NUMBER} ${MINIO_SERVER_ACCESS_KEY} ${MINIO_SERVER_SECRET_KEY}
+              EXPECTED_BUCKETS=0
+              for bucket in food people shops ; do
+                EXPECTED_BUCKETS=$(($EXPECTED_BUCKETS + $(mc ls ${MINIO_ALIAS} | grep $bucket | wc -l)))
+              done
+              echo "EXPECTED_BUCKETS: $EXPECTED_BUCKETS"
+              [ "$EXPECTED_BUCKETS" -eq "3" ] && exit 0 || sleep 1
             done
-            [ "$EXPECTED_BUCKETS" -eq "3" ] && exit 0 || exit 1
+            echo "Failure"
+            exit 1
       containers:
       - name: {{ .Chart.Name }}-init-fixtures
         image: {{ .Values.image }}
