@@ -35,6 +35,11 @@ When('il clique sur un Shop', function () {
 })
 
 Then('il voit les caractéristiques de ce Shop', function () {
-  cy.get('#shop-name')
-    .should('contain', 'Trouduc')
+  cy.get('#shop-img')
+    .then(($img) => {
+      console.log('img = ', $img)
+      console.log('img = ', $img[0].title)
+      console.log('style = ', $img[0].style)
+      console.log('cssText = ', $img[0].style.cssText)
+    })
 })

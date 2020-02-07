@@ -1,6 +1,7 @@
 <template>
   <div class="flex bg-white justify-between w-full h-64 flex-row md:w-64 md:h-full md:flex-col">
     <div
+      id="shop-img"
       class="h-auto w-48 md:h-64 md:w-full bg-cover"
       :style="{ backgroundImage: 'url(' + assetUrl(shop.image.url) + ')' }"
       :title="shop.image.alt"
@@ -15,7 +16,7 @@
         </p>
       </div>
       <div class="flex items-center">
-        <img id="shop-img" class="mr-4" :src="markerImgUrl" alt="GPS coordinates">
+        <img class="mr-4" :src="markerImgUrl" alt="GPS coordinates">
         <div class="text-sm italic">
           {{ gpsCoordinates }}
         </div>
