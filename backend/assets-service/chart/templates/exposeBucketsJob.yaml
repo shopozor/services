@@ -19,6 +19,8 @@ spec:
           - -c
           - |
             mc config host add ${MINIO_ALIAS} http://${MINIO_SERVER_HOST}:${MINIO_SERVER_PORT_NUMBER} ${MINIO_SERVER_ACCESS_KEY} ${MINIO_SERVER_SECRET_KEY}
+            RESULT=$?
+            [ "$RESULT" -eq "0" ] || exit 1
 
             for bucket in food people shops ; do
               mc mb ${MINIO_ALIAS}/$bucket

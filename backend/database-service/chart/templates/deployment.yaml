@@ -27,9 +27,11 @@ spec:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          image: {{ .Values.image }}
+          imagePullPolicy: {{ .Values.pullPolicy }}
           env:
+            - name: HASURA_GRAPHQL_MIGRATIONS_DIR
+              value: {{ .Values.hasura.migrations.dir }}
             - name: HASURA_GRAPHQL_ENABLE_CONSOLE
               value: {{ .Values.hasura.console.enabled | quote }}
             - name: HASURA_GRAPHQL_ENABLED_LOG_TYPES

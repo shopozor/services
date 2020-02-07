@@ -8,7 +8,12 @@ build:
     - image: shopozor/assets-fixtures
       context: .
       docker:
-        dockerfile: ./backend/assets-service/Dockerfile
+        dockerfile: backend/assets-service/Dockerfile
+    - image: shopozor/graphql-engine
+      context: backend/database-service
+      docker:
+        dockerfile: Dockerfile
+        target: app
 
 deploy:
   helm:
@@ -62,6 +67,8 @@ deploy:
         #       3. maybe we can use a PodPreset to inject the postgres password into the hasura container
         chartPath: backend/database-service/chart
         namespace: dev
+        values:
+          image: shopozor/graphql-engine
         overrides:
           postgres:
             secretName: postgres-postgresql
