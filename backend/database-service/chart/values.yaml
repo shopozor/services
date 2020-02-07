@@ -67,8 +67,6 @@ hasura:
     enabled: true
   log:
     enabled_types: startup, http-log, webhook-log, websocket-log, query-log
-  migrations:
-    dir: /app
   telemetry:
     enabled: false
 

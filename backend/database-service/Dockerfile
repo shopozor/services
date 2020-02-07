@@ -5,6 +5,13 @@ COPY config.yaml /app
 
 WORKDIR /app
 
+FROM hasura/graphql-engine:v1.0.0.cli-migrations AS hasura-migrations
+
+# /hasura-migrations is the default folder where the client will look for migrations to apply
+COPY migrations /hasura-migrations
+
+WORKDIR /hasura-migrations
+
 FROM python:3.8-slim AS build
 
 COPY tests/requirements.txt .

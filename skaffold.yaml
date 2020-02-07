@@ -13,7 +13,7 @@ build:
       context: backend/database-service
       docker:
         dockerfile: Dockerfile
-        target: app
+        target: hasura-migrations
 
 deploy:
   helm:
@@ -62,9 +62,6 @@ deploy:
           volumePermissions:
             enabled: true
       - name: hasura
-        # TODO: 1. the migrations can be applied with a separate Job basing on the hasura image containing the client!
-        #       2. we need an init container that waits until postgres is up (https://blog.giantswarm.io/wait-for-it-using-readiness-probes-for-service-dependencies-in-kubernetes/)
-        #       3. maybe we can use a PodPreset to inject the postgres password into the hasura container
         chartPath: backend/database-service/chart
         namespace: dev
         values:
@@ -97,8 +94,6 @@ profiles:
                 storageClass: jelastic-dynamic-volume
                 size: 10Gi
               disableWebUI: false
-          # TODO: for hasura, look at this: https://v2.helm.sh/docs/chart_template_guide/#creating-a-subchart
-          # https://stackoverflow.com/questions/55748639/set-value-in-dependency-of-helm-chart
         flags:
           upgrade:
             - --install
