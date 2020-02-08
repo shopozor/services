@@ -7,6 +7,8 @@ import "quasar/dist/quasar.sass";
 import "@quasar/extras/material-icons/material-icons.css";
 import "@quasar/extras/roboto-font/roboto-font.css";
 //animations
+import "@quasar/extras/animate/flipInY.css";
+import "@quasar/extras/animate/flipOutY.css";
 import "@quasar/extras/animate/shake.css";
 
 Vue.use(Quasar);
