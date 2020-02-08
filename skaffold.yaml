@@ -14,6 +14,11 @@ build:
       docker:
         dockerfile: Dockerfile
         target: hasura-migrations
+    - image: shopozor/fixtures-service
+      context: .
+      docker:
+        dockerfile: backend/fixtures-generator/Dockerfile
+        target: app
 
 deploy:
   helm:
@@ -34,6 +39,8 @@ deploy:
             password: minio
           secretKey:
             password: minio123
+      # TODO: we need to decide if the assets are pushed by default to the assets service
+      #       or if we proceed as with the database fixtures!
       - name: minio-initialization
         chartPath: backend/assets-service/chart
         namespace: dev
@@ -67,11 +74,27 @@ deploy:
         values:
           image: shopozor/graphql-engine
         overrides:
+          nameOverride: hasura
           postgres:
             secretName: postgres-postgresql
             username: postgres
             database: postgres
             hostname: postgres-pgpool.dev
+          hasura:
+            server:
+              port: 8080
+      # TODO: this must not stay in the dev deployment; this is only for staging
+      # TODO: the database-fixtures needs to create a PVC where the generated graphql responses can be found
+      #       so probably we also store the migrations in that PVC
+      - name: database-fixtures
+        chartPath: backend/fixtures-generator/chart
+        namespace: dev
+        values:
+          image: shopozor/fixtures-service
+        overrides:
+          hasura:
+            host: hasura
+            port: 8080
     flags:
       upgrade:
         - --install

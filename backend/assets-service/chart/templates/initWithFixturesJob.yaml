@@ -28,8 +28,7 @@ spec:
               echo "EXPECTED_BUCKETS: $EXPECTED_BUCKETS"
               [ "$EXPECTED_BUCKETS" -eq "3" ] && exit 0 || sleep 1
             done
-            echo "Failure"
-            exit 1
+            echo "Failure" && exit 1
       containers:
       - name: {{ .Chart.Name }}-init-fixtures
         image: {{ .Values.image }}

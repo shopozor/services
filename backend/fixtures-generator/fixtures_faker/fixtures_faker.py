@@ -28,7 +28,7 @@ class FakeDataFactory:
         'Objets pour la maison': ('Objet pour la maison')
     }
 
-    def __init__(self, max_nb_products_per_producer=10, max_nb_producers_per_shop=10, max_nb_variants_per_product=10, max_nb_images_per_product=10):
+    def __init__(self, pictures_folder, max_nb_products_per_producer=10, max_nb_producers_per_shop=10, max_nb_variants_per_product=10, max_nb_images_per_product=10):
         self.__fake = Faker('fr_CH')
         self.__fake.seed('features')
         self.__fake.add_provider(ShopozorGeoProvider)
@@ -39,7 +39,7 @@ class FakeDataFactory:
         self.__MAX_NB_PRODUCTS_PER_PRODUCER = max_nb_products_per_producer
         self.__MAX_NB_IMAGES_PER_PRODUCT = max_nb_images_per_product
         self.__MAX_NB_VARIANTS_PER_PRODUCT = max_nb_variants_per_product
-        self.__PICTURES_FOLDER = os.path.join('/app', 'pictures')
+        self.__PICTURES_FOLDER = pictures_folder
 
     def create_sites(self):
         return {

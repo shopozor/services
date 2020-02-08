@@ -35,8 +35,8 @@ services:
     entrypoint: ./entrypoint.sh
   fixtures-service:
     build:
-      context: backend
-      dockerfile: fixtures-generator/Dockerfile
+      context: .
+      dockerfile: backend/fixtures-generator/Dockerfile
       target: builder
     volumes:
       - ./backend/fixtures-generator:/app

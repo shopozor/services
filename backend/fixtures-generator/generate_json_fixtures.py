@@ -56,7 +56,7 @@ variants = {
 }
 
 
-def generate_variant(variant_name, output_folder):
+def generate_variant(variant_name, output_folder, pictures_folder):
 
     print('#############################################')
     print('Generating data for %s variant' % variant_name)
@@ -66,7 +66,7 @@ def generate_variant(variant_name, output_folder):
     os.makedirs(os.path.join(output_folder, 'Users'), exist_ok=True)
 
     factory = FakeDataFactory(
-        variant['#max(products/producer)'], variant['#max(producers/shop)'], variant['#max(variants/product)'])
+        pictures_folder, variant['#max(products/producer)'], variant['#max(producers/shop)'], variant['#max(variants/product)'])
 
     # TODO: the categories might not be fixtures; we should be able to get them from the database or somehow?
     nb_category_images = len(FakeDataFactory.category_types)
@@ -156,16 +156,18 @@ def generate_variant(variant_name, output_folder):
     print('#############################################')
 
 
-def main(output_folder, fixtures_set):
-    generate_variant(fixtures_set, output_folder)
+def main(output_folder, fixtures_set, pictures_folder):
+    generate_variant(fixtures_set, output_folder, pictures_folder)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Generate json fixtures')
+    parser.add_argument('-p', '--pictures-folder', type=str,
+                        default=settings.PICTURES_DIR, help='Folder containing the assets pictures')
     parser.add_argument('-o', '--output-folder', type=str, default=settings.FIXTURE_DIR,
                         help='Folder where to output the JSON files containing the users and passwords')
     parser.add_argument('--fixtures-set', type=str, default='medium',
                         help='Fixture set: tiny, small, medium, large')
     args = parser.parse_args()
 
-    main(args.output_folder, args.fixtures_set)
+    main(args.output_folder, args.fixtures_set, args.pictures_folder)
