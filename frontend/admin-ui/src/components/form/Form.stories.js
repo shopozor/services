@@ -1,8 +1,9 @@
 import { storiesOf } from "@storybook/vue";
 import ShakingButton from "./ShakingBtn.vue";
 import ValidityIcon from "./ValidityIcon.vue";
+import InputWithValidation from "./InputWithValidation.vue";
 
-const components = { ShakingButton, ValidityIcon };
+const components = { ShakingButton, ValidityIcon, InputWithValidation };
 
 storiesOf("Form", module)
   .add("ShakingButton_Enable", () => {
@@ -34,5 +35,19 @@ storiesOf("Form", module)
     return {
       components,
       template: "<ValidityIcon knowError mandatory/>"
+    };
+  })
+  .add("InputWithValidation_Valid_EditIcon", () => {
+    return {
+      components,
+      template:
+        "<InputWithValidation value='valid value' label='label' hint='hint'/>"
+    };
+  })
+  .add("InputWithValidation_Error_WarningIcon", () => {
+    return {
+      components,
+      template:
+        "<InputWithValidation value='unvalid value' errorMessage='error message' showError knowError iconName='warning'/>"
     };
   });

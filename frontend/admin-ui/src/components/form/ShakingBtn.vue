@@ -34,7 +34,7 @@ export default {
       default: () => undefined
     },
     color: {
-      type: String,
+      type: String, // thok: this was modified during porting
       default: () => undefined
     }
   },
