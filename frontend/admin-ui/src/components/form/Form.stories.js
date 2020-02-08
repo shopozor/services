@@ -2,8 +2,14 @@ import { storiesOf } from "@storybook/vue";
 import ShakingButton from "./ShakingBtn.vue";
 import ValidityIcon from "./ValidityIcon.vue";
 import InputWithValidation from "./InputWithValidation.vue";
+import CheckboxWithValidation from "./CheckboxWithValidation.vue";
 
-const components = { ShakingButton, ValidityIcon, InputWithValidation };
+const components = {
+  ShakingButton,
+  ValidityIcon,
+  InputWithValidation,
+  CheckboxWithValidation
+};
 
 storiesOf("Form", module)
   .add("ShakingButton_Enable", () => {
@@ -18,7 +24,9 @@ storiesOf("Form", module)
       components,
       template: "<ShakingButton label='No Icon round' round disable/>"
     };
-  })
+  });
+
+storiesOf("Form", module)
   .add("ValidityIcon_Valid", () => {
     return {
       components,
@@ -36,12 +44,14 @@ storiesOf("Form", module)
       components,
       template: "<ValidityIcon knowError mandatory/>"
     };
-  })
+  });
+
+storiesOf("Form", module)
   .add("InputWithValidation_Valid_EditIcon", () => {
     return {
       components,
       template:
-        "<InputWithValidation value='valid value' label='label' hint='hint'/>"
+        "<InputWithValidation value='valid value' label='label' hint='hint' v-bind:knowError='false'/>"
     };
   })
   .add("InputWithValidation_Error_WarningIcon", () => {
@@ -51,3 +61,10 @@ storiesOf("Form", module)
         "<InputWithValidation value='unvalid value' errorMessage='error message' showError knowError iconName='warning'/>"
     };
   });
+
+storiesOf("Form", module).add("CheckboxWithValidation_checked", () => {
+  return {
+    components,
+    template: "<CheckboxWithValidation v-bind:value='true'/>"
+  };
+});
