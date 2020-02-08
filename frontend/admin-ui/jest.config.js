@@ -32,7 +32,7 @@ module.exports = {
     '^quasar$': '<rootDir>/node_modules/quasar/dist/quasar.common.js',
     '^~/(.*)$': '<rootDir>/$1',
     '^src/(.*)$': '<rootDir>/src/$1',
-    '.*css$': '<rootDir>/test/jest/utils/stub.css'
+    '.*(css|sass)$': '<rootDir>/test/jest/utils/stub.css',
   },
   transform: {
     '.*\\.vue$': 'vue-jest',

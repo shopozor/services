@@ -1,7 +1,296 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Storyshots First story Test 1`] = `
-<h1>
-  Petit test
-</h1>
+exports[`Storyshots Form CheckboxWithValidation_checked 1`] = `
+<div
+  class="q-item q-item-type row no-wrap"
+>
+  <div
+    class="q-item__section column q-item__section--side justify-center"
+  >
+    <button
+      class="q-btn q-btn-item non-selectable no-outline q-btn--flat q-btn--round text-primary q-btn--actionable q-focusable q-hoverable q-btn--wrap"
+      style="font-size: 1em;"
+      tabindex="0"
+      type="button"
+    >
+      <div
+        class="q-focus-helper"
+        tabindex="-1"
+      />
+      <div
+        class="q-btn__wrapper col row q-anchor--skip"
+      >
+        <div
+          class="q-btn__content text-center col items-center q-anchor--skip justify-center row"
+        >
+          <i
+            aria-hidden="true"
+            class="material-icons q-icon"
+          >
+            help
+          </i>
+        </div>
+      </div>
+    </button>
+  </div>
+   
+  <div
+    class="q-item__section column q-item__section--main justify-center"
+  >
+    <div
+      class="q-checkbox cursor-pointer no-outline row inline no-wrap items-center"
+      id="acceptCookies"
+      tabindex="0"
+    >
+      <div
+        class="q-checkbox__inner relative-position no-pointer-events q-checkbox__inner--active"
+      >
+        <input
+          class="q-checkbox__native q-ma-none q-pa-none invisible"
+          type="checkbox"
+        />
+        <div
+          class="q-checkbox__bg absolute"
+        >
+          <svg
+            class="q-checkbox__check fit absolute-full"
+            focusable="false"
+            viewBox="0 0 24 24"
+          >
+            <path
+              d="M1.73,12.91 8.1,19.28 22.79,4.59"
+              fill="none"
+            />
+          </svg>
+          <div
+            class="q-checkbox__check-indet absolute"
+          />
+        </div>
+      </div>
+      <div
+        class="q-checkbox__label q-anchor--skip"
+      />
+    </div>
+  </div>
+   
+  <div
+    class="q-item__section column q-item__section--side justify-center"
+  >
+    <!---->
+  </div>
+   
+  <!---->
+</div>
+`;
+
+exports[`Storyshots Form InputWithValidation_Error_WarningIcon 1`] = `
+<label
+  class="q-field row no-wrap items-start q-input q-field--standard q-field--focused q-field--float q-field--labeled q-field--with-bottom q-field--error"
+  for="f_7ac61f35-50c5-bd3a-a139-78c3a646aeb4"
+>
+  <div
+    class="q-field__before q-field__marginal row no-wrap items-center"
+  >
+    <i
+      aria-hidden="true"
+      class="material-icons q-icon"
+    >
+      warning
+    </i>
+  </div>
+  <div
+    class="q-field__inner relative-position col self-stretch column justify-center"
+  >
+    <div
+      class="q-field__control relative-position row no-wrap text-negative"
+      tabindex="-1"
+    >
+      <div
+        class="q-field__control-container col relative-position row no-wrap q-anchor--skip"
+      >
+        <input
+          aria-label=""
+          class="q-field__native q-placeholder"
+          id="f_7ac61f35-50c5-bd3a-a139-78c3a646aeb4"
+          tabindex="0"
+          type="text"
+        />
+        <div
+          class="q-field__label no-pointer-events absolute ellipsis"
+        />
+      </div>
+      <div
+        class="q-field__append q-field__marginal row no-wrap items-center"
+      >
+        <i
+          aria-hidden="true"
+          class="material-icons q-icon text-negative"
+          id="error"
+        >
+          error
+        </i>
+      </div>
+    </div>
+    <div
+      class="q-field__bottom row items-start q-field__bottom--animated"
+    >
+      <div
+        class="q-field__messages col"
+      >
+        <div>
+          error message
+        </div>
+      </div>
+    </div>
+  </div>
+</label>
+`;
+
+exports[`Storyshots Form InputWithValidation_Valid_EditIcon 1`] = `
+<label
+  class="q-field row no-wrap items-start q-input q-field--standard q-field--float q-field--labeled q-field--with-bottom"
+  for="f_2b69fe62-fa21-2a2c-6529-4e409c6b2e80"
+>
+  <div
+    class="q-field__before q-field__marginal row no-wrap items-center"
+  >
+    <i
+      aria-hidden="true"
+      class="material-icons q-icon"
+    >
+      edit
+    </i>
+  </div>
+  <div
+    class="q-field__inner relative-position col self-stretch column justify-center"
+  >
+    <div
+      class="q-field__control relative-position row no-wrap"
+      tabindex="-1"
+    >
+      <div
+        class="q-field__control-container col relative-position row no-wrap q-anchor--skip"
+      >
+        <input
+          aria-label="label"
+          class="q-field__native q-placeholder"
+          id="f_2b69fe62-fa21-2a2c-6529-4e409c6b2e80"
+          tabindex="0"
+          type="text"
+        />
+        <div
+          class="q-field__label no-pointer-events absolute ellipsis"
+        >
+          label
+        </div>
+      </div>
+      <div
+        class="q-field__append q-field__marginal row no-wrap items-center"
+      >
+        <i
+          aria-hidden="true"
+          class="material-icons q-icon text-positive"
+          id="valid"
+        >
+          check_circle
+        </i>
+      </div>
+    </div>
+    <div
+      class="q-field__bottom row items-start q-field__bottom--animated"
+    >
+      <div
+        class="q-field__messages col"
+      >
+        <div>
+          hint
+        </div>
+      </div>
+    </div>
+  </div>
+</label>
+`;
+
+exports[`Storyshots Form ShakingButton_Disable 1`] = `
+<button
+  class="q-btn q-btn-item non-selectable no-outline q-ma-md q-btn--unelevated q-btn--round q-btn--actionable q-focusable q-hoverable q-btn--wrap"
+  tabindex="0"
+  type="button"
+>
+  <div
+    class="q-focus-helper"
+    tabindex="-1"
+  />
+  <div
+    class="q-btn__wrapper col row q-anchor--skip"
+  >
+    <div
+      class="q-btn__content text-center col items-center q-anchor--skip justify-center row"
+    >
+      <div>
+        No Icon round
+      </div>
+    </div>
+  </div>
+</button>
+`;
+
+exports[`Storyshots Form ShakingButton_Enable 1`] = `
+<button
+  class="q-btn q-btn-item non-selectable no-outline q-ma-md q-btn--standard q-btn--rectangle bg-green text-white q-btn--actionable q-focusable q-hoverable q-btn--wrap enabled"
+  tabindex="0"
+  type="button"
+>
+  <div
+    class="q-focus-helper"
+    tabindex="-1"
+  />
+  <div
+    class="q-btn__wrapper col row q-anchor--skip"
+  >
+    <div
+      class="q-btn__content text-center col items-center q-anchor--skip justify-center row"
+    >
+      <i
+        aria-hidden="true"
+        class="material-icons q-icon on-left"
+      >
+        mail
+      </i>
+      <div>
+        Green Icon Rectangular
+      </div>
+    </div>
+  </div>
+</button>
+`;
+
+exports[`Storyshots Form ValidityIcon_NotValidMandatory 1`] = `
+<i
+  aria-hidden="true"
+  class="material-icons q-icon text-ghost"
+  id="mandatory"
+>
+  fiber_manual_record
+</i>
+`;
+
+exports[`Storyshots Form ValidityIcon_NotValidShown 1`] = `
+<i
+  aria-hidden="true"
+  class="material-icons q-icon text-negative"
+  id="error"
+>
+  error
+</i>
+`;
+
+exports[`Storyshots Form ValidityIcon_Valid 1`] = `
+<i
+  aria-hidden="true"
+  class="material-icons q-icon text-positive"
+  id="valid"
+>
+  check_circle
+</i>
 `;

@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import ValidityIcon from './ValidityIcon'
+import ValidityIcon from './ValidityIcon.vue'
 
 export default {
   name: 'InputWithValidation',
