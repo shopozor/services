@@ -13,3 +13,4 @@ code --install-extension octref.vetur
 code --install-extension robinbentley.sass-indented
 code --install-extension sysoev.language-stylus
 code --install-extension bradlc.vscode-tailwindcss
+code --install-extension ms-kubernetes-tools.vscode-kubernetes-tools

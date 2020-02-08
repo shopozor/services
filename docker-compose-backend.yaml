@@ -50,8 +50,8 @@ services:
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
   fixtures-service:
     build:
-      context: backend
-      dockerfile: fixtures-generator/Dockerfile
+      context: .
+      dockerfile: backend/fixtures-generator/Dockerfile
       target: app
     image: ${PRODUCT:-shopozor}/fixtures-service:${TAG:-local}
     restart: "no"
