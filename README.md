@@ -73,20 +73,24 @@ Under linux, install minikube. Under Windows, you can enable kubernetes in Docke
 
 ![k8s settings in docker desktop](doc/img/enable_k8s.png)
 
-You will want to
+After that, you will want to
 
-* [install helm](https://helm.sh/docs/intro/install/) too, e.g. with [chocolatey](https://chocolatey.org/packages/kubernetes-helm) under Windows; currently, when used with [skaffold](http://skaffold.dev), it needs version 2, as skaffold is not yet fully compatible with helm v3. When using helm v2, you need to install tiller on the k8s cluster, which you do like this:
+* [install helm](https://helm.sh/docs/intro/install/) too, e.g. with [chocolatey](https://chocolatey.org/packages/kubernetes-helm) under Windows; currently, when used with [skaffold](http://skaffold.dev), it needs version 2, as skaffold is not yet fully compatible with helm v3:
+```
+choco install kubernetes-helm --version=v2.16.1
+```
+When using helm v2, you need to install tiller on the k8s cluster, which you do like this:
 ```
 helm init
 ```
-* install the kubernetes dashboard, following [this advice](https://collabnix.com/kubernetes-dashboard-on-docker-desktop-for-windows-2-0-0-3-in-2-minutes/) and [this documentation](https://github.com/kubernetes/dashboard)
+* install the kubernetes dashboard, following [these instructions](https://github.com/kubernetes/dashboard#getting-started); you can get more background [here](https://collabnix.com/kubernetes-dashboard-on-docker-desktop-for-windows-2-0-0-3-in-2-minutes/) if necessary
 * [install skaffold](https://skaffold.dev/docs/install/)
 * [activate the helm charts repo](https://github.com/helm/charts#how-do-i-enable-the-stable-repository-for-helm-3)
 ```
 helm repo add stable https://kubernetes-charts.storage.googleapis.com
 helm repo add bitnami https://charts.bitnami.com/bitnami
 ```
-* [install squash](https://squash.solo.io/overview/) in order to be able to debug your k8s app
+* [optional] [install squash](https://squash.solo.io/overview/) in order to be able to debug your k8s app
 
 Install the `dev` namespace on your local k8s cluster like this:
 ```
@@ -103,15 +107,16 @@ You can enable port-forwarding like this:
 ```
 skaffold dev --port-forward
 ```
+In the near-future, we might give [devspace](https://devspace.cloud/) shot, as it is very similar to skaffold in terms of configuration and proposes some more developer-friendly features.
 
-#### Kubernetes dashboard
+### Kubernetes dashboard
 
 Once installed, you access the k8s dashboard as follows:
 
 1. run
 ```
 kubectl proxy
-``
+```
 2. using your favorite browser, navigate to
 
 http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
