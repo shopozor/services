@@ -1,5 +1,6 @@
 <template>
   <q-input
+    :for="id"
     :value="value"
     :type="type"
     :label="label"
@@ -65,6 +66,10 @@ export default {
     mandatory: {
       type: Boolean,
       default: () => false
+    },
+    id: {
+      type: String,
+      default: () => null
     }
   }
 }

@@ -86,7 +86,7 @@ exports[`Storyshots Form CheckboxWithValidation_checked 1`] = `
 exports[`Storyshots Form InputWithValidation_Error_WarningIcon 1`] = `
 <label
   class="q-field row no-wrap items-start q-input q-field--standard q-field--focused q-field--float q-field--labeled q-field--with-bottom q-field--error"
-  for="f_7ac61f35-50c5-bd3a-a139-78c3a646aeb4"
+  for="errorWarningIcon"
 >
   <div
     class="q-field__before q-field__marginal row no-wrap items-center"
@@ -111,7 +111,7 @@ exports[`Storyshots Form InputWithValidation_Error_WarningIcon 1`] = `
         <input
           aria-label=""
           class="q-field__native q-placeholder"
-          id="f_7ac61f35-50c5-bd3a-a139-78c3a646aeb4"
+          id="errorWarningIcon"
           tabindex="0"
           type="text"
         />
@@ -149,7 +149,7 @@ exports[`Storyshots Form InputWithValidation_Error_WarningIcon 1`] = `
 exports[`Storyshots Form InputWithValidation_Valid_EditIcon 1`] = `
 <label
   class="q-field row no-wrap items-start q-input q-field--standard q-field--float q-field--labeled q-field--with-bottom"
-  for="f_2b69fe62-fa21-2a2c-6529-4e409c6b2e80"
+  for="validEditIcon"
 >
   <div
     class="q-field__before q-field__marginal row no-wrap items-center"
@@ -174,7 +174,7 @@ exports[`Storyshots Form InputWithValidation_Valid_EditIcon 1`] = `
         <input
           aria-label="label"
           class="q-field__native q-placeholder"
-          id="f_2b69fe62-fa21-2a2c-6529-4e409c6b2e80"
+          id="validEditIcon"
           tabindex="0"
           type="text"
         />
