@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Storyshots Form CheckboxWithValidation_checked 1`] = `
+exports[`Storyshots Form/CheckboxWithValidation Checked 1`] = `
 <div
   class="q-item q-item-type row no-wrap"
 >
@@ -83,7 +83,7 @@ exports[`Storyshots Form CheckboxWithValidation_checked 1`] = `
 </div>
 `;
 
-exports[`Storyshots Form InputWithValidation_Error_WarningIcon 1`] = `
+exports[`Storyshots Form/InputWithValidation Error warning icon 1`] = `
 <label
   class="q-field row no-wrap items-start q-input q-field--standard q-field--focused q-field--float q-field--labeled q-field--with-bottom q-field--error"
   for="errorWarningIcon"
@@ -146,7 +146,7 @@ exports[`Storyshots Form InputWithValidation_Error_WarningIcon 1`] = `
 </label>
 `;
 
-exports[`Storyshots Form InputWithValidation_Valid_EditIcon 1`] = `
+exports[`Storyshots Form/InputWithValidation Valid edit icon 1`] = `
 <label
   class="q-field row no-wrap items-start q-input q-field--standard q-field--float q-field--labeled q-field--with-bottom"
   for="validEditIcon"
@@ -211,7 +211,7 @@ exports[`Storyshots Form InputWithValidation_Valid_EditIcon 1`] = `
 </label>
 `;
 
-exports[`Storyshots Form ShakingButton_Disable 1`] = `
+exports[`Storyshots Form/ShakingButton Disable 1`] = `
 <button
   class="q-btn q-btn-item non-selectable no-outline q-ma-md q-btn--unelevated q-btn--round q-btn--actionable q-focusable q-hoverable q-btn--wrap"
   tabindex="0"
@@ -228,14 +228,14 @@ exports[`Storyshots Form ShakingButton_Disable 1`] = `
       class="q-btn__content text-center col items-center q-anchor--skip justify-center row"
     >
       <div>
-        No Icon round
+        No icon round
       </div>
     </div>
   </div>
 </button>
 `;
 
-exports[`Storyshots Form ShakingButton_Enable 1`] = `
+exports[`Storyshots Form/ShakingButton Enable 1`] = `
 <button
   class="q-btn q-btn-item non-selectable no-outline q-ma-md q-btn--standard q-btn--rectangle bg-green text-white q-btn--actionable q-focusable q-hoverable q-btn--wrap enabled"
   tabindex="0"
@@ -265,7 +265,7 @@ exports[`Storyshots Form ShakingButton_Enable 1`] = `
 </button>
 `;
 
-exports[`Storyshots Form ValidityIcon_NotValidMandatory 1`] = `
+exports[`Storyshots Form/ValidityIcon Not valid mandatory 1`] = `
 <i
   aria-hidden="true"
   class="material-icons q-icon text-ghost"
@@ -275,7 +275,7 @@ exports[`Storyshots Form ValidityIcon_NotValidMandatory 1`] = `
 </i>
 `;
 
-exports[`Storyshots Form ValidityIcon_NotValidShown 1`] = `
+exports[`Storyshots Form/ValidityIcon Not valid shown 1`] = `
 <i
   aria-hidden="true"
   class="material-icons q-icon text-negative"
@@ -285,7 +285,7 @@ exports[`Storyshots Form ValidityIcon_NotValidShown 1`] = `
 </i>
 `;
 
-exports[`Storyshots Form ValidityIcon_Valid 1`] = `
+exports[`Storyshots Form/ValidityIcon Valid 1`] = `
 <i
   aria-hidden="true"
   class="material-icons q-icon text-positive"
