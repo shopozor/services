@@ -11,60 +11,61 @@ const components = {
   CheckboxWithValidation
 }
 
-storiesOf('Form', module)
-  .add('ShakingButton_Enable', () => {
+storiesOf('Form/ShakingButton', module)
+  .add('Enable', () => {
     return {
       components,
       template:
-        "<ShakingButton label='Green Icon Rectangular' icon='mail' color = 'green'/>"
+        "<ShakingButton label='Green Icon Rectangular' icon='mail' color='green'/>"
     }
   })
-  .add('ShakingButton_Disable', () => {
+  .add('Disable', () => {
     return {
       components,
-      template: "<ShakingButton label='No Icon round' round disable/>"
+      template: "<ShakingButton label='No icon round' round disable/>"
     }
   })
 
-storiesOf('Form', module)
-  .add('ValidityIcon_Valid', () => {
+storiesOf('Form/ValidityIcon', module)
+  .add('Valid', () => {
     return {
       components,
       template: '<ValidityIcon/>'
     }
   })
-  .add('ValidityIcon_NotValidShown', () => {
+  .add('Not valid shown', () => {
     return {
       components,
       template: '<ValidityIcon knowError showError/>'
     }
   })
-  .add('ValidityIcon_NotValidMandatory', () => {
+  .add('Not valid mandatory', () => {
     return {
       components,
       template: '<ValidityIcon knowError mandatory/>'
     }
   })
 
-storiesOf('Form', module)
-  .add('InputWithValidation_Valid_EditIcon', () => {
+storiesOf('Form/InputWithValidation', module)
+  .add('Valid edit icon', () => {
     return {
       components,
       template:
         "<InputWithValidation value='valid value' label='label' hint='hint' v-bind:knowError='false' id='validEditIcon'/>"
     }
   })
-  .add('InputWithValidation_Error_WarningIcon', () => {
+  .add('Error warning icon', () => {
     return {
       components,
       template:
-        "<InputWithValidation value='unvalid value' errorMessage='error message' showError knowError iconName='warning' id='errorWarningIcon'/>"
+        "<InputWithValidation value='invalid value' errorMessage='error message' showError knowError iconName='warning' id='errorWarningIcon'/>"
     }
   })
 
-storiesOf('Form', module).add('CheckboxWithValidation_checked', () => {
-  return {
-    components,
-    template: "<CheckboxWithValidation v-bind:value='true'/>"
-  }
-})
+storiesOf('Form/CheckboxWithValidation', module)
+  .add('Checked', () => {
+    return {
+      components,
+      template: "<CheckboxWithValidation v-bind:value='true'/>"
+    }
+  })
