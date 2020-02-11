@@ -74,3 +74,14 @@ def shop_categories_query(graphql_folder):
         'call': call,
         'response': response
     }
+
+
+@pytest.fixture
+def shop_queries(graphql_folder):
+    call = get_query_from_file(os.path.join(graphql_folder, 'calls'), 'shop')
+    # TODO: put the number of shops (5) in the config somehow!
+    return [{
+        'call': call,
+        'variables': {'shopId': id},
+        'response': json_helpers.load(os.path.join(graphql_folder, 'responses', 'Consumer', 'Shops', f'Shop-{id}.json'))
+    } for id in range(1, 5)]

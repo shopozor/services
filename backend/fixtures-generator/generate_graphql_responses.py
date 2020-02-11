@@ -11,6 +11,9 @@ def generate_responses_for_fixture_set(output_folder, fixtures_folder):
     generator = ShopListsGenerator(fixtures_folder, output_folder)
     generator.generate()
 
+    generator = ShopsGenerator(fixtures_folder, output_folder)
+    generator.generate()
+
     generator = ShopCategoriesGenerator(fixtures_folder, output_folder)
     generator.generate()
 
