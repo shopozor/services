@@ -2,6 +2,7 @@ import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { LMap, LMarker, LTileLayer } from 'vue2-leaflet'
 // eslint-disable-next-line no-unused-vars
 import { GestureHandling } from 'leaflet-gesture-handling'
+import ShopCard from '../ShopCard'
 import Map from '../Map'
 import ShopMarker from '../ShopMarker'
 import ShopsData from '~fixtures/Consumer/Shops'
@@ -103,9 +104,9 @@ describe('Map', () => {
     const wrapper = mount(Map, options)
     expect(wrapper.vm.shop).toBeDefined()
 
-    // When I click the map
-    const map = wrapper.find(LMap)
-    map.trigger('click')
+    // When the shop card emits the close event
+    const shopCard = wrapper.find(ShopCard)
+    shopCard.vm.$emit('close')
 
     // Then I have no shop selected anymore
     expect(wrapper.vm.shop).toBeUndefined()

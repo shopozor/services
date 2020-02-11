@@ -1,11 +1,8 @@
 <template>
   <div class="flex bg-white justify-between w-full h-64 flex-row md:w-64 md:h-full md:flex-col">
-    <div
-      id="shop-img"
-      class="h-auto w-48 md:h-64 md:w-full bg-cover"
-      :style="{ backgroundImage: 'url(' + assetUrl(shop.image.url) + ')' }"
-      :title="shop.image.alt"
-    />
+    <div id="close-shop-card" class="absolute top-0 left-0 text-black font-extrabold m-2 cursor-pointer" @click="onClose">
+      &#10008;
+    </div>
     <div class="p-4">
       <div class="mb-8">
         <div id="shop-name" class="text-black font-bold text-xl mb-2">
@@ -22,6 +19,12 @@
         </div>
       </div>
     </div>
+    <div
+      id="shop-img"
+      class="h-auto w-48 md:h-64 md:w-full bg-cover"
+      :style="{ backgroundImage: 'url(' + assetUrl(shop.image.url) + ')' }"
+      :title="shop.image.alt"
+    />
   </div>
 </template>
 
@@ -45,6 +48,11 @@ export default {
   computed: {
     gpsCoordinates () {
       return `${this.shop.latitude}, ${this.shop.longitude}`
+    }
+  },
+  methods: {
+    onClose () {
+      this.$emit('close')
     }
   }
 }
