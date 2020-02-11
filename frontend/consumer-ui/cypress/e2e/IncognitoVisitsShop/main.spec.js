@@ -27,14 +27,14 @@ Then('il voit la carte des Shops', function () {
 })
 
 When('il clique sur un Shop', function () {
-  cy.get('img.leaflet-marker-icon')
-    .first()
-    .click({
-      force: true
-    })
+  cy.clickFirstShopOnMap()
+    .getFixtureDataForSelectedShop()
+    .as('selectedShop')
 })
 
 Then('il voit les caractéristiques de ce Shop', function () {
+  cy.assertShopDescriptionMatchesFixture(this.selectedShop)
+  // 3. check that the clicked shop image #shop-img.(some code) is shop.image.url
   cy.get('#shop-img')
     .then(($img) => {
       console.log('img = ', $img)
