@@ -23,7 +23,6 @@ Fonctionnalité: Incognito visite un Shop
     Alors il voit la carte des Shops
     Lorsqu'il clique sur un Shop
     Alors il voit les caractéristiques de ce Shop
-    # Here we need to check that the Shop card has a link to the Shop
     Et il peut entrer dedans
 
   @wip

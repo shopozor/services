@@ -1,5 +1,6 @@
 export default {
   budzons: 'Les Budzons',
+  budzonnerie: 'La Budzonnerie',
   concept: 'Le concept',
   gestureHandling: {
     touch: 'Utiliser 2 doigts pour bouger la carte',

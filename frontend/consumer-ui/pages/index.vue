@@ -24,8 +24,10 @@ export default {
     center: [46.718852, 7.097669],
     zoom: 11
   }),
-  head: {
-    title: 'La Budzonnerie'
+  head () {
+    return {
+      title: this.$i18n.t('budzonnerie')
+    }
   },
   layout: 'default'
 }

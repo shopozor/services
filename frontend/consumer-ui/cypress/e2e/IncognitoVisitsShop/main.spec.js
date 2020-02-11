@@ -36,3 +36,8 @@ Then('il voit les caractéristiques de ce Shop', function () {
   cy.assertShopDescriptionMatchesFixture(this.selectedShop)
     .assertShopImageMatchesFixture(this.selectedShop)
 })
+
+Then('il peut entrer dedans', function () {
+  cy.get('#shop-name').click()
+  cy.url().should('include', `/shops/${this.selectedShop.id}`)
+})

@@ -6,7 +6,9 @@
     <div class="p-4">
       <div class="mb-8">
         <div id="shop-name" class="text-black font-bold text-xl mb-2">
-          {{ shop.name }}
+          <nuxt-link :to="{name: 'shops-id___fr', params: {id: shop.id}}">
+            {{ shop.name }}
+          </nuxt-link>
         </div>
         <p id="shop-description" class="text-grey-darker text-base">
           {{ shop.description }}
