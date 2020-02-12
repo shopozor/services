@@ -61,6 +61,20 @@ services:
     environment:
       - PYTHONDONTWRITEBYTECODE=1
     entrypoint: ./entrypoint.sh medium
+  site-generator-service:
+    build:
+      context: .
+      dockerfile: backend/site-generator-service/Dockerfile
+    image: ${PRODUCT:-shopozor}/site-generator-service:${TAG:-local}
+    ports:
+      - "${GENERATOR_API:-2000}:8080"
+    environment:
+      API_PORT: 8080
+      GRAPHQL_API: http://graphql-engine:8080/v1/graphql
+      ASSETS_API: http://minio:9000
+    restart: "no"
+    depends_on:
+      - graphql-engine
 
 volumes:
   db_data:

@@ -3,6 +3,8 @@ pipeline {
   environment {
     API_PORT = 8081
     ASSETS_API = "http://localhost:9001"
+    GENERATOR_API_PORT = 2000
+    GENERATOR_API = "http://localhost:${GENERATOR_API_PORT}/"
     GRAPHQL_API = "http://localhost:${API_PORT}/v1/graphql/"
     TEST_REPORTS_FOLDER = 'test-reports'
   }
