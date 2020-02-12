@@ -1,0 +1,4 @@
+Browse your minio instance and notice that the necessary buckets are there.
+{{- if .Values.fixtures.enabled -}}
+Additionally, notice that the buckets are filled with fixtures assets.
+{{- end -}}

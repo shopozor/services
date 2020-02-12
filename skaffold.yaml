@@ -1,0 +1,156 @@
+apiVersion: skaffold/v2alpha2
+kind: Config
+
+build:
+  tagPolicy:
+    sha256: {}
+  artifacts:
+    - image: shopozor/assets-fixtures
+      context: .
+      docker:
+        dockerfile: backend/assets-service/Dockerfile
+    - image: shopozor/graphql-engine
+      context: backend/database-service
+      docker:
+        dockerfile: Dockerfile
+        target: hasura-migrations
+    - image: shopozor/fixtures-service
+      context: .
+      docker:
+        dockerfile: backend/fixtures-generator/Dockerfile
+        target: app
+
+deploy:
+  helm:
+    releases:
+      - name: minio
+        chartPath: bitnami/minio
+        remote: true
+        namespace: dev
+        overrides:
+          fullnameOverride: minio
+          mode: standalone
+          clusterDomain: cluster.local
+          persistence:
+            enabled: false
+            size: 10Gi
+          disableWebUI: false
+          accessKey:
+            password: minio
+          secretKey:
+            password: minio123
+      # TODO: we need to decide if the assets are pushed by default to the assets service
+      #       or if we proceed as with the database fixtures!
+      - name: minio-initialization
+        chartPath: backend/assets-service/chart
+        namespace: dev
+        values:
+          image: shopozor/assets-fixtures
+        overrides:
+          fixtures:
+            enabled: true
+          minio:
+            fullname: minio
+            client:
+              alias: minio
+            server:
+              port: 9000
+      - name: postgres
+        chartPath: bitnami/postgresql-ha
+        remote: true
+        namespace: dev
+        overrides:
+          fullnameOverride: postgres
+          postgresql:
+            username: postgres
+            database: postgres
+          persistence:
+            mountPath: /opt/bitnami/postgresql/data
+          volumePermissions:
+            enabled: true
+      - name: hasura
+        chartPath: backend/database-service/chart
+        namespace: dev
+        values:
+          image: shopozor/graphql-engine
+        overrides:
+          nameOverride: hasura
+          postgres:
+            secretName: postgres-postgresql
+            username: postgres
+            database: postgres
+            hostname: postgres-pgpool.dev
+          hasura:
+            server:
+              port: 8080
+      # TODO: this must not stay in the dev deployment; this is only for staging
+      # TODO: the database-fixtures needs to create a PVC where the generated graphql responses can be found
+      #       so probably we also store the migrations in that PVC
+      - name: database-fixtures
+        chartPath: backend/fixtures-generator/chart
+        namespace: dev
+        values:
+          image: shopozor/fixtures-service
+        overrides:
+          hasura:
+            host: hasura
+            port: 8080
+    flags:
+      upgrade:
+        - --install
+
+profiles:
+  - name: staging
+    deploy:
+      helm:
+        releases:
+          - name: minio
+            chartPath: bitnami/minio
+            remote: true
+            namespace: staging
+            values:
+            overrides:
+              fullnameOverride: minio
+              mode: distributed
+              persistence:
+                enabled: true
+                storageClass: jelastic-dynamic-volume
+                size: 10Gi
+              disableWebUI: false
+        flags:
+          upgrade:
+            - --install
+      kubectl:
+        manifests:
+          - backend/assets-service/k8s/setup/*
+          - backend/assets-service/k8s/testing/*
+        flags:
+          global:
+            - --namespace=staging
+  - name: production
+    deploy:
+      helm:
+        releases:
+          # TODO: use https://github.com/bitnami/charts/blob/master/bitnami/minio/values-production.yaml
+          - name: minio
+            chartPath: bitnami/minio
+            remote: true
+            namespace: production
+            values:
+            overrides:
+              fullnameOverride: minio
+              mode: distributed
+              persistence:
+                enabled: true
+                storageClass: jelastic-dynamic-volume
+                size: 10Gi
+              disableWebUI: true
+        flags:
+          upgrade:
+            - --install
+      kubectl:
+        manifests:
+          - backend/assets-service/k8s/setup/*
+        flags:
+          global:
+            - --namespace=production

@@ -13,3 +13,4 @@ margin_rates = {
 SHOPOZOR_MARGIN = sum(margin_rates.values())
 
 FIXTURE_DIR = 'fixtures'
+PICTURES_DIR = 'pictures'

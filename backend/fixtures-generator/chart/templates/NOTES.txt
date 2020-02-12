@@ -1,0 +1,1 @@
+You see that the chart was installed successfully when you browse your database and notice it is filled with fake data.

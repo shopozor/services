@@ -58,7 +58,7 @@ pipeline {
           sh "make --directory backend seed-database"
           sh "make --directory backend test.integration"
           sh "make --directory backend unseed-database"
-          // sh "make --directory backend assets.down"
+          sh "make --directory backend assets.down"
         }
       }
     }
@@ -83,7 +83,7 @@ pipeline {
           sh "make --directory backend seed-database"
         	sh "make --directory frontend test.e2e"
           sh "make --directory backend unseed-database"
-          // sh "make --directory backend assets.down"
+          sh "make --directory backend assets.down"
         }
       }
     }
