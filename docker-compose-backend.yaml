@@ -75,6 +75,7 @@ services:
       ASSETS_API: http://minio:9000
       GRAPHQL_API: http://graphql-engine:8080/v1/graphql
       OUTPUT_DIR: /dist/static
+      SRC_DIR: /data/frontend/consumer-ui
     restart: "no"
     depends_on:
       - graphql-engine

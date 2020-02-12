@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 
 const server = require('../server')
+const generator = require('../generator')
 
 // TODO: generate the website initially!
 // TODO: integration test that upon starting, the website is generated!
 // TODO: unit test that upon starting, the generate method is called
-// TODO: unit test the server responses
 
+generator.generate()
 server.start()
