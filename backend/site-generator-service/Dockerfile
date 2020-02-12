@@ -1,17 +1,16 @@
 FROM node:13.8.0-alpine
 
-# TODO: copy consumer-ui code in some /data folder
+# consumer-ui code
 WORKDIR /data
-# TODO: make sure I only need the consumer-ui folder for the sake of building
-COPY ./frontend/consumer-ui/ .
+COPY ./frontend/consumer-ui/ ./frontend/consumer-ui
+COPY ./shared/graphql ./shared/graphql
+RUN cd ./frontend/consumer-ui && yarn
 
-# Site generator service app
-RUN addgroup -S app && adduser -S -g app app
+# site generator service app
 RUN apk --no-cache add ca-certificates
-RUN mkdir -p /home/app
-WORKDIR /home/app
+RUN mkdir -p /app
+WORKDIR /app
 COPY ./backend/site-generator-service/package.json ./package.json
 COPY ./backend/site-generator-service/src src
 RUN yarn
-USER app
 CMD ["yarn", "start"]

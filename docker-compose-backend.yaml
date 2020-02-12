@@ -68,10 +68,13 @@ services:
     image: ${PRODUCT:-shopozor}/site-generator-service:${TAG:-local}
     ports:
       - "${GENERATOR_API:-2000}:8080"
+    volumes:
+      - static_site_data:/dist/
     environment:
       API_PORT: 8080
-      GRAPHQL_API: http://graphql-engine:8080/v1/graphql
       ASSETS_API: http://minio:9000
+      GRAPHQL_API: http://graphql-engine:8080/v1/graphql
+      OUTPUT_DIR: /dist/static
     restart: "no"
     depends_on:
       - graphql-engine
@@ -79,3 +82,4 @@ services:
 volumes:
   db_data:
   assets_data:
+  static_site_data:

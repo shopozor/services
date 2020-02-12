@@ -17,7 +17,7 @@ build:
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-backend-tests.yaml build
 
 up:
-	@docker-compose -f ../docker-compose-backend.yaml up -d minio-setup postgres graphql-engine
+	@docker-compose -f ../docker-compose-backend.yaml up -d minio-setup postgres graphql-engine site-generator-service
 	@./database-service/scripts/waitForService.sh localhost ${API_PORT}
 
 down:
