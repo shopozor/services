@@ -1,14 +1,28 @@
-const util = require('util')
-const exec = util.promisify(require('child_process').exec)
+const { spawn } = require('child_process')
 
-async function generate () {
-  const child = await exec('"yarn" generate', {
-    cwd: process.env.SRC_DIR || '/data/frontend/consumer-ui'
+function generate () {
+  const child = spawn('yarn', ['generate'], {
+    cwd: process.env.SRC_DIR || '/data/frontend/consumer-ui',
+    shell: true
   })
 
-  console.log(`stdout: ${child.stdout}`)
-  console.error(`stderr: ${child.stderr}`)
-  console.log(`pid: ${child.pid}`)
+  child.stdout.on('data', (data) => {
+    console.log(`stdout: ${data}`)
+  })
+
+  child.stderr.on('data', (data) => {
+    console.error(`stderr: ${data}`)
+  })
+
+  child.on('close', (code) => {
+    console.log(`child process exited with code ${code}`)
+  })
+
+  child.on('error', (err) => {
+    console.log(`Error: ${err}`)
+  })
+
+  return child
 }
 
 module.exports = {
