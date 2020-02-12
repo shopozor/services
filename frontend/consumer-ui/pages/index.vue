@@ -29,6 +29,6 @@ export default {
       title: this.$i18n.t('budzonnerie')
     }
   },
-  layout: 'default'
+  layout: 'home'
 }
 </script>

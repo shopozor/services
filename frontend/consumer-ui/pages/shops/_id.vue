@@ -26,6 +26,7 @@ export default {
   validate ({ params }) {
     // shop id must be a number
     return /^\d+$/.test(params.id)
-  }
+  },
+  layout: 'shop'
 }
 </script>
