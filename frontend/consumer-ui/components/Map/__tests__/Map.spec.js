@@ -1,4 +1,4 @@
-import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
+import { createLocalVue, mount, shallowMount, RouterLinkStub } from '@vue/test-utils'
 import { LMap, LMarker, LTileLayer } from 'vue2-leaflet'
 // eslint-disable-next-line no-unused-vars
 import { GestureHandling } from 'leaflet-gesture-handling'
@@ -34,6 +34,9 @@ function getMapComponentOptions (localVue, center, zoom, isLoading, data = null)
     propsData: {
       center,
       zoom
+    },
+    stubs: {
+      NuxtLink: RouterLinkStub
     }
   }
 }

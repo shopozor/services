@@ -773,20 +773,13 @@ exports[`Storyshots Map/ShopCard Shop description 1`] = `
     class="flex bg-white justify-between w-full h-64 flex-row md:w-64 md:h-full md:flex-col"
   >
     <div
-      class="absolute top-0 right-0 text-black font-extrabold m-2 cursor-pointer"
+      class="absolute top-0 left-0 text-black font-extrabold m-2 cursor-pointer"
       id="close-shop-card"
     >
       
     ✘
   
     </div>
-     
-    <div
-      class="h-auto w-48 md:h-64 md:w-full bg-cover"
-      id="shop-img"
-      style="background-image: url(http://assets-service/shops/shop_01.jpg);"
-      title="Ex dicta neque quae doloribus quam."
-    />
      
     <div
       class="p-4"
@@ -798,9 +791,11 @@ exports[`Storyshots Map/ShopCard Shop description 1`] = `
           class="text-black font-bold text-xl mb-2"
           id="shop-name"
         >
-          
-        Quae consequuntur similique minus neque dolores.
-      
+          <div>
+            
+          Quae consequuntur similique minus neque dolores.
+        
+          </div>
         </div>
          
         <p
@@ -831,6 +826,13 @@ exports[`Storyshots Map/ShopCard Shop description 1`] = `
         </div>
       </div>
     </div>
+     
+    <div
+      class="h-auto w-48 md:h-64 md:w-full bg-cover"
+      id="shop-img"
+      style="background-image: url(http://assets-service/shops/shop_01.jpg);"
+      title="Ex dicta neque quae doloribus quam."
+    />
   </div>
 </div>
 `;

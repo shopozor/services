@@ -1,13 +1,16 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, shallowMount, RouterLinkStub } from '@vue/test-utils'
 import ShopCard from '../ShopCard'
 import ShopsData from '~fixtures/Consumer/Shops'
 
 function getComponentOptions (localVue) {
   return {
+    localVue,
     propsData: {
       shop: ShopsData.data.shops[0]
     },
-    localVue
+    stubs: {
+      NuxtLink: RouterLinkStub
+    }
   }
 }
 

@@ -1,5 +1,6 @@
 import apolloStorybookDecorator from 'apollo-storybook-vue'
 import { configure, addDecorator, addParameters } from '@storybook/vue'
+import {action} from '@storybook/addon-actions'
 import { INITIAL_VIEWPORTS } from '@storybook/addon-viewport'
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
@@ -14,6 +15,16 @@ import mocks from './schema/mocks'
 import "~assets/css/tailwind.css"
 
 Vue.use(VueI18n)
+
+Vue.component('NuxtLink', {
+  props:   ['to'],
+  methods: {
+    log() {
+      action('link target')(this.to)
+    },
+  },
+  template: '<div @click="log()"><slot>NuxtLink</slot></div>',
+})
 
 addParameters({
   viewport: {
