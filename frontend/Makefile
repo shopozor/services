@@ -25,6 +25,7 @@ dev-test.admin-unit:
 dev-test.consumer-unit:
 	@lerna run test:unit --scope consumer-ui --stream
 
+# TODO: this cannot be only here, as there are backend packages that also have unit tests
 dev-test.unit:
 	@lerna run test:unit --stream
 
