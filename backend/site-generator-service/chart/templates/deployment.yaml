@@ -23,26 +23,64 @@ spec:
       serviceAccountName: {{ template "chart.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      initContainers:
+      - name: wait-for-hasura
+        image: curlimages/curl:latest
+        env: {{- include "hasura.envvarsblock" . | nindent 8 }}
+        - name: TIMEOUT
+          value: "60"
+        command:
+          - /bin/sh
+          - -c
+          - |
+            echo "waiting $TIMEOUT for $HASURA_PORT to be ready on host $HASURA_HOST"
+            for i in `seq 1 $TIMEOUT`;
+            do
+                echo "waiting for graphql engine"
+                version=$(curl -s http://$HASURA_HOST:$HASURA_PORT/v1/version | grep "version")
+                [ "$version" == "" ] && sleep 1 || exit 0
+            done
+            echo "failed waiting for $HASURA_PORT on host $HASURA_HOST" && exit 1
       containers:
-        - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          ports:
-            - name: http
-              containerPort: 80
-              protocol: TCP
-          livenessProbe:
-            httpGet:
-              path: /
-              port: http
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
+      - name: {{ .Chart.Name }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 12 }}
+        image: {{ .Values.image }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        env:
+          - name: API_PORT
+            value: {{ .Values.siteGenerator.server.port }}
+          - name: ASSETS_API
+            value: "http://{{ .Values.services.assets.name }}:{{ .Values.services.assets.port }}"
+          - name: GRAPHQL_API
+            value: "http://{{ .Values.services.hasura.name }}:{{ .Values.services.hasura.port }}"
+          - name: OUTPUT_DIR
+            value: "{{ .Values.siteGenerator.outputDir }}/static"
+          - name: SRC_DIR
+            value: {{ .Values.siteGenerator.srcDir }}
+        volumeMounts:
+          - name: static_site_data
+            mountPath: "{{ .Values.siteGenerator.outputDir }}"
+        ports:
+          - name: http
+            containerPort: {{ .Values.siteGenerator.server.port }}
+            protocol: TCP
+        livenessProbe:
+          httpGet:
+            path: /
+            port: site-generator
+        readinessProbe:
+          httpGet:
+            path: /
+            port: site-generator
+        resources:
+          {{- toYaml .Values.resources | nindent 12 }}
+      volumes:
+        - name: static_site_data
+        {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "chart.fullname" .) }}
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

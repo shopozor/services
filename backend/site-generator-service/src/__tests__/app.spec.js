@@ -2,9 +2,9 @@ const request = require('supertest')
 const app = require('../app')
 
 describe('Test root path', () => {
-  it('should return 404 upon browsing /', async () => {
+  it('should return 200 upon browsing /', async () => {
     const response = await request(app).get('/')
-    expect(response.statusCode).toBe(404)
+    expect(response.statusCode).toBe(200)
   })
 })
 

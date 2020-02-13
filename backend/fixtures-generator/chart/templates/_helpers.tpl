@@ -68,7 +68,7 @@ Common hasura environment variables setup
 {{/*
 Return the proper Storage Class
 */}}
-{{- define "fixtures.storageClass" -}}
+{{- define "chart.storageClass" -}}
 {{/*
 Helm 2.11 supports the assignment of a value to a variable defined in a different scope,
 but Helm 2.9 and 2.10 does not support it, so we need to implement this if-else logic.
