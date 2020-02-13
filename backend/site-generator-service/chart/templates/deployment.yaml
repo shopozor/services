@@ -46,7 +46,7 @@ spec:
         securityContext:
           {{- toYaml .Values.securityContext | nindent 12 }}
         image: {{ .Values.image }}
-        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        imagePullPolicy: {{ .Values.pullPolicy }}
         env:
           - name: API_PORT
             value: {{ .Values.siteGenerator.server.port }}
@@ -68,11 +68,11 @@ spec:
         livenessProbe:
           httpGet:
             path: /
-            port: site-generator
+            port: http
         readinessProbe:
           httpGet:
             path: /
-            port: site-generator
+            port: http
         resources:
           {{- toYaml .Values.resources | nindent 12 }}
       volumes:
