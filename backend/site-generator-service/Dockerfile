@@ -1,16 +1,19 @@
 FROM node:13.8.0-alpine
 
 # consumer-ui code
-WORKDIR /data
+RUN mkdir -p /data/frontend/consumer-ui
+COPY ./frontend/consumer-ui/package.json /data/frontend/consumer-ui
+COPY ./frontend/consumer-ui/yarn.lock /data/frontend/consumer-ui
+WORKDIR /data/frontend/consumer-ui
+RUN yarn
 COPY ./frontend/consumer-ui/ ./frontend/consumer-ui
 COPY ./shared/graphql ./shared/graphql
-RUN cd ./frontend/consumer-ui && yarn
 
 # site generator service app
 RUN apk --no-cache add ca-certificates
-RUN mkdir -p /app
+COPY ./backend/site-generator-service/package.json /app/package.json
+COPY ./backend/site-generator-service/yarn.lock /app/yarn.lock
 WORKDIR /app
-COPY ./backend/site-generator-service/package.json ./package.json
-COPY ./backend/site-generator-service/src src
 RUN yarn
+COPY ./backend/site-generator-service/src src
 CMD ["yarn", "start"]
