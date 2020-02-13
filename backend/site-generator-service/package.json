@@ -24,7 +24,7 @@
   "scripts": {
     "start": "node ./src/bin/www",
     "start:dev": "cross-env DEBUG='express:server' node ./src/bin/www",
-    "test": "jest"
+    "test:unit": "jest"
   },
   "version": "0.0.0"
 }
