@@ -6,7 +6,10 @@ COPY ./frontend/admin-ui/package.json ./frontend/admin-ui/package.json
 COPY ./frontend/admin-ui/yarn.lock ./frontend/admin-ui/yarn.lock
 WORKDIR /tmp/frontend/admin-ui
 RUN yarn && yarn build
+# TODO: build storybook too!
 
 FROM nginx:1.16.0 AS app
 
 COPY --from=builder /tmp/frontend/admin-ui/dist/spa /srv
+
+# TODO: provide storybook image here!
