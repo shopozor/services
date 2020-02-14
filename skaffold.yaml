@@ -23,6 +23,11 @@ build:
       context: .
       docker:
         dockerfile: backend/site-generator-service/Dockerfile
+    - image: shopozor/admin-ui
+      context: .
+      docker:
+        dockerfile: frontend/admin-ui/Dockerfile
+        target: app
 
 deploy:
   helm:
@@ -113,6 +118,12 @@ deploy:
             hasura:
               name: hasura
               port: 8080
+      - name: admin-ui
+        chartPath: frontend/admin-ui/chart
+        namespace: dev
+        values:
+          image: shopozor/admin-ui
+          # TODO: give storybook image too!
     flags:
       upgrade:
         - --install

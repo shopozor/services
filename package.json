@@ -14,8 +14,6 @@
     "@jagi/jest-transform-graphql": "^1.0.2",
     "@nuxtjs/eslint-config": "^2.0.0",
     "@nuxtjs/eslint-module": "^1.1.0",
-    "@quasar/app": "^1.4.3",
-    "@quasar/cli": "^1.0.5",
     "@quasar/quasar-app-extension-testing": "^1.0.0",
     "@quasar/quasar-app-extension-testing-unit-jest": "^1.0.0",
     "@storybook/addon-actions": "^5.2.8",
