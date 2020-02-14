@@ -16,18 +16,11 @@ init:
 dev.end:
 	@make --directory .. dev.backend.end
 
-dev-build:
-	@lerna run build
-
 dev-test.admin-unit:
 	@lerna run test:unit --scope admin-ui --stream
 
 dev-test.consumer-unit:
 	@lerna run test:unit --scope consumer-ui --stream
-
-# TODO: this cannot be only here, as there are backend packages that also have unit tests
-dev-test.unit:
-	@lerna run test:unit --stream
 
 dev-test.admin-integration:
 	@lerna run cypress:integration:dev --scope admin-ui --stream
@@ -61,9 +54,6 @@ down:
 
 rm:
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml -f ../docker-compose-frontend-tests.yaml rm -f
-
-test.unit:
-	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml -f ../docker-compose-frontend-tests.yaml up --abort-on-container-exit ui-unit-tests
 
 test.integration:
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-frontend.yaml -f ../docker-compose-frontend-tests.yaml up --abort-on-container-exit consumer-storybook admin-storybook ui-integration-tests

@@ -10,6 +10,7 @@ pipeline {
   }
   stages {
     // The code linting stage needs node modules like the linter
+    // TODO: do not do this any more --> pack everything in the respective images!
     stage('Bootstrap node packages') {
       steps {
         sh "make bootstrap"
@@ -63,10 +64,10 @@ pipeline {
         }
       }
     }
-    stage('Perform ui unit tests') {
+    stage('Perform jest unit tests') {
       steps {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-         sh "make --directory frontend test.unit"
+         sh "make test.unit"
         }
       }
     }

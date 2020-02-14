@@ -19,12 +19,17 @@
     ],
     "testEnvironment": "node"
   },
+  "jest-junit": {
+    "outputDirectory": "./test-reports",
+    "outputName": "unit-test-report.xml"
+  },
   "name": "site-generator-service",
   "private": false,
   "scripts": {
     "start": "node ./src/bin/www",
     "start:dev": "cross-env DEBUG='express:server' node ./src/bin/www",
-    "test:unit": "jest"
+    "test:unit": "jest",
+    "test:unit:ci": "jest --ci --reporters=default --reporters=jest-junit"
   },
   "version": "0.0.0"
 }
