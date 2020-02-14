@@ -1,0 +1,10 @@
+version: "3.6"
+services:
+  jest-unit-tests:
+    # TODO: we will need a dedicated image where we install the dedicated node modules!
+    image: node:12.10.0-slim
+    working_dir: /app
+    restart: "no"
+    volumes:
+      - .:/app
+    entrypoint: yarn test:unit:ci

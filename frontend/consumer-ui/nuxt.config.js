@@ -105,5 +105,9 @@ module.exports = {
     extend (config, ctx) {
       config.resolve.alias['~graphql'] = path.resolve(__dirname, '../../shared/graphql/')
     }
+  },
+
+  generate: {
+    dir: process.env.OUTPUT_DIR || 'dist'
   }
 }

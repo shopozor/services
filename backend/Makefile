@@ -16,12 +16,15 @@ dev.start: build up db.migrate.up fixtures assets.up
 
 dev.end: fixtures.clean assets.down down rm
 
+dev-test.site-generator-unit:
+	@lerna run test:unit --scope site-generator-service --stream
+
 build:
 	@echo "Building images..."
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-backend-tests.yaml build
 
 up:
-	@docker-compose -f ../docker-compose-backend.yaml up -d minio-setup postgres graphql-engine
+	@docker-compose -f ../docker-compose-backend.yaml up -d minio-setup postgres graphql-engine site-generator-service
 	@./database-service/scripts/waitForService.sh localhost ${API_PORT}
 
 down:
@@ -29,6 +32,9 @@ down:
 
 rm:
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-backend-tests.yaml rm -f
+
+static-site.generate:
+	@docker-compose -f ../docker-compose-backend.yaml up generate-site-job
 
 assets.up:
 	@./assets-service/scripts/push_fixtures.sh

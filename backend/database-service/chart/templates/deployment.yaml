@@ -57,17 +57,17 @@ spec:
             - name: HASURA_GRAPHQL_DATABASE_URL
               value: postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)
           ports:
-            - name: hasura
+            - name: http
               containerPort: {{ .Values.hasura.server.port }}
               protocol: TCP
           livenessProbe:
             httpGet:
               path: /
-              port: hasura
+              port: http
           readinessProbe:
             httpGet:
               path: /
-              port: hasura
+              port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
       {{- with .Values.nodeSelector }}
