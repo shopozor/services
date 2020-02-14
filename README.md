@@ -65,8 +65,6 @@ Most of the backend stuff and the whole frontend validation are performed on doc
 * on Ubuntu, follow [these instructions](https://docs.docker.com/install/linux/docker-ce/ubuntu/)  
 * on Windows 10, follow [these instructions](https://docs.docker.com/docker-for-windows/install/) and make sure you read [this blog](https://nickjanetakis.com/blog/setting-up-docker-for-windows-and-wsl-to-work-flawlessly) if you work with WSL
 
-Do not use Docker for Desktop 2.2.0.0. It is not working. The last working stable version is, as far as we know, version 2.1.0.5.
-
 ### Kubernetes
 
 Under linux, install minikube. Under Windows, you can enable kubernetes in Docker Desktop:
