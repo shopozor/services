@@ -12,9 +12,10 @@ services:
     restart: "no"
   consumer-ui:
     image: abiosoft/caddy:latest
+    working_dir: /srv/static
     volumes:
       - ./frontend/Caddyfile:/etc/Caddyfile
-      - ./frontend/consumer-ui/dist:/srv
+      - static_site_data:/srv
     depends_on:
       - minio
     ports:

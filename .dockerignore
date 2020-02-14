@@ -1,6 +1,6 @@
 .github/
-.quasar/
+**/.quasar/
 .git/
 .vscode/
-/node_modules/
-/dist/
+**/node_modules/
+**/dist/

@@ -1,14 +1,5 @@
 version: "3.6"
 services:
-  ui-unit-tests:
-    build:
-      context: frontend
-      dockerfile: Dockerfile
-      target: unit-tests
-    restart: "no"
-    volumes:
-      - .:/app
-    entrypoint: ./frontend/tests/entrypoint-unit.sh
   admin-storybook:
     image: abiosoft/caddy:latest
     volumes:

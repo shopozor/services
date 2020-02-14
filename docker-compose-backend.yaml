@@ -61,7 +61,31 @@ services:
     environment:
       - PYTHONDONTWRITEBYTECODE=1
     entrypoint: ./entrypoint.sh medium
+  site-generator-service:
+    build:
+      context: .
+      dockerfile: backend/site-generator-service/Dockerfile
+    image: ${PRODUCT:-shopozor}/site-generator-service:${TAG:-local}
+    ports:
+      - "${GENERATOR_API_PORT:-2000}:8080"
+    volumes:
+      - static_site_data:/dist/
+    environment:
+      API_PORT: 8080
+      ASSETS_API: http://minio:9000
+      GRAPHQL_API: http://graphql-engine:8080/v1/graphql
+      OUTPUT_DIR: /dist/static
+      SRC_DIR: /data/frontend/consumer-ui
+    restart: "no"
+    depends_on:
+      - graphql-engine
+  generate-site-job:
+    image: curlimages/curl:latest
+    depends_on:
+      - site-generator-service
+    command: http://site-generator-service:8080/generate
 
 volumes:
   db_data:
   assets_data:
+  static_site_data:

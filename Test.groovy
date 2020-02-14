@@ -3,11 +3,14 @@ pipeline {
   environment {
     API_PORT = 8081
     ASSETS_API = "http://localhost:9001"
+    GENERATOR_API_PORT = 2000
+    GENERATOR_API = "http://localhost:${GENERATOR_API_PORT}/"
     GRAPHQL_API = "http://localhost:${API_PORT}/v1/graphql/"
     TEST_REPORTS_FOLDER = 'test-reports'
   }
   stages {
     // The code linting stage needs node modules like the linter
+    // TODO: do not do this any more --> pack everything in the respective images!
     stage('Bootstrap node packages') {
       steps {
         sh "make bootstrap"
@@ -40,7 +43,7 @@ pipeline {
     stage('Build the frontends') {
       steps {
         sh "yarn build"
-        sh "yarn generate"
+        sh "make --directory backend static-site.generate"
       }
     }
     stage('Perform database tests') {
@@ -61,10 +64,10 @@ pipeline {
         }
       }
     }
-    stage('Perform ui unit tests') {
+    stage('Perform jest unit tests') {
       steps {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
-         sh "make --directory frontend test.unit"
+         sh "make test.unit"
         }
       }
     }

@@ -19,6 +19,10 @@ build:
       docker:
         dockerfile: backend/fixtures-generator/Dockerfile
         target: app
+    - image: shopozor/site-generator-service
+      context: .
+      docker:
+        dockerfile: backend/site-generator-service/Dockerfile
 
 deploy:
   helm:
@@ -28,6 +32,7 @@ deploy:
         remote: true
         namespace: dev
         overrides:
+          # TODO: this override is probably not necessary
           fullnameOverride: minio
           mode: standalone
           clusterDomain: cluster.local
@@ -60,6 +65,7 @@ deploy:
         remote: true
         namespace: dev
         overrides:
+          # TODO: this override is probably not necessary
           fullnameOverride: postgres
           postgresql:
             username: postgres
@@ -74,6 +80,7 @@ deploy:
         values:
           image: shopozor/graphql-engine
         overrides:
+          # TODO: this override is probably not necessary
           nameOverride: hasura
           postgres:
             secretName: postgres-postgresql
@@ -84,8 +91,6 @@ deploy:
             server:
               port: 8080
       # TODO: this must not stay in the dev deployment; this is only for staging
-      # TODO: the database-fixtures needs to create a PVC where the generated graphql responses can be found
-      #       so probably we also store the migrations in that PVC
       - name: database-fixtures
         chartPath: backend/fixtures-generator/chart
         namespace: dev
@@ -95,6 +100,19 @@ deploy:
           hasura:
             host: hasura
             port: 8080
+      - name: site-generator-service
+        chartPath: backend/site-generator-service/chart
+        namespace: dev
+        values:
+          image: shopozor/site-generator-service
+        overrides:
+          services:
+            assets:
+              name: minio
+              port: 9000
+            hasura:
+              name: hasura
+              port: 8080
     flags:
       upgrade:
         - --install

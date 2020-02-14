@@ -60,9 +60,9 @@ Common hasura environment variables setup
 */}}
 {{- define "hasura.envvarsblock" -}}
 - name: HASURA_HOST
-  value: {{ .Values.hasura.host }}
+  value: {{ .Values.services.hasura.name }}
 - name: HASURA_PORT
-  value: {{ .Values.hasura.port | quote }}
+  value: {{ .Values.services.hasura.port | quote }}
 {{- end -}}
 
 {{/*
