@@ -67,7 +67,7 @@ services:
       dockerfile: backend/site-generator-service/Dockerfile
     image: ${PRODUCT:-shopozor}/site-generator-service:${TAG:-local}
     ports:
-      - "${GENERATOR_API:-2000}:8080"
+      - "${GENERATOR_API_PORT:-2000}:8080"
     volumes:
       - static_site_data:/dist/
     environment:
