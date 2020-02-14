@@ -42,7 +42,7 @@ pipeline {
     stage('Build the frontends') {
       steps {
         sh "yarn build"
-        sh "yarn generate"
+        sh "make --directory backend static-site.generate"
       }
     }
     stage('Perform database tests') {
