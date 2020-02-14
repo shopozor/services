@@ -79,6 +79,11 @@ services:
     restart: "no"
     depends_on:
       - graphql-engine
+  generate-site-job:
+    image: curlimages/curl:latest
+    depends_on:
+      - site-generator-service
+    command: http://site-generator-service:8080/generate
 
 volumes:
   db_data:
