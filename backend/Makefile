@@ -26,6 +26,9 @@ down:
 rm:
 	@docker-compose -f ../docker-compose-backend.yaml -f ../docker-compose-backend-tests.yaml rm -f
 
+static-site.generate:
+	@docker-compose -f ../docker-compose-backend.yaml up generate-site-job
+
 assets.up:
 	@./assets-service/scripts/push_fixtures.sh
 
