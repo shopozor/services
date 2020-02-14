@@ -49,7 +49,7 @@ spec:
         imagePullPolicy: {{ .Values.pullPolicy }}
         env:
           - name: API_PORT
-            value: {{ .Values.siteGenerator.server.port }}
+            value: {{ .Values.siteGenerator.server.port | quote }}
           - name: ASSETS_API
             value: "http://{{ .Values.services.assets.name }}:{{ .Values.services.assets.port }}"
           - name: GRAPHQL_API
@@ -59,7 +59,7 @@ spec:
           - name: SRC_DIR
             value: {{ .Values.siteGenerator.srcDir }}
         volumeMounts:
-          - name: static_site_data
+          - name: static-site-data
             mountPath: "{{ .Values.siteGenerator.outputDir }}"
         ports:
           - name: http
@@ -76,7 +76,7 @@ spec:
         resources:
           {{- toYaml .Values.resources | nindent 12 }}
       volumes:
-        - name: static_site_data
+        - name: static-site-data
         {{- if .Values.persistence.enabled }}
           persistentVolumeClaim:
             claimName: {{ .Values.persistence.existingClaim | default (include "chart.fullname" .) }}

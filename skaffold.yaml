@@ -91,8 +91,6 @@ deploy:
             server:
               port: 8080
       # TODO: this must not stay in the dev deployment; this is only for staging
-      # TODO: the database-fixtures needs to create a PVC where the generated graphql responses can be found
-      #       so probably we also store the migrations in that PVC
       - name: database-fixtures
         chartPath: backend/fixtures-generator/chart
         namespace: dev

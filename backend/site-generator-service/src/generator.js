@@ -14,14 +14,6 @@ function generate () {
     console.error(`stderr: ${data}`)
   })
 
-  child.on('close', (code) => {
-    console.log(`child process exited with code ${code}`)
-  })
-
-  child.on('error', (err) => {
-    console.log(`Error: ${err}`)
-  })
-
   return child
 }
 
