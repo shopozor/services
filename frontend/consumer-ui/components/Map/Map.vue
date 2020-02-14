@@ -1,8 +1,8 @@
 <template>
   <div>
     <loading class="z-999" :active="loadingMapData" :can-cancel="true" :is-full-page="false" :color="spinnerColor" />
-    <l-map class="w-full h-3/4" :zoom="zoom" :center="center" :options="options" @click="clearDescription">
-      <shop-card v-if="shop" :shop="shop" class="absolute left-0 bottom-0 z-999" />
+    <l-map class="w-full h-3/4" :zoom="zoom" :center="center" :options="options">
+      <shop-card v-if="shop" :shop="shop" class="absolute left-0 bottom-0 z-999" @close="clearDescription" />
       <l-tile-layer :url="tilesUrl" />
       <shop-marker v-for="shop in shops" :key="shop.id" :shop="shop" @display-description="displayDescription" />
     </l-map>

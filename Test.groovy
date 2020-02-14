@@ -2,7 +2,8 @@ pipeline {
   agent any
   environment {
     API_PORT = 8081
-    ASSETS_API = "http://localhost:9001"
+    MINIO_PORT = 9001
+    ASSETS_API = "http://localhost:${MINIO_PORT}"
     GENERATOR_API_PORT = 2000
     GENERATOR_API = "http://localhost:${GENERATOR_API_PORT}/"
     GRAPHQL_API = "http://localhost:${API_PORT}/v1/graphql/"

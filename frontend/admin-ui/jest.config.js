@@ -20,6 +20,7 @@ module.exports = {
     //  statements: 50
     }
   },
+  testPathIgnorePatterns: ['/node_modules/', '/cypress/'],
   testMatch: [
     '<rootDir>/test/jest/__tests__/**/*.spec.js',
     '<rootDir>/test/jest/__tests__/**/*.test.js',

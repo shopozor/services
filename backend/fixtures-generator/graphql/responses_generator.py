@@ -89,6 +89,34 @@ class ShopListsGenerator(ResponsesGenerator):
         self._to_json(self._produce_data(), 'Shops.json')
 
 
+class ShopsGenerator(ResponsesGenerator):
+
+    def __init__(self, fixtures_dir, output_dir):
+        super().__init__(fixtures_dir, os.path.join(
+            output_dir, 'Consumer', 'Shops'))
+        self.__SHOPS_FIXTURE = helpers.get_shopozor_fixture(self._INPUT_DIR)
+
+    def _produce_data(self):
+        return [{
+            'data': {
+                'shops_by_pk': {
+                    'id': shop['id'],
+                    'name': shop['name']
+                }
+            }
+        } for shop in self.__SHOPS_FIXTURE['shops']]
+
+    def __output_shop_details(self, details):
+        for detail in details:
+            id = detail['data']['shops_by_pk']['id']
+            output_filename = os.path.join('Shop-%d.json' % id)
+            self._to_json(detail, output_filename)
+
+    def generate(self):
+        expected_shop_details = self._produce_data()
+        self.__output_shop_details(expected_shop_details)
+
+
 class ShopCategoriesGenerator(ResponsesGenerator):
 
     def __init__(self, fixtures_dir, output_dir):

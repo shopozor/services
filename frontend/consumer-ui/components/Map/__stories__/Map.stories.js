@@ -1,4 +1,5 @@
 import { storiesOf } from '@storybook/vue'
+import { action } from '@storybook/addon-actions'
 import Map from '../Map'
 import ShopCard from '../ShopCard'
 import ShopsData from '~fixtures/Consumer/Shops'
@@ -12,7 +13,7 @@ const center = [46.718852, 7.097669]
 const shop = ShopsData.data.shops[0]
 const zoom = 11
 
-storiesOf('Map', module)
+storiesOf('Map/Map', module)
   .add('OpenStreetMap Carto with some customizations', () => {
     return {
       components,
@@ -79,12 +80,17 @@ storiesOf('Map', module)
       })
     }
   })
+
+storiesOf('Map/ShopCard', module)
   .add('Shop description', () => {
     return {
       components,
-      template: '<shop-card :shop="shop"/>',
+      template: '<shop-card :shop="shop" @close="onClose"/>',
       data: () => ({
         shop
-      })
+      }),
+      methods: {
+        onClose: action('onClose')
+      }
     }
   })

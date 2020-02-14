@@ -329,6 +329,20 @@ make --directory frontend dev-test.admin-e2e
 make --directory frontend dev-test.consumer-e2e
 ```
 
+To run the Cypress UI in order to debug the e2e tests, you might want to run
+```
+lerna run cypress:open --scope consumer-ui --stream -- --env configFile=e2e
+```
+
+## Adding a new graphql query / mutation / subscription
+
+Here's how we proceed when we want to add a new query / mutation / subscription:
+
+1. create a new graphql file with the corresponding query / mutation / subscription under `shared/graphql`
+2. generate the graphql response fixture out of the database json fixtures in `backend/fixtures-generator/generate_graphql_responses.py` and `backend/fixtures-generator/graphql/responses_generator.py`; there you can also extend the `responses_generator_helpers.py`
+3. write the corresponding integration test(s) in `backend/tests/test_*.py`; there you will probably need to register your query in `backend/tests/conftest.py`
+4. use it in the frontend!
+
 ## Troubleshooting
 
 ### The database is not reset

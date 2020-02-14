@@ -12,6 +12,7 @@ module.exports = {
     '<rootDir>/src/**/*.js',
     '<rootDir>/src/**/*.ts'
   ],
+  testPathIgnorePatterns: ['/node_modules/', '/cypress/'],
   coverageThreshold: {
     global: {
     //  branches: 50,

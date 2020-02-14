@@ -5,7 +5,7 @@ services:
     volumes:
       - assets_data:/data
     ports:
-      - 9001:9000
+      - ${MINIO_PORT:-9001}:9000
     environment:
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-minio}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-minio123}
