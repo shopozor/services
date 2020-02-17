@@ -22,14 +22,8 @@ COPY .eslintrc.js .eslintrc.js
 
 FROM dependencies AS builder
 
-ARG GRAPHQL_API
 WORKDIR /app
-RUN npx lerna run build --scope admin-ui \
-  && npx lerna run build-storybook
-
-FROM nginx:1.16.0 AS admin-ui
-
-COPY --from=builder /app/frontend/admin-ui/dist/spa /srv
+RUN npx lerna run build-storybook
 
 FROM nginx:1.16.0 AS admin-storybook
 
@@ -48,3 +42,19 @@ COPY --from=builder /app/backend/site-generator-service /app/
 WORKDIR /app
 
 CMD [ "yarn", "start" ]
+
+FROM site-generator AS jest-unit-testing
+
+WORKDIR /app
+
+CMD [ "yarn", "test:unit:ci" ]
+
+FROM dependencies AS admin-builder
+
+ARG GRAPHQL_API
+WORKDIR /app
+RUN npx lerna run build --scope admin-ui
+
+FROM nginx:1.16.0 AS admin-ui
+
+COPY --from=admin-builder /app/frontend/admin-ui/dist/spa /srv

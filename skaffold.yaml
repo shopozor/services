@@ -24,8 +24,6 @@ build:
       docker:
         dockerfile: Dockerfile
         target: site-generator
-        buildArgs:
-          GRAPHQL_API: http://hasura:8080/v1/graphql/
     - image: shopozor/admin-ui
       context: .
       docker:
@@ -39,15 +37,11 @@ build:
       docker:
         dockerfile: Dockerfile
         target: admin-storybook
-        buildArgs:
-          GRAPHQL_API: http://hasura:8080/v1/graphql/
     - image: shopozor/consumer-storybook
       context: .
       docker:
         dockerfile: Dockerfile
         target: consumer-storybook
-        buildArgs:
-          GRAPHQL_API: http://hasura:8080/v1/graphql/
 
 deploy:
   helm:
@@ -156,6 +150,7 @@ deploy:
             assets:
               name: minio
               port: 9000
+        # TODO: the consumer-ui needs the pvc declared by the site-generator-service
     flags:
       upgrade:
         - --install

@@ -1,10 +1,13 @@
 version: "3.6"
 services:
   jest-unit-tests:
-    # TODO: we will need a dedicated image where we install the dedicated node modules!
-    image: node:12.10.0-slim
-    working_dir: /app
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: jest-unit-testing
+    image: ${PRODUCT:-shopozor}/jest-unit-testing:${TAG:-local}
     restart: "no"
     volumes:
-      - .:/app
-    entrypoint: yarn test:unit:ci
+      - ./frontend/consumer-ui/test-reports:/app/frontend/consumer-ui/test-reports
+      - ./frontend/admin-ui/test-reports:/app/frontend/admin-ui/test-reports
+      - ./backend/site-generator-service/test-reports:/app/backend/site-generator-service/test-reports
