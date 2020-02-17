@@ -10,7 +10,6 @@ kind: Ingress
 metadata:
   name: {{ $fullName }}-storybook
   labels:
-# TODO: these labels contain the app.kubernetes.io/name; maybe it's not cool to have the same name for the ui as for the storybook (same for instance)
 {{ include "chart.labels" . | indent 4 }}
   {{- with .Values.storybook.ingress.annotations }}
   annotations:
