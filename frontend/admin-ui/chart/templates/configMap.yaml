@@ -53,7 +53,7 @@ data:
         location = /robots.txt  { access_log off; log_not_found off; }
 
         access_log off;
-        error_log  /var/log/nginx/admin-ui.log error;
+        error_log  /var/log/nginx/app.log error;
 
         location ~ /\.(?!well-known).* {
             deny all;
