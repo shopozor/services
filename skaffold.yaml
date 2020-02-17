@@ -138,17 +138,29 @@ deploy:
             hasura:
               name: hasura
               port: 8080
-        # TODO: configure ingress!
       - name: admin-ui
         chartPath: frontend/admin-ui/chart
         namespace: dev
         values:
-          image: shopozor/admin-ui
-          # TODO: give storybook image too!
+          ui.image: shopozor/admin-ui
+          storybook.image: shopozor/admin-storybook
+        overrides:
+          ui:
+            ingress:
+              enabled: false
+          storybook:
+            enabled: true
+            ingress:
+              enabled: false
+          services:
+            assets:
+              name: minio
+              port: 9000
     flags:
       upgrade:
         - --install
 
+# TODO: put env vars in the section below that will then substituted with e.g. the jelastic environment name!
 profiles:
   - name: staging
     deploy:
@@ -170,13 +182,6 @@ profiles:
         flags:
           upgrade:
             - --install
-      kubectl:
-        manifests:
-          - backend/assets-service/k8s/setup/*
-          - backend/assets-service/k8s/testing/*
-        flags:
-          global:
-            - --namespace=staging
   - name: production
     deploy:
       helm:
@@ -198,9 +203,3 @@ profiles:
         flags:
           upgrade:
             - --install
-      kubectl:
-        manifests:
-          - backend/assets-service/k8s/setup/*
-        flags:
-          global:
-            - --namespace=production

@@ -45,4 +45,6 @@ COPY --from=builder /app/frontend/consumer-ui /data/frontend/consumer-ui
 COPY --from=builder /app/shared/graphql /data/shared/graphql
 COPY --from=builder /app/backend/site-generator-service /app/
 
+WORKDIR /app
+
 CMD [ "yarn", "start" ]

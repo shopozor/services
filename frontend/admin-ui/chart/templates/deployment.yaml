@@ -26,18 +26,21 @@ spec:
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: {{ .Values.image }}
-          imagePullPolicy: {{ .Values.pullPolicy }}
+            {{- toYaml .Values.ui.securityContext | nindent 12 }}
+          image: {{ .Values.ui.image }}
+          imagePullPolicy: {{ .Values.ui.pullPolicy }}
+          env:
+          - name: ASSETS_API
+            value: http://{{ .Values.services.assets.name }}:{{ .Values.services.assets.port }}
           volumeMounts:
           - mountPath: /etc/nginx/nginx.conf
-            subPath: nginx.conf
+            subPath: ui
             readOnly: true
             name: nginx-conf
           ports:
-            - name: http
-              containerPort: {{ .Values.adminUi.containerPort }}
-              protocol: TCP
+          - name: http
+            containerPort: {{ .Values.ui.containerPort }}
+            protocol: TCP
           livenessProbe:
             httpGet:
               path: /
@@ -47,15 +50,45 @@ spec:
               path: /
               port: http
           resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-        # TODO: add the storybook container!
+            {{- toYaml .Values.ui.resources | nindent 12 }}
+{{- if .Values.storybook.enabled }}
+        - name: {{ .Chart.Name }}-storybook
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ .Values.storybook.image }}
+          imagePullPolicy: {{ .Values.storybook.pullPolicy }}
+          env:
+          - name: ASSETS_API
+            value: http://{{ .Values.services.assets.name }}:{{ .Values.services.assets.port }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.storybook.containerPort }}
+              protocol: TCP
+          volumeMounts:
+          - mountPath: /etc/nginx/nginx.conf
+            subPath: storybook
+            readOnly: true
+            name: nginx-conf
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.storybook.resources | nindent 12 }}
+{{- end }}
       volumes:
         - name: nginx-conf
           configMap:
-            name: nginx-conf
+            name: {{ include "chart.fullname" . }}
             items:
-              - key: nginx.conf
-                path: nginx.conf
+              - key: ui
+                path: ui
+              - key: storybook
+                path: storybook
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
