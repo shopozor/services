@@ -168,7 +168,6 @@ deploy:
             siteGenerator:
               # TODO: this is probably wrong!
               claimName: site-generator-service
-        # TODO: the consumer-ui needs the pvc declared by the site-generator-service
     flags:
       upgrade:
         - --install
