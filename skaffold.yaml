@@ -145,6 +145,29 @@ deploy:
             assets:
               name: minio
               port: 9000
+      - name: consumer-ui
+        chartPath: frontend/consumer-ui/chart
+        namespace: dev
+        values:
+          storybook.image: shopozor/admin-storybook
+        overrides:
+          ui:
+            ingress:
+              enabled: false
+          storybook:
+            enabled: true
+            ingress:
+              enabled: false
+          services:
+            assets:
+              name: minio
+              port: 9000
+            hasura:
+              name: hasura
+              port: 8080
+            siteGenerator:
+              # TODO: this is probably wrong!
+              claimName: site-generator-service
         # TODO: the consumer-ui needs the pvc declared by the site-generator-service
     flags:
       upgrade:

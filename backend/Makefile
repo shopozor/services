@@ -17,7 +17,7 @@ dev.start: build up db.migrate.up fixtures assets.up
 dev.end: fixtures.clean assets.down down rm
 
 dev-test.site-generator-unit:
-	@lerna run test:unit --scope site-generator-service --stream
+	@npx lerna run test:unit --scope site-generator-service --stream
 
 build:
 	@echo "Building images..."

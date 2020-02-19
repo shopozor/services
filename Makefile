@@ -22,7 +22,7 @@ dev.backend.end:
 dev-test.unit:
 	# Unit tests
 	@make --directory backend test.unit
-	@lerna run test:unit --stream
+	@npx lerna run test:unit --stream
 
 dev-test.setup:
 	@make --directory backend build
