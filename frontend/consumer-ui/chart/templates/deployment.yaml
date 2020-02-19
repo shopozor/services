@@ -1,0 +1,110 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "chart.fullname" . }}
+  labels:
+{{ include "chart.labels" . | indent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "chart.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "chart.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+    {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+      serviceAccountName: {{ template "chart.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.ui.securityContext | nindent 12 }}
+          image: "{{ .Values.ui.image.repository }}:{{ .Values.ui.image.tag }}"
+          imagePullPolicy: {{ .Values.ui.image.pullPolicy }}
+          env:
+          - name: ASSETS_API
+            value: http://{{ .Values.services.assets.name }}:{{ .Values.services.assets.port }}
+          - name: GRAPHQL_API
+            value: http://{{ .Values.services.hasura.name }}:{{ .Values.services.hasura.port }}
+          volumeMounts:
+          - mountPath: /etc/nginx/nginx.conf
+            subPath: ui
+            readOnly: true
+            name: nginx-conf
+          - mountPath: /srv
+            name: static-data
+          ports:
+          - name: http
+            containerPort: {{ .Values.ui.containerPort }}
+            protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.ui.resources | nindent 12 }}
+{{- if .Values.storybook.enabled }}
+        - name: {{ .Chart.Name }}-storybook
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: {{ .Values.storybook.image }}
+          imagePullPolicy: {{ .Values.storybook.pullPolicy }}
+          env:
+          - name: ASSETS_API
+            value: http://{{ .Values.services.assets.name }}:{{ .Values.services.assets.port }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.storybook.containerPort }}
+              protocol: TCP
+          volumeMounts:
+          - mountPath: /etc/nginx/nginx.conf
+            subPath: storybook
+            readOnly: true
+            name: nginx-conf
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+            {{- toYaml .Values.storybook.resources | nindent 12 }}
+{{- end }}
+      volumes:
+        - name: nginx-conf
+          configMap:
+            name: {{ include "chart.fullname" . }}
+            items:
+              - key: ui
+                path: ui
+              - key: storybook
+                path: storybook
+        - name: static-data
+          persistentVolumeClaim:
+            claimName: {{ .Values.services.siteGenerator.claimName }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
