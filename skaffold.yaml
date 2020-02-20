@@ -149,7 +149,7 @@ deploy:
         chartPath: frontend/consumer-ui/chart
         namespace: dev
         values:
-          storybook.image: shopozor/admin-storybook
+          storybook.image: shopozor/consumer-storybook
         overrides:
           ui:
             ingress:
@@ -166,11 +166,18 @@ deploy:
               name: hasura
               port: 8080
             siteGenerator:
-              # TODO: this is probably wrong!
               claimName: site-generator-service
     flags:
       upgrade:
         - --install
+
+# TODO: test this:
+portForward:
+- resourceType: service
+  resourceName: minio
+  namespace: dev
+  port: 9000
+  localPort: 9000
 
 # TODO: put env vars in the section below that will then substituted with e.g. the jelastic environment name!
 profiles:

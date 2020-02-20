@@ -65,7 +65,7 @@ spec:
           - name: ASSETS_API
             value: http://{{ .Values.services.assets.name }}:{{ .Values.services.assets.port }}
           ports:
-            - name: http
+            - name: http-storybook
               containerPort: {{ .Values.storybook.containerPort }}
               protocol: TCP
           volumeMounts:
@@ -76,11 +76,11 @@ spec:
           livenessProbe:
             httpGet:
               path: /
-              port: http
+              port: http-storybook
           readinessProbe:
             httpGet:
               path: /
-              port: http
+              port: http-storybook
           resources:
             {{- toYaml .Values.storybook.resources | nindent 12 }}
 {{- end }}

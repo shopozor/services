@@ -8,9 +8,9 @@ spec:
   type: {{ .Values.storybook.service.type }}
   ports:
     - port: {{ .Values.storybook.service.port }}
-      targetPort: http
+      targetPort: http-storybook
       protocol: TCP
       name: http
   selector:
-    app.kubernetes.io/name: {{ include "chart.name" . }}-storybook
+    app.kubernetes.io/name: {{ include "chart.name" . }}
     app.kubernetes.io/instance: {{ .Release.Name }}
