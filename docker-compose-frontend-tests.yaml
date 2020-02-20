@@ -7,7 +7,7 @@ services:
       dockerfile: Dockerfile
       target: admin-storybook
     volumes:
-      - ./frontend/admin-ui/nginx.conf:/etc/nginx/nginx.conf
+      - ./frontend/admin-ui/conf/storybook-nginx.conf:/etc/nginx/nginx.conf
     ports:
       - ${ADMIN_STORYBOOK_PORT:-7006}:80
     restart: "no"
@@ -18,7 +18,7 @@ services:
       dockerfile: Dockerfile
       target: consumer-storybook
     volumes:
-      - ./frontend/consumer-ui/nginx.conf:/etc/nginx/nginx.conf
+      - ./frontend/consumer-ui/conf/storybook-nginx.conf:/etc/nginx/nginx.conf
     ports:
       - ${CONSUMER_STORYBOOK_PORT:-6006}:80
     restart: "no"
