@@ -87,7 +87,8 @@ deploy:
             username: postgres
             database: postgres
           persistence:
-            mountPath: /opt/bitnami/postgresql/data
+            enabled: false
+            # mountPath: /opt/bitnami/postgresql/data
           volumePermissions:
             enabled: true
       - name: hasura
@@ -178,6 +179,36 @@ portForward:
   namespace: dev
   port: 9000
   localPort: 9000
+- resourceType: service
+  resourceName: consumer-ui
+  namespace: dev
+  port: 80
+  localPort: 3000
+- resourceType: service
+  resourceName: consumer-ui-storybook
+  namespace: dev
+  port: 80
+  localPort: 6006
+- resourceType: service
+  resourceName: admin-ui
+  namespace: dev
+  port: 80
+  localPort: 4000
+- resourceType: service
+  resourceName: admin-ui-storybook
+  namespace: dev
+  port: 80
+  localPort: 7006
+- resourceType: service
+  resourceName: hasura
+  namespace: dev
+  port: 8080
+  localPort: 8080
+- resourceType: service
+  resourceName: site-generator-service
+  namespace: dev
+  port: 8080
+  localPort: 8081
 
 # TODO: put env vars in the section below that will then substituted with e.g. the jelastic environment name!
 profiles:

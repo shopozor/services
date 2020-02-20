@@ -33,7 +33,7 @@ spec:
           - name: ASSETS_API
             value: http://{{ .Values.services.assets.name }}:{{ .Values.services.assets.port }}
           - name: GRAPHQL_API
-            value: http://{{ .Values.services.hasura.name }}:{{ .Values.services.hasura.port }}
+            value: http://{{ .Values.services.hasura.hostname }}:{{ .Values.services.hasura.port }}/v1/graphql/
           volumeMounts:
           - mountPath: /etc/nginx/nginx.conf
             subPath: ui

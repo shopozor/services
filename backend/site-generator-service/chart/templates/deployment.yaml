@@ -51,16 +51,16 @@ spec:
           - name: API_PORT
             value: {{ .Values.siteGenerator.server.port | quote }}
           - name: ASSETS_API
-            value: "http://{{ .Values.services.assets.name }}:{{ .Values.services.assets.port }}"
+            value: http://{{ .Values.services.assets.name }}:{{ .Values.services.assets.port }}
           - name: GRAPHQL_API
-            value: "http://{{ .Values.services.hasura.name }}:{{ .Values.services.hasura.port }}"
+            value: http://{{ .Values.services.hasura.hostname }}:{{ .Values.services.hasura.port }}/v1/graphql
           - name: OUTPUT_DIR
-            value: "{{ .Values.siteGenerator.outputDir }}/static"
+            value: {{ .Values.siteGenerator.outputDir }}/static
           - name: SRC_DIR
             value: {{ .Values.siteGenerator.srcDir }}
         volumeMounts:
           - name: static-site-data
-            mountPath: "{{ .Values.siteGenerator.outputDir }}"
+            mountPath: {{ .Values.siteGenerator.outputDir }}
         ports:
           - name: http
             containerPort: {{ .Values.siteGenerator.server.port }}
