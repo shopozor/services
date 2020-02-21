@@ -32,43 +32,47 @@ data:
 
       #gzip  on;
 
-      proxy_cache_path  /var/cache/nginx levels=1:2 keys_zone=nuxt-cache:25m max_size=1g inactive=60m use_temp_path=off;
-
-      map $sent_http_content_type $expires {
-          "text/html"                 1h; # set this to your needs
-          "text/html; charset=utf-8"  1h; # set this to your needs
-          default                     7d; # set this to your needs
+      upstream graphql_api {
+        server {{ .Values.services.hasura.hostname }}:{{ .Values.services.hasura.port }};
       }
 
       server {
-        listen          80;             # the port nginx is listening on
-        server_name     localhost;    # setup your domain here
-
-        gzip            on;
-        gzip_types      text/plain application/xml text/css application/javascript;
-        gzip_min_length 1000;
-
-        charset utf-8;
+        listen 80;
+        server_name localhost;
 
         root /srv/static;
 
-        location ~* \.(?:ico|gif|jpe?g|png|woff2?|eot|otf|ttf|svg|js|css)$ {
-            expires $expires;
-            add_header Pragma public;
-            add_header Cache-Control "public";
+        add_header X-Frame-Options "SAMEORIGIN";
+        add_header X-XSS-Protection "1; mode=block";
+        add_header X-Content-Type-Options "nosniff";
+        #add_header "Access-Control-Allow-Origin"  *;
 
-            try_files $uri $uri/;
-        }
+        index index.html;
+
+        charset utf-8;
 
         location / {
-            expires $expires;
-            #add_header Content-Security-Policy "default-src 'self' 'unsafe-inline';";
-            add_header Strict-Transport-Security "max-age=31536000; includeSubDomains; preload" always;
-            add_header X-Frame-Options "SAMEORIGIN";
-
             try_files $uri $uri/ /index.html;
         }
-        # TODO: integrate official nuxt recommended config here!
+
+        location /graphql/ {
+          proxy_pass http://graphql_api/v1/graphql;
+        }
+
+        location = /favicon.ico { access_log off; log_not_found off; }
+        location = /robots.txt  { access_log off; log_not_found off; }
+
+        access_log off;
+        error_log  /var/log/nginx/app.log error;
+
+        location ~ /\.(?!well-known).* {
+            deny all;
+        }
+
+        error_page   500 502 503 504  /50x.html;
+        location = /50x.html {
+            root   /usr/share/nginx/html;
+        }
       }
     }
   storybook: |

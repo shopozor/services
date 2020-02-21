@@ -105,6 +105,9 @@ deploy:
           hasura:
             server:
               port: 8080
+            cors:
+              enabled: true
+              domain: "*"
       # TODO: this must not stay in the dev deployment; this is only for staging
       - name: database-fixtures
         chartPath: backend/fixtures-generator/chart

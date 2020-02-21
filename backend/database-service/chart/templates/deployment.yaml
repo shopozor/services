@@ -41,6 +41,10 @@ spec:
               value: {{ .Values.hasura.log.enabled_types }}
             - name: HASURA_GRAPHQL_ENABLE_TELEMETRY
               value: {{ .Values.hasura.telemetry.enabled | quote }}
+            - name: HASURA_GRAPHQL_CORS_DOMAIN
+              value: {{ .Values.hasura.cors.domain | quote }}
+            - name: HASURA_GRAPHQL_DISABLE_CORS
+              value: {{ not .Values.hasura.cors.enabled | quote }}
             - name: POSTGRES_USER
               value: {{ .Values.postgres.username }}
             - name: POSTGRES_DATABASE

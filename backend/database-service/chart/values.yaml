@@ -71,6 +71,9 @@ hasura:
     port: 8080
   telemetry:
     enabled: false
+  cors:
+    enabled: true
+    domain: "*"
 
 postgres:
   secretName: postgres

@@ -38,6 +38,7 @@ spec:
             do
                 echo "waiting for graphql engine"
                 version=$(curl -s http://$HASURA_HOST:$HASURA_PORT/v1/version | grep "version")
+                echo "VERSION = $version"
                 [ "$version" == "" ] && sleep 1 || exit 0
             done
             echo "failed waiting for $HASURA_PORT on host $HASURA_HOST" && exit 1
@@ -53,7 +54,7 @@ spec:
           - name: ASSETS_API
             value: http://{{ .Values.services.assets.name }}:{{ .Values.services.assets.port }}
           - name: GRAPHQL_API
-            value: http://{{ .Values.services.hasura.hostname }}:{{ .Values.services.hasura.port }}/v1/graphql
+            value: http://localhost/graphql/
           - name: OUTPUT_DIR
             value: {{ .Values.siteGenerator.outputDir }}/static
           - name: SRC_DIR
