@@ -30,8 +30,7 @@ build:
         dockerfile: Dockerfile
         target: admin-ui
         buildArgs:
-          GRAPHQL_API: http://hasura:8080/v1/graphql/
-    # TODO: here we are still missing the consumer-ui!
+          GRAPHQL_API: http://localhost/graphql/
     - image: shopozor/admin-storybook
       context: .
       docker:
@@ -42,6 +41,8 @@ build:
       docker:
         dockerfile: Dockerfile
         target: consumer-storybook
+        buildArgs:
+          ASSETS_API: http://localhost/assets/
 
 deploy:
   helm:

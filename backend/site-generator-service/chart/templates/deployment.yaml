@@ -52,7 +52,7 @@ spec:
           - name: API_PORT
             value: {{ .Values.siteGenerator.server.port | quote }}
           - name: ASSETS_API
-            value: http://{{ .Values.services.assets.name }}:{{ .Values.services.assets.port }}
+            value: http://localhost/assets/
           - name: GRAPHQL_API
             value: http://localhost/graphql/
           - name: OUTPUT_DIR

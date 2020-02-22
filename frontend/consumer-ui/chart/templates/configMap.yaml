@@ -33,7 +33,11 @@ data:
       #gzip  on;
 
       upstream graphql_api {
-        server {{ .Values.services.hasura.hostname }}:{{ .Values.services.hasura.port }};
+        server {{ .Values.services.hasura.name }}:{{ .Values.services.hasura.port }};
+      }
+
+      upstream assets_api {
+        server {{ .Values.services.assets.name }}:{{ .Values.services.assets.port }};
       }
 
       server {
@@ -45,7 +49,6 @@ data:
         add_header X-Frame-Options "SAMEORIGIN";
         add_header X-XSS-Protection "1; mode=block";
         add_header X-Content-Type-Options "nosniff";
-        #add_header "Access-Control-Allow-Origin"  *;
 
         index index.html;
 
@@ -53,10 +56,6 @@ data:
 
         location / {
             try_files $uri $uri/ /index.html;
-        }
-
-        location /graphql/ {
-          proxy_pass http://graphql_api/v1/graphql;
         }
 
         location = /favicon.ico { access_log off; log_not_found off; }
@@ -73,8 +72,17 @@ data:
         location = /50x.html {
             root   /usr/share/nginx/html;
         }
+
+        location /graphql/ {
+          proxy_pass http://graphql_api/v1/graphql;
+        }
+
+        location /assets/ {
+          proxy_pass http://assets_api;
+        }
       }
     }
+  # TODO: add assets dns here too!
   storybook: |
     user  nginx;
     worker_processes  1;
@@ -102,6 +110,10 @@ data:
       keepalive_timeout  65;
 
       #gzip  on;
+
+      upstream assets_api {
+        server {{ .Values.services.assets.name }}:{{ .Values.services.assets.port }};
+      }
 
       server {
         listen 8080;
@@ -134,6 +146,10 @@ data:
         error_page   500 502 503 504  /50x.html;
         location = /50x.html {
             root   /usr/share/nginx/html;
+        }
+
+        location /assets/ {
+          proxy_pass http://assets_api;
         }
       }
     }

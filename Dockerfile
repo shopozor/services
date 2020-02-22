@@ -22,6 +22,7 @@ COPY .eslintrc.js .eslintrc.js
 
 FROM dependencies AS builder
 
+ARG ASSETS_API
 WORKDIR /app
 RUN npx lerna run build-storybook
 
