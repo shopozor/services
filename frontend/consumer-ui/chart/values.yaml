@@ -96,7 +96,7 @@ services:
     name: minio
     port: 9000
   hasura:
-    hostname: hasura
+    name: hasura
     port: 8080
   siteGenerator:
     claimName: site-generator-service

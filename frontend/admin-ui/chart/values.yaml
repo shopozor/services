@@ -92,6 +92,9 @@ services:
   assets:
     name: minio
     port: 9000
+  hasura:
+    name: hasura
+    port: 8080
 
 imagePullSecrets: []
 nameOverride: ""
