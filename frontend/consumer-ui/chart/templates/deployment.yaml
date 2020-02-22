@@ -24,39 +24,18 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
-      - name: wait-for-hasura
-        image: curlimages/curl:latest
+      - name: wait-for-graphql-service
+        image: busybox
         env:
-        - name: HASURA_HOST
-          value: {{ .Values.services.hasura.hostname }}
-        - name: HASURA_PORT
-          value: {{ .Values.services.hasura.port | quote }}
-        - name: TIMEOUT
-          value: "60"
-        command:
-          - /bin/sh
-          - -c
-          - |
-            echo "waiting $TIMEOUT for $HASURA_PORT to be ready on host $HASURA_HOST"
-            for i in `seq 1 $TIMEOUT`;
-            do
-                echo "waiting for graphql engine"
-                version=$(curl -s http://$HASURA_HOST:$HASURA_PORT/v1/version | grep "version")
-                echo "VERSION = $version"
-                [ "$version" == "" ] && sleep 1 || exit 0
-            done
-            echo "failed waiting for $HASURA_PORT on host $HASURA_HOST" && exit 1
+        - name: SERVICE_NAME
+          value: {{ .Values.services.hasura.name }}
+        command: ['sh', '-c', 'until nslookup $${SERVICE_NAME}; do echo "Waiting for $${SERVICE_NAME}"; sleep 2; done;']
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.ui.securityContext | nindent 12 }}
           image: "{{ .Values.ui.image.repository }}:{{ .Values.ui.image.tag }}"
           imagePullPolicy: {{ .Values.ui.image.pullPolicy }}
-          env:
-          - name: ASSETS_API
-            value: http://{{ .Values.services.assets.name }}:{{ .Values.services.assets.port }}
-          - name: GRAPHQL_API
-            value: http://localhost:{{ .Values.ui.containerPort }}/graphql/
           volumeMounts:
           - mountPath: /etc/nginx/nginx.conf
             subPath: ui
@@ -85,8 +64,6 @@ spec:
           image: {{ .Values.storybook.image }}
           imagePullPolicy: {{ .Values.storybook.pullPolicy }}
           env:
-          - name: ASSETS_API
-            value: http://{{ .Values.services.assets.name }}:{{ .Values.services.assets.port }}
           ports:
             - name: http-storybook
               containerPort: {{ .Values.storybook.containerPort }}
