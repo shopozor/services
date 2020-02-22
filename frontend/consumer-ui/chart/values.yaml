@@ -41,9 +41,9 @@ ui:
         more_set_headers "Access-Control-Allow-Origin: $http_origin";
     hosts:
         # TODO: get the host from a sealed secret
-      - host: ""
+      - host: "localhost"
         paths:
-          - "/admin"
+          - "/"
 
     tls: []
     #  - secretName: chart-example-tls
@@ -98,6 +98,8 @@ services:
   hasura:
     hostname: hasura
     port: 8080
+  siteGenerator:
+    claimName: site-generator-service
 
 imagePullSecrets: []
 nameOverride: ""

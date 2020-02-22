@@ -61,6 +61,8 @@ deploy:
             password: minio
           secretKey:
             password: minio123
+          service:
+            port: 9000
       # TODO: we need to decide if the assets are pushed by default to the assets service
       #       or if we proceed as with the database fixtures!
       - name: minio-initialization
@@ -108,6 +110,8 @@ deploy:
             cors:
               enabled: true
               domain: "*"
+          service:
+            port: 8080
       # TODO: this must not stay in the dev deployment; this is only for staging
       - name: database-fixtures
         chartPath: backend/fixtures-generator/chart
@@ -131,6 +135,8 @@ deploy:
             hasura:
               name: hasura
               port: 8080
+          service:
+            port: 8081
       - name: admin-ui
         chartPath: frontend/admin-ui/chart
         namespace: dev
@@ -141,8 +147,13 @@ deploy:
           ui:
             ingress:
               enabled: false
+            service:
+              port: 4000
+              type: ClusterIP
           storybook:
             enabled: true
+            service:
+              port: 7006
             ingress:
               enabled: false
           services:
@@ -158,10 +169,15 @@ deploy:
           ui:
             ingress:
               enabled: false
+            service:
+              type: ClusterIP
+              port: 80
           storybook:
             enabled: true
             ingress:
               enabled: false
+            service:
+              port: 6006
           services:
             assets:
               name: minio
@@ -176,42 +192,42 @@ deploy:
         - --install
 
 # TODO: test this:
-portForward:
-- resourceType: service
-  resourceName: minio
-  namespace: dev
-  port: 9000
-  localPort: 9000
-- resourceType: service
-  resourceName: consumer-ui
-  namespace: dev
-  port: 80
-  localPort: 3000
-- resourceType: service
-  resourceName: consumer-ui-storybook
-  namespace: dev
-  port: 80
-  localPort: 6006
-- resourceType: service
-  resourceName: admin-ui
-  namespace: dev
-  port: 80
-  localPort: 4000
-- resourceType: service
-  resourceName: admin-ui-storybook
-  namespace: dev
-  port: 80
-  localPort: 7006
-- resourceType: service
-  resourceName: hasura
-  namespace: dev
-  port: 8080
-  localPort: 8080
-- resourceType: service
-  resourceName: site-generator-service
-  namespace: dev
-  port: 8080
-  localPort: 8081
+# portForward:
+# - resourceType: service
+#   resourceName: minio
+#   namespace: dev
+#   port: 9000
+#   localPort: 9000
+# - resourceType: service
+#   resourceName: consumer-ui
+#   namespace: dev
+#   port: 80
+#   localPort: 80
+# - resourceType: service
+#   resourceName: consumer-ui-storybook
+#   namespace: dev
+#   port: 80
+#   localPort: 6006
+# - resourceType: service
+#   resourceName: admin-ui
+#   namespace: dev
+#   port: 80
+#   localPort: 4000
+# - resourceType: service
+#   resourceName: admin-ui-storybook
+#   namespace: dev
+#   port: 80
+#   localPort: 7006
+# - resourceType: service
+#   resourceName: hasura
+#   namespace: dev
+#   port: 8080
+#   localPort: 8080
+# - resourceType: service
+#   resourceName: site-generator-service
+#   namespace: dev
+#   port: 8080
+#   localPort: 8081
 
 # TODO: put env vars in the section below that will then substituted with e.g. the jelastic environment name!
 profiles:
