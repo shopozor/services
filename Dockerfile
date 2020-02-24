@@ -20,6 +20,12 @@ COPY ./backend/site-generator-service ./backend/site-generator-service
 COPY ./shared ./shared
 COPY .eslintrc.js .eslintrc.js
 
+FROM dependencies AS jest-unit-testing
+
+WORKDIR /app
+
+CMD [ "yarn", "test:unit:ci" ]
+
 FROM dependencies AS builder
 
 ARG ASSETS_API
@@ -43,12 +49,6 @@ COPY --from=builder /app/backend/site-generator-service /app/
 WORKDIR /app
 
 CMD [ "yarn", "start" ]
-
-FROM site-generator AS jest-unit-testing
-
-WORKDIR /app
-
-CMD [ "yarn", "test:unit:ci" ]
 
 FROM dependencies AS app-builder
 
