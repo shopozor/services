@@ -44,7 +44,6 @@ pipeline {
     stage('Build the frontends') {
       steps {
         sh "yarn build"
-        sh "make --directory backend static-site.generate"
       }
     }
     stage('Perform database tests') {
@@ -84,6 +83,7 @@ pipeline {
         catchError(buildResult: 'FAILURE', stageResult: 'FAILURE') {
           sh "make --directory backend assets.up"
           sh "make --directory backend seed-database"
+          sh "make --directory backend static-site.generate"
         	sh "make --directory frontend test.e2e"
           sh "make --directory backend unseed-database"
           sh "make --directory backend assets.down"
