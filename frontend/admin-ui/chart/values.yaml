@@ -29,7 +29,7 @@ ui:
     port: 80
 
   ingress:
-    enabled: true
+    enabled: false
     annotations:
       nginx.ingress.kubernetes.io/enable-cors: "true"
       nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
@@ -37,10 +37,9 @@ ui:
       nginx.ingress.kubernetes.io/configuration-snippet: |
         more_set_headers "Access-Control-Allow-Origin: $http_origin";
     hosts:
-        # TODO: get the host from a sealed secret
-      - host: ""
+      - host: admin.shopozor
         paths:
-          - "/admin"
+          - /
 
     tls: []
     #  - secretName: chart-example-tls
@@ -89,11 +88,8 @@ storybook:
     #      - chart-example.local
 
 services:
-  assets:
-    name: minio
-    port: 9000
-  hasura:
-    name: hasura
+  api:
+    hostname: api
     port: 8080
 
 imagePullSecrets: []

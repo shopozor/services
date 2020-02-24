@@ -5,9 +5,6 @@
 replicaCount: 1
 
 ui:
-  image:
-    repository: nginx
-    tag: 1.16.0
   containerPort: 80
   securityContext: {}
     # capabilities:
@@ -32,7 +29,7 @@ ui:
     port: 80
 
   ingress:
-    enabled: true
+    enabled: false
     annotations:
       nginx.ingress.kubernetes.io/enable-cors: "true"
       nginx.ingress.kubernetes.io/cors-allow-methods: "PUT, GET, POST, OPTIONS"
@@ -40,10 +37,9 @@ ui:
       nginx.ingress.kubernetes.io/configuration-snippet: |
         more_set_headers "Access-Control-Allow-Origin: $http_origin";
     hosts:
-        # TODO: get the host from a sealed secret
-      - host: "localhost"
+      - host: localhost
         paths:
-          - "/"
+          - /
 
     tls: []
     #  - secretName: chart-example-tls
@@ -82,9 +78,9 @@ storybook:
       # kubernetes.io/tls-acme: "true"
     hosts:
         # TODO: get the host from a sealed secret
-      - host: ""
+      - host: localhost
         paths:
-          - "/admin-storybook"
+          - /admin-storybook
 
     tls: []
     #  - secretName: chart-example-tls
@@ -92,14 +88,9 @@ storybook:
     #      - chart-example.local
 
 services:
-  assets:
-    name: minio
-    port: 9000
-  hasura:
-    name: hasura
+  api:
+    hostname: api
     port: 8080
-  siteGenerator:
-    claimName: site-generator-service
 
 imagePullSecrets: []
 nameOverride: ""

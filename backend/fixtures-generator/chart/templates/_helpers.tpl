@@ -56,13 +56,13 @@ Create the name of the service account to use
 {{- end -}}
 
 {{/*
-Common hasura environment variables setup
+Common api environment variables setup
 */}}
-{{- define "hasura.envvarsblock" -}}
-- name: HASURA_HOST
-  value: {{ .Values.hasura.host }}
-- name: HASURA_PORT
-  value: {{ .Values.hasura.port | quote }}
+{{- define "api.envvarsblock" -}}
+- name: API_HOSTNAME
+  value: {{ .Values.services.api.hostname }}
+- name: API_PORT
+  value: {{ .Values.services.api.port | quote }}
 {{- end -}}
 
 {{/*

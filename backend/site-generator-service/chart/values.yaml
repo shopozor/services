@@ -63,12 +63,10 @@ tolerations: []
 affinity: {}
 
 services:
-  assets:
-    name: minio
-    port: 9000
-  hasura:
-    hostname: hasura
-    port: 8080
+  assets: http://assets.shopozor/
+  api:
+    hostname: api
+    url: http://api.shopozor/v1/graphql
 
 siteGenerator:
   server:

@@ -19,30 +19,41 @@ build:
       docker:
         dockerfile: backend/fixtures-generator/Dockerfile
         target: app
-    - image: shopozor/site-generator-service
-      context: .
-      docker:
-        dockerfile: Dockerfile
-        target: site-generator
+    # - image: shopozor/site-generator-service
+    #   context: .
+    #   docker:
+    #     dockerfile: Dockerfile
+    #     target: site-generator
     - image: shopozor/admin-ui
       context: .
       docker:
         dockerfile: Dockerfile
         target: admin-ui
         buildArgs:
-          GRAPHQL_API: http://localhost/graphql/
+          GRAPHQL_API: http://api.shopozor/v1/graphql/
+          ASSETS_API: http://assets.shopozor/
+    - image: shopozor/consumer-ui-spa
+      context: .
+      docker:
+        dockerfile: Dockerfile
+        target: consumer-ui-spa
+        buildArgs:
+          GRAPHQL_API: http://api.shopozor/v1/graphql/
+          ASSETS_API: http://assets.shopozor/
     - image: shopozor/admin-storybook
       context: .
       docker:
         dockerfile: Dockerfile
         target: admin-storybook
+        buildArgs:
+          ASSETS_API: http://assets.shopozor/
     - image: shopozor/consumer-storybook
       context: .
       docker:
         dockerfile: Dockerfile
         target: consumer-storybook
         buildArgs:
-          ASSETS_API: http://localhost/assets/
+          ASSETS_API: http://assets.shopozor/
 
 deploy:
   helm:
@@ -52,8 +63,16 @@ deploy:
         remote: true
         namespace: dev
         overrides:
+          ingress:
+            enabled: true
+            annotations:
+              kubernetes.io/ingress.class: nginx
+            hosts:
+            - name: assets.shopozor
+              path: /
           mode: standalone
-          clusterDomain: cluster.local
+          # TODO: shouldn't this be assets.shopozor?
+          clusterDomain: localhost
           persistence:
             enabled: false
             size: 10Gi
@@ -94,17 +113,23 @@ deploy:
             # mountPath: /opt/bitnami/postgresql/data
           volumePermissions:
             enabled: true
-      - name: hasura
+      - name: api
         chartPath: backend/database-service/chart
         namespace: dev
         values:
           image: shopozor/graphql-engine
         overrides:
+          ingress:
+            enabled: true
+            hosts:
+            - host: api.shopozor
+              paths:
+                - /
           postgres:
             secretName: postgres-postgresql
             username: postgres
             database: postgres
-            hostname: postgres-pgpool.dev
+            hostname: postgres-pgpool
           hasura:
             server:
               port: 8080
@@ -114,30 +139,31 @@ deploy:
           service:
             port: 8080
       # TODO: this must not stay in the dev deployment; this is only for staging
+      # TODO: this really need to wait for hasura, not just for the port to open
       - name: database-fixtures
         chartPath: backend/fixtures-generator/chart
         namespace: dev
         values:
           image: shopozor/fixtures-service
         overrides:
-          hasura:
-            host: hasura
-            port: 8080
-      - name: site-generator-service
-        chartPath: backend/site-generator-service/chart
-        namespace: dev
-        values:
-          image: shopozor/site-generator-service
-        overrides:
           services:
-            assets:
-              name: minio
-              port: 9000
-            hasura:
-              name: hasura
+            api:
+              hostname: api
               port: 8080
-          service:
-            port: 8081
+      # TODO: remove this:
+      # - name: site-generator-service
+      #   chartPath: backend/site-generator-service/chart
+      #   namespace: dev
+      #   values:
+      #     image: shopozor/site-generator-service
+      #   overrides:
+      #     services:
+      #       assets: http://assets.shopozor/
+      #       api:
+      #         client: http://localhost/api/v1/graphql
+      #         server: http://api:8080/v1/graphql
+      #     service:
+      #       port: 8081
       - name: admin-ui
         chartPath: frontend/admin-ui/chart
         namespace: dev
@@ -146,8 +172,14 @@ deploy:
           storybook.image: shopozor/admin-storybook
         overrides:
           ui:
-            ingress:
-              enabled: false
+            # ingress:
+            #   enabled: false
+            #   annotations:
+            #     kubernetes.io/ingress.class: nginx
+            #   hosts:
+            #     - host: admin.shopozor
+            #       paths:
+            #         - /
             service:
               port: 4000
               type: ClusterIP
@@ -158,21 +190,27 @@ deploy:
             ingress:
               enabled: false
           services:
-            assets:
-              name: minio
-              port: 9000
+            api:
+              hostname: api
       - name: consumer-ui
         chartPath: frontend/consumer-ui/chart
         namespace: dev
         values:
+          ui.image: shopozor/consumer-ui-spa
           storybook.image: shopozor/consumer-storybook
         overrides:
           ui:
-            ingress:
-              enabled: false
+            # ingress:
+              # enabled: false
+              # annotations:
+              #   kubernetes.io/ingress.class: nginx
+              # hosts:
+              #   - host: localhost
+              #     paths:
+              #       - /
             service:
               type: ClusterIP
-              port: 80
+              port: 3000
           storybook:
             enabled: true
             ingress:
@@ -180,14 +218,10 @@ deploy:
             service:
               port: 6006
           services:
-            assets:
-              name: minio
-              port: 9000
-            hasura:
-              name: hasura
-              port: 8080
-            siteGenerator:
-              claimName: site-generator-service
+            api:
+              hostname: api
+            # siteGenerator:
+              # claimName: site-generator-service
     flags:
       upgrade:
         - --install
@@ -224,11 +258,11 @@ deploy:
 #   namespace: dev
 #   port: 8080
 #   localPort: 8080
-# - resourceType: service
-#   resourceName: site-generator-service
-#   namespace: dev
-#   port: 8080
-#   localPort: 8081
+# # - resourceType: service
+# #   resourceName: site-generator-service
+# #   namespace: dev
+# #   port: 8080
+# #   localPort: 8081
 
 # TODO: put env vars in the section below that will then substituted with e.g. the jelastic environment name!
 profiles:

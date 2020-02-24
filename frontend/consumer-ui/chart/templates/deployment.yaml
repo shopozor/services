@@ -24,25 +24,38 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
-      - name: wait-for-graphql-service
-        image: busybox
+      - name: wait-for-api
+        image: curlimages/curl:latest
         env:
-        - name: SERVICE_NAME
-          value: {{ .Values.services.hasura.name }}
-        command: ['sh', '-c', 'until nslookup $${SERVICE_NAME}; do echo "Waiting for $${SERVICE_NAME}"; sleep 2; done;']
+        - name: API_HOSTNAME
+          value: {{ .Values.services.api.hostname }}
+        - name: API_PORT
+          value: {{ .Values.services.api.port | quote }}
+        - name: TIMEOUT
+          value: "60"
+        command:
+          - /bin/sh
+          - -c
+          - |
+            echo "waiting $TIMEOUT for $API_PORT to be ready on host $API_HOSTNAME"
+            for i in `seq 1 $TIMEOUT`;
+            do
+                echo "waiting for graphql engine"
+                version=$(curl -s http://$API_HOSTNAME:$API_PORT/v1/version | grep "version")
+                [ "$version" == "" ] && sleep 1 || exit 0
+            done
+            echo "failed waiting for $API_PORT on host $API_HOSTNAME" && exit 1
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
             {{- toYaml .Values.ui.securityContext | nindent 12 }}
-          image: "{{ .Values.ui.image.repository }}:{{ .Values.ui.image.tag }}"
-          imagePullPolicy: {{ .Values.ui.image.pullPolicy }}
+          image: {{ .Values.ui.image }}
+          imagePullPolicy: {{ .Values.ui.pullPolicy }}
           volumeMounts:
           - mountPath: /etc/nginx/nginx.conf
             subPath: ui
             readOnly: true
             name: nginx-conf
-          - mountPath: /srv
-            name: static-data
           ports:
           - name: http
             containerPort: {{ .Values.ui.containerPort }}
@@ -93,9 +106,6 @@ spec:
                 path: ui
               - key: storybook
                 path: storybook
-        - name: static-data
-          persistentVolumeClaim:
-            claimName: {{ .Values.services.siteGenerator.claimName }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

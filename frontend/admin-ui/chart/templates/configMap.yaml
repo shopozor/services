@@ -32,14 +32,6 @@ data:
 
       #gzip  on;
 
-      upstream graphql_api {
-        server {{ .Values.services.hasura.name }}:{{ .Values.services.hasura.port }};
-      }
-
-      upstream assets_api {
-        server {{ .Values.services.assets.name }}:{{ .Values.services.assets.port }};
-      }
-
       server {
         listen 80;
         server_name localhost;
@@ -72,14 +64,6 @@ data:
         location = /50x.html {
             root   /usr/share/nginx/html;
         }
-
-        location /graphql/ {
-          proxy_pass http://graphql_api/v1/graphql;
-        }
-
-        location /assets/ {
-          proxy_pass http://assets_api;
-        }
       }
     }
   storybook: |
@@ -109,10 +93,6 @@ data:
       keepalive_timeout  65;
 
       #gzip  on;
-
-      upstream assets_api {
-        server {{ .Values.services.assets.name }}:{{ .Values.services.assets.port }};
-      }
 
       server {
         listen 8080;
@@ -145,10 +125,6 @@ data:
         error_page   500 502 503 504  /50x.html;
         location = /50x.html {
             root   /usr/share/nginx/html;
-        }
-
-        location /assets/ {
-          proxy_pass http://assets_api;
         }
       }
     }

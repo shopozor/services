@@ -50,12 +50,18 @@ WORKDIR /app
 
 CMD [ "yarn", "test:unit:ci" ]
 
-FROM dependencies AS admin-builder
+FROM dependencies AS app-builder
 
 ARG GRAPHQL_API
+ARG ASSETS_API
 WORKDIR /app
-RUN npx lerna run build --scope admin-ui
+RUN npx lerna run build --scope admin-ui \
+  && npx lerna run build --scope consumer-ui -- --spa
 
 FROM nginx:1.16.0 AS admin-ui
 
-COPY --from=admin-builder /app/frontend/admin-ui/dist/spa /srv
+COPY --from=app-builder /app/frontend/admin-ui/dist/spa /srv
+
+FROM nginx:1.16.0 AS consumer-ui-spa
+
+COPY --from=app-builder /app/frontend/consumer-ui/dist /srv/static

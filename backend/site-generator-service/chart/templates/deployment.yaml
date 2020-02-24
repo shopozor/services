@@ -24,24 +24,12 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
-      - name: wait-for-hasura
-        image: curlimages/curl:latest
-        env: {{- include "hasura.envvarsblock" . | nindent 8 }}
-        - name: TIMEOUT
-          value: "60"
-        command:
-          - /bin/sh
-          - -c
-          - |
-            echo "waiting $TIMEOUT for $HASURA_PORT to be ready on host $HASURA_HOST"
-            for i in `seq 1 $TIMEOUT`;
-            do
-                echo "waiting for graphql engine"
-                version=$(curl -s http://$HASURA_HOST:$HASURA_PORT/v1/version | grep "version")
-                echo "VERSION = $version"
-                [ "$version" == "" ] && sleep 1 || exit 0
-            done
-            echo "failed waiting for $HASURA_PORT on host $HASURA_HOST" && exit 1
+      - name: wait-for-api
+        image: busybox
+        env:
+        - name: SERVICE_NAME
+          value: {{ .Values.services.api.hostname }}
+        command: ['sh', '-c', 'until nslookup $${SERVICE_NAME}; do echo "Waiting for $${SERVICE_NAME}"; sleep 2; done;']
       containers:
       - name: {{ .Chart.Name }}
         securityContext:
@@ -52,9 +40,9 @@ spec:
           - name: API_PORT
             value: {{ .Values.siteGenerator.server.port | quote }}
           - name: ASSETS_API
-            value: http://localhost/assets/
+            value: {{ .Values.services.assets }}
           - name: GRAPHQL_API
-            value: http://localhost/graphql/
+            value: {{ .Values.services.api.url }}
           - name: OUTPUT_DIR
             value: {{ .Values.siteGenerator.outputDir }}/static
           - name: SRC_DIR
