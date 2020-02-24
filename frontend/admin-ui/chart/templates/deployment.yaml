@@ -24,33 +24,12 @@ spec:
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
-      # - name: wait-for-api
-      #   image: busybox
-      #   env:
-      #   - name: SERVICE_NAME
-      #     value: {{ .Values.services.api.hostname }}
-      #   command: ['sh', '-c', 'until nslookup $${SERVICE_NAME}; do echo "Waiting for $${SERVICE_NAME}"; sleep 2; done;']
       - name: wait-for-api
-        image: curlimages/curl:latest
+        image: busybox
         env:
-        - name: API_HOSTNAME
+        - name: SERVICE_NAME
           value: {{ .Values.services.api.hostname }}
-        - name: API_PORT
-          value: {{ .Values.services.api.port | quote }}
-        - name: TIMEOUT
-          value: "60"
-        command:
-          - /bin/sh
-          - -c
-          - |
-            echo "waiting $TIMEOUT for $API_PORT to be ready on host $API_HOSTNAME"
-            for i in `seq 1 $TIMEOUT`;
-            do
-                echo "waiting for graphql engine"
-                version=$(curl -s http://$API_HOSTNAME:$API_PORT/v1/version | grep "version")
-                [ "$version" == "" ] && sleep 1 || exit 0
-            done
-            echo "failed waiting for $API_PORT on host $API_HOSTNAME" && exit 1
+        command: ['sh', '-c', 'until nslookup $${SERVICE_NAME}; do echo "Waiting for $${SERVICE_NAME}"; sleep 2; done;']
       containers:
         - name: {{ .Chart.Name }}
           securityContext:
