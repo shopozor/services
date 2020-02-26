@@ -1,104 +1,240 @@
 version: v1beta6
 images:
-  assets-fixtures:
-    image: shopozor/assets-fixtures
-    tag: ${DEVSPACE_GIT_COMMIT}
-    context: .
-    dockerfile: backend/assets-service/Dockerfile
-  api:
-    image: shopozor/graphql-engine
-    tag: ${DEVSPACE_GIT_COMMIT}
-    context: backend/database-service
-    dockerfile: backend/database-service/Dockerfile
-    build:
-      docker:
-        options:
-          target: hasura-migrations
-  fixtures-service:
-    image: shopozor/fixtures-service
-    tag: ${DEVSPACE_GIT_COMMIT}
-    context: .
-    dockerfile: backend/fixtures-generator/Dockerfile
-    build:
-      docker:
-        options:
-          target: app
-  admin-ui:
-    image: shopozor/admin-ui
-    tag: ${DEVSPACE_GIT_COMMIT}
-    context: .
-    dockerfile: Dockerfile
-    build:
-      docker:
-        options:
-          target: admin-ui
-          buildArgs:
-            GRAPHQL_API: http://api.shopozor/v1/graphql/
-            ASSETS_API: http://assets.shopozor/
-  consumer-ui:
-    image: shopozor/consumer-ui-spa
-    tag: ${DEVSPACE_GIT_COMMIT}
-    context: .
-    dockerfile: Dockerfile
-    build:
-      docker:
-        options:
-          target: consumer-ui-spa
-          buildArgs:
-            GRAPHQL_API: http://api.shopozor/v1/graphql/
-            ASSETS_API: http://assets.shopozor/
   admin-storybook:
     image: shopozor/admin-storybook
     tag: ${DEVSPACE_GIT_COMMIT}
-    context: .
     dockerfile: Dockerfile
+    context: .
     build:
       docker:
         options:
           target: admin-storybook
           buildArgs:
             ASSETS_API: http://assets.shopozor/
+  admin-ui:
+    image: shopozor/admin-ui
+    tag: ${DEVSPACE_GIT_COMMIT}
+    dockerfile: Dockerfile
+    context: .
+    build:
+      docker:
+        options:
+          target: admin-ui
+          buildArgs:
+            ASSETS_API: http://assets.shopozor/
+            GRAPHQL_API: http://api.shopozor/v1/graphql/
+  api:
+    image: shopozor/graphql-engine
+    tag: ${DEVSPACE_GIT_COMMIT}
+    dockerfile: backend/database-service/Dockerfile
+    context: backend/database-service
+    build:
+      docker:
+        options:
+          target: hasura-migrations
+  assets-fixtures:
+    image: shopozor/assets-fixtures
+    tag: ${DEVSPACE_GIT_COMMIT}
+    dockerfile: backend/assets-service/Dockerfile
+    context: .
   consumer-storybook:
     image: shopozor/consumer-storybook
     tag: ${DEVSPACE_GIT_COMMIT}
-    context: .
     dockerfile: Dockerfile
+    context: .
     build:
       docker:
         options:
           target: consumer-storybook
           buildArgs:
             ASSETS_API: http://assets.shopozor/
+  consumer-ui:
+    image: shopozor/consumer-ui-spa
+    tag: ${DEVSPACE_GIT_COMMIT}
+    dockerfile: Dockerfile
+    context: .
+    build:
+      docker:
+        options:
+          target: consumer-ui-spa
+          buildArgs:
+            ASSETS_API: http://assets.shopozor/
+            GRAPHQL_API: http://api.shopozor/v1/graphql/
+  fixtures-service:
+    image: shopozor/fixtures-service
+    tag: ${DEVSPACE_GIT_COMMIT}
+    dockerfile: backend/fixtures-generator/Dockerfile
+    context: .
+    build:
+      docker:
+        options:
+          target: app
 deployments:
 - name: minio
   # namespace: dev
   helm:
-    componentChart: false
     chart:
-      repo: https://charts.bitnami.com/bitnami
       name: minio
+      repo: https://charts.bitnami.com/bitnami
+    componentChart: false
     values:
+      accessKey:
+        password: minio
+      clusterDomain: localhost
+      disableWebUI: false
       ingress:
-        enabled: true
         annotations:
           kubernetes.io/ingress.class: nginx
+        enabled: true
         hosts:
         - name: assets.shopozor
           path: /
       mode: standalone
-      clusterDomain: localhost
       persistence:
         enabled: false
         size: 10Gi
-      disableWebUI: false
-      accessKey:
-        password: minio
       secretKey:
         password: minio123
       service:
         port: 9000
-# - name: services
-#   helm:
-#     chart:
-#       name: ./backend/assets-service/chart
-dev: {}
+    v2: true
+- name: minio-initialization
+  # namespace: dev
+  helm:
+    chart:
+      name: ./backend/assets-service/chart/
+    componentChart: false
+    values:
+      image: shopozor/assets-fixtures
+      fixtures:
+        enabled: true
+      minio:
+        fullname: minio
+        client:
+          alias: minio
+        server:
+          port: 9000
+    v2: true
+- name: postgres
+  # namespace: dev
+  helm:
+    chart:
+      name: postgresql-ha
+      repo: https://charts.bitnami.com/bitnami
+    componentChart: false
+    values:
+      fullnameOverride: postgres
+      postgresql:
+        username: postgres
+        database: postgres
+      persistence:
+        enabled: false
+        # mountPath: /opt/bitnami/postgresql/data
+      volumePermissions:
+        enabled: true
+    v2: true
+- name: api
+  # namespace: dev
+  helm:
+    chart:
+      name: backend/database-service/chart
+    componentChart: false
+    v2: true
+    values:
+      image: shopozor/graphql-engine
+      ingress:
+        enabled: true
+        hosts:
+        - host: api.shopozor
+          paths:
+            - /
+      postgres:
+        secretName: postgres-postgresql
+        username: postgres
+        database: postgres
+        hostname: postgres-pgpool
+      hasura:
+        server:
+          port: 8080
+        cors:
+          enabled: true
+          domain: "*"
+      service:
+        port: 8080
+- name: database-fixtures
+  # namespace: dev
+  helm:
+    v2: true
+    componentChart: false
+    chart:
+      name: backend/fixtures-generator/chart
+    values:
+      image: shopozor/fixtures-service
+      services:
+        api:
+          hostname: api
+          port: 8080
+- name: admin-ui
+  # namespace: dev
+  helm:
+    v2: true
+    componentChart: false
+    chart:
+      name: frontend/admin-ui/chart
+    values:
+      ui:
+        image: shopozor/admin-ui
+        service:
+          port: 4000
+          type: ClusterIP
+      storybook:
+        image: shopozor/admin-storybook
+        enabled: true
+        service:
+          port: 7006
+        ingress:
+          enabled: false
+      services:
+        api:
+          hostname: api
+- name: consumer-ui
+  # namespace: dev
+  helm:
+    v2: true
+    componentChart: false
+    chart:
+      name: frontend/consumer-ui/chart
+    values:
+      ui:
+        image: shopozor/consumer-ui-spa
+        service:
+          port: 3000
+          type: ClusterIP
+      storybook:
+        image: shopozor/consumer-storybook
+        enabled: true
+        service:
+          port: 6006
+        ingress:
+          enabled: false
+      services:
+        api:
+          hostname: api
+dev:
+  ports:
+  - imageName: admin-ui
+    forward:
+    - port: 4000
+      remotePort: 80
+  - imageName: admin-storybook
+    forward:
+    - port: 7006
+      remotePort: 8080
+  - imageName: consumer-ui
+    forward:
+    - port: 3001
+      remotePort: 80
+  - imageName: consumer-storybook
+    forward:
+    - port: 6006
+      remotePort: 8080
