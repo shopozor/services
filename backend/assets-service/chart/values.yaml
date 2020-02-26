@@ -10,8 +10,6 @@ minio:
   server:
     port: 9000
 
-# image: shopozor/assets-fixtures
-
 nameOverride: ""
 fullnameOverride: ""
 

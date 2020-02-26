@@ -2,7 +2,7 @@ version: v1beta6
 images:
   admin-storybook:
     image: shopozor/admin-storybook
-    tag: ${DEVSPACE_GIT_COMMIT}
+    tag: ${DEVSPACE_RANDOM}
     dockerfile: Dockerfile
     context: .
     build:
@@ -13,7 +13,7 @@ images:
             ASSETS_API: http://assets.shopozor/
   admin-ui:
     image: shopozor/admin-ui
-    tag: ${DEVSPACE_GIT_COMMIT}
+    tag: ${DEVSPACE_RANDOM}
     dockerfile: Dockerfile
     context: .
     build:
@@ -25,7 +25,7 @@ images:
             GRAPHQL_API: http://api.shopozor/v1/graphql/
   api:
     image: shopozor/graphql-engine
-    tag: ${DEVSPACE_GIT_COMMIT}
+    tag: ${DEVSPACE_RANDOM}
     dockerfile: backend/database-service/Dockerfile
     context: backend/database-service
     build:
@@ -34,12 +34,12 @@ images:
           target: hasura-migrations
   assets-fixtures:
     image: shopozor/assets-fixtures
-    tag: ${DEVSPACE_GIT_COMMIT}
+    tag: ${DEVSPACE_RANDOM}
     dockerfile: backend/assets-service/Dockerfile
     context: .
   consumer-storybook:
     image: shopozor/consumer-storybook
-    tag: ${DEVSPACE_GIT_COMMIT}
+    tag: ${DEVSPACE_RANDOM}
     dockerfile: Dockerfile
     context: .
     build:
@@ -50,7 +50,7 @@ images:
             ASSETS_API: http://assets.shopozor/
   consumer-ui:
     image: shopozor/consumer-ui-spa
-    tag: ${DEVSPACE_GIT_COMMIT}
+    tag: ${DEVSPACE_RANDOM}
     dockerfile: Dockerfile
     context: .
     build:
@@ -62,7 +62,7 @@ images:
             GRAPHQL_API: http://api.shopozor/v1/graphql/
   fixtures-service:
     image: shopozor/fixtures-service
-    tag: ${DEVSPACE_GIT_COMMIT}
+    tag: ${DEVSPACE_RANDOM}
     dockerfile: backend/fixtures-generator/Dockerfile
     context: .
     build:
@@ -105,13 +105,13 @@ deployments:
       name: ./backend/assets-service/chart/
     componentChart: false
     values:
-      image: shopozor/assets-fixtures
       fixtures:
         enabled: true
+      image: shopozor/assets-fixtures
       minio:
-        fullname: minio
         client:
           alias: minio
+        fullname: minio
         server:
           port: 9000
     v2: true
@@ -124,12 +124,11 @@ deployments:
     componentChart: false
     values:
       fullnameOverride: postgres
-      postgresql:
-        username: postgres
-        database: postgres
       persistence:
         enabled: false
-        # mountPath: /opt/bitnami/postgresql/data
+      postgresql:
+        database: postgres
+        username: postgres
       volumePermissions:
         enabled: true
     v2: true
@@ -139,87 +138,87 @@ deployments:
     chart:
       name: backend/database-service/chart
     componentChart: false
-    v2: true
     values:
+      hasura:
+        cors:
+          domain: '*'
+          enabled: true
+        server:
+          port: 8080
       image: shopozor/graphql-engine
       ingress:
         enabled: true
         hosts:
         - host: api.shopozor
           paths:
-            - /
+          - /
       postgres:
-        secretName: postgres-postgresql
-        username: postgres
         database: postgres
         hostname: postgres-pgpool
-      hasura:
-        server:
-          port: 8080
-        cors:
-          enabled: true
-          domain: "*"
+        secretName: postgres-postgresql
+        username: postgres
       service:
         port: 8080
+    v2: true
 - name: database-fixtures
   # namespace: dev
   helm:
-    v2: true
-    componentChart: false
     chart:
       name: backend/fixtures-generator/chart
+    componentChart: false
     values:
       image: shopozor/fixtures-service
       services:
         api:
           hostname: api
           port: 8080
+    v2: true
 - name: admin-ui
   # namespace: dev
   helm:
-    v2: true
-    componentChart: false
     chart:
       name: frontend/admin-ui/chart
+    componentChart: false
     values:
+      services:
+        api:
+          hostname: api
+      storybook:
+        enabled: true
+        image: shopozor/admin-storybook
+        ingress:
+          enabled: false
+        service:
+          port: 7006
       ui:
         image: shopozor/admin-ui
         service:
           port: 4000
           type: ClusterIP
-      storybook:
-        image: shopozor/admin-storybook
-        enabled: true
-        service:
-          port: 7006
-        ingress:
-          enabled: false
-      services:
-        api:
-          hostname: api
+    v2: true
 - name: consumer-ui
   # namespace: dev
   helm:
-    v2: true
-    componentChart: false
     chart:
       name: frontend/consumer-ui/chart
+    componentChart: false
     values:
+      services:
+        api:
+          hostname: api
+      storybook:
+        enabled: true
+        image: shopozor/consumer-storybook
+        ingress:
+          enabled: false
+        service:
+          port: 6006
       ui:
         image: shopozor/consumer-ui-spa
         service:
           port: 3000
           type: ClusterIP
-      storybook:
-        image: shopozor/consumer-storybook
-        enabled: true
-        service:
-          port: 6006
-        ingress:
-          enabled: false
-      services:
-        api:
-          hostname: api
+    v2: true
 dev:
   ports:
   - imageName: admin-ui
@@ -238,3 +237,74 @@ dev:
     forward:
     - port: 6006
       remotePort: 8080
+hooks:
+# TODO: is it possible to call a local script here? <-- yes
+# TODO: this needs to be a loop polling all the resources until they are all ok or a timeout was reached
+- command: kubectl
+  args:
+  - rollout
+  - status
+  - deployment
+  - minio
+  - --namespace
+  # TODO: change this namespace!
+  - devspace
+  - --watch=false
+  when:
+    after:
+      deployments: all
+profiles:
+# TODO: change the hooks!
+- name: staging
+  # TODO: organize TLS!
+  patches:
+  # Image tags
+  - op: replace
+    path: /images/tag=${DEVSPACE_RANDOM}/tag
+    value: ${DEVSPACE_GIT_COMMIT}
+  # Minio
+  - op: remove
+    path: /deployments/name=minio/helm/values/accessKey/password
+  - op: remove
+    path: /deployments/name=minio/helm/values/secretKey/password
+  - op: replace
+    path: /deployments/name=minio/helm/values/clusterDomain
+    value: shopozor.hidora.com
+  - op: replace
+    path: /deployments/name=minio/helm/values/ingress/hosts/0/name
+    value: assets.shopozor.hidora.com
+  - op: replace
+    path: /deployments/name=minio/helm/values/mode
+    value: distributed
+  - op: replace
+    path: /deployments/name=minio/helm/values/persistence
+    value:
+      enabled: true
+      storageClass: jelastic-dynamic-volume
+      size: 1Gi
+    # TODO: will the secret keys still work? cf. minio.envvarsblock
+    # TODO: in production:
+    #   - disableWebUI should be true!
+    #   - minio-initialization should be only partial: just the buckets, that's it
+  # postgres
+  - op: replace
+    path: /deployments/name=postgres/helm/values/persistence
+    value:
+      enabled: true
+      storageClass: jelastic-dynamic-volume
+      size: 1Gi
+    # TODO: fine-tune database name and username
+  # api
+    # TODO: change cors.domain appropriately!
+  - op: replace
+    path: /deployments/name=api/helm/values/ingress/hosts/0/host
+    value: api.shopozor.hidora.com
+  # admin-ui
+  - op: replace
+    path: /deployments/name=admin-ui/helm/values/ui/service/type
+    value: LoadBalancer
+  # consumer-ui
+  # TODO: replace with consumer-ui image, don't keep consumer-ui-spa!
+  - op: replace
+    path: /deployments/name=consumer-ui/helm/values/ui/service/type
+    value: LoadBalancer
