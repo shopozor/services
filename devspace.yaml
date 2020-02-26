@@ -71,7 +71,7 @@ images:
             ASSETS_API: http://assets.shopozor/
 deployments:
 - name: minio
-  namespace: dev
+  # namespace: dev
   helm:
     componentChart: false
     chart:
