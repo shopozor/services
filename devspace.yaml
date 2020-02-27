@@ -69,9 +69,9 @@ images:
       docker:
         options:
           target: app
+# TODO: do NOT deploy the database fixtures and assets by default here; it must be done manually in the dev environment; it can be automated in the staging environment
 deployments:
 - name: minio
-  # namespace: dev
   helm:
     chart:
       name: minio
@@ -97,9 +97,7 @@ deployments:
         password: minio123
       service:
         port: 9000
-    v2: true
 - name: minio-initialization
-  # namespace: dev
   helm:
     chart:
       name: ./backend/assets-service/chart/
@@ -114,9 +112,7 @@ deployments:
         fullname: minio
         server:
           port: 9000
-    v2: true
 - name: postgres
-  # namespace: dev
   helm:
     chart:
       name: postgresql-ha
@@ -131,9 +127,7 @@ deployments:
         username: postgres
       volumePermissions:
         enabled: true
-    v2: true
 - name: api
-  # namespace: dev
   helm:
     chart:
       name: backend/database-service/chart
@@ -159,9 +153,7 @@ deployments:
         username: postgres
       service:
         port: 8080
-    v2: true
 - name: database-fixtures
-  # namespace: dev
   helm:
     chart:
       name: backend/fixtures-generator/chart
@@ -172,9 +164,7 @@ deployments:
         api:
           hostname: api
           port: 8080
-    v2: true
 - name: admin-ui
-  # namespace: dev
   helm:
     chart:
       name: frontend/admin-ui/chart
@@ -195,9 +185,7 @@ deployments:
         service:
           port: 4000
           type: ClusterIP
-    v2: true
 - name: consumer-ui
-  # namespace: dev
   helm:
     chart:
       name: frontend/consumer-ui/chart
@@ -218,7 +206,6 @@ deployments:
         service:
           port: 3000
           type: ClusterIP
-    v2: true
 dev:
   ports:
   - imageName: admin-ui
@@ -237,15 +224,6 @@ dev:
     forward:
     - port: 6006
       remotePort: 8080
-hooks:
-# TODO: it's probably not a good idea to have this command here because it depends on the namespace with is provided by command-line arguments!
-- command: ./scripts/wait_for_deployments.sh
-  args:
-  # TODO: change this namespace!
-  - devspace
-  when:
-    after:
-      deployments: all
 profiles:
 # TODO: change the hooks!
 - name: staging
