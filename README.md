@@ -85,6 +85,7 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/ngin
 ```
 127.0.0.1  localhost assets.shopozor api.shopozor
 ```
+That is because our assets and api services will be served on `assets.shopozor` and `api.shopozor` hostnames locally.
 
 ### Helm
 
