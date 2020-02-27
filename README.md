@@ -136,6 +136,14 @@ http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kube
 kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep default-token | awk '{print $1}')
 ```
 
+### Hasura client
+
+Following [these instructions](https://hasura.io/docs/1.0/graphql/manual/hasura-cli/install-hasura-cli.html#install-a-binary-globally), you need to perform the following command to install the hasura client:
+```
+curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | INSTALL_PATH=$HOME/bin bash
+```
+Under Windows, you will need to store the `hasura` bin under the name `hasura.exe`, for the sake of compatibility with `devspace`. Also, whatever OS you use, you should make sure the `hasura` binary is found in one of the paths listed in the `PATH` environment variable.
+
 ### Common third-party packages
 
 In order to play with the assets, you will probably need the [minio client](https://docs.min.io/docs/minio-client-quickstart-guide.html). Under Windows 10,

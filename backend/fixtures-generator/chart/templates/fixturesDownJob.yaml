@@ -1,0 +1,48 @@
+{{- if .Values.fixtures.down -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "chart.fullname" . }}-fixtures-down
+  labels:
+{{ include "chart.labels" . | indent 4 }}
+spec:
+  template:
+    spec:
+      initContainers:
+      - name: wait-for-api
+        image: curlimages/curl:latest
+        env: {{- include "api.envvarsblock" . | nindent 8 }}
+        - name: TIMEOUT
+          value: "60"
+        command:
+          - /bin/sh
+          - -c
+          - |
+            echo "waiting $TIMEOUT for $API_PORT to be ready on host $API_HOSTNAME"
+            for i in `seq 1 $TIMEOUT`;
+            do
+                echo "waiting for graphql engine"
+                version=$(curl -s http://$API_HOSTNAME:$API_PORT/v1/version | grep "version")
+                [ "$version" == "" ] && sleep 1 || exit 0
+            done
+            echo "failed waiting for $API_PORT on host $API_HOSTNAME" && exit 1
+      containers:
+      - name: {{ .Chart.Name }}-fixtures-down
+        image: {{ .Values.image }}
+        env: {{- include "api.envvarsblock" . | nindent 8 }}
+        volumeMounts:
+          - name: data
+            mountPath: /app/fixtures
+        command:
+          - /bin/sh
+          - -c
+          - |
+            hasura migrate apply --endpoint http://${API_HOSTNAME}:${API_PORT} --project /app/fixtures/database --down $(ls /app/fixtures/database/migrations/*.up.sql | wc -l) --skip-update-check
+      restartPolicy: OnFailure
+      volumes:
+        - name: data
+        {{- if .Values.persistence.enabled }}
+          persistentVolumeClaim:
+            claimName: {{ .Values.persistence.existingClaim | default (include "chart.fullname" .) }}
+        {{- end }}
+{{- end -}}

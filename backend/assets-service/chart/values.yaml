@@ -13,5 +13,6 @@ minio:
 nameOverride: ""
 fullnameOverride: ""
 
-fixtures:
-  enabled: true
+assets:
+  up: false
+  down: false

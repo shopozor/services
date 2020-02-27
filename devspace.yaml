@@ -1,4 +1,20 @@
 version: v1beta6
+vars:
+- name: MINIO_ALIAS
+  source: env
+  default: minio
+- name: MINIO_URL
+  source: env
+  default: http://assets.shopozor
+- name: MINIO_ACCESS_KEY
+  source: env
+  default: minio
+- name: MINIO_SECRET_KEY
+  source: env
+  default: minio123
+- name: HASURA_ENDPOINT
+  source: env
+  default: http://api.shopozor/
 images:
   admin-storybook:
     image: shopozor/admin-storybook
@@ -69,7 +85,38 @@ images:
       docker:
         options:
           target: app
-# TODO: do NOT deploy the database fixtures and assets by default here; it must be done manually in the dev environment; it can be automated in the staging environment
+commands:
+- name: push-assets-dev
+  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
+  #       helm install ./backend/assets-service/chart with some values that tell we want the assets up + image with tag latests
+  command: |
+    mc config host add ${MINIO_ALIAS} ${MINIO_URL} ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
+    for category in `ls ./shared/pictures`; do
+      echo "Processing category $category"
+      for f in `ls ./shared/pictures/$category/*` ; do
+        mc cp $f ${MINIO_ALIAS}/$category/$(basename $f)
+      done
+    done
+- name: cleanup-assets-dev
+  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
+  #       helm install ./backend/assets-service/chart with some values that tell we want the assets down + image with tag latests
+  command: |
+    echo "tag: ${DEVSPACE_RANDOM}"
+    mc config host add ${MINIO_ALIAS} ${MINIO_URL} ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
+    for category in `ls ./shared/pictures`; do
+      echo "Processing category $category"
+      mc rm --recursive --force ${MINIO_ALIAS}/$category
+    done
+- name: push-fixtures-dev
+  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
+  #       helm install ./backend/fixtures-generator/chart with some values that tell we want the fixtures up + image with tag latests
+  command: |
+    hasura migrate apply --endpoint ${HASURA_ENDPOINT} --project ./shared/fixtures/database --up all --skip-update-check
+- name: cleanup-fixtures-dev
+  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
+  #       helm install ./backend/fixtures-generator/chart with some values that tell we want the fixtures down + image with tag latests
+  command: |
+    hasura migrate apply --endpoint ${HASURA_ENDPOINT} --project ./shared/fixtures/database --down $(ls ./shared/fixtures/database/migrations/*.up.sql | wc -l) --skip-update-check
 deployments:
 - name: minio
   helm:
@@ -103,8 +150,6 @@ deployments:
       name: ./backend/assets-service/chart/
     componentChart: false
     values:
-      fixtures:
-        enabled: true
       image: shopozor/assets-fixtures
       minio:
         client:
@@ -153,17 +198,17 @@ deployments:
         username: postgres
       service:
         port: 8080
-- name: database-fixtures
-  helm:
-    chart:
-      name: backend/fixtures-generator/chart
-    componentChart: false
-    values:
-      image: shopozor/fixtures-service
-      services:
-        api:
-          hostname: api
-          port: 8080
+# - name: database-fixtures
+#   helm:
+#     chart:
+#       name: backend/fixtures-generator/chart
+#     componentChart: false
+#     values:
+#       image: shopozor/fixtures-service
+#       services:
+#         api:
+#           hostname: api
+#           port: 8080
 - name: admin-ui
   helm:
     chart:
@@ -224,6 +269,7 @@ dev:
     forward:
     - port: 6006
       remotePort: 8080
+  # TODO: for the sake of visualization with pgAdmin, we could also port-forward postgres
 profiles:
 # TODO: change the hooks!
 - name: staging
@@ -253,6 +299,7 @@ profiles:
       enabled: true
       storageClass: jelastic-dynamic-volume
       size: 1Gi
+    # TODO: enable the fixtures
     # TODO: will the secret keys still work? cf. minio.envvarsblock
     # TODO: in production:
     #   - disableWebUI should be true!
@@ -267,6 +314,7 @@ profiles:
     # TODO: fine-tune database name and username
   # api
     # TODO: change cors.domain appropriately!
+    # TODO: apply fixtures!
   - op: replace
     path: /deployments/name=api/helm/values/ingress/hosts/0/host
     value: api.shopozor.hidora.com

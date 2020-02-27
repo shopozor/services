@@ -1,8 +1,8 @@
-{{- if .Values.fixtures.enabled -}}
+{{- if .Values.assets.up -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "chart.fullname" . }}-init-fixtures
+  name: {{ include "chart.fullname" . }}-assets-up
   labels:
 {{ include "chart.labels" . | indent 4 }}
 spec:
@@ -30,7 +30,7 @@ spec:
             done
             echo "Failure" && exit 1
       containers:
-      - name: {{ .Chart.Name }}-init-fixtures
+      - name: {{ .Chart.Name }}-assets-up
         image: {{ .Values.image }}
         env: {{- include "minio.envvarsblock" . | nindent 10 }}
         command:
