@@ -87,6 +87,25 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/ngin
 ```
 That is because our assets and api services will be served on `assets.shopozor` and `api.shopozor` hostnames locally.
 
+#### Kubernetes dashboard
+
+You install the kubernetes dashboard by following [these instructions](https://github.com/kubernetes/dashboard#getting-started). You can get more background [here](https://collabnix.com/kubernetes-dashboard-on-docker-desktop-for-windows-2-0-0-3-in-2-minutes/) if necessary.
+
+Once installed, you access the k8s dashboard as follows:
+
+1. run
+```
+kubectl proxy
+```
+2. using your favorite browser, navigate to
+
+http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
+
+3. on that address, you will need to provide a token; you find it in the following way (under Windows with default kubernetes installation through the docker for desktop):
+```
+kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep default-token | awk '{print $1}')
+```
+
 ### Helm
 
 First [install helm v3](https://helm.sh/docs/intro/install/), e.g. with [chocolatey](https://chocolatey.org/packages/kubernetes-helm) under Windows (you need to have admin rights):
@@ -117,25 +136,6 @@ Later on, start developping with devspace like this:
 devspace dev
 ```
 
-### Kubernetes dashboard
-
-You install the kubernetes dashboard by following [these instructions](https://github.com/kubernetes/dashboard#getting-started). You can get more background [here](https://collabnix.com/kubernetes-dashboard-on-docker-desktop-for-windows-2-0-0-3-in-2-minutes/) if necessary.
-
-Once installed, you access the k8s dashboard as follows:
-
-1. run
-```
-kubectl proxy
-```
-2. using your favorite browser, navigate to
-
-http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/
-
-3. on that address, you will need to provide a token; you find it in the following way (under Windows with default kubernetes installation through the docker for desktop):
-```
-kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep default-token | awk '{print $1}')
-```
-
 ### Hasura client
 
 Following [these instructions](https://hasura.io/docs/1.0/graphql/manual/hasura-cli/install-hasura-cli.html#install-a-binary-globally), you need to perform the following command to install the hasura client:
@@ -144,7 +144,7 @@ curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | INSTALL
 ```
 Under Windows, you will need to store the `hasura` bin under the name `hasura.exe`, for the sake of compatibility with `devspace`. Also, whatever OS you use, you should make sure the `hasura` binary is found in one of the paths listed in the `PATH` environment variable.
 
-### Common third-party packages
+### Minio client
 
 In order to play with the assets, you will probably need the [minio client](https://docs.min.io/docs/minio-client-quickstart-guide.html). Under Windows 10,
 
@@ -164,14 +164,6 @@ Compare with the data set up in the `docker-compose-backend.yaml`. The `MINIO_AC
 * [minio client quickstart guide](https://docs.min.io/docs/minio-client-quickstart-guide.html)
 
 ## Backend development setup
-
-### Necessary third-party packages
-
-Some of our scripts use the `jq` tool to interpret json output. Under ubuntu / debian, you will need `jq`:
-```
-sudo apt install -y jq
-```
-Under Windows 10, you want to install [jq](https://github.com/stedolan/jq/releases). Just download the Win64 installer and make it available somewhere in your disk. Add that location to your `PATH` variable. Rename `jq-win64.exe` to `jq.exe`.
 
 ### Development database seeding
 

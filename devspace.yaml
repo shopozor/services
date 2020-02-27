@@ -86,7 +86,7 @@ images:
         options:
           target: app
 commands:
-- name: push-assets-dev
+- name: push-assets
   # TODO: when additionally tagging the images with "latest" is possible, we can just use here
   #       helm install ./backend/assets-service/chart with some values that tell we want the assets up + image with tag latests
   command: |
@@ -97,7 +97,7 @@ commands:
         mc cp $f ${MINIO_ALIAS}/$category/$(basename $f)
       done
     done
-- name: cleanup-assets-dev
+- name: cleanup-assets
   # TODO: when additionally tagging the images with "latest" is possible, we can just use here
   #       helm install ./backend/assets-service/chart with some values that tell we want the assets down + image with tag latests
   command: |
@@ -107,16 +107,22 @@ commands:
       echo "Processing category $category"
       mc rm --recursive --force ${MINIO_ALIAS}/$category
     done
-- name: push-fixtures-dev
+- name: push-fixtures
   # TODO: when additionally tagging the images with "latest" is possible, we can just use here
   #       helm install ./backend/fixtures-generator/chart with some values that tell we want the fixtures up + image with tag latests
   command: |
     hasura migrate apply --endpoint ${HASURA_ENDPOINT} --project ./shared/fixtures/database --up all --skip-update-check
-- name: cleanup-fixtures-dev
+- name: cleanup-fixtures
   # TODO: when additionally tagging the images with "latest" is possible, we can just use here
   #       helm install ./backend/fixtures-generator/chart with some values that tell we want the fixtures down + image with tag latests
   command: |
     hasura migrate apply --endpoint ${HASURA_ENDPOINT} --project ./shared/fixtures/database --down $(ls ./shared/fixtures/database/migrations/*.up.sql | wc -l) --skip-update-check
+- name: kubernetes-dashboard-token
+  command: |
+    kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep default-token | awk '{print $1}')
+- name: hasura-console
+  command: |
+    hasura console --project ./backend/database-service --endpoint ${HASURA_ENDPOINT}
 deployments:
 - name: minio
   helm:
@@ -271,7 +277,6 @@ dev:
       remotePort: 8080
   # TODO: for the sake of visualization with pgAdmin, we could also port-forward postgres
 profiles:
-# TODO: change the hooks!
 - name: staging
   # TODO: organize TLS!
   patches:
@@ -311,6 +316,7 @@ profiles:
       enabled: true
       storageClass: jelastic-dynamic-volume
       size: 1Gi
+      mountPath: /opt/bitnami/postgresql/data
     # TODO: fine-tune database name and username
   # api
     # TODO: change cors.domain appropriately!
