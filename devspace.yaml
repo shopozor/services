@@ -238,18 +238,11 @@ dev:
     - port: 6006
       remotePort: 8080
 hooks:
-# TODO: is it possible to call a local script here? <-- yes
-# TODO: this needs to be a loop polling all the resources until they are all ok or a timeout was reached
-- command: kubectl
+# TODO: it's probably not a good idea to have this command here because it depends on the namespace with is provided by command-line arguments!
+- command: ./scripts/wait_for_deployments.sh
   args:
-  - rollout
-  - status
-  - deployment
-  - minio
-  - --namespace
   # TODO: change this namespace!
   - devspace
-  - --watch=false
   when:
     after:
       deployments: all
