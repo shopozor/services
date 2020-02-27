@@ -65,6 +65,8 @@ Most of the backend stuff and the whole frontend validation are performed on doc
 * on Ubuntu, follow [these instructions](https://docs.docker.com/install/linux/docker-ce/ubuntu/)  
 * on Windows 10, follow [these instructions](https://docs.docker.com/docker-for-windows/install/) and make sure you read [this blog](https://nickjanetakis.com/blog/setting-up-docker-for-windows-and-wsl-to-work-flawlessly) if you work with WSL
 
+We have not experimented WSL 2 under Windows 10, but as far as WSL is concerned, we don't recommend using it if you need to work on the frontend and build it locally (not on the local k8s cluster), because `yarn` does not work well at all in WSL.
+
 ### Kubernetes
 
 Under linux, install minikube. Under Windows, you can enable kubernetes in Docker for Desktop:
@@ -73,32 +75,32 @@ Under linux, install minikube. Under Windows, you can enable kubernetes in Docke
 
 After that, you will want to
 
-* [install helm v3](https://helm.sh/docs/intro/install/), e.g. with [chocolatey](https://chocolatey.org/packages/kubernetes-helm) under Windows (you need to have admin rights):
-```
-choco install kubernetes-helm
-```
-* install the kubernetes dashboard, following [these instructions](https://github.com/kubernetes/dashboard#getting-started); you can get more background [here](https://collabnix.com/kubernetes-dashboard-on-docker-desktop-for-windows-2-0-0-3-in-2-minutes/) if necessary
 * install the [nginx ingress controller](https://kubernetes.github.io/ingress-nginx/deploy/)
 ```
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.29.0/deploy/static/mandatory.yaml
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.29.0/deploy/static/provider/cloud-generic.yaml
 ```
-* [install devspace](https://devspace.cloud/docs/cli/getting-started/installation)
-* [activate the helm charts repo](https://github.com/helm/charts#how-do-i-enable-the-stable-repository-for-helm-3)
-```
-helm repo add stable https://kubernetes-charts.storage.googleapis.com
-helm repo add bitnami https://charts.bitnami.com/bitnami
-```
 * [optional] [install squash](https://squash.solo.io/overview/) in order to be able to debug your k8s app
-
-Finally, modify your `C:\Windows\System32\drivers\etc\hosts` file with
+* modify your `C:\Windows\System32\drivers\etc\hosts` (or `/etc/hosts` under Linux) file with
 ```
 127.0.0.1  localhost assets.shopozor api.shopozor
 ```
 
+### Helm
+
+First [install helm v3](https://helm.sh/docs/intro/install/), e.g. with [chocolatey](https://chocolatey.org/packages/kubernetes-helm) under Windows (you need to have admin rights):
+```
+choco install kubernetes-helm
+```
+Then, [activate the helm charts repo](https://github.com/helm/charts#how-do-i-enable-the-stable-repository-for-helm-3)
+```
+helm repo add stable https://kubernetes-charts.storage.googleapis.com
+helm repo add bitnami https://charts.bitnami.com/bitnami
+```
+
 ### Devspace
 
-The very first time you run `devspace`,
+You install devspace by following [these instructions](https://devspace.cloud/docs/cli/getting-started/installation). Then, the very first time you run `devspace`,
 
 1. Create the `dev` namespace
 ```
@@ -115,6 +117,8 @@ devspace dev
 ```
 
 ### Kubernetes dashboard
+
+You install the kubernetes dashboard by following [these instructions](https://github.com/kubernetes/dashboard#getting-started). You can get more background [here](https://collabnix.com/kubernetes-dashboard-on-docker-desktop-for-windows-2-0-0-3-in-2-minutes/) if necessary.
 
 Once installed, you access the k8s dashboard as follows:
 
