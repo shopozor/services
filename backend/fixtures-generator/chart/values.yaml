@@ -5,12 +5,10 @@
 nameOverride: ""
 fullnameOverride: ""
 
-hasura:
-  host: hasura
-  port: 8080
-  # image:
-  #   repository: hasura/graphql-engine
-  #   tag: v1.0.0.cli-migrations
+services:
+  api:
+    hostname: api
+    port: 8080
 
 persistence:
   enabled: true

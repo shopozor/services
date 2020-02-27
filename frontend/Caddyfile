@@ -1,9 +1,0 @@
-0.0.0.0:8080
-
-tls off
-
-browse
-
-log stdout
-
-errors stdout

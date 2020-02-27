@@ -64,7 +64,8 @@ services:
   site-generator-service:
     build:
       context: .
-      dockerfile: backend/site-generator-service/Dockerfile
+      dockerfile: Dockerfile
+      target: site-generator
     image: ${PRODUCT:-shopozor}/site-generator-service:${TAG:-local}
     ports:
       - "${GENERATOR_API_PORT:-2000}:8080"

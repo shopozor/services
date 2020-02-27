@@ -56,16 +56,6 @@ Create the name of the service account to use
 {{- end -}}
 
 {{/*
-Common hasura environment variables setup
-*/}}
-{{- define "hasura.envvarsblock" -}}
-- name: HASURA_HOST
-  value: {{ .Values.services.hasura.name }}
-- name: HASURA_PORT
-  value: {{ .Values.services.hasura.port | quote }}
-{{- end -}}
-
-{{/*
 Return the proper Storage Class
 */}}
 {{- define "chart.storageClass" -}}

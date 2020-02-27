@@ -19,10 +19,36 @@ build:
       docker:
         dockerfile: backend/fixtures-generator/Dockerfile
         target: app
-    - image: shopozor/site-generator-service
+    - image: shopozor/admin-ui
       context: .
       docker:
-        dockerfile: backend/site-generator-service/Dockerfile
+        dockerfile: Dockerfile
+        target: admin-ui
+        buildArgs:
+          GRAPHQL_API: http://api.shopozor/v1/graphql/
+          ASSETS_API: http://assets.shopozor/
+    - image: shopozor/consumer-ui-spa
+      context: .
+      docker:
+        dockerfile: Dockerfile
+        target: consumer-ui-spa
+        buildArgs:
+          GRAPHQL_API: http://api.shopozor/v1/graphql/
+          ASSETS_API: http://assets.shopozor/
+    - image: shopozor/admin-storybook
+      context: .
+      docker:
+        dockerfile: Dockerfile
+        target: admin-storybook
+        buildArgs:
+          ASSETS_API: http://assets.shopozor/
+    - image: shopozor/consumer-storybook
+      context: .
+      docker:
+        dockerfile: Dockerfile
+        target: consumer-storybook
+        buildArgs:
+          ASSETS_API: http://assets.shopozor/
 
 deploy:
   helm:
@@ -32,10 +58,15 @@ deploy:
         remote: true
         namespace: dev
         overrides:
-          # TODO: this override is probably not necessary
-          fullnameOverride: minio
+          ingress:
+            enabled: true
+            annotations:
+              kubernetes.io/ingress.class: nginx
+            hosts:
+            - name: assets.shopozor
+              path: /
           mode: standalone
-          clusterDomain: cluster.local
+          clusterDomain: localhost
           persistence:
             enabled: false
             size: 10Gi
@@ -44,6 +75,8 @@ deploy:
             password: minio
           secretKey:
             password: minio123
+          service:
+            port: 9000
       # TODO: we need to decide if the assets are pushed by default to the assets service
       #       or if we proceed as with the database fixtures!
       - name: minio-initialization
@@ -65,31 +98,40 @@ deploy:
         remote: true
         namespace: dev
         overrides:
-          # TODO: this override is probably not necessary
           fullnameOverride: postgres
           postgresql:
             username: postgres
             database: postgres
           persistence:
-            mountPath: /opt/bitnami/postgresql/data
+            enabled: false
+            # mountPath: /opt/bitnami/postgresql/data
           volumePermissions:
             enabled: true
-      - name: hasura
+      - name: api
         chartPath: backend/database-service/chart
         namespace: dev
         values:
           image: shopozor/graphql-engine
         overrides:
-          # TODO: this override is probably not necessary
-          nameOverride: hasura
+          ingress:
+            enabled: true
+            hosts:
+            - host: api.shopozor
+              paths:
+                - /
           postgres:
             secretName: postgres-postgresql
             username: postgres
             database: postgres
-            hostname: postgres-pgpool.dev
+            hostname: postgres-pgpool
           hasura:
             server:
               port: 8080
+            cors:
+              enabled: true
+              domain: "*"
+          service:
+            port: 8080
       # TODO: this must not stay in the dev deployment; this is only for staging
       - name: database-fixtures
         chartPath: backend/fixtures-generator/chart
@@ -97,26 +139,93 @@ deploy:
         values:
           image: shopozor/fixtures-service
         overrides:
-          hasura:
-            host: hasura
-            port: 8080
-      - name: site-generator-service
-        chartPath: backend/site-generator-service/chart
+          services:
+            api:
+              hostname: api
+              port: 8080
+      - name: admin-ui
+        chartPath: frontend/admin-ui/chart
         namespace: dev
         values:
-          image: shopozor/site-generator-service
+          ui.image: shopozor/admin-ui
+          storybook.image: shopozor/admin-storybook
         overrides:
+          ui:
+            service:
+              port: 4000
+              type: ClusterIP
+          storybook:
+            enabled: true
+            service:
+              port: 7006
+            ingress:
+              enabled: false
           services:
-            assets:
-              name: minio
-              port: 9000
-            hasura:
-              name: hasura
-              port: 8080
+            api:
+              hostname: api
+      - name: consumer-ui
+        chartPath: frontend/consumer-ui/chart
+        namespace: dev
+        values:
+          ui.image: shopozor/consumer-ui-spa
+          storybook.image: shopozor/consumer-storybook
+        overrides:
+          ui:
+            service:
+              type: ClusterIP
+              port: 3000
+          storybook:
+            enabled: true
+            ingress:
+              enabled: false
+            service:
+              port: 6006
+          services:
+            api:
+              hostname: api
     flags:
       upgrade:
         - --install
 
+# TODO: test this:
+# portForward:
+# - resourceType: service
+#   resourceName: minio
+#   namespace: dev
+#   port: 9000
+#   localPort: 9000
+# - resourceType: service
+#   resourceName: consumer-ui
+#   namespace: dev
+#   port: 80
+#   localPort: 80
+# - resourceType: service
+#   resourceName: consumer-ui-storybook
+#   namespace: dev
+#   port: 80
+#   localPort: 6006
+# - resourceType: service
+#   resourceName: admin-ui
+#   namespace: dev
+#   port: 80
+#   localPort: 4000
+# - resourceType: service
+#   resourceName: admin-ui-storybook
+#   namespace: dev
+#   port: 80
+#   localPort: 7006
+# - resourceType: service
+#   resourceName: hasura
+#   namespace: dev
+#   port: 8080
+#   localPort: 8080
+# # - resourceType: service
+# #   resourceName: site-generator-service
+# #   namespace: dev
+# #   port: 8080
+# #   localPort: 8081
+
+# TODO: put env vars in the section below that will then substituted with e.g. the jelastic environment name!
 profiles:
   - name: staging
     deploy:
@@ -135,16 +244,10 @@ profiles:
                 storageClass: jelastic-dynamic-volume
                 size: 10Gi
               disableWebUI: false
+        # TODO: here we need to deploy an "empty" consumer-ui (with no knowledge of the database)
         flags:
           upgrade:
             - --install
-      kubectl:
-        manifests:
-          - backend/assets-service/k8s/setup/*
-          - backend/assets-service/k8s/testing/*
-        flags:
-          global:
-            - --namespace=staging
   - name: production
     deploy:
       helm:
@@ -166,9 +269,3 @@ profiles:
         flags:
           upgrade:
             - --install
-      kubectl:
-        manifests:
-          - backend/assets-service/k8s/setup/*
-        flags:
-          global:
-            - --namespace=production

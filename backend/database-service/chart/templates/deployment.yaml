@@ -32,15 +32,19 @@ spec:
           imagePullPolicy: {{ .Values.pullPolicy }}
           env:
             - name: HASURA_GRAPHQL_SERVER_PORT
-              value: {{ .Values.hasura.server.port | quote }}
+              value: {{ .Values.service.server.port | quote }}
             # - name: HASURA_GRAPHQL_SERVER_HOST
             #   value: {{ $fullName }}
             - name: HASURA_GRAPHQL_ENABLE_CONSOLE
-              value: {{ .Values.hasura.console.enabled | quote }}
+              value: {{ .Values.service.console.enabled | quote }}
             - name: HASURA_GRAPHQL_ENABLED_LOG_TYPES
-              value: {{ .Values.hasura.log.enabled_types }}
+              value: {{ .Values.service.log.enabled_types }}
             - name: HASURA_GRAPHQL_ENABLE_TELEMETRY
-              value: {{ .Values.hasura.telemetry.enabled | quote }}
+              value: {{ .Values.service.telemetry.enabled | quote }}
+            - name: HASURA_GRAPHQL_CORS_DOMAIN
+              value: {{ .Values.service.cors.domain | quote }}
+            - name: HASURA_GRAPHQL_DISABLE_CORS
+              value: {{ not .Values.service.cors.enabled | quote }}
             - name: POSTGRES_USER
               value: {{ .Values.postgres.username }}
             - name: POSTGRES_DATABASE
@@ -58,7 +62,7 @@ spec:
               value: postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DATABASE)
           ports:
             - name: http
-              containerPort: {{ .Values.hasura.server.port }}
+              containerPort: {{ .Values.service.server.port }}
               protocol: TCP
           livenessProbe:
             httpGet:

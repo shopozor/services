@@ -8,27 +8,27 @@ spec:
   template:
     spec:
       initContainers:
-      - name: wait-for-hasura
+      - name: wait-for-api
         image: curlimages/curl:latest
-        env: {{- include "hasura.envvarsblock" . | nindent 8 }}
+        env: {{- include "api.envvarsblock" . | nindent 8 }}
         - name: TIMEOUT
           value: "60"
         command:
           - /bin/sh
           - -c
           - |
-            echo "waiting $TIMEOUT for $HASURA_PORT to be ready on host $HASURA_HOST"
+            echo "waiting $TIMEOUT for $API_PORT to be ready on host $API_HOSTNAME"
             for i in `seq 1 $TIMEOUT`;
             do
                 echo "waiting for graphql engine"
-                version=$(curl -s http://$HASURA_HOST:$HASURA_PORT/v1/version | grep "version")
+                version=$(curl -s http://$API_HOSTNAME:$API_PORT/v1/version | grep "version")
                 [ "$version" == "" ] && sleep 1 || exit 0
             done
-            echo "failed waiting for $HASURA_PORT on host $HASURA_HOST" && exit 1
+            echo "failed waiting for $API_PORT on host $API_HOSTNAME" && exit 1
       containers:
       - name: {{ .Chart.Name }}-apply-fixtures
         image: {{ .Values.image }}
-        env: {{- include "hasura.envvarsblock" . | nindent 8 }}
+        env: {{- include "api.envvarsblock" . | nindent 8 }}
         volumeMounts:
           - name: data
             mountPath: /app/fixtures
@@ -37,7 +37,7 @@ spec:
           - -c
           - |
             ./entrypoint.sh medium
-            hasura migrate apply --endpoint http://${HASURA_HOST}:${HASURA_PORT} --project /app/fixtures/database --up all --skip-update-check
+            hasura migrate apply --endpoint http://${API_HOSTNAME}:${API_PORT} --project /app/fixtures/database --up all --skip-update-check
       restartPolicy: OnFailure
       volumes:
         - name: data

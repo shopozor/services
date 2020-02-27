@@ -82,6 +82,11 @@ When using helm v2, you need to install tiller on the k8s cluster, which you do 
 helm init
 ```
 * install the kubernetes dashboard, following [these instructions](https://github.com/kubernetes/dashboard#getting-started); you can get more background [here](https://collabnix.com/kubernetes-dashboard-on-docker-desktop-for-windows-2-0-0-3-in-2-minutes/) if necessary
+* install the [nginx ingress controller](https://kubernetes.github.io/ingress-nginx/deploy/)
+```
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.29.0/deploy/static/mandatory.yaml
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.29.0/deploy/static/provider/cloud-generic.yaml
+```
 * [install skaffold](https://skaffold.dev/docs/install/)
 * [activate the helm charts repo](https://github.com/helm/charts#how-do-i-enable-the-stable-repository-for-helm-3)
 ```
@@ -90,9 +95,15 @@ helm repo add bitnami https://charts.bitnami.com/bitnami
 ```
 * [optional] [install squash](https://squash.solo.io/overview/) in order to be able to debug your k8s app
 
-Install the `dev` namespace on your local k8s cluster like this:
+Finally,
+
+1. Install the `dev` namespace on your local k8s cluster like this:
 ```
 kubectl create namespace dev
+```
+2. Modify your `C:\Windows\System32\drivers\etc\hosts` file with
+```
+127.0.0.1  localhost assets.shopozor api.shopozor
 ```
 
 ### Skaffold
