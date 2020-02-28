@@ -8,7 +8,7 @@ services:
   graphql-engine:
     image: hasura/graphql-engine:v1.0.0
     ports:
-      - "${API_PORT:-8080}:8080"
+      - "${TEST_API_PORT:-8086}:8080"
     depends_on:
       - postgres
     restart: "always"
@@ -67,6 +67,7 @@ services:
       - PYTHONPATH=./tests:$PYTHONPATH
     volumes:
       - ./backend/tests/test-reports:/app/test-reports
+    # TODO: wrap with fixtures.up and fixtures.down!
     entrypoint: ./entrypoint.sh graphql-engine 8080
   # TODO: rework this image so that we have one image for each ui?
   e2e-tests:
