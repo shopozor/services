@@ -269,7 +269,7 @@ dev:
       remotePort: 8080
   - imageName: consumer-ui
     forward:
-    - port: 3001
+    - port: 3000
       remotePort: 80
   - imageName: consumer-storybook
     forward:
