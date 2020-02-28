@@ -1,5 +1,6 @@
 #! /bin/bash
 
-ENDPOINT=${1:-http://api:8080/}
+HOST=${1:-api}
+PORT=${2:-8080}
 
-pytest -ra --junitxml=test-reports/test-report.xml -vv --hasura-endpoint $ENDPOINT
+wait-for-it $HOST:$PORT -t 60 -s -- pytest -ra --junitxml=test-reports/test-report.xml -vv --hasura-endpoint http://$HOST:$PORT

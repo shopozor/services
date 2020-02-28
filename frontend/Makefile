@@ -1,3 +1,4 @@
+# TODO: mount a docker container into the dev cluster where we can run the tests in the console!
 dev-test.admin-unit:
 	@npx lerna run test:unit --scope admin-ui --stream
 

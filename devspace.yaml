@@ -43,7 +43,7 @@ images:
     image: shopozor/graphql-engine
     tag: ${DEVSPACE_RANDOM}
     dockerfile: backend/database-service/Dockerfile
-    context: backend/database-service
+    context: .
     build:
       docker:
         options:

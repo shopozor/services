@@ -1,27 +1,28 @@
-FROM hasura/graphql-engine:v1.0.0.cli-migrations AS app
-
-COPY migrations /app/migrations
-COPY config.yaml /app
-
-WORKDIR /app
-
 FROM hasura/graphql-engine:v1.0.0.cli-migrations AS hasura-migrations
 
 # /hasura-migrations is the default folder where the client will look for migrations to apply
-COPY migrations /hasura-migrations
+COPY ./backend/database-service/migrations /hasura-migrations
 
 WORKDIR /hasura-migrations
 
 FROM python:3.8-slim AS build
 
-COPY tests/requirements.txt .
+COPY ./backend/database-service/tests/requirements.txt .
 
-RUN pip install --no-cache-dir -r requirements.txt
+RUN apt update && apt install -y wget \
+  && wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh -O /usr/local/bin/wait-for-it \
+  && chmod u+x /usr/local/bin/wait-for-it \
+  && pip install --no-cache-dir -r requirements.txt
 
 FROM python:3.8-slim AS test
 
+COPY --from=build /usr/local/bin/wait-for-it /usr/local/bin/wait-for-it
 COPY --from=build /usr/local/lib/python3.8/site-packages /usr/local/lib/python3.8/site-packages
 COPY --from=build /usr/local/bin /usr/local/bin
 COPY --from=hasura-migrations /bin/hasura-cli /usr/local/bin/hasura
 
 WORKDIR /app
+
+COPY ./backend/database-service .
+COPY ./backend/test-utils ./utils
+COPY ./shared/fixtures ./fixtures
