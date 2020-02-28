@@ -1,7 +1,8 @@
+{{- if .Values.fixtures.up -}}
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "chart.fullname" . }}-apply-fixtures
+  name: {{ include "chart.fullname" . }}-fixtures-up
   labels:
 {{ include "chart.labels" . | indent 4 }}
 spec:
@@ -26,7 +27,7 @@ spec:
             done
             echo "failed waiting for $API_PORT on host $API_HOSTNAME" && exit 1
       containers:
-      - name: {{ .Chart.Name }}-apply-fixtures
+      - name: {{ .Chart.Name }}-fixtures-up
         image: {{ .Values.image }}
         env: {{- include "api.envvarsblock" . | nindent 8 }}
         volumeMounts:
@@ -45,3 +46,4 @@ spec:
           persistentVolumeClaim:
             claimName: {{ .Values.persistence.existingClaim | default (include "chart.fullname" .) }}
         {{- end }}
+{{- end -}}

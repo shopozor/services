@@ -77,3 +77,6 @@ build/Release
 
 # Static storybooks
 storybook-static/
+
+# Ignore DevSpace cache and log folder
+.devspace/

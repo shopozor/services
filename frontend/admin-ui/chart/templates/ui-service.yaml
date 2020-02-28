@@ -8,7 +8,9 @@ spec:
   type: {{ .Values.ui.service.type }}
   ports:
     - port: {{ .Values.ui.service.port }}
-      targetPort: http
+      # TODO: we cannot use string port because devspace doesn't support it in its UI
+      # targetPort: http
+      targetPort: {{ .Values.ui.containerPort }}
       protocol: TCP
       name: http
   selector:

@@ -65,60 +65,61 @@ Most of the backend stuff and the whole frontend validation are performed on doc
 * on Ubuntu, follow [these instructions](https://docs.docker.com/install/linux/docker-ce/ubuntu/)  
 * on Windows 10, follow [these instructions](https://docs.docker.com/docker-for-windows/install/) and make sure you read [this blog](https://nickjanetakis.com/blog/setting-up-docker-for-windows-and-wsl-to-work-flawlessly) if you work with WSL
 
+We have not experimented WSL 2 under Windows 10, but as far as WSL is concerned, we don't recommend using it if you need to work on the frontend and build it locally (not on the local k8s cluster), because `yarn` does not work well at all in WSL.
+
 ### Kubernetes
 
-Under linux, install minikube. Under Windows, you can enable kubernetes in Docker Desktop:
+Under linux, install minikube. Under Windows, you can enable kubernetes in Docker for Desktop:
 
 ![k8s settings in docker desktop](doc/img/enable_k8s.png)
 
 After that, you will want to
 
-* [install helm](https://helm.sh/docs/intro/install/) too, e.g. with [chocolatey](https://chocolatey.org/packages/kubernetes-helm) under Windows; currently, when used with [skaffold](http://skaffold.dev), it needs version 2, as skaffold is not yet fully compatible with helm v3:
-```
-choco install kubernetes-helm --version=v2.16.1
-```
-When using helm v2, you need to install tiller on the k8s cluster, which you do like this:
-```
-helm init
-```
-* install the kubernetes dashboard, following [these instructions](https://github.com/kubernetes/dashboard#getting-started); you can get more background [here](https://collabnix.com/kubernetes-dashboard-on-docker-desktop-for-windows-2-0-0-3-in-2-minutes/) if necessary
 * install the [nginx ingress controller](https://kubernetes.github.io/ingress-nginx/deploy/)
 ```
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.29.0/deploy/static/mandatory.yaml
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/nginx-0.29.0/deploy/static/provider/cloud-generic.yaml
 ```
-* [install skaffold](https://skaffold.dev/docs/install/)
-* [activate the helm charts repo](https://github.com/helm/charts#how-do-i-enable-the-stable-repository-for-helm-3)
+* [optional] [install squash](https://squash.solo.io/overview/) in order to be able to debug your k8s app
+* modify your `C:\Windows\System32\drivers\etc\hosts` (or `/etc/hosts` under Linux) file with
+```
+127.0.0.1  localhost assets.shopozor api.shopozor
+```
+That is because our assets and api services will be served on `assets.shopozor` and `api.shopozor` hostnames locally.
+
+### Helm
+
+First [install helm v3](https://helm.sh/docs/intro/install/), e.g. with [chocolatey](https://chocolatey.org/packages/kubernetes-helm) under Windows (you need to have admin rights):
+```
+choco install kubernetes-helm
+```
+Then, [activate the helm charts repo](https://github.com/helm/charts#how-do-i-enable-the-stable-repository-for-helm-3)
 ```
 helm repo add stable https://kubernetes-charts.storage.googleapis.com
 helm repo add bitnami https://charts.bitnami.com/bitnami
 ```
-* [optional] [install squash](https://squash.solo.io/overview/) in order to be able to debug your k8s app
 
-Finally,
+### Devspace
 
-1. Install the `dev` namespace on your local k8s cluster like this:
+You install devspace by following [these instructions](https://devspace.cloud/docs/cli/getting-started/installation). Then, the very first time you run `devspace`,
+
+1. Create the `dev` namespace
 ```
 kubectl create namespace dev
 ```
-2. Modify your `C:\Windows\System32\drivers\etc\hosts` file with
+2. Tell `devspace` to use that `dev` namespace by default:
 ```
-127.0.0.1  localhost assets.shopozor api.shopozor
+devspace use namespace dev
 ```
 
-### Skaffold
-
-Start developping with skaffold like this:
+Later on, start developping with devspace like this:
 ```
-skaffold dev
+devspace dev
 ```
-You can enable port-forwarding like this:
-```
-skaffold dev --port-forward
-```
-In the near-future, we might give [devspace](https://devspace.cloud/) shot, as it is very similar to skaffold in terms of configuration and proposes some more developer-friendly features.
 
 ### Kubernetes dashboard
+
+You install the kubernetes dashboard by following [these instructions](https://github.com/kubernetes/dashboard#getting-started). You can get more background [here](https://collabnix.com/kubernetes-dashboard-on-docker-desktop-for-windows-2-0-0-3-in-2-minutes/) if necessary.
 
 Once installed, you access the k8s dashboard as follows:
 
@@ -134,6 +135,14 @@ http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kube
 ```
 kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep default-token | awk '{print $1}')
 ```
+
+### Hasura client
+
+Following [these instructions](https://hasura.io/docs/1.0/graphql/manual/hasura-cli/install-hasura-cli.html#install-a-binary-globally), you need to perform the following command to install the hasura client:
+```
+curl -L https://github.com/hasura/graphql-engine/raw/stable/cli/get.sh | INSTALL_PATH=$HOME/bin bash
+```
+Under Windows, you will need to store the `hasura` bin under the name `hasura.exe`, for the sake of compatibility with `devspace`. Also, whatever OS you use, you should make sure the `hasura` binary is found in one of the paths listed in the `PATH` environment variable.
 
 ### Common third-party packages
 
