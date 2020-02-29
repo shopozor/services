@@ -5,10 +5,20 @@ services:
     restart: "always"
     volumes:
       - db_data:/var/lib/postgresql-11.2/data
-  graphql-engine:
+  graphql-engine-empty:
     image: hasura/graphql-engine:v1.0.0
-    ports:
-      - "${TEST_API_PORT:-8086}:8080"
+    depends_on:
+      - postgres
+    restart: "always"
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:@postgres:5432/postgres
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+  graphql-engine-with-tables:
+    build:
+      context: .
+      dockerfile: backend/database-service/Dockerfile
+      target: hasura-migrations
     depends_on:
       - postgres
     restart: "always"
@@ -20,12 +30,15 @@ services:
     build:
       context: .
       dockerfile: backend/fixtures-generator/Dockerfile
-      target: builder
+      target: app
     image: ${PRODUCT:-shopozor}/fixtures-service:${TAG:-local}
     restart: "no"
+    # TODO: optimize this for local dev; instead of copying the app's code and test-utils, maybe mount the relevant volumes!
     volumes:
-      - ./backend/fixtures-generator:/app
-      - ./backend/test-utils:/app/test_utils
+      # - ./backend/fixtures-generator:/app
+      # - ./backend/test-utils:/app/test_utils
+      # - ./shared/pictures:/app/pictures
+      - ./shared/fixtures:/app/fixtures
     environment:
       - PYTHONDONTWRITEBYTECODE=1
     entrypoint: ./entrypoint.sh medium
@@ -47,13 +60,13 @@ services:
       target: test
     restart: "no"
     depends_on:
-      - graphql-engine
+      - graphql-engine-empty
     environment:
       - PYTHONDONTWRITEBYTECODE=1
       - PYTHONPATH=./tests:$PYTHONPATH
     volumes:
       - ./backend/database-service/test-reports:/app/test-reports
-    entrypoint: ./tests/entrypoint.sh graphql-engine 8080
+    entrypoint: ./tests/entrypoint.sh graphql-engine-empty 8080
   service-integration-tests:
     build:
       context: .
@@ -61,14 +74,13 @@ services:
       target: integration-test
     restart: "no"
     depends_on:
-      - graphql-engine
+      - graphql-engine-with-tables
     environment:
       - PYTHONDONTWRITEBYTECODE=1
       - PYTHONPATH=./tests:$PYTHONPATH
     volumes:
       - ./backend/tests/test-reports:/app/test-reports
-    # TODO: wrap with fixtures.up and fixtures.down!
-    entrypoint: ./entrypoint.sh graphql-engine 8080
+    entrypoint: ./entrypoint.sh graphql-engine-with-tables 8080
   # TODO: rework this image so that we have one image for each ui?
   e2e-tests:
     build:

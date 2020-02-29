@@ -86,7 +86,17 @@ images:
         options:
           target: app
 commands:
-- name: push-assets
+- name: assets.cleanup
+  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
+  #       helm install ./backend/assets-service/chart with some values that tell we want the assets down + image with tag latests
+  command: |
+    echo "tag: ${DEVSPACE_RANDOM}"
+    mc config host add ${MINIO_ALIAS} ${MINIO_URL} ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
+    for category in `ls ./shared/pictures`; do
+      echo "Processing category $category"
+      mc rm --recursive --force ${MINIO_ALIAS}/$category
+    done
+- name: assets.push
   # TODO: when additionally tagging the images with "latest" is possible, we can just use here
   #       helm install ./backend/assets-service/chart with some values that tell we want the assets up + image with tag latests
   command: |
@@ -97,32 +107,40 @@ commands:
         mc cp $f ${MINIO_ALIAS}/$category/$(basename $f)
       done
     done
-- name: cleanup-assets
-  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
-  #       helm install ./backend/assets-service/chart with some values that tell we want the assets down + image with tag latests
-  command: |
-    echo "tag: ${DEVSPACE_RANDOM}"
-    mc config host add ${MINIO_ALIAS} ${MINIO_URL} ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
-    for category in `ls ./shared/pictures`; do
-      echo "Processing category $category"
-      mc rm --recursive --force ${MINIO_ALIAS}/$category
-    done
-- name: push-fixtures
-  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
-  #       helm install ./backend/fixtures-generator/chart with some values that tell we want the fixtures up + image with tag latests
-  command: |
-    hasura migrate apply --endpoint ${HASURA_ENDPOINT} --project ./shared/fixtures/database --up all --skip-update-check
-- name: cleanup-fixtures
+- name: fixtures.cleanup
   # TODO: when additionally tagging the images with "latest" is possible, we can just use here
   #       helm install ./backend/fixtures-generator/chart with some values that tell we want the fixtures down + image with tag latests
   command: |
     hasura migrate apply --endpoint ${HASURA_ENDPOINT} --project ./shared/fixtures/database --down $(ls ./shared/fixtures/database/migrations/*.up.sql | wc -l) --skip-update-check
-- name: kubernetes-dashboard-token
+- name: fixtures.generate
   command: |
-    kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep default-token | awk '{print $1}')
-- name: hasura-console
+    docker-compose build fixtures-service
+    docker-compose up fixtures-service
+    docker-compose rm -f fixtures-service
+- name: fixtures.push
+  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
+  #       helm install ./backend/fixtures-generator/chart with some values that tell we want the fixtures up + image with tag latests
+  command: |
+    hasura migrate apply --endpoint ${HASURA_ENDPOINT} --project ./shared/fixtures/database --up all --skip-update-check
+- name: hasura.console
   command: |
     hasura console --project ./backend/database-service --endpoint ${HASURA_ENDPOINT}
+- name: kubernetes.dashboard-token
+  command: |
+    kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep default-token | awk '{print $1}')
+- name: tests.unit
+  command: |
+    docker-compose build database-service-tests jest-unit-tests
+    docker-compose up database-service-tests
+    docker-compose up jest-unit-tests
+- name: tests.integration
+  command: |
+    docker-compose down --remove-orphans
+    docker-compose build graphql-engine-with-tables service-integration-tests
+    docker-compose up -d graphql-engine-with-tables
+    sleep 60
+    docker-compose up --abort-on-container-exit service-integration-tests
+    docker-compose down --remove-orphans
 deployments:
 - name: minio
   helm:
