@@ -1,6 +1,0 @@
-behave==1.2.6
-psycopg2-binary==2.8.4
-sh==1.12.14
-SQLAlchemy==1.2.5
-SQLAlchemy-Utils==0.33.1
-stellar==0.4.5

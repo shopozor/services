@@ -1,20 +1,32 @@
 version: v1beta6
 vars:
-- name: MINIO_ALIAS
+- name: ADMIN_STORYBOOK_PORT
+  source: env
+  default: 7006
+- name: ADMIN_UI_PORT
+  source: env
+  default: 4000
+- name: CONSUMER_STORYBOOK_PORT
+  source: env
+  default: 6006
+- name: CONSUMER_UI_PORT
+  source: env
+  default: 3000
+- name: HASURA_ENDPOINT
+  source: env
+  default: http://api.shopozor/
+- name: MINIO_ACCESS_KEY
   source: env
   default: minio
-- name: MINIO_URL
-  source: env
-  default: http://assets.shopozor
-- name: MINIO_ACCESS_KEY
+- name: MINIO_ALIAS
   source: env
   default: minio
 - name: MINIO_SECRET_KEY
   source: env
   default: minio123
-- name: HASURA_ENDPOINT
+- name: MINIO_URL
   source: env
-  default: http://api.shopozor/
+  default: http://assets.shopozor/
 images:
   admin-storybook:
     image: shopozor/admin-storybook
@@ -42,8 +54,8 @@ images:
   api:
     image: shopozor/graphql-engine
     tag: ${DEVSPACE_RANDOM}
-    dockerfile: backend/database-service/Dockerfile
-    context: backend/database-service
+    dockerfile: Dockerfile
+    context: .
     build:
       docker:
         options:
@@ -51,8 +63,12 @@ images:
   assets-fixtures:
     image: shopozor/assets-fixtures
     tag: ${DEVSPACE_RANDOM}
-    dockerfile: backend/assets-service/Dockerfile
+    dockerfile: Dockerfile
     context: .
+    build:
+      docker:
+        options:
+          target: assets-client
   consumer-storybook:
     image: shopozor/consumer-storybook
     tag: ${DEVSPACE_RANDOM}
@@ -79,14 +95,24 @@ images:
   fixtures-service:
     image: shopozor/fixtures-service
     tag: ${DEVSPACE_RANDOM}
-    dockerfile: backend/fixtures-generator/Dockerfile
+    dockerfile: Dockerfile
     context: .
     build:
       docker:
         options:
-          target: app
+          target: fixtures-app
 commands:
-- name: push-assets-dev
+- name: assets.cleanup
+  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
+  #       helm install ./backend/assets-service/chart with some values that tell we want the assets down + image with tag latests
+  command: |
+    echo "tag: ${DEVSPACE_RANDOM}"
+    mc config host add ${MINIO_ALIAS} ${MINIO_URL} ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
+    for category in `ls ./shared/pictures`; do
+      echo "Processing category $category"
+      mc rm --recursive --force ${MINIO_ALIAS}/$category
+    done
+- name: assets.push
   # TODO: when additionally tagging the images with "latest" is possible, we can just use here
   #       helm install ./backend/assets-service/chart with some values that tell we want the assets up + image with tag latests
   command: |
@@ -97,26 +123,70 @@ commands:
         mc cp $f ${MINIO_ALIAS}/$category/$(basename $f)
       done
     done
-- name: cleanup-assets-dev
-  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
-  #       helm install ./backend/assets-service/chart with some values that tell we want the assets down + image with tag latests
+- name: bootstrap
   command: |
-    echo "tag: ${DEVSPACE_RANDOM}"
-    mc config host add ${MINIO_ALIAS} ${MINIO_URL} ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
-    for category in `ls ./shared/pictures`; do
-      echo "Processing category $category"
-      mc rm --recursive --force ${MINIO_ALIAS}/$category
-    done
-- name: push-fixtures-dev
-  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
-  #       helm install ./backend/fixtures-generator/chart with some values that tell we want the fixtures up + image with tag latests
+    yarn && yarn bootstrap
+- name: cypress.all.run
   command: |
-    hasura migrate apply --endpoint ${HASURA_ENDPOINT} --project ./shared/fixtures/database --up all --skip-update-check
-- name: cleanup-fixtures-dev
+    devspace run cypress.admin-ui.run
+    devspace run cypress.consumer-ui.run
+- name: cypress.admin-ui.open
+  command: |
+    CYPRESS_baseUrl=http://localhost:${ADMIN_UI_PORT}/# NODE_ENV=development npx lerna run cypress:open --scope admin-ui --stream -- --env configFile=e2e
+- name: cypress.admin-ui.run
+  command: |
+    CYPRESS_baseUrl=http://localhost:${ADMIN_UI_PORT}/# npx lerna run cypress:e2e --scope admin-ui --stream -- --env configFile=e2e
+- name: cypress.consumer-ui.open
+  command: |
+    CYPRESS_baseUrl=http://localhost:${CONSUMER_UI_PORT} NODE_ENV=development npx lerna run cypress:open --scope consumer-ui --stream -- --env configFile=e2e
+- name: cypress.consumer-ui.run
+  command: |
+    CYPRESS_baseUrl=http://localhost:${CONSUMER_UI_PORT} npx lerna run cypress:e2e --scope consumer-ui --stream -- --env configFile=e2e
+- name: fixtures.cleanup
   # TODO: when additionally tagging the images with "latest" is possible, we can just use here
   #       helm install ./backend/fixtures-generator/chart with some values that tell we want the fixtures down + image with tag latests
   command: |
     hasura migrate apply --endpoint ${HASURA_ENDPOINT} --project ./shared/fixtures/database --down $(ls ./shared/fixtures/database/migrations/*.up.sql | wc -l) --skip-update-check
+- name: fixtures.generate
+  command: |
+    docker-compose build fixtures-service
+    docker-compose up fixtures-service
+    docker-compose rm -f fixtures-service
+- name: fixtures.push
+  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
+  #       helm install ./backend/fixtures-generator/chart with some values that tell we want the fixtures up + image with tag latests
+  command: |
+    hasura migrate apply --endpoint ${HASURA_ENDPOINT} --project ./shared/fixtures/database --up all --skip-update-check
+- name: hasura.console
+  command: |
+    hasura console --project ./backend/database-service --endpoint ${HASURA_ENDPOINT}
+- name: kubernetes.dashboard-token
+  command: |
+    kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep default-token | awk '{print $1}')
+- name: tests.all
+  command: |
+    devspace run tests.all.unit
+    devspace run tests.all.integration
+    devspace run cypress.all.run
+- name: tests.all.unit
+  command: |
+    docker-compose build database-service-tests
+    docker-compose up database-service-tests
+    npx lerna run test:unit --stream
+- name: tests.all.integration
+  command: |
+    docker-compose down --remove-orphans
+    docker-compose build graphql-engine-with-tables service-integration-tests
+    docker-compose up -d graphql-engine-with-tables
+    sleep 60
+    docker-compose up --abort-on-container-exit service-integration-tests
+    docker-compose down --remove-orphans
+- name: tests.admin-ui.unit
+  command: |
+    npx lerna run test:unit --scope admin-ui --stream
+- name: tests.consumer-ui.unit
+  command: |
+    npx lerna run test:unit --scope consumer-ui --stream
 deployments:
 - name: minio
   helm:
@@ -255,23 +325,22 @@ dev:
   ports:
   - imageName: admin-ui
     forward:
-    - port: 4000
+    - port: ${ADMIN_UI_PORT}
       remotePort: 80
   - imageName: admin-storybook
     forward:
-    - port: 7006
+    - port: ${ADMIN_STORYBOOK_PORT}
       remotePort: 8080
   - imageName: consumer-ui
     forward:
-    - port: 3001
+    - port: ${CONSUMER_UI_PORT}
       remotePort: 80
   - imageName: consumer-storybook
     forward:
-    - port: 6006
+    - port: ${CONSUMER_STORYBOOK_PORT}
       remotePort: 8080
   # TODO: for the sake of visualization with pgAdmin, we could also port-forward postgres
 profiles:
-# TODO: change the hooks!
 - name: staging
   # TODO: organize TLS!
   patches:
@@ -311,6 +380,7 @@ profiles:
       enabled: true
       storageClass: jelastic-dynamic-volume
       size: 1Gi
+      mountPath: /opt/bitnami/postgresql/data
     # TODO: fine-tune database name and username
   # api
     # TODO: change cors.domain appropriately!

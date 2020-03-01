@@ -2,8 +2,7 @@
   "author": "info@softozor.ch",
   "dependencies": {
     "admin-ui": "file:frontend\\admin-ui",
-    "consumer-ui": "file:frontend\\consumer-ui",
-    "site-generator-service": "file:backend\\site-generator-service"
+    "consumer-ui": "file:frontend\\consumer-ui"
   },
   "description": "Shopozor services",
   "devDependencies": {
