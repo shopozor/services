@@ -22,7 +22,7 @@ application:
       - name: version
         type: string
         caption: Version
-        default: v1.15.6
+        default: v1.16.7
 
   onInstall:
     - installKubernetes
