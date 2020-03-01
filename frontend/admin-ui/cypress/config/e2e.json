@@ -1,8 +1,6 @@
 {
   "env": {
-    "TAGS": "not @wip",
-    "timeDeltaInMs": 10,
-    "timeoutInMs": 1000
+    "TAGS": "not @wip"
   },
   "fixturesFolder": "cypress/fixtures",
   "ignoreTestFiles": [
