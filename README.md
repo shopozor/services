@@ -183,6 +183,10 @@ Development is made very easy with [devspace](http://devspace.sh):
 ```
 devspace use namespace dev
 ```
+* generate the fixtures
+```
+devspace run fixtures.generate
+```
 * start the shopozor:
 ```
 devspace dev --build-sequential

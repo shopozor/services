@@ -149,6 +149,8 @@ commands:
     hasura migrate apply --endpoint ${HASURA_ENDPOINT} --project ./shared/fixtures/database --down $(ls ./shared/fixtures/database/migrations/*.up.sql | wc -l) --skip-update-check
 - name: fixtures.generate
   command: |
+    rm -Rf shared/fixtures
+    mkdir shared/fixtures
     docker-compose build fixtures-service
     docker-compose up fixtures-service
     docker-compose rm -f fixtures-service
