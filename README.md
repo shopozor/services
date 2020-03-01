@@ -212,14 +212,6 @@ Here's how we proceed when we want to add a new query / mutation / subscription:
 
 **Never ever** remove any `yarn.lock` file, if you don't want to lose your time fixing the build.
 
-### The database is not reset
-
-It might be that you've followed this introduction and run all the services, tests, etc. Then you rebooted your PC and re-run the stuff and ... ooops, I can't seed the database anymore! Beacuse we develop a lot of features all the time, the fixtures set also evolves a lot and might need to be applied several times a week (or a day). Once the fixtures set has been applied to the database, you can't apply a new one, because the data already exist. When you're done testing, make sure you run in the repository's root
-```bash
-make down
-```
-That shuts down all the backend services. In particular, that shuts down the database. Next time you run the backend, the database will be empty and you can apply the fixtures again.
-
 ### Ui unit tests
 
 Upon running the ui unit tests, you might get an error of the kind (especially on Windows machines):
