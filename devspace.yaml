@@ -54,7 +54,7 @@ images:
   api:
     image: shopozor/graphql-engine
     tag: ${DEVSPACE_RANDOM}
-    dockerfile: backend/database-service/Dockerfile
+    dockerfile: Dockerfile
     context: .
     build:
       docker:
@@ -63,8 +63,12 @@ images:
   assets-fixtures:
     image: shopozor/assets-fixtures
     tag: ${DEVSPACE_RANDOM}
-    dockerfile: backend/assets-service/Dockerfile
+    dockerfile: Dockerfile
     context: .
+    build:
+      docker:
+        options:
+          target: assets-client
   consumer-storybook:
     image: shopozor/consumer-storybook
     tag: ${DEVSPACE_RANDOM}
@@ -91,12 +95,12 @@ images:
   fixtures-service:
     image: shopozor/fixtures-service
     tag: ${DEVSPACE_RANDOM}
-    dockerfile: backend/fixtures-generator/Dockerfile
+    dockerfile: Dockerfile
     context: .
     build:
       docker:
         options:
-          target: app
+          target: fixtures-app
 commands:
 - name: assets.cleanup
   # TODO: when additionally tagging the images with "latest" is possible, we can just use here
@@ -119,6 +123,9 @@ commands:
         mc cp $f ${MINIO_ALIAS}/$category/$(basename $f)
       done
     done
+- name: bootstrap
+  command: |
+    yarn && yarn bootstrap
 - name: cypress.all.run
   command: |
     devspace run cypress.admin-ui.run

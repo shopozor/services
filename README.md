@@ -105,6 +105,10 @@ http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kube
 ```
 kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep default-token | awk '{print $1}')
 ```
+When you have installed `devspace` (described below), you can get the token through the `devspace` UI or the command
+```
+devspace run kubernetes.dashboard-token
+```
 
 ### Helm
 
@@ -118,23 +122,25 @@ helm repo add stable https://kubernetes-charts.storage.googleapis.com
 helm repo add bitnami https://charts.bitnami.com/bitnami
 ```
 
+More information on helm:
+
+* [create your first helm chart](https://docs.bitnami.com/kubernetes/how-to/create-your-first-helm-chart/)
+* [helm quickstart guide](https://helm.sh/docs/intro/quickstart/)
+* [helmfile](https://github.com/roboll/helmfile)
+* [dry k8s with helm](https://blog.mimacom.com/dry-kubernetes-with-helm/)
+
 ### Devspace
 
-You install devspace by following [these instructions](https://devspace.cloud/docs/cli/getting-started/installation). Then, the very first time you run `devspace`,
-
-1. Create the `dev` namespace
-```
-kubectl create namespace dev
-```
-2. Tell `devspace` to use that `dev` namespace by default:
+You install devspace by following [these instructions](https://devspace.cloud/docs/cli/getting-started/installation). Then, the very first time you run `devspace`, tell `devspace` to use that `dev` namespace by default:
 ```
 devspace use namespace dev
 ```
 
 Later on, start developping with devspace like this:
 ```
-devspace dev
+devspace dev --build-sequential
 ```
+You currently need to build the docker images sequentially, for some reason we don't know yet (maybe a bug in `devspace`).
 
 ### Hasura client
 
@@ -146,95 +152,21 @@ Under Windows, you will need to store the `hasura` bin under the name `hasura.ex
 
 ### Minio client
 
-In order to play with the assets, you will probably need the [minio client](https://docs.min.io/docs/minio-client-quickstart-guide.html). Under Windows 10,
-
-1. download the [client](https://dl.min.io/client/mc/release/windows-amd64/mc.exe)
-2. run
-```
-export MINIO_ACCESS_KEY=minio
-export MINIO_SECRET_KEY=minio123
-export MINIO_PORT=9001
-mc config host add minio http://localhost:${MINIO_PORT} ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
-```
-Compare with the data set up in the `docker-compose-backend.yaml`. The `MINIO_ACCESS_KEY`, `MINIO_SECRET_KEY`, and the `MINIO_PORT` might be different in your local setup. Some more information here on how to use [min.io](https://min.io) in our frontend applications:
+In order to play with the assets, you will probably need the [minio client](https://docs.min.io/docs/minio-client-quickstart-guide.html). Under Windows 10, download the [client](https://dl.min.io/client/mc/release/windows-amd64/mc.exe). Some more information here on how to use [min.io](https://min.io) in our frontend applications:
 
 * [minio js store app](https://github.com/minio/minio-js-store-app)
 * [Get permanent URL for object](https://github.com/minio/minio-js/issues/588)
 * [Javascript Client API reference](https://docs.min.io/docs/javascript-client-api-reference.html)
 * [minio client quickstart guide](https://docs.min.io/docs/minio-client-quickstart-guide.html)
 
-## Backend development setup
+### Node
 
-### Development database seeding
+We don't recommend using `yarn` on WSL under Windows 10 because it is not well supported there. Use it preferrably with [git bash](https://gitforwindows.org/) or devspace. To do so,
 
-To start development environment, just enter following command that will take
-care of everything, including applying migrations and loading fixtures
+* [install nodejs](https://nodejs.org/)
+* [install yarn](https://yarnpkg.com/en/docs/install#windows-stable)
 
-```bash
-make dev.start
-```
-
-This command handles the case where the `graphql-engine` cannot connect to the `postgres` service for a moment and retries to apply migrations until it works. Therefore, this command can take up to 30 seconds to be successful. Just ignore the error messages on the console.
-
-### Development database tear-down
-
-When you are over with development (or when you checkout another branch) and
-want your environment to be clean, just do
-
-```bash
-make dev.end
-```
-
-### Launching hasura console
-
-To launch console, which is the only way to automatically generate the corresponding hasura migrations, enter following command from the root of the repo
-
-```bash
-make console
-```
-
-### Starting the database and applying migrations
-
-Special rules in the `Makefile` take care of setting up everything for
-development. To start Hasura and PostgreSQL and apply the migrations, just run
-
-```bash
-make up
-```
-
-This command will probably output error messages due to the postgres DB not
-being ready for loading the fixtures.
-
-```
-FATA[0001] version check: failed to get version from server: failed making version api call: Get http://localhost:8080/v1/version: EOF
-Makefile:18: recipe for target 'db.migrate.apply' failed
-make[1]: *** [db.migrate.apply] Error 1
-make[1]: Leaving directory '/c/Users/cedon/linux/softozor/backend'
-Waiting for database to be ready ...
-make[1]: Entering directory '/c/Users/cedon/linux/softozor/backend'
-cd database-service && hasura migrate apply --endpoint http://localhost:8080
-INFO migrations applied
-```
-
-Just wait until the migrations are applied.
-
-### Generating fixtures and loading them into the database
-
-Just run the following command at the root of this repo
-
-```bash
-make fixtures
-```
-
-## Frontend development setup
-
-### Caution notice
-
-**Never ever** remove any `yarn.lock` file, if you don't want to lose your time fixing the build.
-
-### Necessary third-party packages
-
-You will need to have `yarn` and `nodejs` installed. Under WSL or Linux, you can run the following commands (or you can also follow [this advice](https://askubuntu.com/questions/426750/how-can-i-update-my-nodejs-to-the-latest-version)):
+Under Linux, you can run the following commands (or you can also follow [this advice](https://askubuntu.com/questions/426750/how-can-i-update-my-nodejs-to-the-latest-version)):
 ```bash
 curl -sL https://deb.nodesource.com/setup_10.x | bash -
 curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add -
@@ -242,106 +174,27 @@ echo "deb https://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/source
 apt update
 apt install -y yarn nodejs
 ```
-If you're not using WSL because `yarn` is still buggy there, you should then [install nodejs](https://nodejs.org/) and [install yarn](https://yarnpkg.com/en/docs/install#windows-stable).
 
-In addition, install [lerna](https://lerna.js.org/) globally
-```bash
-yarn global add lerna
+# Develop locally
+
+Development is made very easy with [devspace](http://devspace.sh):
+
+* initialize the used namespace:
 ```
-That tool simplifies management of monorepos. While not strictly necessary in the global environment of our build systems, it's pretty handy to have it globally available on development environments.
-
-Finally, bootstrap the node packages like this:
-```bash
-make bootstrap
+devspace use namespace dev
 ```
-
-### Starting the frontends
-
-For the sake of development, you will almost never need to **build** the frontends. Building the frontends will be done for you in the testing commands.
-
-To start the frontends in development mode, just run
-```bash
-yarn start:dev
+* start the shopozor:
 ```
-at the root of this monorepo. To only start one of the frontends, run the previous command with the `--scope` option:
-```bash
-yarn start:dev --scope consumer-ui
-yarn start:dev --scope admin-ui
+devspace dev --build-sequential
 ```
 
-### Storybook
-
-[Storybook](storybook.js.org) is a very nice tool allowing devs to develop their components in an isolated environment. You can start storybook the very same way you start the frontends:
-```bash
-yarn storybook
+Then, head to [devspace UI](http://localhost:8090) to interact with the system. Would you need to perform any action on the shopozor, like enabling the assets or the database fixtures, head to the commands in the devspace UI. Those commmands can also be run in a terminal. You list the commands like this:
 ```
-or
-```bash
-yarn storybook --scope consumer-ui
-yarn storybook --scope admin-ui
+devspace list commands
 ```
-Not only is storybook nice to develop components isolately, it's aslo providing us with out-of-the-box snapshot testing of each of those components. It can be that we have e.g. very simple components like a header or a footer with almost no logic. That component's snapshot will, however, be tested.
-
-### Testing
-
-We defined several kinds of UI tests. We have the unit and integration tests. Unit tests cover both isolated component tests as well as snapshot tests (essentially defined by storybook). Testing is not run exactly the same way on development as on continuous integration environments. On the latter, we run the tests in docker images. On the former, we just run them directly on the development system's OS.
-
-#### Unit tests
-
-In the `frontend` folder, run either one of the following commands, depending on what you want to test:
-```bash
-# Only the admin-ui unit tests
-make dev-test.admin-unit
-# Only the consumer-ui unit tests
-make dev-test.consumer-unit
-# All the frontend unit tests
-make dev-test.unit
+and you run e.g. command `assets.push` like this:
 ```
-
-#### Integration tests
-
-It's not crystal clear if we really want to have integration tests for our UIs. An integration test would typically use a few components and test their interactions. That would be done within storybook where we would define stories that put those components together. With Cypress, we would then browse the corresponding story and perform the necessary tests. No such test has been defined yet. The necessary code infrastructure is however already in place. To run the initial, dummy integration tests, run the following commands in the `frontend` folder:
-```bash
-make dev-test.admin-integration
-make dev-test.consumer-integration
-make dev-test.integration
-```
-
-## Testing the whole stack
-
-Before pushing your changes to the git server, you may want to check that you broke nothing. You can do that by enabling the corresponding pre-push hook as explained above. In that case, however, it'll be difficult to use your IDE's built-in commands to push your code, which might be annoying. Another way is to just run the tests manually like follows, in the repository's root:
-```bash
-make dev-test.all
-```
-Feel free to have a look at the `Makefile`s to see what happens under the hood. You will discover how to run the whole backend or the whole frontend tests separately too:
-```bash
-make dev-test.run-backend
-make dev-test.run-frontend
-```
-Indeed, if you only changed code on the frontend side, you probably don't want to spend your time testing the backend.
-
-### End-to-end tests
-
-The end-to-end tests are run by command
-```bash
-make dev-test.run-frontend
-```
-Those tests ensure that the whole application flow is working as expected. They need database data. To run them without running the other tests, you need to generate the fixtures, run the backend, seed the database, and then run the e2e tests:
-```bash
-make --directory backend fixtures.generate
-make --directory backend up
-make --directory backend seed-database
-make --directory frontend dev-test.e2e
-```
-Instead of the last line, you might want to only run the e2e tests of one frontend at a time, which you do like this:
-```bash
-make --directory frontend dev-test.admin-e2e
-make --directory frontend dev-test.consumer-e2e
-```
-
-To run the Cypress UI in order to debug the e2e tests, you might want to run
-```
-lerna run cypress:open --scope consumer-ui --stream -- --env configFile=e2e
+devspace run assets.push
 ```
 
 ## Adding a new graphql query / mutation / subscription
@@ -354,6 +207,10 @@ Here's how we proceed when we want to add a new query / mutation / subscription:
 4. use it in the frontend!
 
 ## Troubleshooting
+
+### Caution notice
+
+**Never ever** remove any `yarn.lock` file, if you don't want to lose your time fixing the build.
 
 ### The database is not reset
 
@@ -415,13 +272,6 @@ which outputs for example
 
 Useful documentation on how to work with helm can be found here:
 
-* [create your first helm chart](https://docs.bitnami.com/kubernetes/how-to/create-your-first-helm-chart/)
-* [helm quickstart guide](https://helm.sh/docs/intro/quickstart/)
-* [helmfile](https://github.com/roboll/helmfile)
-* [dry k8s with helm](https://blog.mimacom.com/dry-kubernetes-with-helm/)
-* [microservices deployment with helm and skaffold](https://github.com/GoogleCloudPlatform/microservices-demo/blob/master/skaffold.yaml)
-* [example deployment with helm and skaffold](https://github.com/cmcornejocrespo/auvik-helm-skaffold/blob/master/skaffold.yaml)
-* [draft vs skaffold vs garden](https://codefresh.io/howtos/local-k8s-draft-skaffold-garden/)
 * [monorepo cicd helm k8s](https://www.infracloud.io/monorepo-ci-cd-helm-kubernetes/)
 * [gitlab monorepo pipelines](https://aarongorka.com/blog/gitlab-monorepo-pipelines/)
 

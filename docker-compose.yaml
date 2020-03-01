@@ -17,7 +17,7 @@ services:
   graphql-engine-with-tables:
     build:
       context: .
-      dockerfile: backend/database-service/Dockerfile
+      dockerfile: Dockerfile
       target: hasura-migrations
     depends_on:
       - postgres
@@ -29,8 +29,8 @@ services:
   fixtures-service:
     build:
       context: .
-      dockerfile: backend/fixtures-generator/Dockerfile
-      target: app
+      dockerfile: Dockerfile
+      target: fixtures-app
     image: ${PRODUCT:-shopozor}/fixtures-service:${TAG:-local}
     restart: "no"
     # TODO: optimize this for local dev; instead of copying the app's code and test-utils, maybe mount the relevant volumes!
@@ -56,8 +56,8 @@ services:
   database-service-tests:
     build:
       context: .
-      dockerfile: backend/database-service/Dockerfile
-      target: test
+      dockerfile: Dockerfile
+      target: hasura-test
     restart: "no"
     depends_on:
       - graphql-engine-empty
@@ -70,7 +70,7 @@ services:
   service-integration-tests:
     build:
       context: .
-      dockerfile: ./backend/tests/Dockerfile
+      dockerfile: Dockerfile
       target: integration-test
     restart: "no"
     depends_on:
@@ -84,7 +84,7 @@ services:
   # TODO: rework this image so that we have one image for each ui?
   e2e-tests:
     build:
-      context: frontend
+      context: .
       dockerfile: Dockerfile
       target: cypress-tests
       args:
