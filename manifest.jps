@@ -48,4 +48,5 @@ application:
           jaeger: false
     enableSubDomains:
       - jelastic.env.binder.AddDomains[cp]:
+          envName: ${settings.envName}
           domains: staging,api-staging,assets-staging,api,assets

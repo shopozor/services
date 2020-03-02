@@ -27,6 +27,9 @@ vars:
 - name: MINIO_URL
   source: env
   default: http://assets.shopozor/
+- name: REMOTE_CLUSTER_DOMAIN
+  source: env
+  default: budzonnerie.hidora.com
 images:
   admin-storybook:
     image: shopozor/admin-storybook
@@ -199,7 +202,8 @@ deployments:
     values:
       accessKey:
         password: minio
-      clusterDomain: localhost
+      # cf. https://stackoverflow.com/questions/52940774/kubernetes-how-to-check-current-domain-set-by-cluster-domain-from-pod
+      clusterDomain: cluster.local
       disableWebUI: false
       ingress:
         annotations:
@@ -270,17 +274,6 @@ deployments:
         username: postgres
       service:
         port: 8080
-# - name: database-fixtures
-#   helm:
-#     chart:
-#       name: backend/fixtures-generator/chart
-#     componentChart: false
-#     values:
-#       image: shopozor/fixtures-service
-#       services:
-#         api:
-#           hostname: api
-#           port: 8080
 - name: admin-ui
   helm:
     chart:
@@ -356,11 +349,9 @@ profiles:
   - op: remove
     path: /deployments/name=minio/helm/values/secretKey/password
   - op: replace
-    path: /deployments/name=minio/helm/values/clusterDomain
-    value: shopozor.hidora.com
-  - op: replace
     path: /deployments/name=minio/helm/values/ingress/hosts/0/name
-    value: assets.shopozor.hidora.com
+    value: assets-staging.${REMOTE_CLUSTER_DOMAIN}
+    # value: assets.shopozor
   - op: replace
     path: /deployments/name=minio/helm/values/mode
     value: distributed
@@ -368,8 +359,11 @@ profiles:
     path: /deployments/name=minio/helm/values/persistence
     value:
       enabled: true
+      # storageClass: hostpath
       storageClass: jelastic-dynamic-volume
       size: 1Gi
+      # mountPath: /c/Users/mihl/data
+      mountPath: /data
     # TODO: enable the fixtures
     # TODO: will the secret keys still work? cf. minio.envvarsblock
     # TODO: in production:
@@ -386,10 +380,21 @@ profiles:
     # TODO: fine-tune database name and username
   # api
     # TODO: change cors.domain appropriately!
-    # TODO: apply fixtures!
   - op: replace
     path: /deployments/name=api/helm/values/ingress/hosts/0/host
-    value: api.shopozor.hidora.com
+    value: api-staging.${REMOTE_CLUSTER_DOMAIN}
+  # TODO: apply fixtures!
+  # - name: database-fixtures
+  #   helm:
+  #     chart:
+  #       name: backend/fixtures-generator/chart
+  #     componentChart: false
+  #     values:
+  #       image: shopozor/fixtures-service
+  #       services:
+  #         api:
+  #           hostname: api
+  #           port: 8080
   # admin-ui
   - op: replace
     path: /deployments/name=admin-ui/helm/values/ui/service/type
