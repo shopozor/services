@@ -49,4 +49,4 @@ application:
     enableSubDomains:
       - jelastic.env.binder.AddDomains[cp]:
           envName: ${settings.envName}
-          domains: staging,api-staging,assets-staging,api,assets
+          domains: staging,admin-staging,api-staging,assets-staging,admin,api,assets

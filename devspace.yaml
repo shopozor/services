@@ -351,7 +351,6 @@ profiles:
   - op: replace
     path: /deployments/name=minio/helm/values/ingress/hosts/0/name
     value: assets-staging.${REMOTE_CLUSTER_DOMAIN}
-    # value: assets.shopozor
   - op: replace
     path: /deployments/name=minio/helm/values/mode
     value: distributed
@@ -359,13 +358,13 @@ profiles:
     path: /deployments/name=minio/helm/values/persistence
     value:
       enabled: true
-      # storageClass: hostpath
       storageClass: jelastic-dynamic-volume
       size: 1Gi
-      # mountPath: /c/Users/mihl/data
       mountPath: /data
-    # TODO: enable the fixtures
-    # TODO: will the secret keys still work? cf. minio.envvarsblock
+  - op: add
+    path: /deployments/name=minio-initialization/helm/values/assets
+    value:
+      up: true
     # TODO: in production:
     #   - disableWebUI should be true!
     #   - minio-initialization should be only partial: just the buckets, that's it
@@ -376,8 +375,8 @@ profiles:
       enabled: true
       storageClass: jelastic-dynamic-volume
       size: 1Gi
-      mountPath: /opt/bitnami/postgresql/data
     # TODO: fine-tune database name and username
+    # TODO: find a way to make PVC deletion easy in staging!
   # api
     # TODO: change cors.domain appropriately!
   - op: replace
@@ -395,12 +394,30 @@ profiles:
   #         api:
   #           hostname: api
   #           port: 8080
+  # TODO: to access the storybooks, we will need to open ports on the jelastic interface!
+  #       I don't think we need to make the storybooks available anyway
   # admin-ui
   - op: replace
     path: /deployments/name=admin-ui/helm/values/ui/service/type
     value: LoadBalancer
+  - op: add
+    path: /deployments/name=admin-ui/helm/values/ui/ingress
+    value:
+      enabled: true
+      hosts:
+      - host: admin-staging.${REMOTE_CLUSTER_DOMAIN}
+        paths:
+          - /
   # consumer-ui
   # TODO: replace with consumer-ui image, don't keep consumer-ui-spa!
   - op: replace
     path: /deployments/name=consumer-ui/helm/values/ui/service/type
     value: LoadBalancer
+  - op: add
+    path: /deployments/name=consumer-ui/helm/values/ui/ingress
+    value:
+      enabled: true
+      hosts:
+      - host: staging.${REMOTE_CLUSTER_DOMAIN}
+        paths:
+          - /
