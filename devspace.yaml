@@ -365,23 +365,23 @@ profiles:
   # Images
   - op: replace
     path: /images/tag=${DEVSPACE_RANDOM}/tag
-    value: ${DEVSPACE_GIT_COMMIT}
+    value: staging-${DEVSPACE_GIT_COMMIT}
   - op: remove
     path: images.admin-storybook
   - op: remove
     path: images.consumer-storybook
   - op: replace
     path: images.admin-ui.build.docker.options.buildArgs.GRAPHQL_API
-    value: api-staging.${REMOTE_CLUSTER_DOMAIN}/v1/graphql/
+    value: http://api-staging.${REMOTE_CLUSTER_DOMAIN}/v1/graphql/
   - op: replace
     path: images.admin-ui.build.docker.options.buildArgs.ASSETS_API
-    value: assets-staging.${REMOTE_CLUSTER_DOMAIN}/
+    value: http://assets-staging.${REMOTE_CLUSTER_DOMAIN}/
   - op: replace
     path: images.consumer-ui.build.docker.options.buildArgs.GRAPHQL_API
-    value: api-staging.${REMOTE_CLUSTER_DOMAIN}/v1/graphql/
+    value: http://api-staging.${REMOTE_CLUSTER_DOMAIN}/v1/graphql/
   - op: replace
     path: images.consumer-ui.build.docker.options.buildArgs.ASSETS_API
-    value: assets-staging.${REMOTE_CLUSTER_DOMAIN}/
+    value: http://assets-staging.${REMOTE_CLUSTER_DOMAIN}/
   # Minio
   - op: remove
     path: /deployments/name=minio/helm/values/accessKey/password
