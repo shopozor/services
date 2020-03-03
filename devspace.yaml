@@ -145,6 +145,13 @@ commands:
 - name: cypress.consumer-ui.run
   command: |
     CYPRESS_baseUrl=http://localhost:${CONSUMER_UI_PORT} npx lerna run cypress:e2e --scope consumer-ui --stream -- --env configFile=e2e
+- name: deploy.staging
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context hidora
+    devspace deploy --build-sequential -n staging -p staging --kube-context hidora
+    bash ./scripts/wait_for_deployments.sh staging 120
+    kubectl config use-context $CURRENT_CONTEXT
 - name: fixtures.cleanup
   # TODO: when additionally tagging the images with "latest" is possible, we can just use here
   #       helm install ./backend/fixtures-generator/chart with some values that tell we want the fixtures down + image with tag latests
@@ -165,9 +172,25 @@ commands:
 - name: hasura.console
   command: |
     hasura console --project ./backend/database-service --endpoint ${HASURA_ENDPOINT}
-- name: kubernetes.dashboard-token
+- name: kubernetes.dashboard-token.local
   command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context docker-desktop
     kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep default-token | awk '{print $1}')
+    kubectl config use-context $CURRENT_CONTEXT
+- name: kubernetes.dashboard-token.remote
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context hidora
+    kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep default-token | awk '{print $1}')
+    kubectl config use-context $CURRENT_CONTEXT
+- name: purge.staging
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context hidora
+    devspace purge -n staging -p staging --kube-context hidora
+    kubectl delete namespaces staging
+    kubectl config use-context $CURRENT_CONTEXT
 - name: tests.all
   command: |
     devspace run tests.all.unit
@@ -339,10 +362,26 @@ profiles:
 - name: staging
   # TODO: organize TLS!
   patches:
-  # Image tags
+  # Images
   - op: replace
     path: /images/tag=${DEVSPACE_RANDOM}/tag
     value: ${DEVSPACE_GIT_COMMIT}
+  - op: remove
+    path: images.admin-storybook
+  - op: remove
+    path: images.consumer-storybook
+  - op: replace
+    path: images.admin-ui.build.docker.options.buildArgs.GRAPHQL_API
+    value: api-staging.${REMOTE_CLUSTER_DOMAIN}/v1/graphql/
+  - op: replace
+    path: images.admin-ui.build.docker.options.buildArgs.ASSETS_API
+    value: assets-staging.${REMOTE_CLUSTER_DOMAIN}/
+  - op: replace
+    path: images.consumer-ui.build.docker.options.buildArgs.GRAPHQL_API
+    value: api-staging.${REMOTE_CLUSTER_DOMAIN}/v1/graphql/
+  - op: replace
+    path: images.consumer-ui.build.docker.options.buildArgs.ASSETS_API
+    value: assets-staging.${REMOTE_CLUSTER_DOMAIN}/
   # Minio
   - op: remove
     path: /deployments/name=minio/helm/values/accessKey/password
@@ -376,27 +415,34 @@ profiles:
       storageClass: jelastic-dynamic-volume
       size: 1Gi
     # TODO: fine-tune database name and username
-    # TODO: find a way to make PVC deletion easy in staging!
+    # TODO: find a way to make PVC deletion easy in staging! <-- delete the whole namespace
   # api
     # TODO: change cors.domain appropriately!
   - op: replace
     path: /deployments/name=api/helm/values/ingress/hosts/0/host
     value: api-staging.${REMOTE_CLUSTER_DOMAIN}
-  # TODO: apply fixtures!
-  # - name: database-fixtures
-  #   helm:
-  #     chart:
-  #       name: backend/fixtures-generator/chart
-  #     componentChart: false
-  #     values:
-  #       image: shopozor/fixtures-service
-  #       services:
-  #         api:
-  #           hostname: api
-  #           port: 8080
+  - op: add
+    path: deployments
+    value:
+      name: database-fixtures
+      helm:
+        chart:
+          name: backend/fixtures-generator/chart
+        componentChart: false
+        values:
+          image: shopozor/fixtures-service
+          services:
+            api:
+              hostname: api
+              port: 8080
+          fixtures:
+            up: true
   # TODO: to access the storybooks, we will need to open ports on the jelastic interface!
   #       I don't think we need to make the storybooks available anyway
   # admin-ui
+  - op: replace
+    path: /deployments/name=admin-ui/helm/values/storybook/enabled
+    value: false
   - op: replace
     path: /deployments/name=admin-ui/helm/values/ui/service/type
     value: LoadBalancer
@@ -410,6 +456,9 @@ profiles:
           - /
   # consumer-ui
   # TODO: replace with consumer-ui image, don't keep consumer-ui-spa!
+  - op: replace
+    path: /deployments/name=consumer-ui/helm/values/storybook/enabled
+    value: false
   - op: replace
     path: /deployments/name=consumer-ui/helm/values/ui/service/type
     value: LoadBalancer
