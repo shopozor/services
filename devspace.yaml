@@ -45,6 +45,8 @@ images:
             ASSETS_API: http://assets.shopozor/
   admin-ui:
     image: shopozor/admin-ui
+    tags:
+    - ${DEVSPACE_RANDOM}
     dockerfile: Dockerfile
     context: .
     build:
@@ -56,6 +58,8 @@ images:
             GRAPHQL_API: http://api.shopozor/v1/graphql/
   api:
     image: shopozor/graphql-engine
+    tags:
+    - ${DEVSPACE_RANDOM}
     dockerfile: Dockerfile
     context: .
     build:
@@ -64,6 +68,8 @@ images:
           target: hasura-migrations
   assets-fixtures:
     image: shopozor/assets-fixtures
+    tags:
+    - ${DEVSPACE_RANDOM}
     dockerfile: Dockerfile
     context: .
     build:
@@ -72,6 +78,8 @@ images:
           target: assets-client
   consumer-storybook:
     image: shopozor/consumer-storybook
+    tags:
+    - ${DEVSPACE_RANDOM}
     dockerfile: Dockerfile
     context: .
     build:
@@ -82,6 +90,8 @@ images:
             ASSETS_API: http://assets.shopozor/
   consumer-ui:
     image: shopozor/consumer-ui-spa
+    tags:
+    - ${DEVSPACE_RANDOM}
     dockerfile: Dockerfile
     context: .
     build:
@@ -93,6 +103,8 @@ images:
             GRAPHQL_API: http://api.shopozor/v1/graphql/
   fixtures-service:
     image: shopozor/fixtures-service
+    tags:
+    - ${DEVSPACE_RANDOM}
     dockerfile: Dockerfile
     context: .
     build:
@@ -161,12 +173,6 @@ deployments:
       name: backend/database-service/chart
     componentChart: false
     values:
-      hasura:
-        cors:
-          domain: '*'
-          enabled: true
-        server:
-          port: 8080
       image: shopozor/graphql-engine
       ingress:
         enabled: true
@@ -180,7 +186,11 @@ deployments:
         secretName: postgres-postgresql
         username: postgres
       service:
-        port: 8080
+        cors:
+          domain: '*'
+          enabled: true
+        server:
+          port: 8080
 - name: admin-ui
   helm:
     chart:
@@ -286,8 +296,8 @@ commands:
 - name: deploy.staging
   command: |
     CURRENT_CONTEXT=$(kubectl config current-context)
-    kubectl config use-context docker-desktop #hidora
-    devspace deploy --build-sequential -n staging -p staging --kube-context hidora --tag latest --tag staging-$(git rev-parse HEAD)
+    kubectl config use-context hidora
+    devspace deploy --build-sequential -n staging -p staging --kube-context hidora
     bash ./scripts/wait_for_deployments.sh staging 120
     kubectl config use-context $CURRENT_CONTEXT
 - name: fixtures.cleanup
@@ -389,6 +399,15 @@ profiles:
   # TODO: organize TLS!
   patches:
   # Images
+  # For production (see if the correct image is then deployed!):
+  # - op: replace
+  #   path: /images/0=${DEVSPACE_RANDOM}
+  #   value:
+  #     - prod-${DEVSPACE_GIT_COMMIT}
+  #     - latest
+  - op: replace
+    path: /images/0=${DEVSPACE_RANDOM}/0
+    value: staging-${DEVSPACE_GIT_COMMIT}
   - op: remove
     path: images.admin-storybook
   - op: remove
@@ -437,10 +456,15 @@ profiles:
       storageClass: jelastic-dynamic-volume
         # TODO: fine-tune database name and username
   # api
-    # TODO: change cors.domain appropriately!
   - op: replace
     path: /deployments/name=api/helm/values/ingress/hosts/0/host
     value: api-staging.${REMOTE_CLUSTER_DOMAIN}
+  - op: replace
+    path: /deployments/name=api/helm/values/service/cors/domain
+    # TODO: only enable https! <-- add issue!
+    value: http://admin-staging.${REMOTE_CLUSTER_DOMAIN},http://staging.${REMOTE_CLUSTER_DOMAIN},https://admin-staging.${REMOTE_CLUSTER_DOMAIN},https://staging.${REMOTE_CLUSTER_DOMAIN}
+  # TODO: in production, get rid of the console and stuff!
+  # fixtures-generator
   - op: add
     path: deployments
     value:
