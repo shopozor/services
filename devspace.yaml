@@ -257,7 +257,6 @@ commands:
   # TODO: when additionally tagging the images with "latest" is possible, we can just use here
   #       helm install ./backend/assets-service/chart with some values that tell we want the assets up + image with tag latests
   command: |
-    echo "tag: ${DEVSPACE_RANDOM}"
     mc config host add ${MINIO_ALIAS} ${MINIO_URL} ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
     for category in `ls ./shared/pictures`; do
       echo "Processing category $category"
