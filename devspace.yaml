@@ -415,7 +415,6 @@ profiles:
       storageClass: jelastic-dynamic-volume
       size: 1Gi
     # TODO: fine-tune database name and username
-    # TODO: find a way to make PVC deletion easy in staging! <-- delete the whole namespace
   # api
     # TODO: change cors.domain appropriately!
   - op: replace
@@ -437,8 +436,6 @@ profiles:
               port: 8080
           fixtures:
             up: true
-  # TODO: to access the storybooks, we will need to open ports on the jelastic interface!
-  #       I don't think we need to make the storybooks available anyway
   # admin-ui
   - op: replace
     path: /deployments/name=admin-ui/helm/values/storybook/enabled
