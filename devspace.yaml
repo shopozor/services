@@ -1,4 +1,4 @@
-version: v1beta6
+version: v1beta7
 vars:
 - name: ADMIN_STORYBOOK_PORT
   source: env
@@ -33,7 +33,8 @@ vars:
 images:
   admin-storybook:
     image: shopozor/admin-storybook
-    tag: ${DEVSPACE_RANDOM}
+    tags:
+    - ${DEVSPACE_RANDOM}
     dockerfile: Dockerfile
     context: .
     build:
@@ -44,7 +45,6 @@ images:
             ASSETS_API: http://assets.shopozor/
   admin-ui:
     image: shopozor/admin-ui
-    tag: ${DEVSPACE_RANDOM}
     dockerfile: Dockerfile
     context: .
     build:
@@ -56,7 +56,6 @@ images:
             GRAPHQL_API: http://api.shopozor/v1/graphql/
   api:
     image: shopozor/graphql-engine
-    tag: ${DEVSPACE_RANDOM}
     dockerfile: Dockerfile
     context: .
     build:
@@ -65,7 +64,6 @@ images:
           target: hasura-migrations
   assets-fixtures:
     image: shopozor/assets-fixtures
-    tag: ${DEVSPACE_RANDOM}
     dockerfile: Dockerfile
     context: .
     build:
@@ -74,7 +72,6 @@ images:
           target: assets-client
   consumer-storybook:
     image: shopozor/consumer-storybook
-    tag: ${DEVSPACE_RANDOM}
     dockerfile: Dockerfile
     context: .
     build:
@@ -85,7 +82,6 @@ images:
             ASSETS_API: http://assets.shopozor/
   consumer-ui:
     image: shopozor/consumer-ui-spa
-    tag: ${DEVSPACE_RANDOM}
     dockerfile: Dockerfile
     context: .
     build:
@@ -97,124 +93,12 @@ images:
             GRAPHQL_API: http://api.shopozor/v1/graphql/
   fixtures-service:
     image: shopozor/fixtures-service
-    tag: ${DEVSPACE_RANDOM}
     dockerfile: Dockerfile
     context: .
     build:
       docker:
         options:
           target: fixtures-app
-commands:
-- name: assets.cleanup
-  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
-  #       helm install ./backend/assets-service/chart with some values that tell we want the assets down + image with tag latests
-  command: |
-    echo "tag: ${DEVSPACE_RANDOM}"
-    mc config host add ${MINIO_ALIAS} ${MINIO_URL} ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
-    for category in `ls ./shared/pictures`; do
-      echo "Processing category $category"
-      mc rm --recursive --force ${MINIO_ALIAS}/$category
-    done
-- name: assets.push
-  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
-  #       helm install ./backend/assets-service/chart with some values that tell we want the assets up + image with tag latests
-  command: |
-    mc config host add ${MINIO_ALIAS} ${MINIO_URL} ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
-    for category in `ls ./shared/pictures`; do
-      echo "Processing category $category"
-      for f in `ls ./shared/pictures/$category/*` ; do
-        mc cp $f ${MINIO_ALIAS}/$category/$(basename $f)
-      done
-    done
-- name: bootstrap
-  command: |
-    yarn && yarn bootstrap
-- name: cypress.all.run
-  command: |
-    devspace run cypress.admin-ui.run
-    devspace run cypress.consumer-ui.run
-- name: cypress.admin-ui.open
-  command: |
-    CYPRESS_baseUrl=http://localhost:${ADMIN_UI_PORT}/# NODE_ENV=development npx lerna run cypress:open --scope admin-ui --stream -- --env configFile=e2e
-- name: cypress.admin-ui.run
-  command: |
-    CYPRESS_baseUrl=http://localhost:${ADMIN_UI_PORT}/# npx lerna run cypress:e2e --scope admin-ui --stream -- --env configFile=e2e
-- name: cypress.consumer-ui.open
-  command: |
-    CYPRESS_baseUrl=http://localhost:${CONSUMER_UI_PORT} NODE_ENV=development npx lerna run cypress:open --scope consumer-ui --stream -- --env configFile=e2e
-- name: cypress.consumer-ui.run
-  command: |
-    CYPRESS_baseUrl=http://localhost:${CONSUMER_UI_PORT} npx lerna run cypress:e2e --scope consumer-ui --stream -- --env configFile=e2e
-- name: deploy.staging
-  command: |
-    CURRENT_CONTEXT=$(kubectl config current-context)
-    kubectl config use-context hidora
-    devspace deploy --build-sequential -n staging -p staging --kube-context hidora
-    bash ./scripts/wait_for_deployments.sh staging 120
-    kubectl config use-context $CURRENT_CONTEXT
-- name: fixtures.cleanup
-  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
-  #       helm install ./backend/fixtures-generator/chart with some values that tell we want the fixtures down + image with tag latests
-  command: |
-    hasura migrate apply --endpoint ${HASURA_ENDPOINT} --project ./shared/fixtures/database --down $(ls ./shared/fixtures/database/migrations/*.up.sql | wc -l) --skip-update-check
-- name: fixtures.generate
-  command: |
-    rm -Rf shared/fixtures
-    mkdir shared/fixtures
-    docker-compose build fixtures-service
-    docker-compose up fixtures-service
-    docker-compose rm -f fixtures-service
-- name: fixtures.push
-  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
-  #       helm install ./backend/fixtures-generator/chart with some values that tell we want the fixtures up + image with tag latests
-  command: |
-    hasura migrate apply --endpoint ${HASURA_ENDPOINT} --project ./shared/fixtures/database --up all --skip-update-check
-- name: hasura.console
-  command: |
-    hasura console --project ./backend/database-service --endpoint ${HASURA_ENDPOINT}
-- name: kubernetes.dashboard-token.local
-  command: |
-    CURRENT_CONTEXT=$(kubectl config current-context)
-    kubectl config use-context docker-desktop
-    kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep default-token | awk '{print $1}')
-    kubectl config use-context $CURRENT_CONTEXT
-- name: kubernetes.dashboard-token.remote
-  command: |
-    CURRENT_CONTEXT=$(kubectl config current-context)
-    kubectl config use-context hidora
-    kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep default-token | awk '{print $1}')
-    kubectl config use-context $CURRENT_CONTEXT
-- name: purge.staging
-  command: |
-    CURRENT_CONTEXT=$(kubectl config current-context)
-    kubectl config use-context hidora
-    devspace purge -n staging -p staging --kube-context hidora
-    kubectl delete namespaces staging
-    kubectl config use-context $CURRENT_CONTEXT
-- name: tests.all
-  command: |
-    devspace run tests.all.unit
-    devspace run tests.all.integration
-    devspace run cypress.all.run
-- name: tests.all.unit
-  command: |
-    docker-compose build database-service-tests
-    docker-compose up database-service-tests
-    npx lerna run test:unit --stream
-- name: tests.all.integration
-  command: |
-    docker-compose down --remove-orphans
-    docker-compose build graphql-engine-with-tables service-integration-tests
-    docker-compose up -d graphql-engine-with-tables
-    sleep 60
-    docker-compose up --abort-on-container-exit service-integration-tests
-    docker-compose down --remove-orphans
-- name: tests.admin-ui.unit
-  command: |
-    npx lerna run test:unit --scope admin-ui --stream
-- name: tests.consumer-ui.unit
-  command: |
-    npx lerna run test:unit --scope consumer-ui --stream
 deployments:
 - name: minio
   helm:
@@ -358,30 +242,167 @@ dev:
     - port: ${CONSUMER_STORYBOOK_PORT}
       remotePort: 8080
   # TODO: for the sake of visualization with pgAdmin, we could also port-forward postgres
+commands:
+- name: assets.cleanup
+  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
+  #       helm install ./backend/assets-service/chart with some values that tell we want the assets up + image with tag latests
+  command: |
+    echo "tag: ${DEVSPACE_RANDOM}"
+    mc config host add ${MINIO_ALIAS} ${MINIO_URL} ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
+    for category in `ls ./shared/pictures`; do
+      echo "Processing category $category"
+      mc rm --recursive --force ${MINIO_ALIAS}/$category
+    done
+- name: assets.push
+  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
+  #       helm install ./backend/assets-service/chart with some values that tell we want the assets up + image with tag latests
+  command: |
+    mc config host add ${MINIO_ALIAS} ${MINIO_URL} ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
+    for category in `ls ./shared/pictures`; do
+      echo "Processing category $category"
+      for f in `ls ./shared/pictures/$category/*` ; do
+        mc cp $f ${MINIO_ALIAS}/$category/$(basename $f)
+      done
+    done
+- name: bootstrap
+  command: |
+    yarn && yarn bootstrap
+- name: cypress.all.run
+  command: |
+    devspace run cypress.admin-ui.run
+    devspace run cypress.consumer-ui.run
+- name: cypress.admin-ui.open
+  command: |
+    CYPRESS_baseUrl=http://localhost:${ADMIN_UI_PORT}/# NODE_ENV=development npx lerna run cypress:open --scope admin-ui --stream -- --env configFile=e2e
+- name: cypress.admin-ui.run
+  command: |
+    CYPRESS_baseUrl=http://localhost:${ADMIN_UI_PORT}/# npx lerna run cypress:e2e --scope admin-ui --stream -- --env configFile=e2e
+- name: cypress.consumer-ui.open
+  command: |
+    CYPRESS_baseUrl=http://localhost:${CONSUMER_UI_PORT} NODE_ENV=development npx lerna run cypress:open --scope consumer-ui --stream -- --env configFile=e2e
+- name: cypress.consumer-ui.run
+  command: |
+    CYPRESS_baseUrl=http://localhost:${CONSUMER_UI_PORT} npx lerna run cypress:e2e --scope consumer-ui --stream -- --env configFile=e2e
+- name: deploy.staging
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context docker-desktop #hidora
+    devspace deploy --build-sequential -n staging -p staging --kube-context hidora --tag latest --tag staging-$(git rev-parse HEAD)
+    bash ./scripts/wait_for_deployments.sh staging 120
+    kubectl config use-context $CURRENT_CONTEXT
+- name: fixtures.cleanup
+  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
+  #       helm install ./backend/fixtures-generator/chart with some values that tell we want the fixtures up + image with tag latests
+  command: |
+    hasura migrate apply --endpoint ${HASURA_ENDPOINT} --project ./shared/fixtures/database --down $(ls ./shared/fixtures/database/migrations/*.up.sql | wc -l) --skip-update-check
+- name: fixtures.generate
+  command: |
+    rm -Rf shared/fixtures
+    mkdir shared/fixtures
+    docker-compose build fixtures-service
+    docker-compose up fixtures-service
+    docker-compose rm -f fixtures-service
+- name: fixtures.push
+  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
+  #       helm install ./backend/fixtures-generator/chart with some values that tell we want the fixtures up + image with tag latests
+  command: |
+    hasura migrate apply --endpoint ${HASURA_ENDPOINT} --project ./shared/fixtures/database --up all --skip-update-check
+- name: hasura.console
+  command: |
+    hasura console --project ./backend/database-service --endpoint ${HASURA_ENDPOINT}
+- name: kubernetes.dashboard-token.local
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context docker-desktop
+    kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep default-token | awk '{print $1}')
+    kubectl config use-context $CURRENT_CONTEXT
+- name: kubernetes.dashboard-token.remote
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context hidora
+    kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep default-token | awk '{print $1}')
+    kubectl config use-context $CURRENT_CONTEXT
+- name: purge.staging
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context hidora
+    devspace purge -n staging -p staging --kube-context hidora
+    kubectl delete namespaces staging
+    kubectl config use-context $CURRENT_CONTEXT
+- name: tests.all
+  command: |
+    devspace run tests.all.unit
+    devspace run tests.all.integration
+    devspace run cypress.all.run
+- name: tests.all.unit
+  command: |
+    docker-compose build database-service-tests
+    docker-compose up database-service-tests
+    npx lerna run test:unit --stream
+- name: tests.all.integration
+  command: |
+    docker-compose down --remove-orphans
+    docker-compose build graphql-engine-with-tables service-integration-tests
+    docker-compose up -d graphql-engine-with-tables
+    sleep 60
+    docker-compose up --abort-on-container-exit service-integration-tests
+    docker-compose down --remove-orphans
+- name: tests.admin-ui.unit
+  command: |
+    npx lerna run test:unit --scope admin-ui --stream
+- name: tests.consumer-ui.unit
+  command: |
+    npx lerna run test:unit --scope consumer-ui --stream
+vars:
+- name: ADMIN_STORYBOOK_PORT
+  default: "7006"
+  source: env
+- name: ADMIN_UI_PORT
+  default: "4000"
+  source: env
+- name: CONSUMER_STORYBOOK_PORT
+  default: "6006"
+  source: env
+- name: CONSUMER_UI_PORT
+  default: "3000"
+  source: env
+- name: HASURA_ENDPOINT
+  default: http://api.shopozor/
+  source: env
+- name: MINIO_ACCESS_KEY
+  default: minio
+  source: env
+- name: MINIO_ALIAS
+  default: minio
+  source: env
+- name: MINIO_SECRET_KEY
+  default: minio123
+  source: env
+- name: MINIO_URL
+  default: http://assets.shopozor/
+  source: env
+- name: REMOTE_CLUSTER_DOMAIN
+  default: budzonnerie.hidora.com
+  source: env
 profiles:
 - name: staging
   # TODO: organize TLS!
   patches:
   # Images
-  - op: replace
-    path: /images/tag=${DEVSPACE_RANDOM}/tag
-    value: staging-${DEVSPACE_GIT_COMMIT}
   - op: remove
     path: images.admin-storybook
   - op: remove
     path: images.consumer-storybook
   - op: replace
-    path: images.admin-ui.build.docker.options.buildArgs.GRAPHQL_API
-    value: http://api-staging.${REMOTE_CLUSTER_DOMAIN}/v1/graphql/
+    path: images.admin-ui.build.docker.options.buildArgs
+    value:
+      GRAPHQL_API: http://api-staging.${REMOTE_CLUSTER_DOMAIN}/v1/graphql/
+      ASSETS_API: http://assets-staging.${REMOTE_CLUSTER_DOMAIN}/
   - op: replace
-    path: images.admin-ui.build.docker.options.buildArgs.ASSETS_API
-    value: http://assets-staging.${REMOTE_CLUSTER_DOMAIN}/
-  - op: replace
-    path: images.consumer-ui.build.docker.options.buildArgs.GRAPHQL_API
-    value: http://api-staging.${REMOTE_CLUSTER_DOMAIN}/v1/graphql/
-  - op: replace
-    path: images.consumer-ui.build.docker.options.buildArgs.ASSETS_API
-    value: http://assets-staging.${REMOTE_CLUSTER_DOMAIN}/
+    path: images.consumer-ui.build.docker.options.buildArgs
+    value:
+      GRAPHQL_API: http://api-staging.${REMOTE_CLUSTER_DOMAIN}/v1/graphql/
+      ASSETS_API: http://assets-staging.${REMOTE_CLUSTER_DOMAIN}/
   # Minio
   - op: remove
     path: /deployments/name=minio/helm/values/accessKey/password
@@ -397,9 +418,9 @@ profiles:
     path: /deployments/name=minio/helm/values/persistence
     value:
       enabled: true
-      storageClass: jelastic-dynamic-volume
-      size: 1Gi
       mountPath: /data
+      size: 1Gi
+      storageClass: jelastic-dynamic-volume
   - op: add
     path: /deployments/name=minio-initialization/helm/values/assets
     value:
@@ -412,9 +433,9 @@ profiles:
     path: /deployments/name=postgres/helm/values/persistence
     value:
       enabled: true
-      storageClass: jelastic-dynamic-volume
       size: 1Gi
-    # TODO: fine-tune database name and username
+      storageClass: jelastic-dynamic-volume
+        # TODO: fine-tune database name and username
   # api
     # TODO: change cors.domain appropriately!
   - op: replace
@@ -423,19 +444,19 @@ profiles:
   - op: add
     path: deployments
     value:
-      name: database-fixtures
       helm:
         chart:
           name: backend/fixtures-generator/chart
         componentChart: false
         values:
+          fixtures:
+            up: true
           image: shopozor/fixtures-service
           services:
             api:
               hostname: api
               port: 8080
-          fixtures:
-            up: true
+      name: database-fixtures
   # admin-ui
   - op: replace
     path: /deployments/name=admin-ui/helm/values/storybook/enabled
@@ -450,7 +471,7 @@ profiles:
       hosts:
       - host: admin-staging.${REMOTE_CLUSTER_DOMAIN}
         paths:
-          - /
+        - /
   # consumer-ui
   # TODO: replace with consumer-ui image, don't keep consumer-ui-spa!
   - op: replace
@@ -466,4 +487,4 @@ profiles:
       hosts:
       - host: staging.${REMOTE_CLUSTER_DOMAIN}
         paths:
-          - /
+        - /
