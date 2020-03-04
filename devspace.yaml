@@ -117,7 +117,6 @@ deployments:
     chart:
       name: minio
       repo: https://charts.bitnami.com/bitnami
-    componentChart: false
     values:
       accessKey:
         password: minio
@@ -143,7 +142,6 @@ deployments:
   helm:
     chart:
       name: ./backend/assets-service/chart/
-    componentChart: false
     values:
       image: shopozor/assets-fixtures
       minio:
@@ -157,7 +155,6 @@ deployments:
     chart:
       name: postgresql-ha
       repo: https://charts.bitnami.com/bitnami
-    componentChart: false
     values:
       fullnameOverride: postgres
       persistence:
@@ -171,7 +168,6 @@ deployments:
   helm:
     chart:
       name: backend/database-service/chart
-    componentChart: false
     values:
       image: shopozor/graphql-engine
       ingress:
@@ -195,7 +191,6 @@ deployments:
   helm:
     chart:
       name: frontend/admin-ui/chart
-    componentChart: false
     values:
       services:
         api:
@@ -216,7 +211,6 @@ deployments:
   helm:
     chart:
       name: frontend/consumer-ui/chart
-    componentChart: false
     values:
       services:
         api:
@@ -397,13 +391,7 @@ profiles:
 - name: staging
   # TODO: organize TLS!
   patches:
-  # Images
-  # For production (see if the correct image is then deployed!):
-  # - op: replace
-  #   path: /images/0=${DEVSPACE_RANDOM}
-  #   value:
-  #     - prod-${DEVSPACE_GIT_COMMIT}
-  #     - latest
+  # images
   - op: replace
     path: /images/0=${DEVSPACE_RANDOM}/0
     value: staging-${DEVSPACE_GIT_COMMIT}
@@ -414,14 +402,16 @@ profiles:
   - op: replace
     path: images.admin-ui.build.docker.options.buildArgs
     value:
+      # TODO: use https!!!
       GRAPHQL_API: http://api-staging.${REMOTE_CLUSTER_DOMAIN}/v1/graphql/
       ASSETS_API: http://assets-staging.${REMOTE_CLUSTER_DOMAIN}/
   - op: replace
     path: images.consumer-ui.build.docker.options.buildArgs
     value:
+      # TODO: use https!!!
       GRAPHQL_API: http://api-staging.${REMOTE_CLUSTER_DOMAIN}/v1/graphql/
       ASSETS_API: http://assets-staging.${REMOTE_CLUSTER_DOMAIN}/
-  # Minio
+  # minio
   - op: remove
     path: /deployments/name=minio/helm/values/accessKey/password
   - op: remove
@@ -439,13 +429,11 @@ profiles:
       mountPath: /data
       size: 1Gi
       storageClass: jelastic-dynamic-volume
+  # minio-initialization
   - op: add
     path: /deployments/name=minio-initialization/helm/values/assets
     value:
       up: true
-    # TODO: in production:
-    #   - disableWebUI should be true!
-    #   - minio-initialization should be only partial: just the buckets, that's it
   # postgres
   - op: replace
     path: /deployments/name=postgres/helm/values/persistence
@@ -453,8 +441,10 @@ profiles:
       enabled: true
       size: 1Gi
       storageClass: jelastic-dynamic-volume
-        # TODO: fine-tune database name and username
+      # TODO: fine-tune database name and username
   # api
+  # TODO: add an admin secret
+  # TODO: configure jwt secret
   - op: replace
     path: /deployments/name=api/helm/values/ingress/hosts/0/host
     value: api-staging.${REMOTE_CLUSTER_DOMAIN}
@@ -462,15 +452,14 @@ profiles:
     path: /deployments/name=api/helm/values/service/cors/domain
     # TODO: only enable https! <-- add issue!
     value: http://admin-staging.${REMOTE_CLUSTER_DOMAIN},http://staging.${REMOTE_CLUSTER_DOMAIN},https://admin-staging.${REMOTE_CLUSTER_DOMAIN},https://staging.${REMOTE_CLUSTER_DOMAIN}
-  # TODO: in production, get rid of the console and stuff!
-  # fixtures-generator
+  # TODO: fine-tune database url!
+  # database-fixtures
   - op: add
     path: deployments
     value:
       helm:
         chart:
           name: backend/fixtures-generator/chart
-        componentChart: false
         values:
           fixtures:
             up: true
@@ -511,3 +500,74 @@ profiles:
       - host: staging.${REMOTE_CLUSTER_DOMAIN}
         paths:
         - /
+- name: production
+  parent: staging
+  patches:
+  # images
+  - op: replace
+    path: /images/0=staging-${DEVSPACE_GIT_COMMIT}
+    value:
+      - prod-${DEVSPACE_GIT_COMMIT}
+      - latest
+  - op: replace
+    path: images.admin-ui.build.docker.options.buildArgs
+    value:
+      # TODO: use https!!!
+      GRAPHQL_API: http://api.${REMOTE_CLUSTER_DOMAIN}/v1/graphql/
+      ASSETS_API: http://assets.${REMOTE_CLUSTER_DOMAIN}/
+  - op: replace
+    path: images.consumer-ui.build.docker.options.buildArgs
+    value:
+      # TODO: use https!!!
+      GRAPHQL_API: http://api.${REMOTE_CLUSTER_DOMAIN}/v1/graphql/
+      ASSETS_API: http://assets.${REMOTE_CLUSTER_DOMAIN}/
+  # minio
+  - op: replace
+    path: /deployments/name=minio/helm/values/ingress/hosts/0/name
+    value: assets.${REMOTE_CLUSTER_DOMAIN}
+  - op: replace
+    path: /deployments/name=minio/helm/values/disableWebUI
+    value: true
+  - op: replace
+    path: /deployments/name=minio/helm/values/persistence/size
+    value: 50Gi
+  # minio-initialization
+  - op: replace
+    path: /deployments/name=minio-initialization/helm/values/assets§
+    value:
+      up: false
+  # postgres
+  # TODO: make sure the database name, username, and password are all different from that defined for staging!
+  # database-fixtures
+  - op: remove
+    path: /deployments/name=database-fixtures
+  # api
+  - op: replace
+    path: /deployments/name=api/helm/values/ingress/hosts/0/host
+    value: api.${REMOTE_CLUSTER_DOMAIN}
+  - op: replace
+    path: /deployments/name=api/helm/values/service/cors/domain
+    # TODO: only enable https! <-- add issue!
+    value: http://admin.${REMOTE_CLUSTER_DOMAIN},http://${REMOTE_CLUSTER_DOMAIN},https://admin.${REMOTE_CLUSTER_DOMAIN},https://${REMOTE_CLUSTER_DOMAIN}
+  # TODO: add an admin secret
+  # TODO: configure jwt secret
+  #       cf. https://hasura.io/docs/1.0/graphql/manual/deployment/graphql-engine-flags/reference.html
+  - op: replace
+    path: /deployments/name=api/helm/values/service/console/enabled
+    value: false
+  # TODO: https://hasura.io/docs/1.0/graphql/manual/deployment/production-checklist.html
+  # admin-ui
+  - op: replace
+    path: /deployments/name=admin-ui/helm/values/ui/ingress/hosts
+    value:
+    - host: admin.${REMOTE_CLUSTER_DOMAIN}
+      paths:
+      - /
+  # consumer-ui
+  # TODO: replace with consumer-ui image, don't keep consumer-ui-spa!
+  - op: replace
+    path: /deployments/name=consumer-ui/helm/values/ui/ingress/hosts
+    value:
+    - host: ${REMOTE_CLUSTER_DOMAIN}
+      paths:
+      - /
