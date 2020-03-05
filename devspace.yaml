@@ -15,6 +15,12 @@ vars:
 - name: HASURA_ENDPOINT
   source: env
   default: http://api.shopozor/
+- name: KUBE_LOCAL_CONTEXT
+  source: env
+  default: docker-desktop
+- name: KUBE_REMOTE_CONTEXT
+  source: env
+  default: hidora
 - name: MINIO_ACCESS_KEY
   source: env
   default: minio
@@ -245,11 +251,15 @@ dev:
     forward:
     - port: ${CONSUMER_STORYBOOK_PORT}
       remotePort: 8080
-  # TODO: for the sake of visualization with pgAdmin, we could also port-forward postgres
+  - labelSelector:
+      app.kubernetes.io/component: pgpool
+      app.kubernetes.io/instance: postgres
+      app.kubernetes.io/name: postgresql-ha
+    forward:
+    - port: 5432
+      remotePort: 5432
 commands:
 - name: assets.cleanup
-  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
-  #       helm install ./backend/assets-service/chart with some values that tell we want the assets up + image with tag latests
   command: |
     mc config host add ${MINIO_ALIAS} ${MINIO_URL} ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
     for category in `ls ./shared/pictures`; do
@@ -257,8 +267,6 @@ commands:
       mc rm --recursive --force ${MINIO_ALIAS}/$category
     done
 - name: assets.push
-  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
-  #       helm install ./backend/assets-service/chart with some values that tell we want the assets up + image with tag latests
   command: |
     mc config host add ${MINIO_ALIAS} ${MINIO_URL} ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
     for category in `ls ./shared/pictures`; do
@@ -289,13 +297,11 @@ commands:
 - name: deploy.staging
   command: |
     CURRENT_CONTEXT=$(kubectl config current-context)
-    kubectl config use-context hidora
-    devspace deploy --build-sequential -n staging -p staging --kube-context hidora
+    kubectl config use-context ${KUBE_REMOTE_CONTEXT}
+    devspace deploy --build-sequential -n staging -p staging --kube-context ${KUBE_REMOTE_CONTEXT}
     bash ./scripts/wait_for_deployments.sh staging 120
     kubectl config use-context $CURRENT_CONTEXT
 - name: fixtures.cleanup
-  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
-  #       helm install ./backend/fixtures-generator/chart with some values that tell we want the fixtures up + image with tag latests
   command: |
     hasura migrate apply --endpoint ${HASURA_ENDPOINT} --project ./shared/fixtures/database --down $(ls ./shared/fixtures/database/migrations/*.up.sql | wc -l) --skip-update-check
 - name: fixtures.generate
@@ -306,8 +312,6 @@ commands:
     docker-compose up fixtures-service
     docker-compose rm -f fixtures-service
 - name: fixtures.push
-  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
-  #       helm install ./backend/fixtures-generator/chart with some values that tell we want the fixtures up + image with tag latests
   command: |
     hasura migrate apply --endpoint ${HASURA_ENDPOINT} --project ./shared/fixtures/database --up all --skip-update-check
 - name: hasura.console
@@ -316,20 +320,26 @@ commands:
 - name: kubernetes.dashboard-token.local
   command: |
     CURRENT_CONTEXT=$(kubectl config current-context)
-    kubectl config use-context docker-desktop
+    kubectl config use-context ${KUBE_LOCAL_CONTEXT}
     kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep default-token | awk '{print $1}')
     kubectl config use-context $CURRENT_CONTEXT
 - name: kubernetes.dashboard-token.remote
   command: |
     CURRENT_CONTEXT=$(kubectl config current-context)
-    kubectl config use-context hidora
-    kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep default-token | awk '{print $1}')
+    kubectl config use-context ${KUBE_REMOTE_CONTEXT}
+    kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep fulladmin | awk '{print $1}') | grep 'token:' | sed -e's/token:\| //g'
+    kubectl config use-context $CURRENT_CONTEXT
+- name: postgres.password.dev
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context ${KUBE_LOCAL_CONTEXT}
+    kubectl get secret --namespace dev postgres-postgresql -o jsonpath="{.data.postgresql-password}" | base64 --decode
     kubectl config use-context $CURRENT_CONTEXT
 - name: purge.staging
   command: |
     CURRENT_CONTEXT=$(kubectl config current-context)
-    kubectl config use-context hidora
-    devspace purge -n staging -p staging --kube-context hidora
+    kubectl config use-context ${KUBE_REMOTE_CONTEXT}
+    devspace purge -n staging -p staging --kube-context ${KUBE_REMOTE_CONTEXT}
     kubectl delete namespaces staging
     kubectl config use-context $CURRENT_CONTEXT
 - name: tests.all
@@ -390,6 +400,8 @@ vars:
 profiles:
 - name: staging
   # TODO: organize TLS!
+  #  - https://www.digitalocean.com/community/tutorials/how-to-set-up-an-nginx-ingress-with-cert-manager-on-digitalocean-kubernetes
+  #  - https://kubernetes.github.io/ingress-nginx/user-guide/tls/
   patches:
   # images
   - op: replace
@@ -442,6 +454,7 @@ profiles:
       size: 1Gi
       storageClass: jelastic-dynamic-volume
       # TODO: fine-tune database name and username
+  # TODO: apply production values! https://github.com/bitnami/charts/blob/master/upstreamed/postgresql/values-production.yaml
   # api
   # TODO: add an admin secret
   # TODO: configure jwt secret
@@ -538,6 +551,7 @@ profiles:
       up: false
   # postgres
   # TODO: make sure the database name, username, and password are all different from that defined for staging!
+  # TODO: apply production values! https://github.com/bitnami/charts/blob/master/upstreamed/postgresql/values-production.yaml
   # database-fixtures
   - op: remove
     path: /deployments/name=database-fixtures
