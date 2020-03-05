@@ -32,7 +32,8 @@ application:
   onInstall:
     - installKubernetes
     - enableSubDomains
-    - setupTLS
+    # TODO: reactivate when we know in what order we need to install this
+    # - setupTLS
 
   actions:
     installKubernetes:
@@ -41,6 +42,7 @@ application:
         envName: ${settings.envName}
         displayName: ${settings.envName}
         settings:
+          # this is deployed at the end (cf. https://github.com/jelastic-jps/kubernetes/blob/v1.16.3/manifest.jps#L61)
           deploy: cmd
           cmd: |-
             curl -fsSL ${baseUrl}/scripts/install_k8s.sh | /bin/bash -s ${baseUrl} ${settings.envName} ${settings.k8s-version} ${settings.cert-manager-version}

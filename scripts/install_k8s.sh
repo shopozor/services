@@ -19,3 +19,4 @@ sed -i "s/HOSTNAME/${ENV_NAME}.hidora.com/g" ${dashboard_ingress_yaml}
 # Activate TLS
 kubectl create namespace cert-manager
 kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/${CERT_MANAGER_VERSION}/cert-manager.yaml
+# TODO: not sure the rest of it will work if it is installed before letsencrypt
