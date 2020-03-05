@@ -5,7 +5,8 @@ application:
   name: Shopozor k8s cluster
   version: 0.0
 
-  baseUrl: https://raw.githubusercontent.com/shopozor/services/dev
+  # TODO: set branch back to dev
+  baseUrl: https://raw.githubusercontent.com/shopozor/services/deploy-remotely
 
   settings:
     fields:
@@ -19,34 +20,53 @@ application:
           0-dev: '<b>Development:</b> one master (1) and one scalable worker (1+)'
           1-prod: '<b>Production:</b> multi master (3) with API balancers (2+) and scalable workers (2+)'
         default: 0-dev
-      - name: version
+      - name: k8s-version
         type: string
-        caption: Version
+        caption: k8s manifest version
         default: v1.16.3
+      - name: cert-manager-version
+        type: string
+        caption: Cert-manager version
+        default: v0.13.1
 
   onInstall:
     - installKubernetes
     - enableSubDomains
+    - setupTLS
 
   actions:
     installKubernetes:
       install:
-        jps: https://github.com/jelastic-jps/kubernetes/blob/${settings.version}/manifest.jps
+        jps: https://github.com/jelastic-jps/kubernetes/blob/${settings.k8s-version}/manifest.jps
         envName: ${settings.envName}
         displayName: ${settings.envName}
         settings:
           deploy: cmd
           cmd: |-
-            curl -fsSL ${baseUrl}/scripts/install_k8s.sh | /bin/bash
+            curl -fsSL ${baseUrl}/scripts/install_k8s.sh | /bin/bash -s ${baseUrl} ${settings.envName} ${settings.k8s-version} ${settings.cert-manager-version}
           topo: ${settings.topo}
           dashboard: version2
           ingress-controller: Nginx
           storage: true
           api: true
           monitoring: true
-          version: ${settings.version}
+          version: ${settings.k8s-version}
           jaeger: false
     enableSubDomains:
       - jelastic.env.binder.AddDomains[cp]:
           envName: ${settings.envName}
-          domains: staging,admin-staging,api-staging,assets-staging,admin,api,assets
+          domains: dashboard,staging,admin-staging,api-staging,assets-staging,admin,api,assets
+    setupTLS:
+      - installAddon:
+          id: letsencrypt
+
+  addons:
+    - id: letsencrypt
+      name: letsencrypt
+      onInstall:
+        - install:
+            envName: ${env.envName}
+            jps: https://github.com/jelastic-jps/lets-encrypt/blob/master/manifest.jps
+            settings:
+              nodeGroup: cp
+              customDomains: staging.${env.envName}.hidora.com,admin-staging.${env.envName}.hidora.com,api-staging.${env.envName}.hidora.com,assets-staging.${env.envName}.hidora.com,admin.${env.envName}.hidora.com,api.${env.envName}.hidora.com,assets.${env.envName}.hidora.com

@@ -191,6 +191,8 @@ deployments:
         cors:
           domain: '*'
           enabled: true
+        console:
+          enabled: true
         server:
           port: 8080
 - name: admin-ui
@@ -520,8 +522,8 @@ profiles:
   - op: replace
     path: /images/0=staging-${DEVSPACE_GIT_COMMIT}
     value:
-      - prod-${DEVSPACE_GIT_COMMIT}
-      - latest
+    - prod-${DEVSPACE_GIT_COMMIT}
+    - latest
   - op: replace
     path: images.admin-ui.build.docker.options.buildArgs
     value:
@@ -546,7 +548,7 @@ profiles:
     value: 50Gi
   # minio-initialization
   - op: replace
-    path: /deployments/name=minio-initialization/helm/values/assets§
+    path: /deployments/name=minio-initialization/helm/values/assets
     value:
       up: false
   # postgres
