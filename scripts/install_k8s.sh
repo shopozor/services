@@ -12,9 +12,11 @@ CERT_MANAGER_VERSION=$4
 
 # Transform dashboard ingress from /kubernetes-dashboard path to dashboard subdomain
 dashboard_ingress_yaml="dashboard-ingress.yaml"
-kubectl delete ingress kubernetes-dashboard -n kubernetes-dashboard
+dashboard_namespace="kubernetes-dashboard"
+kubectl delete ingress kubernetes-dashboard -n ${dashboard_namespace}
 wget -q ${BASE_URL}/manifests/${dashboard_ingress_yaml} -O ${dashboard_ingress_yaml}
 sed -i "s/HOSTNAME/${ENV_NAME}.hidora.com/g" ${dashboard_ingress_yaml}
+kubectl apply -f ${dashboard_ingress_yaml} -n ${dashboard_namespace}
 
 # Activate TLS
 kubectl create namespace cert-manager
