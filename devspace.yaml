@@ -383,37 +383,6 @@ commands:
 - name: tests.consumer-ui.unit
   command: |
     npx lerna run test:unit --scope consumer-ui --stream
-vars:
-- name: ADMIN_STORYBOOK_PORT
-  default: "7006"
-  source: env
-- name: ADMIN_UI_PORT
-  default: "4000"
-  source: env
-- name: CONSUMER_STORYBOOK_PORT
-  default: "6006"
-  source: env
-- name: CONSUMER_UI_PORT
-  default: "3000"
-  source: env
-- name: HASURA_ENDPOINT
-  default: http://api.shopozor/
-  source: env
-- name: MINIO_ACCESS_KEY
-  default: minio
-  source: env
-- name: MINIO_ALIAS
-  default: minio
-  source: env
-- name: MINIO_SECRET_KEY
-  default: minio123
-  source: env
-- name: MINIO_URL
-  default: http://assets.shopozor/
-  source: env
-- name: REMOTE_CLUSTER_DOMAIN
-  default: budzonnerie.hidora.com
-  source: env
 profiles:
 - name: staging
   # TODO: organize TLS!
