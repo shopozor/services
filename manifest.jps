@@ -47,17 +47,19 @@ application:
           cmd: |-
             curl -fsSL ${baseUrl}/scripts/install_k8s.sh | /bin/bash -s ${baseUrl} ${settings.envName} ${settings.k8s-version} ${settings.cert-manager-version}
           topo: ${settings.topo}
-          dashboard: version2
+          # do not install the dashboard as jelastic proposes
+          dashboard: shopozor
           ingress-controller: Nginx
           storage: true
-          api: true
+          # we expose the api our way, not through the /api path
+          api: false
           monitoring: true
           version: ${settings.k8s-version}
           jaeger: false
     enableSubDomains:
       - jelastic.env.binder.AddDomains[cp]:
           envName: ${settings.envName}
-          domains: dashboard,staging,admin-staging,api-staging,assets-staging,admin,api,assets
+          domains: k8s-api,k8s-dashboard,staging,admin-staging,api-staging,assets-staging,admin,api,assets
     setupTLS:
       - installAddon:
           id: letsencrypt
@@ -71,4 +73,4 @@ application:
             jps: https://github.com/jelastic-jps/lets-encrypt/blob/master/manifest.jps
             settings:
               nodeGroup: cp
-              customDomains: staging.${env.envName}.hidora.com,admin-staging.${env.envName}.hidora.com,api-staging.${env.envName}.hidora.com,assets-staging.${env.envName}.hidora.com,admin.${env.envName}.hidora.com,api.${env.envName}.hidora.com,assets.${env.envName}.hidora.com
+              customDomains: k8s-api.${env.envName},k8s-dashboard.${env.envName},staging.${env.envName}.hidora.com,admin-staging.${env.envName}.hidora.com,api-staging.${env.envName}.hidora.com,assets-staging.${env.envName}.hidora.com,admin.${env.envName}.hidora.com,api.${env.envName}.hidora.com,assets.${env.envName}.hidora.com
