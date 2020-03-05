@@ -12,7 +12,7 @@ CERT_MANAGER_VERSION=$4
 
 # Transform dashboard ingress from /kubernetes-dashboard path to dashboard subdomain
 dashboard_ingress_yaml="dashboard-ingress.yaml"
-kubectl delete ingress kubernetes-dashboard
+kubectl delete ingress kubernetes-dashboard -n kubernetes-dashboard
 wget -q ${BASE_URL}/manifests/${dashboard_ingress_yaml} -O ${dashboard_ingress_yaml}
 sed -i "s/HOSTNAME/${ENV_NAME}.hidora.com/g" ${dashboard_ingress_yaml}
 
