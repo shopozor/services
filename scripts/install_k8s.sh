@@ -14,7 +14,7 @@ CERT_MANAGER_VERSION=$4
 dashboard_ingress_yaml="dashboard-ingress.yaml"
 kubectl delete ingress kubernetes-dashboard
 wget -q ${BASE_URL}/manifests/${dashboard_ingress_yaml} -O ${dashboard_ingress_yaml}
-sed -i "s/ENV/${ENV_NAME}.hidora.com/g" ${dashboard_ingress_yaml}
+sed -i "s/HOSTNAME/${ENV_NAME}.hidora.com/g" ${dashboard_ingress_yaml}
 
 # Activate TLS
 kubectl create namespace cert-manager
