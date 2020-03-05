@@ -296,6 +296,13 @@ commands:
 - name: cypress.consumer-ui.run
   command: |
     CYPRESS_baseUrl=http://localhost:${CONSUMER_UI_PORT} npx lerna run cypress:e2e --scope consumer-ui --stream -- --env configFile=e2e
+- name: deploy.production
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context ${KUBE_REMOTE_CONTEXT}
+    devspace deploy --build-sequential -n production -p production --kube-context ${KUBE_REMOTE_CONTEXT}
+    bash ./scripts/wait_for_deployments.sh production 120
+    kubectl config use-context $CURRENT_CONTEXT
 - name: deploy.staging
   command: |
     CURRENT_CONTEXT=$(kubectl config current-context)
@@ -336,6 +343,14 @@ commands:
     CURRENT_CONTEXT=$(kubectl config current-context)
     kubectl config use-context ${KUBE_LOCAL_CONTEXT}
     kubectl get secret --namespace dev postgres-postgresql -o jsonpath="{.data.postgresql-password}" | base64 --decode
+    kubectl config use-context $CURRENT_CONTEXT
+# TODO: this here is only for testing purposes; we will have to remove this command as it is dangerous
+- name: purge.production
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context ${KUBE_REMOTE_CONTEXT}
+    devspace purge -n production -p production --kube-context ${KUBE_REMOTE_CONTEXT}
+    kubectl delete namespaces production
     kubectl config use-context $CURRENT_CONTEXT
 - name: purge.staging
   command: |
@@ -570,7 +585,8 @@ profiles:
   #       cf. https://hasura.io/docs/1.0/graphql/manual/deployment/graphql-engine-flags/reference.html
   - op: replace
     path: /deployments/name=api/helm/values/service/console/enabled
-    value: false
+    # TODO: find out why setting this to false makes the api unable to start
+    value: true
   # TODO: https://hasura.io/docs/1.0/graphql/manual/deployment/production-checklist.html
   # admin-ui
   - op: replace
