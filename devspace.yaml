@@ -564,7 +564,7 @@ profiles:
   - op: replace
     path: /deployments/name=api/helm/values/service/cors/domain
     # TODO: only enable https! <-- add issue!
-    value: http://admin.${REMOTE_CLUSTER_DOMAIN},http://${REMOTE_CLUSTER_DOMAIN},https://admin.${REMOTE_CLUSTER_DOMAIN},https://${REMOTE_CLUSTER_DOMAIN}
+    value: http://admin.${REMOTE_CLUSTER_DOMAIN},http://app.${REMOTE_CLUSTER_DOMAIN},https://admin.${REMOTE_CLUSTER_DOMAIN},https://app.${REMOTE_CLUSTER_DOMAIN}
   # TODO: add an admin secret
   # TODO: configure jwt secret
   #       cf. https://hasura.io/docs/1.0/graphql/manual/deployment/graphql-engine-flags/reference.html
@@ -584,6 +584,6 @@ profiles:
   - op: replace
     path: /deployments/name=consumer-ui/helm/values/ui/ingress/hosts
     value:
-    - host: ${REMOTE_CLUSTER_DOMAIN}
+    - host: app.${REMOTE_CLUSTER_DOMAIN}
       paths:
       - /

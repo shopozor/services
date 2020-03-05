@@ -57,7 +57,7 @@ application:
     enableSubDomains:
       - jelastic.env.binder.AddDomains[cp]:
           envName: ${settings.envName}
-          domains: staging,admin-staging,api-staging,assets-staging,admin,api,assets
+          domains: staging,admin-staging,api-staging,assets-staging,admin,api,app,assets
     setupTLS:
       - installAddon:
           id: letsencrypt
@@ -71,4 +71,4 @@ application:
             jps: https://github.com/jelastic-jps/lets-encrypt/blob/master/manifest.jps
             settings:
               nodeGroup: cp
-              customDomains: staging.${env.envName}.hidora.com,admin-staging.${env.envName}.hidora.com,api-staging.${env.envName}.hidora.com,assets-staging.${env.envName}.hidora.com,admin.${env.envName}.hidora.com,api.${env.envName}.hidora.com,assets.${env.envName}.hidora.com
+              customDomains: staging.${env.envName}.hidora.com,admin-staging.${env.envName}.hidora.com,api-staging.${env.envName}.hidora.com,assets-staging.${env.envName}.hidora.com,admin.${env.envName}.hidora.com,api.${env.envName}.hidora.com,assets.${env.envName}.hidora.com,app.${env.envName}.hidora.com
