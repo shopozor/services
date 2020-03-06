@@ -1,4 +1,4 @@
-{{- if .Values.storybook.ingress.enabled -}}
+{{- if and .Values.storybook.enabled .Values.storybook.ingress.enabled -}}
 {{- $fullName := include "chart.fullname" . -}}
 {{- $svcPort := .Values.storybook.service.port -}}
 {{- if semverCompare ">=1.14-0" .Capabilities.KubeVersion.GitVersion -}}
