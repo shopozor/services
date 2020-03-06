@@ -134,6 +134,7 @@ FROM node-dependencies AS node-app-builder
 
 ARG GRAPHQL_API
 ARG ASSETS_API
+
 WORKDIR /app
 RUN npx lerna run build --scope admin-ui \
   && npx lerna run build --scope consumer-ui -- --spa

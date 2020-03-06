@@ -1,0 +1,9 @@
+jpsVersion: 1.3
+jpsType: update
+application:
+  id: sleep-cluster
+  name: Sleep cluster
+  version: 0.0
+
+  onInstall:
+    - jelastic.env.control.SleepEnv

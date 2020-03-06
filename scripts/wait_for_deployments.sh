@@ -1,12 +1,16 @@
 #! /bin/bash
 
 if [ "$#" -lt "1" ] ; then
-  echo "Usage: $0 namespace [timeout_iterations]"
+  echo "Usage: $0 namespace [timeout_iterations] [delta_iterations_in_sec]"
+  echo "Default: "
+  echo " - timeout_iterations     : 300"
+  echo " - delta_iterations_in_sec:   5"
   exit 1
 fi
 
 NAMESPACE=$1
 TIMEOUT=${2:-300}
+DELTA_T=${3:-5}
 
 deployment_names=$(kubectl get deployments -o jsonpath='{.items[*].metadata.name}' -n $NAMESPACE)
 nb_deployments=$(echo ${deployment_names} | wc -w)
@@ -26,7 +30,7 @@ for iteration in `seq 1 $TIMEOUT`; do
     exit 0
   else
     echo "Iteration $iteration"
-    sleep 1
+    sleep ${DELTA_T}
   fi
 done
 

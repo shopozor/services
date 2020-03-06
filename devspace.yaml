@@ -1,4 +1,4 @@
-version: v1beta6
+version: v1beta7
 vars:
 - name: ADMIN_STORYBOOK_PORT
   source: env
@@ -15,6 +15,12 @@ vars:
 - name: HASURA_ENDPOINT
   source: env
   default: http://api.shopozor/
+- name: KUBE_LOCAL_CONTEXT
+  source: env
+  default: docker-desktop
+- name: KUBE_REMOTE_CONTEXT
+  source: env
+  default: hidora
 - name: MINIO_ACCESS_KEY
   source: env
   default: minio
@@ -27,10 +33,14 @@ vars:
 - name: MINIO_URL
   source: env
   default: http://assets.shopozor/
+- name: REMOTE_CLUSTER_DOMAIN
+  source: env
+  default: budzonnerie.hidora.com
 images:
   admin-storybook:
     image: shopozor/admin-storybook
-    tag: ${DEVSPACE_RANDOM}
+    tags:
+    - ${DEVSPACE_RANDOM}
     dockerfile: Dockerfile
     context: .
     build:
@@ -41,7 +51,8 @@ images:
             ASSETS_API: http://assets.shopozor/
   admin-ui:
     image: shopozor/admin-ui
-    tag: ${DEVSPACE_RANDOM}
+    tags:
+    - ${DEVSPACE_RANDOM}
     dockerfile: Dockerfile
     context: .
     build:
@@ -53,7 +64,8 @@ images:
             GRAPHQL_API: http://api.shopozor/v1/graphql/
   api:
     image: shopozor/graphql-engine
-    tag: ${DEVSPACE_RANDOM}
+    tags:
+    - ${DEVSPACE_RANDOM}
     dockerfile: Dockerfile
     context: .
     build:
@@ -62,7 +74,8 @@ images:
           target: hasura-migrations
   assets-fixtures:
     image: shopozor/assets-fixtures
-    tag: ${DEVSPACE_RANDOM}
+    tags:
+    - ${DEVSPACE_RANDOM}
     dockerfile: Dockerfile
     context: .
     build:
@@ -71,7 +84,8 @@ images:
           target: assets-client
   consumer-storybook:
     image: shopozor/consumer-storybook
-    tag: ${DEVSPACE_RANDOM}
+    tags:
+    - ${DEVSPACE_RANDOM}
     dockerfile: Dockerfile
     context: .
     build:
@@ -82,7 +96,8 @@ images:
             ASSETS_API: http://assets.shopozor/
   consumer-ui:
     image: shopozor/consumer-ui-spa
-    tag: ${DEVSPACE_RANDOM}
+    tags:
+    - ${DEVSPACE_RANDOM}
     dockerfile: Dockerfile
     context: .
     build:
@@ -94,112 +109,25 @@ images:
             GRAPHQL_API: http://api.shopozor/v1/graphql/
   fixtures-service:
     image: shopozor/fixtures-service
-    tag: ${DEVSPACE_RANDOM}
+    tags:
+    - ${DEVSPACE_RANDOM}
     dockerfile: Dockerfile
     context: .
     build:
       docker:
         options:
           target: fixtures-app
-commands:
-- name: assets.cleanup
-  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
-  #       helm install ./backend/assets-service/chart with some values that tell we want the assets down + image with tag latests
-  command: |
-    echo "tag: ${DEVSPACE_RANDOM}"
-    mc config host add ${MINIO_ALIAS} ${MINIO_URL} ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
-    for category in `ls ./shared/pictures`; do
-      echo "Processing category $category"
-      mc rm --recursive --force ${MINIO_ALIAS}/$category
-    done
-- name: assets.push
-  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
-  #       helm install ./backend/assets-service/chart with some values that tell we want the assets up + image with tag latests
-  command: |
-    mc config host add ${MINIO_ALIAS} ${MINIO_URL} ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
-    for category in `ls ./shared/pictures`; do
-      echo "Processing category $category"
-      for f in `ls ./shared/pictures/$category/*` ; do
-        mc cp $f ${MINIO_ALIAS}/$category/$(basename $f)
-      done
-    done
-- name: bootstrap
-  command: |
-    yarn && yarn bootstrap
-- name: cypress.all.run
-  command: |
-    devspace run cypress.admin-ui.run
-    devspace run cypress.consumer-ui.run
-- name: cypress.admin-ui.open
-  command: |
-    CYPRESS_baseUrl=http://localhost:${ADMIN_UI_PORT}/# NODE_ENV=development npx lerna run cypress:open --scope admin-ui --stream -- --env configFile=e2e
-- name: cypress.admin-ui.run
-  command: |
-    CYPRESS_baseUrl=http://localhost:${ADMIN_UI_PORT}/# npx lerna run cypress:e2e --scope admin-ui --stream -- --env configFile=e2e
-- name: cypress.consumer-ui.open
-  command: |
-    CYPRESS_baseUrl=http://localhost:${CONSUMER_UI_PORT} NODE_ENV=development npx lerna run cypress:open --scope consumer-ui --stream -- --env configFile=e2e
-- name: cypress.consumer-ui.run
-  command: |
-    CYPRESS_baseUrl=http://localhost:${CONSUMER_UI_PORT} npx lerna run cypress:e2e --scope consumer-ui --stream -- --env configFile=e2e
-- name: fixtures.cleanup
-  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
-  #       helm install ./backend/fixtures-generator/chart with some values that tell we want the fixtures down + image with tag latests
-  command: |
-    hasura migrate apply --endpoint ${HASURA_ENDPOINT} --project ./shared/fixtures/database --down $(ls ./shared/fixtures/database/migrations/*.up.sql | wc -l) --skip-update-check
-- name: fixtures.generate
-  command: |
-    rm -Rf shared/fixtures
-    mkdir shared/fixtures
-    docker-compose build fixtures-service
-    docker-compose up fixtures-service
-    docker-compose rm -f fixtures-service
-- name: fixtures.push
-  # TODO: when additionally tagging the images with "latest" is possible, we can just use here
-  #       helm install ./backend/fixtures-generator/chart with some values that tell we want the fixtures up + image with tag latests
-  command: |
-    hasura migrate apply --endpoint ${HASURA_ENDPOINT} --project ./shared/fixtures/database --up all --skip-update-check
-- name: hasura.console
-  command: |
-    hasura console --project ./backend/database-service --endpoint ${HASURA_ENDPOINT}
-- name: kubernetes.dashboard-token
-  command: |
-    kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep default-token | awk '{print $1}')
-- name: tests.all
-  command: |
-    devspace run tests.all.unit
-    devspace run tests.all.integration
-    devspace run cypress.all.run
-- name: tests.all.unit
-  command: |
-    docker-compose build database-service-tests
-    docker-compose up database-service-tests
-    npx lerna run test:unit --stream
-- name: tests.all.integration
-  command: |
-    docker-compose down --remove-orphans
-    docker-compose build graphql-engine-with-tables service-integration-tests
-    docker-compose up -d graphql-engine-with-tables
-    sleep 60
-    docker-compose up --abort-on-container-exit service-integration-tests
-    docker-compose down --remove-orphans
-- name: tests.admin-ui.unit
-  command: |
-    npx lerna run test:unit --scope admin-ui --stream
-- name: tests.consumer-ui.unit
-  command: |
-    npx lerna run test:unit --scope consumer-ui --stream
 deployments:
 - name: minio
   helm:
     chart:
       name: minio
       repo: https://charts.bitnami.com/bitnami
-    componentChart: false
     values:
       accessKey:
         password: minio
-      clusterDomain: localhost
+      # cf. https://stackoverflow.com/questions/52940774/kubernetes-how-to-check-current-domain-set-by-cluster-domain-from-pod
+      clusterDomain: cluster.local
       disableWebUI: false
       ingress:
         annotations:
@@ -220,7 +148,6 @@ deployments:
   helm:
     chart:
       name: ./backend/assets-service/chart/
-    componentChart: false
     values:
       image: shopozor/assets-fixtures
       minio:
@@ -234,7 +161,6 @@ deployments:
     chart:
       name: postgresql-ha
       repo: https://charts.bitnami.com/bitnami
-    componentChart: false
     values:
       fullnameOverride: postgres
       persistence:
@@ -248,14 +174,7 @@ deployments:
   helm:
     chart:
       name: backend/database-service/chart
-    componentChart: false
     values:
-      hasura:
-        cors:
-          domain: '*'
-          enabled: true
-        server:
-          port: 8080
       image: shopozor/graphql-engine
       ingress:
         enabled: true
@@ -269,23 +188,17 @@ deployments:
         secretName: postgres-postgresql
         username: postgres
       service:
-        port: 8080
-# - name: database-fixtures
-#   helm:
-#     chart:
-#       name: backend/fixtures-generator/chart
-#     componentChart: false
-#     values:
-#       image: shopozor/fixtures-service
-#       services:
-#         api:
-#           hostname: api
-#           port: 8080
+        cors:
+          domain: '*'
+          enabled: true
+        console:
+          enabled: true
+        server:
+          port: 8080
 - name: admin-ui
   helm:
     chart:
       name: frontend/admin-ui/chart
-    componentChart: false
     values:
       services:
         api:
@@ -306,7 +219,6 @@ deployments:
   helm:
     chart:
       name: frontend/consumer-ui/chart
-    componentChart: false
     values:
       services:
         api:
@@ -341,26 +253,170 @@ dev:
     forward:
     - port: ${CONSUMER_STORYBOOK_PORT}
       remotePort: 8080
-  # TODO: for the sake of visualization with pgAdmin, we could also port-forward postgres
+  - labelSelector:
+      app.kubernetes.io/component: pgpool
+      app.kubernetes.io/instance: postgres
+      app.kubernetes.io/name: postgresql-ha
+    forward:
+    - port: 5432
+      remotePort: 5432
+commands:
+- name: assets.cleanup
+  command: |
+    mc config host add ${MINIO_ALIAS} ${MINIO_URL} ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
+    for category in `ls ./shared/pictures`; do
+      echo "Processing category $category"
+      mc rm --recursive --force ${MINIO_ALIAS}/$category
+    done
+- name: assets.push
+  command: |
+    mc config host add ${MINIO_ALIAS} ${MINIO_URL} ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
+    for category in `ls ./shared/pictures`; do
+      echo "Processing category $category"
+      for f in `ls ./shared/pictures/$category/*` ; do
+        mc cp $f ${MINIO_ALIAS}/$category/$(basename $f)
+      done
+    done
+- name: bootstrap
+  command: |
+    yarn && yarn bootstrap
+- name: cypress.all.run
+  command: |
+    devspace run cypress.admin-ui.run
+    devspace run cypress.consumer-ui.run
+- name: cypress.admin-ui.open
+  command: |
+    CYPRESS_baseUrl=http://localhost:${ADMIN_UI_PORT}/# NODE_ENV=development npx lerna run cypress:open --scope admin-ui --stream -- --env configFile=e2e
+- name: cypress.admin-ui.run
+  command: |
+    CYPRESS_baseUrl=http://localhost:${ADMIN_UI_PORT}/# npx lerna run cypress:e2e --scope admin-ui --stream -- --env configFile=e2e
+- name: cypress.consumer-ui.open
+  command: |
+    CYPRESS_baseUrl=http://localhost:${CONSUMER_UI_PORT} NODE_ENV=development npx lerna run cypress:open --scope consumer-ui --stream -- --env configFile=e2e
+- name: cypress.consumer-ui.run
+  command: |
+    CYPRESS_baseUrl=http://localhost:${CONSUMER_UI_PORT} npx lerna run cypress:e2e --scope consumer-ui --stream -- --env configFile=e2e
+- name: deploy.production
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context ${KUBE_REMOTE_CONTEXT}
+    devspace deploy --build-sequential -n production -p production --kube-context ${KUBE_REMOTE_CONTEXT}
+    bash ./scripts/wait_for_deployments.sh production 120
+    kubectl config use-context $CURRENT_CONTEXT
+- name: deploy.staging
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context ${KUBE_REMOTE_CONTEXT}
+    devspace deploy --build-sequential -n staging -p staging --kube-context ${KUBE_REMOTE_CONTEXT}
+    bash ./scripts/wait_for_deployments.sh staging 120
+    kubectl config use-context $CURRENT_CONTEXT
+- name: fixtures.cleanup
+  command: |
+    hasura migrate apply --endpoint ${HASURA_ENDPOINT} --project ./shared/fixtures/database --down $(ls ./shared/fixtures/database/migrations/*.up.sql | wc -l) --skip-update-check
+- name: fixtures.generate
+  command: |
+    rm -Rf shared/fixtures
+    mkdir shared/fixtures
+    docker-compose build fixtures-service
+    docker-compose up fixtures-service
+    docker-compose rm -f fixtures-service
+- name: fixtures.push
+  command: |
+    hasura migrate apply --endpoint ${HASURA_ENDPOINT} --project ./shared/fixtures/database --up all --skip-update-check
+- name: hasura.console
+  command: |
+    hasura console --project ./backend/database-service --endpoint ${HASURA_ENDPOINT}
+- name: kubernetes.dashboard-token.local
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context ${KUBE_LOCAL_CONTEXT}
+    kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep default-token | awk '{print $1}')
+    kubectl config use-context $CURRENT_CONTEXT
+- name: kubernetes.dashboard-token.remote
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context ${KUBE_REMOTE_CONTEXT}
+    kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep fulladmin | awk '{print $1}') | grep 'token:' | sed -e's/token:\| //g'
+    kubectl config use-context $CURRENT_CONTEXT
+- name: postgres.password.dev
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context ${KUBE_LOCAL_CONTEXT}
+    kubectl get secret --namespace dev postgres-postgresql -o jsonpath="{.data.postgresql-password}" | base64 --decode
+    kubectl config use-context $CURRENT_CONTEXT
+# TODO: this here is only for testing purposes; we will have to remove this command as it is dangerous
+- name: purge.production
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context ${KUBE_REMOTE_CONTEXT}
+    devspace purge -n production -p production --kube-context ${KUBE_REMOTE_CONTEXT}
+    kubectl delete namespaces production
+    kubectl config use-context $CURRENT_CONTEXT
+- name: purge.staging
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context ${KUBE_REMOTE_CONTEXT}
+    devspace purge -n staging -p staging --kube-context ${KUBE_REMOTE_CONTEXT}
+    kubectl delete namespaces staging
+    kubectl config use-context $CURRENT_CONTEXT
+- name: tests.all
+  command: |
+    devspace run tests.all.unit
+    devspace run tests.all.integration
+    devspace run cypress.all.run
+- name: tests.all.unit
+  command: |
+    docker-compose build database-service-tests
+    docker-compose up database-service-tests
+    npx lerna run test:unit --stream
+- name: tests.all.integration
+  command: |
+    docker-compose down --remove-orphans
+    docker-compose build graphql-engine-with-tables service-integration-tests
+    docker-compose up -d graphql-engine-with-tables
+    sleep 60
+    docker-compose up --abort-on-container-exit service-integration-tests
+    docker-compose down --remove-orphans
+- name: tests.admin-ui.unit
+  command: |
+    npx lerna run test:unit --scope admin-ui --stream
+- name: tests.consumer-ui.unit
+  command: |
+    npx lerna run test:unit --scope consumer-ui --stream
 profiles:
 - name: staging
   # TODO: organize TLS!
+  #  - https://www.digitalocean.com/community/tutorials/how-to-set-up-an-nginx-ingress-with-cert-manager-on-digitalocean-kubernetes
+  #  - https://kubernetes.github.io/ingress-nginx/user-guide/tls/
   patches:
-  # Image tags
+  # images
   - op: replace
-    path: /images/tag=${DEVSPACE_RANDOM}/tag
-    value: ${DEVSPACE_GIT_COMMIT}
-  # Minio
+    path: /images/0=${DEVSPACE_RANDOM}/0
+    value: staging-${DEVSPACE_GIT_COMMIT}
+  - op: remove
+    path: images.admin-storybook
+  - op: remove
+    path: images.consumer-storybook
+  - op: replace
+    path: images.admin-ui.build.docker.options.buildArgs
+    value:
+      # TODO: use https!!!
+      GRAPHQL_API: http://api-staging.${REMOTE_CLUSTER_DOMAIN}/v1/graphql/
+      ASSETS_API: http://assets-staging.${REMOTE_CLUSTER_DOMAIN}/
+  - op: replace
+    path: images.consumer-ui.build.docker.options.buildArgs
+    value:
+      # TODO: use https!!!
+      GRAPHQL_API: http://api-staging.${REMOTE_CLUSTER_DOMAIN}/v1/graphql/
+      ASSETS_API: http://assets-staging.${REMOTE_CLUSTER_DOMAIN}/
+  # minio
   - op: remove
     path: /deployments/name=minio/helm/values/accessKey/password
   - op: remove
     path: /deployments/name=minio/helm/values/secretKey/password
   - op: replace
-    path: /deployments/name=minio/helm/values/clusterDomain
-    value: shopozor.hidora.com
-  - op: replace
     path: /deployments/name=minio/helm/values/ingress/hosts/0/name
-    value: assets.shopozor.hidora.com
+    value: assets-staging.${REMOTE_CLUSTER_DOMAIN}
   - op: replace
     path: /deployments/name=minio/helm/values/mode
     value: distributed
@@ -368,34 +424,151 @@ profiles:
     path: /deployments/name=minio/helm/values/persistence
     value:
       enabled: true
-      storageClass: jelastic-dynamic-volume
+      mountPath: /data
       size: 1Gi
-    # TODO: enable the fixtures
-    # TODO: will the secret keys still work? cf. minio.envvarsblock
-    # TODO: in production:
-    #   - disableWebUI should be true!
-    #   - minio-initialization should be only partial: just the buckets, that's it
+      storageClass: jelastic-dynamic-volume
+  # minio-initialization
+  - op: add
+    path: /deployments/name=minio-initialization/helm/values/assets
+    value:
+      up: true
   # postgres
   - op: replace
     path: /deployments/name=postgres/helm/values/persistence
     value:
       enabled: true
-      storageClass: jelastic-dynamic-volume
       size: 1Gi
-      mountPath: /opt/bitnami/postgresql/data
-    # TODO: fine-tune database name and username
+      storageClass: jelastic-dynamic-volume
+      # TODO: fine-tune database name and username
+  # TODO: apply production values! https://github.com/bitnami/charts/blob/master/upstreamed/postgresql/values-production.yaml
   # api
-    # TODO: change cors.domain appropriately!
-    # TODO: apply fixtures!
+  # TODO: add an admin secret
+  # TODO: configure jwt secret
   - op: replace
     path: /deployments/name=api/helm/values/ingress/hosts/0/host
-    value: api.shopozor.hidora.com
+    value: api-staging.${REMOTE_CLUSTER_DOMAIN}
+  - op: replace
+    path: /deployments/name=api/helm/values/service/cors/domain
+    # TODO: only enable https! <-- add issue!
+    value: http://admin-staging.${REMOTE_CLUSTER_DOMAIN},http://staging.${REMOTE_CLUSTER_DOMAIN},https://admin-staging.${REMOTE_CLUSTER_DOMAIN},https://staging.${REMOTE_CLUSTER_DOMAIN}
+  # TODO: fine-tune database url!
+  # database-fixtures
+  - op: add
+    path: deployments
+    value:
+      helm:
+        chart:
+          name: backend/fixtures-generator/chart
+        values:
+          fixtures:
+            up: true
+          image: shopozor/fixtures-service
+          services:
+            api:
+              hostname: api
+              port: 8080
+      name: database-fixtures
   # admin-ui
+  - op: replace
+    path: /deployments/name=admin-ui/helm/values/storybook/enabled
+    value: false
   - op: replace
     path: /deployments/name=admin-ui/helm/values/ui/service/type
     value: LoadBalancer
+  - op: add
+    path: /deployments/name=admin-ui/helm/values/ui/ingress
+    value:
+      enabled: true
+      hosts:
+      - host: admin-staging.${REMOTE_CLUSTER_DOMAIN}
+        paths:
+        - /
   # consumer-ui
   # TODO: replace with consumer-ui image, don't keep consumer-ui-spa!
   - op: replace
+    path: /deployments/name=consumer-ui/helm/values/storybook/enabled
+    value: false
+  - op: replace
     path: /deployments/name=consumer-ui/helm/values/ui/service/type
     value: LoadBalancer
+  - op: add
+    path: /deployments/name=consumer-ui/helm/values/ui/ingress
+    value:
+      enabled: true
+      hosts:
+      - host: staging.${REMOTE_CLUSTER_DOMAIN}
+        paths:
+        - /
+- name: production
+  parent: staging
+  patches:
+  # images
+  - op: replace
+    path: /images/0=staging-${DEVSPACE_GIT_COMMIT}
+    value:
+    - prod-${DEVSPACE_GIT_COMMIT}
+    - latest
+  - op: replace
+    path: images.admin-ui.build.docker.options.buildArgs
+    value:
+      # TODO: use https!!!
+      GRAPHQL_API: http://api.${REMOTE_CLUSTER_DOMAIN}/v1/graphql/
+      ASSETS_API: http://assets.${REMOTE_CLUSTER_DOMAIN}/
+  - op: replace
+    path: images.consumer-ui.build.docker.options.buildArgs
+    value:
+      # TODO: use https!!!
+      GRAPHQL_API: http://api.${REMOTE_CLUSTER_DOMAIN}/v1/graphql/
+      ASSETS_API: http://assets.${REMOTE_CLUSTER_DOMAIN}/
+  # minio
+  - op: replace
+    path: /deployments/name=minio/helm/values/ingress/hosts/0/name
+    value: assets.${REMOTE_CLUSTER_DOMAIN}
+  - op: replace
+    path: /deployments/name=minio/helm/values/disableWebUI
+    value: true
+  - op: replace
+    path: /deployments/name=minio/helm/values/persistence/size
+    value: 50Gi
+  # minio-initialization
+  - op: replace
+    path: /deployments/name=minio-initialization/helm/values/assets
+    value:
+      up: false
+  # postgres
+  # TODO: make sure the database name, username, and password are all different from that defined for staging!
+  # TODO: apply production values! https://github.com/bitnami/charts/blob/master/upstreamed/postgresql/values-production.yaml
+  # database-fixtures
+  - op: remove
+    path: /deployments/name=database-fixtures
+  # api
+  - op: replace
+    path: /deployments/name=api/helm/values/ingress/hosts/0/host
+    value: api.${REMOTE_CLUSTER_DOMAIN}
+  - op: replace
+    path: /deployments/name=api/helm/values/service/cors/domain
+    # TODO: only enable https! <-- add issue!
+    value: http://admin.${REMOTE_CLUSTER_DOMAIN},http://app.${REMOTE_CLUSTER_DOMAIN},https://admin.${REMOTE_CLUSTER_DOMAIN},https://app.${REMOTE_CLUSTER_DOMAIN}
+  # TODO: add an admin secret
+  # TODO: configure jwt secret
+  #       cf. https://hasura.io/docs/1.0/graphql/manual/deployment/graphql-engine-flags/reference.html
+  - op: replace
+    path: /deployments/name=api/helm/values/service/console/enabled
+    # TODO: find out why setting this to false makes the api unable to start
+    value: false
+  # TODO: https://hasura.io/docs/1.0/graphql/manual/deployment/production-checklist.html
+  # admin-ui
+  - op: replace
+    path: /deployments/name=admin-ui/helm/values/ui/ingress/hosts
+    value:
+    - host: admin.${REMOTE_CLUSTER_DOMAIN}
+      paths:
+      - /
+  # consumer-ui
+  # TODO: replace with consumer-ui image, don't keep consumer-ui-spa!
+  - op: replace
+    path: /deployments/name=consumer-ui/helm/values/ui/ingress/hosts
+    value:
+    - host: app.${REMOTE_CLUSTER_DOMAIN}
+      paths:
+      - /
