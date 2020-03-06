@@ -325,7 +325,7 @@ commands:
     hasura migrate apply --endpoint ${HASURA_ENDPOINT} --project ./shared/fixtures/database --up all --skip-update-check
 - name: hasura.console
   command: |
-    hasura console --project ./backend/database-service --endpoint ${HASURA_ENDPOINT}
+    hasura console --project ./backend/database-service --endpoint ${HASURA_ENDPOINT} --skip-update-check
 - name: kubernetes.dashboard-token.local
   command: |
     CURRENT_CONTEXT=$(kubectl config current-context)
