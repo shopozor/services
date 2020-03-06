@@ -555,7 +555,7 @@ profiles:
   - op: replace
     path: /deployments/name=api/helm/values/service/console/enabled
     # TODO: find out why setting this to false makes the api unable to start
-    value: true
+    value: false
   # TODO: https://hasura.io/docs/1.0/graphql/manual/deployment/production-checklist.html
   # admin-ui
   - op: replace
