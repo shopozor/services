@@ -5,8 +5,7 @@ application:
   name: Shopozor k8s cluster
   version: 0.0
 
-  # TODO: set branch back to dev
-  baseUrl: https://raw.githubusercontent.com/shopozor/services/deploy-remotely
+  baseUrl: https://raw.githubusercontent.com/shopozor/services/dev
 
   settings:
     fields:
