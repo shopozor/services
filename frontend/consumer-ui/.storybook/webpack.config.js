@@ -31,12 +31,12 @@ module.exports = async ({ config, mode }) => {
 
   config.plugins.push(
     new webpack.DefinePlugin({
-      'process.env.ASSETS_API': JSON.stringify(process.env.ASSETS_API || 'http://localhost:9001/')
+      'process.env.ASSETS_API': JSON.stringify(process.env.ASSETS_API || 'http://assets.shopozor/')
     })
   )
 
-  config.resolve.alias['~assets'] = path.resolve(__dirname, '../assets/')
   config.resolve.alias['~'] = path.resolve(__dirname, '../')
+  config.resolve.alias['~assets'] = path.resolve(__dirname, '../assets/')
   config.resolve.alias['~shared'] = path.resolve(__dirname, '../../../shared/')
   config.resolve.alias['~graphql'] = path.resolve(__dirname, '../../../shared/graphql/')
   config.resolve.alias['~fixtures'] = path.resolve(__dirname, '../../../shared/fixtures/graphql/responses/')

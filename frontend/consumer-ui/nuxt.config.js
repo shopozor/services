@@ -6,8 +6,8 @@ module.exports = {
   mode: 'universal',
 
   env: {
-    GRAPHQL_API: process.env.GRAPHQL_API || 'http://localhost:8080/v1/graphql/',
-    ASSETS_API: process.env.ASSETS_API || 'http://localhost:9001/'
+    GRAPHQL_API: process.env.GRAPHQL_API || 'http://api.shopozor/v1/graphql/',
+    ASSETS_API: process.env.ASSETS_API || 'http://assets.shopozor/'
   },
 
   /*
