@@ -37,6 +37,8 @@ application:
     - installKubernetes
     - enableSubDomains
     # TODO: reactivate when we know in what order we need to install this
+    #       --> the letsencrypt stuff is not yet available
+    #       cf. https://stackoverflow.com/questions/60546645/how-do-i-install-letsencrypt-on-my-jelastic-kubernetes-cluster?noredirect=1#comment107139402_60546645
     # - setupTLS
     - bindExternalDomains
 
