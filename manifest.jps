@@ -28,12 +28,17 @@ application:
         type: string
         caption: Cert-manager version
         default: v0.13.1
+      - name: extDomains
+        type: string
+        caption: External domains (; separates)
+        required: true
 
   onInstall:
     - installKubernetes
     - enableSubDomains
     # TODO: reactivate when we know in what order we need to install this
     # - setupTLS
+    - bindExternalDomains
 
   actions:
     installKubernetes:
@@ -61,6 +66,10 @@ application:
     setupTLS:
       - installAddon:
           id: letsencrypt
+    bindExternalDomains:
+      - jelastic.env.binder.BindExtDomains:
+          envName: ${settings.envName}
+          extDomains: ${settings.extDomains}
 
   addons:
     - id: letsencrypt
