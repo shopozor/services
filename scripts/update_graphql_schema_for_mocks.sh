@@ -1,6 +1,8 @@
 #! /bin/bash
 
-npx gq http://localhost:8080/v1/graphql --introspect > schema.graphql
+ENDPOINT=${1:-http://api.shopozor/v1/graphql}
+
+npx gq $ENDPOINT --introspect > schema.graphql
 
 sed -i 's/query_root/Query/g' schema.graphql
 sed -i 's/mutation_root/Mutation/g' schema.graphql
