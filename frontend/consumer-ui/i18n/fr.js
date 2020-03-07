@@ -34,17 +34,40 @@ export default {
     title: 'Le concept',
     description: `
       <p class="mb-5">
-        Nous prétendons que le produit artisanal que nous sommes en train de réaliser, "La Budzonnerie", rendra le commerce
-        de proximité attractif par ses aspects local, transparent et ludique. La Budzonnerie alliera la stimulation de l''économie locale à la
-        simplification de la vie de nos agriculteurs et artisans. Tout cela transparaît dans le nom "Budzonnerie": en effet, ce terme est une
-        extension du patois "Budzon" qui signifie "fourmi rouge". En particulier, un "Budzon" est une fourmi qui bouge beaucoup.
+        La Budzonnerie fournit aux Producteurs un moyen efficace d’écouler leurs marchandises dans leur région.
+        En parallèle, elle veut se démarquer comme une plateforme transparente qui propose à ses utilisateurs
+        une consommation équitable. Contrairement à ses concurrents, la Budzonnerie est un système entièrement suisse
+        (données, transactions bancaires, développeurs suisses), qui ne ponctionne pas les Producteurs et qui se focalise
+        sur le circuit court et la protection de l'environnement.
       </p>
       <p class="mb-5">
-        Une Budzonnerie est un groupe de Producteurs actifs dans une région donnée dont le rayon ne dépassera généralement pas 25 kilomètres.
-        Ceux-ci proposeront une certaine palette de produits de la région, comme par exemple de la confiture, du nutella maison, des légumes, de la viande,
-        du fromage, des gâteaux, du savon ou des produits de nettoyage. Ils se réuniront tous régulièrement dans un endroit donné où ils mettront à disposition
-        les produits qui leur auront été commandés. Les Consommateurs pourront commander des produits à une Budzonnerie au travers de la présente plateforme qui
-        rassemblera les produits de tous ses producteurs. Nous proposerons divers moyens de paiement typiquement suisses.
+        Les Producteurs peuvent proposer les Produits de leur région, comme par exemple de la confiture, du nutella maison, des légumes,
+        de la viande, du fromage, des gâteaux, du savon ou des produits de nettoyage. Ils pourront également offrir leurs services, comme
+        par exemple des services de traiteur, de réparations, ou de couture.
+      </p>
+      <p class="mb-5">
+        Les commandes sont possibles jusqu’à minuit la veille de la distribution. Les distributions s’effectuent deux fois par semaine
+        dans un endroit donné où les Producteurs amènent leurs Produits au Responsable du point de distribution, qui procède alors au contrôle
+        de la marchandise, évitant ainsi aux Producteurs de rester sur place en attendant les Consommateurs. Toutefois, un tournus est mis
+        en place pour que les Consommateurs puissent faire plus ample connaissance avec les Producteurs. Les Consommateurs peuvent commander
+        des produits à une Budzonnerie au travers de la présente plateforme qui rassemble les Produits de tous ses Producteurs. Divers moyens
+        de paiement typiquement suisses sont proposés dont la facture, le bulletin de versement électronique, la carte de crédit ou twint.
+        Certaines monnaies locales seront probablement intégrées au fil du temps et un porte-monnaie virtuel sera mis à disposition afin de
+        réduire la quantité de transactions bancaires.
+      </p>
+      <p class="mb-5">
+        Notre priorité est la promotion du circuit court, tout comme l'impact écologique de nos achats. Dans l'optique de réduire celui-ci au maximum,
+        nous formerons les Producteurs et orienterons les Consommateurs quant à la réduction à zéro des contenants jetables à usage unique. De plus,
+        la vente de surplus sera possible lors de la distribution, toutefois selon certaines conditions établies au préalable.
+        La qualité et le traitement des Produits soumis aux Consommateurs nous tiennent également à coeur. Chaque Producteur recevra la visite d’un
+        Responsable afin de garantir que les Produits proposés correspondent aux standards de la Budzonnerie.
+      </p>
+      <p class="mb-5">
+        Nous prétendons que le produit artisanal que nous sommes en train de réaliser, "La Budzonnerie", rendra le commerce
+        de proximité attractif par ses aspects local, transparent et ludique. La Budzonnerie alliera la stimulation de l'économie locale à la
+        simplification de la vie de nos agriculteurs et artisans ainsi que des Consommateurs. Tout cela transparaît dans le nom "Budzonnerie" :
+        en effet, ce terme est une extension du patois "Budzon" qui signifie "fourmi". Ce terme est souvent utilisé pour caractériser un
+        enfant qui bouge beaucoup.
       </p>`
   },
   gestureHandling: {
