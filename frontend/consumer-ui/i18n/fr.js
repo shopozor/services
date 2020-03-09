@@ -56,7 +56,7 @@ export default {
         Responsable afin de garantir que les Produits proposés correspondent aux standards de la Budzonnerie.
       </p>
       <p class="mb-5">
-        Nous prétendons que le produit artisanal que nous sommes en train de réaliser, "La Budzonnerie", rendra le commerce
+        Nous prétendons que le service artisanal que nous sommes en train de réaliser, "La Budzonnerie", rendra le commerce
         de proximité attractif par ses aspects local, transparent et ludique. La Budzonnerie alliera la stimulation de l'économie locale à la
         simplification de la vie de nos agriculteurs et artisans ainsi que des Consommateurs. Tout cela transparaît dans le nom "Budzonnerie" :
         en effet, ce terme est une extension du patois "Budzon" qui signifie "fourmi". Ce terme est souvent utilisé pour caractériser un
