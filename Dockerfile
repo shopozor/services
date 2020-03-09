@@ -29,6 +29,10 @@ COPY --from=hasura-migrations /bin/hasura-cli /usr/local/bin/hasura
 
 WORKDIR /app
 
+FROM hasura-test AS hasura-test-ci
+
+WORKDIR /app
+
 COPY ./backend/database-service .
 COPY ./backend/test-utils ./utils
 COPY ./shared/fixtures ./fixtures
