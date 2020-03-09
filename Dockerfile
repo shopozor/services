@@ -78,6 +78,10 @@ COPY --from=hasura-migrations /bin/hasura-cli /usr/local/bin/hasura
 
 WORKDIR /app
 
+FROM integration-test AS integration-test-ci
+
+WORKDIR /app
+
 COPY ./backend/tests .
 COPY ./backend/test-utils ./common_utils
 COPY ./shared/fixtures ./fixtures

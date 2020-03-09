@@ -96,10 +96,27 @@ services:
       - PYTHONDONTWRITEBYTECODE=1
       - PYTHONPATH=./tests:$PYTHONPATH
     volumes:
+      - ./backend/tests:/app
+      - ./backend/test-utils:/app/common_utils
+      - ./shared/fixtures:/app/fixtures
+      - ./shared/graphql:/app/fixtures/graphql/calls
       - ./backend/tests/test-reports:/app/test-reports
     entrypoint: ./entrypoint.sh graphql-engine-with-tables 8080
-  # TODO: rework this image so that we have one image for each ui?
-  e2e-tests:
+  service-integration-tests-ci:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: integration-test-ci
+    restart: "no"
+    depends_on:
+      - graphql-engine-with-tables
+    environment:
+      - PYTHONDONTWRITEBYTECODE=1
+      - PYTHONPATH=./tests:$PYTHONPATH
+    volumes:
+      - ./backend/tests/test-reports:/app/test-reports
+    entrypoint: ./entrypoint.sh graphql-engine-with-tables 8080
+  admin-e2e-tests:
     build:
       context: .
       dockerfile: Dockerfile
@@ -109,8 +126,22 @@ services:
     restart: "no"
     volumes:
       - .:/app
-    # TODO: we need to make sure the consumer-ui / admin-ui are accessible!
-    entrypoint: ./frontend/tests/entrypoint-cypress.sh e2e
+    environment:
+      CYPRESS_baseUrl: http://localhost:${ADMIN_UI_PORT:-4000}
+    entrypoint: lerna run cypress:e2e --scope admin-ui --stream -- --env configFile=e2e
+  consumer-e2e-tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: cypress-tests
+      args:
+        CYPRESS_VERSION: 3.8.0
+    restart: "no"
+    volumes:
+      - .:/app
+    environment:
+      CYPRESS_baseUrl: http://localhost:${CONSUMER_UI_PORT:-3000}
+    entrypoint: lerna run cypress:e2e --scope consumer-ui --stream -- --env configFile=e2e
 
 volumes:
   db_data:

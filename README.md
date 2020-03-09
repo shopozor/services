@@ -201,6 +201,19 @@ and you run e.g. command `assets.push` like this:
 devspace run assets.push
 ```
 
+## Validate your changes
+
+You can test the software on your laptop:
+
+1. You need to have the software running:
+```
+devspace dev -n dev --build-sequential
+```
+2. You run the tests
+```
+devspace run tests.all
+``
+
 ## Adding a new graphql query / mutation / subscription
 
 Here's how we proceed when we want to add a new query / mutation / subscription:
