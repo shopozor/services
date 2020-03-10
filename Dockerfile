@@ -29,6 +29,10 @@ COPY --from=hasura-migrations /bin/hasura-cli /usr/local/bin/hasura
 
 WORKDIR /app
 
+FROM hasura-test AS hasura-test-ci
+
+WORKDIR /app
+
 COPY ./backend/database-service .
 COPY ./backend/test-utils ./utils
 COPY ./shared/fixtures ./fixtures
@@ -71,6 +75,10 @@ COPY --from=integration-test-build /usr/local/bin/wait-for-it /usr/local/bin/wai
 COPY --from=integration-test-build /usr/local/lib/python3.8/site-packages /usr/local/lib/python3.8/site-packages
 COPY --from=integration-test-build /usr/local/bin /usr/local/bin
 COPY --from=hasura-migrations /bin/hasura-cli /usr/local/bin/hasura
+
+WORKDIR /app
+
+FROM integration-test AS integration-test-ci
 
 WORKDIR /app
 

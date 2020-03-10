@@ -47,7 +47,6 @@
     "concurrently:dev:jest": "concurrently \"quasar dev\" \"jest --watch\"",
     "cypress:clean": "rimraf cypress/screenshots/* cypress/videos/*",
     "cypress:e2e": "cross-var wait-on $CYPRESS_baseUrl && cypress run --env configFile=e2e",
-    "cypress:e2e:ci": "wait-on http://admin-ui:8080/# && cross-env CYPRESS_baseUrl=http://admin-ui:8080/# cypress run --env configFile=e2e",
     "cypress:open": "cypress open",
     "lint": "eslint --ext .js,.vue,.feature src",
     "serve:test:coverage": "quasar serve test/jest/coverage/lcov-report/ --port 8788",

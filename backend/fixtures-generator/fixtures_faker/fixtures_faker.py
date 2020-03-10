@@ -41,14 +41,6 @@ class FakeDataFactory:
         self.__MAX_NB_VARIANTS_PER_PRODUCT = max_nb_variants_per_product
         self.__PICTURES_FOLDER = pictures_folder
 
-    def create_sites(self):
-        return {
-            'sites': [{
-                'id': 1,
-                'description': self.__fake.description()
-            }]
-        }
-
     def create_email(self, first_name, last_name):
         domain_name = self.__fake.free_email_domain()
         # get rid of any potential French accent from the first and last name

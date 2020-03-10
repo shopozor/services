@@ -1,23 +1,20 @@
 <template>
   <div>
     <h2 class="overview-title">
-      {{ $t('budzons') }}
+      {{ $t('budzons.title') }}
     </h2>
-    <person-details v-for="budzon in budzons" :key="budzon.id" :person="budzon" />
+    <div class="p-6 text-justify">
+      <span v-html="$t('budzons.description')" />
+    </div>
+    <img class="w-1/2 rounded-full mx-auto lg:max-w-lg" :src="budzons">
   </div>
 </template>
-
 <script>
-import PersonDetails from './PersonDetails'
-import budzons from '~graphql/budzons'
+import BudzonsImg from '~/assets/img/budzons.jpg'
+
 export default {
-  apollo: {
-    budzons: {
-      query: budzons
-    }
-  },
-  components: {
-    PersonDetails
-  }
+  data: () => ({
+    budzons: BudzonsImg
+  })
 }
 </script>

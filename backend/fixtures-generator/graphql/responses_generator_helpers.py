@@ -18,22 +18,6 @@ def image_item(object, images):
     return image[0]
 
 
-def budzon_item(user, image):
-    return {
-        'first_name': user['first_name'],
-        'description': user['description'],
-        'id': user['id'],
-        'image': image,
-        'last_name': user['last_name']
-    }
-
-
-def site_item(site):
-    return {
-        'description': site['description'],
-    }
-
-
 def shop_item(shop, image):
     return {
         'id': shop['id'],

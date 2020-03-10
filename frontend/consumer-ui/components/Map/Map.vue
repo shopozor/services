@@ -18,7 +18,8 @@ import shops from '~graphql/shops'
 export default {
   apollo: {
     shops: {
-      query: shops
+      query: shops,
+      prefetch: true
     }
   },
   components: {

@@ -289,12 +289,14 @@ commands:
     CYPRESS_baseUrl=http://localhost:${ADMIN_UI_PORT}/# NODE_ENV=development npx lerna run cypress:open --scope admin-ui --stream -- --env configFile=e2e
 - name: cypress.admin-ui.run
   command: |
+    devspace run reset.test-data
     CYPRESS_baseUrl=http://localhost:${ADMIN_UI_PORT}/# npx lerna run cypress:e2e --scope admin-ui --stream -- --env configFile=e2e
 - name: cypress.consumer-ui.open
   command: |
     CYPRESS_baseUrl=http://localhost:${CONSUMER_UI_PORT} NODE_ENV=development npx lerna run cypress:open --scope consumer-ui --stream -- --env configFile=e2e
 - name: cypress.consumer-ui.run
   command: |
+    devspace run reset.test-data
     CYPRESS_baseUrl=http://localhost:${CONSUMER_UI_PORT} npx lerna run cypress:e2e --scope consumer-ui --stream -- --env configFile=e2e
 - name: deploy.production
   command: |
@@ -325,7 +327,7 @@ commands:
     hasura migrate apply --endpoint ${HASURA_ENDPOINT} --project ./shared/fixtures/database --up all --skip-update-check
 - name: hasura.console
   command: |
-    hasura console --project ./backend/database-service --endpoint ${HASURA_ENDPOINT}
+    hasura console --project ./backend/database-service --endpoint ${HASURA_ENDPOINT} --skip-update-check
 - name: kubernetes.dashboard-token.local
   command: |
     CURRENT_CONTEXT=$(kubectl config current-context)
@@ -359,6 +361,12 @@ commands:
     devspace purge -n staging -p staging --kube-context ${KUBE_REMOTE_CONTEXT}
     kubectl delete namespaces staging
     kubectl config use-context $CURRENT_CONTEXT
+- name: reset.test-data
+  command: |
+    devspace run assets.cleanup
+    devspace run fixtures.cleanup
+    devspace run assets.push
+    devspace run fixtures.push
 - name: tests.all
   command: |
     devspace run tests.all.unit
@@ -383,6 +391,9 @@ commands:
 - name: tests.consumer-ui.unit
   command: |
     npx lerna run test:unit --scope consumer-ui --stream
+- name: tests.update-snapshots
+  command: |
+    npx lerna run test:unit:updateSnapshot --stream
 profiles:
 - name: staging
   # TODO: organize TLS!
