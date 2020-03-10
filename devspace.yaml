@@ -391,6 +391,9 @@ commands:
 - name: tests.consumer-ui.unit
   command: |
     npx lerna run test:unit --scope consumer-ui --stream
+- name: tests.update-snapshots
+  command: |
+    npx lerna run test:unit:updateSnapshot --stream
 profiles:
 - name: staging
   # TODO: organize TLS!
