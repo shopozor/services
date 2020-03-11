@@ -15,24 +15,18 @@ function getLocalVue () {
   return localVue
 }
 
-function getMapComponentOptions (localVue, center, zoom, isLoading, data = null) {
+function getMapComponentOptions (localVue, center, zoom, data = null) {
   return {
     data,
     localVue,
     mocks: {
-      $apollo: {
-        queries: {
-          shops: {
-            loading: isLoading
-          }
-        }
-      },
       $i18n: {
         t: () => {}
       }
     },
     propsData: {
       center,
+      shops: ShopsData.data.shops,
       zoom
     },
     stubs: {
@@ -47,23 +41,13 @@ describe('Map', () => {
   const localVue = getLocalVue()
 
   it('is initialized with no shop description popup', () => {
-    const wrapper = shallowMount(Map, getMapComponentOptions(localVue, center, zoom, false))
+    const wrapper = shallowMount(Map, getMapComponentOptions(localVue, center, zoom))
     expect(wrapper.vm.shop).toBeUndefined()
-  })
-
-  it('indicates loading shops', async () => {
-    // Given I have a loading map
-    const wrapper = mount(Map, getMapComponentOptions(localVue, center, zoom, true))
-
-    // Then it is overlayed by a loading spinner or something equivalent
-    await localVue.nextTick()
-    const overlayElement = wrapper.find('.vld-overlay')
-    expect(overlayElement.isVisible()).toBeTruthy()
   })
 
   it('is initialized with gesture handling', () => {
     // Given I have a loaded map
-    const wrapper = mount(Map, getMapComponentOptions(localVue, center, zoom, false))
+    const wrapper = mount(Map, getMapComponentOptions(localVue, center, zoom))
 
     // Then the gesture handling is enabled
     const leafletMap = wrapper.find('.vue2leaflet-map')
@@ -74,17 +58,14 @@ describe('Map', () => {
   })
 
   it('does not show zoom control', () => {
-    const wrapper = mount(Map, getMapComponentOptions(localVue, center, zoom, false))
+    const wrapper = mount(Map, getMapComponentOptions(localVue, center, zoom))
     const zoomControl = wrapper.find('.leaflet-control-zoom')
     expect(zoomControl.exists()).toBeFalsy()
   })
 
   it('displays the selected shop description', () => {
     // Given I have shops data and am not loading server data
-    const data = () => ({
-      shops: ShopsData.data.shops
-    })
-    const options = getMapComponentOptions(localVue, center, zoom, false, data)
+    const options = getMapComponentOptions(localVue, center, zoom)
     const wrapper = mount(Map, options)
     expect(wrapper.vm.shop).toBeUndefined()
 
@@ -100,10 +81,9 @@ describe('Map', () => {
   it('clears shop description popup upon clicking the map', () => {
     // Given I have a shop selected for description
     const data = () => ({
-      shops: ShopsData.data.shops,
       shop: ShopsData.data.shops[0]
     })
-    const options = getMapComponentOptions(localVue, center, zoom, false, data)
+    const options = getMapComponentOptions(localVue, center, zoom, data)
     const wrapper = mount(Map, options)
     expect(wrapper.vm.shop).toBeDefined()
 
