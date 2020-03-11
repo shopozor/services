@@ -63,7 +63,9 @@ module.exports = {
 
   // Give apollo module options
   apollo: {
-    tokenExpires: 10, // optional, default: 7 (days)
+    cookieAttributes: {
+      expires: 7 // optional, default: 7 (days)
+    },
     includeNodeModules: true, // optional, default: false (this includes graphql-tag for node_modules folder)
     authenticationType: 'Basic', // optional, default: 'Bearer'
     // optional
@@ -73,7 +75,8 @@ module.exports = {
     // required
     clientConfigs: {
       default: '~/apollo/clientConfig.js'
-    }
+    },
+    errorHandler: '~/plugins/apolloErrorHandler.js'
   },
 
   /*
