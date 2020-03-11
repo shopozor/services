@@ -10,40 +10,44 @@ const components = {
 }
 
 const center = [46.718852, 7.097669]
-const shop = ShopsData.data.shops[0]
+const shops = ShopsData.data.shops
+const shop = shops[0]
 const zoom = 11
 
 storiesOf('Map/Map', module)
   .add('OpenStreetMap Carto with some customizations', () => {
     return {
       components,
-      template: '<shops-map :center="center" :zoom="zoom" :tilesUrl="tilesUrl"/>',
+      template: '<shops-map :center="center" :shops="shops" :tilesUrl="tilesUrl" :zoom="zoom" />',
       data: () => ({
         center,
-        zoom,
-        tilesUrl: 'https://tile.osm.ch/switzerland/{z}/{x}/{y}.png'
+        shops,
+        tilesUrl: 'https://tile.osm.ch/switzerland/{z}/{x}/{y}.png',
+        zoom
       })
     }
   })
   .add('Swiss lv03 projection (epsg:21781)', () => {
     return {
       components,
-      template: '<shops-map :center="center" :zoom="zoom" :tilesUrl="tilesUrl"/>',
+      template: '<shops-map :center="center" :shops="shops" :zoom="zoom" :tilesUrl="tilesUrl"/>',
       data: () => ({
         center,
-        zoom,
-        tilesUrl: 'https://tile.osm.ch/21781/{z}/{x}/{y}.png'
+        shops,
+        tilesUrl: 'https://tile.osm.ch/21781/{z}/{x}/{y}.png',
+        zoom
       })
     }
   })
   .add('Swiss lv95 projection (epsg:2056)', () => {
     return {
       components,
-      template: '<shops-map :center="center" :zoom="zoom" :tilesUrl="tilesUrl"/>',
+      template: '<shops-map :center="center" :shops="shops" :zoom="zoom" :tilesUrl="tilesUrl"/>',
       data: () => ({
         center,
-        zoom,
-        tilesUrl: 'https://tile.osm.ch/2056/{z}/{x}/{y}.png'
+        shops,
+        tilesUrl: 'https://tile.osm.ch/2056/{z}/{x}/{y}.png',
+        zoom
       })
     }
   })

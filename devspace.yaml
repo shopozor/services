@@ -286,6 +286,7 @@ commands:
     devspace run cypress.consumer-ui.run
 - name: cypress.admin-ui.open
   command: |
+    devspace run reset.test-data
     CYPRESS_baseUrl=http://localhost:${ADMIN_UI_PORT}/# NODE_ENV=development npx lerna run cypress:open --scope admin-ui --stream -- --env configFile=e2e
 - name: cypress.admin-ui.run
   command: |
@@ -293,6 +294,7 @@ commands:
     CYPRESS_baseUrl=http://localhost:${ADMIN_UI_PORT}/# npx lerna run cypress:e2e --scope admin-ui --stream -- --env configFile=e2e
 - name: cypress.consumer-ui.open
   command: |
+    devspace run reset.test-data
     CYPRESS_baseUrl=http://localhost:${CONSUMER_UI_PORT} NODE_ENV=development npx lerna run cypress:open --scope consumer-ui --stream -- --env configFile=e2e
 - name: cypress.consumer-ui.run
   command: |
@@ -369,6 +371,7 @@ commands:
     devspace run fixtures.push
 - name: tests.all
   command: |
+    devspace dev -n dev --build-sequential
     devspace run tests.all.unit
     devspace run tests.all.integration
     devspace run cypress.all.run
