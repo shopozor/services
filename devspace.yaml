@@ -397,6 +397,15 @@ commands:
 - name: tests.update-snapshots
   command: |
     npx lerna run test:unit:updateSnapshot --stream
+- name: ui.prepare-for-designer
+  command: |
+    devspace deploy --build-sequential -n dev
+    bash ./scripts/wait_for_deployments.sh dev 120
+    devspace run fixtures.push
+    yarn generate
+    cp -R shared/pictures/* frontend/consumer-ui/dist/
+    find frontend/consumer-ui/dist -type f -exec sed -i s@http\:\/\/assets.shopozor\/@@g {} \;
+    rm -f ui.zip && zip -r ui.zip frontend/consumer-ui/dist/
 profiles:
 - name: staging
   # TODO: organize TLS!

@@ -80,3 +80,6 @@ storybook-static/
 
 # Ignore DevSpace cache and log folder
 .devspace/
+
+# Ignore generated zip artifacts
+*.zip
