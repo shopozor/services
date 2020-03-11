@@ -1,21 +1,33 @@
 <template>
   <div>
-    <shops-map :center="center" :zoom="zoom" />
-    <project-overview class="py-4" />
-    <budzons class="py-4" />
-    <project-roadmap class="py-4" />
+    <client-only>
+      <shops-map :center="center" :shops="shops" :zoom="zoom" />
+      <project-overview class="py-4" />
+      <budzons class="py-4" />
+      <project-roadmap class="py-4" />
+    </client-only>
   </div>
 </template>
 
 <script>
+import ClientOnly from 'vue-client-only'
 import Budzons from '~/components/ProjectDetails/Budzons'
 import Map from '~/components/Map/Map'
 import ProjectOverview from '~/components/ProjectDetails/ProjectOverview'
 import ProjectRoadmap from '~/components/ProjectDetails/ProjectRoadmap'
 
+import shops from '~graphql/shops'
+
 export default {
+  apollo: {
+    shops: {
+      prefetch: true,
+      query: shops
+    }
+  },
   components: {
     Budzons,
+    ClientOnly,
     'shops-map': Map,
     ProjectOverview,
     ProjectRoadmap

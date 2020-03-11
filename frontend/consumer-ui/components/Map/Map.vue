@@ -1,6 +1,5 @@
 <template>
   <div>
-    <loading class="z-999" :active="loadingMapData" :can-cancel="true" :is-full-page="false" :color="spinnerColor" />
     <l-map class="w-full h-3/4" :zoom="zoom" :center="center" :options="options">
       <shop-card v-if="shop" :shop="shop" class="absolute left-0 bottom-0 z-999" @close="clearDescription" />
       <l-tile-layer :url="tilesUrl" />
@@ -10,46 +9,37 @@
 </template>
 
 <script>
-import Loading from 'vue-loading-overlay'
 import ShopCard from '~/components/Map/ShopCard'
 import ShopMarker from '~/components/Map/ShopMarker'
-import shops from '~graphql/shops'
 
 export default {
-  apollo: {
-    shops: {
-      query: shops,
-      prefetch: true
-    }
-  },
   components: {
     ShopCard,
-    ShopMarker,
-    Loading
+    ShopMarker
   },
   props: {
     center: {
       type: Array,
       required: true
     },
-    zoom: {
-      type: Number,
-      required: true
+    shops: {
+      type: Array,
+      default: null
     },
     tilesUrl: {
       type: String,
       // cf. https://sosm.ch/projects/tile-service/
       default: 'https://tile.osm.ch/switzerland/{z}/{x}/{y}.png'
+    },
+    zoom: {
+      type: Number,
+      required: true
     }
   },
   data: () => ({
-    shop: undefined,
-    spinnerColor: '#e78000ff'
+    shop: undefined
   }),
   computed: {
-    loadingMapData () {
-      return this.$apollo.queries.shops.loading
-    },
     options () {
       return {
         gestureHandling: true,
@@ -76,7 +66,6 @@ export default {
 }
 </script>
 
-<style src="vue-loading-overlay/dist/vue-loading.css"></style>
 <style src="leaflet/dist/leaflet.css"></style>
 <style src="leaflet-gesture-handling/dist/leaflet-gesture-handling.css"></style>
 <style>
