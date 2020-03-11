@@ -162,57 +162,6 @@ exports[`Storyshots Map/Map French language map 1`] = `
 <div>
   <div>
     <div
-      aria-busy="true"
-      aria-label="Loading"
-      class="vld-overlay is-active z-999"
-      tabindex="0"
-    >
-      <div
-        class="vld-background"
-      />
-      <div
-        class="vld-icon"
-      >
-        <svg
-          height="64"
-          stroke="#e78000ff"
-          viewBox="0 0 38 38"
-          width="64"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <g
-            fill="none"
-            fill-rule="evenodd"
-          >
-            <g
-              stroke-width="2"
-              transform="translate(1 1)"
-            >
-              <circle
-                cx="18"
-                cy="18"
-                r="18"
-                stroke-opacity=".25"
-              />
-              <path
-                d="M36 18c0-9.94-8.06-18-18-18"
-              >
-                <animatetransform
-                  attributeName="transform"
-                  dur="0.8s"
-                  from="0 18 18"
-                  repeatCount="indefinite"
-                  to="360 18 18"
-                  type="rotate"
-                />
-              </path>
-            </g>
-          </g>
-        </svg>
-      </div>
-    </div>
-     
-    <div
       class="vue2leaflet-map w-full h-3/4 leaflet-container"
       data-gesture-handling-scroll-content="CTRL + scroll pour zoomer"
       data-gesture-handling-touch-content="Utiliser 2 doigts pour bouger la carte"
@@ -278,57 +227,6 @@ exports[`Storyshots Map/Map French language map 1`] = `
 exports[`Storyshots Map/Map OpenStreetMap Carto with some customizations 1`] = `
 <div>
   <div>
-    <div
-      aria-busy="true"
-      aria-label="Loading"
-      class="vld-overlay is-active z-999"
-      tabindex="0"
-    >
-      <div
-        class="vld-background"
-      />
-      <div
-        class="vld-icon"
-      >
-        <svg
-          height="64"
-          stroke="#e78000ff"
-          viewBox="0 0 38 38"
-          width="64"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <g
-            fill="none"
-            fill-rule="evenodd"
-          >
-            <g
-              stroke-width="2"
-              transform="translate(1 1)"
-            >
-              <circle
-                cx="18"
-                cy="18"
-                r="18"
-                stroke-opacity=".25"
-              />
-              <path
-                d="M36 18c0-9.94-8.06-18-18-18"
-              >
-                <animatetransform
-                  attributeName="transform"
-                  dur="0.8s"
-                  from="0 18 18"
-                  repeatCount="indefinite"
-                  to="360 18 18"
-                  type="rotate"
-                />
-              </path>
-            </g>
-          </g>
-        </svg>
-      </div>
-    </div>
-     
     <div
       class="vue2leaflet-map w-full h-3/4 leaflet-container"
       data-gesture-handling-scroll-content="CTRL + scroll pour zoomer"
@@ -396,57 +294,6 @@ exports[`Storyshots Map/Map Swiss Style from xyztobixyz 1`] = `
 <div>
   <div>
     <div
-      aria-busy="true"
-      aria-label="Loading"
-      class="vld-overlay is-active z-999"
-      tabindex="0"
-    >
-      <div
-        class="vld-background"
-      />
-      <div
-        class="vld-icon"
-      >
-        <svg
-          height="64"
-          stroke="#e78000ff"
-          viewBox="0 0 38 38"
-          width="64"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <g
-            fill="none"
-            fill-rule="evenodd"
-          >
-            <g
-              stroke-width="2"
-              transform="translate(1 1)"
-            >
-              <circle
-                cx="18"
-                cy="18"
-                r="18"
-                stroke-opacity=".25"
-              />
-              <path
-                d="M36 18c0-9.94-8.06-18-18-18"
-              >
-                <animatetransform
-                  attributeName="transform"
-                  dur="0.8s"
-                  from="0 18 18"
-                  repeatCount="indefinite"
-                  to="360 18 18"
-                  type="rotate"
-                />
-              </path>
-            </g>
-          </g>
-        </svg>
-      </div>
-    </div>
-     
-    <div
       class="vue2leaflet-map w-full h-3/4 leaflet-container"
       data-gesture-handling-scroll-content="CTRL + scroll pour zoomer"
       data-gesture-handling-touch-content="Utiliser 2 doigts pour bouger la carte"
@@ -512,57 +359,6 @@ exports[`Storyshots Map/Map Swiss Style from xyztobixyz 1`] = `
 exports[`Storyshots Map/Map Swiss lv03 projection (epsg:21781) 1`] = `
 <div>
   <div>
-    <div
-      aria-busy="true"
-      aria-label="Loading"
-      class="vld-overlay is-active z-999"
-      tabindex="0"
-    >
-      <div
-        class="vld-background"
-      />
-      <div
-        class="vld-icon"
-      >
-        <svg
-          height="64"
-          stroke="#e78000ff"
-          viewBox="0 0 38 38"
-          width="64"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <g
-            fill="none"
-            fill-rule="evenodd"
-          >
-            <g
-              stroke-width="2"
-              transform="translate(1 1)"
-            >
-              <circle
-                cx="18"
-                cy="18"
-                r="18"
-                stroke-opacity=".25"
-              />
-              <path
-                d="M36 18c0-9.94-8.06-18-18-18"
-              >
-                <animatetransform
-                  attributeName="transform"
-                  dur="0.8s"
-                  from="0 18 18"
-                  repeatCount="indefinite"
-                  to="360 18 18"
-                  type="rotate"
-                />
-              </path>
-            </g>
-          </g>
-        </svg>
-      </div>
-    </div>
-     
     <div
       class="vue2leaflet-map w-full h-3/4 leaflet-container"
       data-gesture-handling-scroll-content="CTRL + scroll pour zoomer"
@@ -630,57 +426,6 @@ exports[`Storyshots Map/Map Swiss lv95 projection (epsg:2056) 1`] = `
 <div>
   <div>
     <div
-      aria-busy="true"
-      aria-label="Loading"
-      class="vld-overlay is-active z-999"
-      tabindex="0"
-    >
-      <div
-        class="vld-background"
-      />
-      <div
-        class="vld-icon"
-      >
-        <svg
-          height="64"
-          stroke="#e78000ff"
-          viewBox="0 0 38 38"
-          width="64"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <g
-            fill="none"
-            fill-rule="evenodd"
-          >
-            <g
-              stroke-width="2"
-              transform="translate(1 1)"
-            >
-              <circle
-                cx="18"
-                cy="18"
-                r="18"
-                stroke-opacity=".25"
-              />
-              <path
-                d="M36 18c0-9.94-8.06-18-18-18"
-              >
-                <animatetransform
-                  attributeName="transform"
-                  dur="0.8s"
-                  from="0 18 18"
-                  repeatCount="indefinite"
-                  to="360 18 18"
-                  type="rotate"
-                />
-              </path>
-            </g>
-          </g>
-        </svg>
-      </div>
-    </div>
-     
-    <div
       class="vue2leaflet-map w-full h-3/4 leaflet-container"
       data-gesture-handling-scroll-content="CTRL + scroll pour zoomer"
       data-gesture-handling-touch-content="Utiliser 2 doigts pour bouger la carte"
@@ -746,57 +491,6 @@ exports[`Storyshots Map/Map Swiss lv95 projection (epsg:2056) 1`] = `
 exports[`Storyshots Map/Map Transparent layer of contour lines 1`] = `
 <div>
   <div>
-    <div
-      aria-busy="true"
-      aria-label="Loading"
-      class="vld-overlay is-active z-999"
-      tabindex="0"
-    >
-      <div
-        class="vld-background"
-      />
-      <div
-        class="vld-icon"
-      >
-        <svg
-          height="64"
-          stroke="#e78000ff"
-          viewBox="0 0 38 38"
-          width="64"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <g
-            fill="none"
-            fill-rule="evenodd"
-          >
-            <g
-              stroke-width="2"
-              transform="translate(1 1)"
-            >
-              <circle
-                cx="18"
-                cy="18"
-                r="18"
-                stroke-opacity=".25"
-              />
-              <path
-                d="M36 18c0-9.94-8.06-18-18-18"
-              >
-                <animatetransform
-                  attributeName="transform"
-                  dur="0.8s"
-                  from="0 18 18"
-                  repeatCount="indefinite"
-                  to="360 18 18"
-                  type="rotate"
-                />
-              </path>
-            </g>
-          </g>
-        </svg>
-      </div>
-    </div>
-     
     <div
       class="vue2leaflet-map w-full h-3/4 leaflet-container"
       data-gesture-handling-scroll-content="CTRL + scroll pour zoomer"
