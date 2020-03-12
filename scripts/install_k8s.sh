@@ -9,14 +9,17 @@ BASE_URL=$1
 CERT_MANAGER_VERSION=$2
 CERT_MANAGER_EMAIL=$3
 
+installIssuer() {
+  local name=$1
+  wget ${BASE_URL}/manifests/${name}.yaml -O ${name}.yaml
+  sed -i "s/EMAIL_ADDRESS/${CERT_MANAGER_EMAIL}/g" ${name}.yaml
+  kubectl create -f ${name}.yaml
+}
+
 # Install cert-manager
 kubectl create namespace cert-manager
 kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/${CERT_MANAGER_VERSION}/cert-manager.yaml
 
 # Install certification issuers
-wget ${BASE_URL}/manifests/staging_issuer.yaml -O staging_issuer.yaml
-wget ${BASE_URL}/manifests/prod_issuer.yaml -O prod_issuer.yaml
-sed -i "s/EMAIL_ADDRESS/${CERT_MANAGER_EMAIL}/g" staging_issuer.yaml
-kubectl create -f staging_issuer.yaml
-sed -i "s/EMAIL_ADDRESS/${CERT_MANAGER_EMAIL}/g" prod_issuer.yaml
-kubectl create -f prod_issuer.yaml
+installIssuer staging_issuer
+installIssuer prod_issuer
