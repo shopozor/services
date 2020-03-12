@@ -6,6 +6,9 @@ vars:
 - name: ADMIN_UI_PORT
   source: env
   default: 4000
+- name: CLUSTER_DOMAIN
+  source: env
+  default: cluster.local
 - name: CONSUMER_STORYBOOK_PORT
   source: env
   default: 6006
@@ -33,7 +36,7 @@ vars:
 - name: MINIO_URL
   source: env
   default: http://assets.shopozor/
-- name: REMOTE_CLUSTER_DOMAIN
+- name: REMOTE_DOMAIN
   source: env
   default: budzonnerie.hidora.com
 images:
@@ -118,6 +121,13 @@ images:
         options:
           target: fixtures-app
 deployments:
+- name: keycloak
+  helm:
+    chart:
+      name: keycloak
+      repo: https://codecentric.github.io/helm-charts
+    values:
+      clusterDomain: ${CLUSTER_DOMAIN}
 - name: minio
   helm:
     chart:
@@ -127,7 +137,7 @@ deployments:
       accessKey:
         password: minio
       # cf. https://stackoverflow.com/questions/52940774/kubernetes-how-to-check-current-domain-set-by-cluster-domain-from-pod
-      clusterDomain: cluster.local
+      clusterDomain: ${CLUSTER_DOMAIN}
       disableWebUI: false
       ingress:
         annotations:
@@ -424,14 +434,14 @@ profiles:
     path: images.admin-ui.build.docker.options.buildArgs
     value:
       # TODO: use https!!!
-      GRAPHQL_API: http://api-staging.${REMOTE_CLUSTER_DOMAIN}/v1/graphql/
-      ASSETS_API: http://assets-staging.${REMOTE_CLUSTER_DOMAIN}/
+      GRAPHQL_API: http://api-staging.${REMOTE_DOMAIN}/v1/graphql/
+      ASSETS_API: http://assets-staging.${REMOTE_DOMAIN}/
   - op: replace
     path: images.consumer-ui.build.docker.options.buildArgs
     value:
       # TODO: use https!!!
-      GRAPHQL_API: http://api-staging.${REMOTE_CLUSTER_DOMAIN}/v1/graphql/
-      ASSETS_API: http://assets-staging.${REMOTE_CLUSTER_DOMAIN}/
+      GRAPHQL_API: http://api-staging.${REMOTE_DOMAIN}/v1/graphql/
+      ASSETS_API: http://assets-staging.${REMOTE_DOMAIN}/
   # minio
   - op: remove
     path: /deployments/name=minio/helm/values/accessKey/password
@@ -439,7 +449,7 @@ profiles:
     path: /deployments/name=minio/helm/values/secretKey/password
   - op: replace
     path: /deployments/name=minio/helm/values/ingress/hosts/0/name
-    value: assets-staging.${REMOTE_CLUSTER_DOMAIN}
+    value: assets-staging.${REMOTE_DOMAIN}
   - op: replace
     path: /deployments/name=minio/helm/values/mode
     value: distributed
@@ -469,11 +479,11 @@ profiles:
   # TODO: configure jwt secret
   - op: replace
     path: /deployments/name=api/helm/values/ingress/hosts/0/host
-    value: api-staging.${REMOTE_CLUSTER_DOMAIN}
+    value: api-staging.${REMOTE_DOMAIN}
   - op: replace
     path: /deployments/name=api/helm/values/service/cors/domain
     # TODO: only enable https! <-- add issue!
-    value: http://admin-staging.${REMOTE_CLUSTER_DOMAIN},http://staging.${REMOTE_CLUSTER_DOMAIN},https://admin-staging.${REMOTE_CLUSTER_DOMAIN},https://staging.${REMOTE_CLUSTER_DOMAIN}
+    value: http://admin-staging.${REMOTE_DOMAIN},http://staging.${REMOTE_DOMAIN},https://admin-staging.${REMOTE_DOMAIN},https://staging.${REMOTE_DOMAIN}
   # TODO: fine-tune database url!
   # database-fixtures
   - op: add
@@ -503,7 +513,7 @@ profiles:
     value:
       enabled: true
       hosts:
-      - host: admin-staging.${REMOTE_CLUSTER_DOMAIN}
+      - host: admin-staging.${REMOTE_DOMAIN}
         paths:
         - /
   # consumer-ui
@@ -519,7 +529,7 @@ profiles:
     value:
       enabled: true
       hosts:
-      - host: staging.${REMOTE_CLUSTER_DOMAIN}
+      - host: staging.${REMOTE_DOMAIN}
         paths:
         - /
 - name: production
@@ -535,18 +545,18 @@ profiles:
     path: images.admin-ui.build.docker.options.buildArgs
     value:
       # TODO: use https!!!
-      GRAPHQL_API: http://api.${REMOTE_CLUSTER_DOMAIN}/v1/graphql/
-      ASSETS_API: http://assets.${REMOTE_CLUSTER_DOMAIN}/
+      GRAPHQL_API: http://api.${REMOTE_DOMAIN}/v1/graphql/
+      ASSETS_API: http://assets.${REMOTE_DOMAIN}/
   - op: replace
     path: images.consumer-ui.build.docker.options.buildArgs
     value:
       # TODO: use https!!!
-      GRAPHQL_API: http://api.${REMOTE_CLUSTER_DOMAIN}/v1/graphql/
-      ASSETS_API: http://assets.${REMOTE_CLUSTER_DOMAIN}/
+      GRAPHQL_API: http://api.${REMOTE_DOMAIN}/v1/graphql/
+      ASSETS_API: http://assets.${REMOTE_DOMAIN}/
   # minio
   - op: replace
     path: /deployments/name=minio/helm/values/ingress/hosts/0/name
-    value: assets.${REMOTE_CLUSTER_DOMAIN}
+    value: assets.${REMOTE_DOMAIN}
   - op: replace
     path: /deployments/name=minio/helm/values/disableWebUI
     value: true
@@ -567,11 +577,11 @@ profiles:
   # api
   - op: replace
     path: /deployments/name=api/helm/values/ingress/hosts/0/host
-    value: api.${REMOTE_CLUSTER_DOMAIN}
+    value: api.${REMOTE_DOMAIN}
   - op: replace
     path: /deployments/name=api/helm/values/service/cors/domain
     # TODO: only enable https! <-- add issue!
-    value: http://admin.${REMOTE_CLUSTER_DOMAIN},http://app.${REMOTE_CLUSTER_DOMAIN},https://admin.${REMOTE_CLUSTER_DOMAIN},https://app.${REMOTE_CLUSTER_DOMAIN}
+    value: http://admin.${REMOTE_DOMAIN},http://app.${REMOTE_DOMAIN},https://admin.${REMOTE_DOMAIN},https://app.${REMOTE_DOMAIN}
   # TODO: add an admin secret
   # TODO: configure jwt secret
   #       cf. https://hasura.io/docs/1.0/graphql/manual/deployment/graphql-engine-flags/reference.html
@@ -584,7 +594,7 @@ profiles:
   - op: replace
     path: /deployments/name=admin-ui/helm/values/ui/ingress/hosts
     value:
-    - host: admin.${REMOTE_CLUSTER_DOMAIN}
+    - host: admin.${REMOTE_DOMAIN}
       paths:
       - /
   # consumer-ui
@@ -592,6 +602,6 @@ profiles:
   - op: replace
     path: /deployments/name=consumer-ui/helm/values/ui/ingress/hosts
     value:
-    - host: app.${REMOTE_CLUSTER_DOMAIN}
+    - host: app.${REMOTE_DOMAIN}
       paths:
       - /
