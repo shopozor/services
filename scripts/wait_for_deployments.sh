@@ -20,16 +20,13 @@ for iteration in `seq 1 $TIMEOUT`; do
   nb_success=0
   for name in $deployment_names ; do
     status=$(kubectl rollout status deployment $name --namespace $NAMESPACE --watch=false | grep "success" | wc -l)
-    if [ "$status" -eq "1" ] ; then
-      echo "Deployment $name rolled out."
-    fi
+    # when status == 1, then the corresponding deployment is successful
+    # maybe we could just put that information in some kind of arrays and just display the new successful deployment
     nb_success=$(($nb_success + $status))
   done
   if [ "$nb_success" -eq "$nb_deployments" ] ; then
-    echo "Deployments rolled out successfully"
-    exit 0
+    echo "Deployments rolled out successfully" && exit 0
   else
-    echo "Iteration $iteration"
     sleep ${DELTA_T}
   fi
 done
