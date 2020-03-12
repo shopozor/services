@@ -441,12 +441,11 @@ profiles:
   # - op: add
   #   path: /deployments/name=minio/helm/values/ingress/certManager
   #   value: true
-  # TODO: change this when we know that it is working! we don't go for letsencrypt-staging! it's letsencrypt-prod instead
-  - op: add
+  - op: replace
     path: /deployments/name=minio/helm/values/ingress/annotations
     value:
       kubernetes.io/ingress.class: "nginx"
-      cert-manager.io/cluster-issuer: "letsencrypt-staging"
+      cert-manager.io/cluster-issuer: "letsencrypt-prod"
   - op: replace
     path: /deployments/name=minio/helm/values/ingress/hosts/0/name
     value: assets-staging.${REMOTE_CLUSTER_DOMAIN}

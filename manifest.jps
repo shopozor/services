@@ -27,6 +27,10 @@ application:
       type: string
       caption: Cert-manager version
       default: v0.13.1
+    - name: cert-mgr-email
+      type: string
+      caption: Email (for cert-mgr)
+      required: true
     - name: extDomains
       type: string
       caption: External domains (; separates)
@@ -48,7 +52,7 @@ application:
           # this is deployed at the end (cf. https://github.com/jelastic-jps/kubernetes/blob/v1.16.3/manifest.jps#L61)
           deploy: cmd
           cmd: |-
-            curl -fsSL ${baseUrl}/scripts/install_k8s.sh | /bin/bash -s ${settings.cert-manager-version}
+            curl -fsSL ${baseUrl}/scripts/install_k8s.sh | /bin/bash -s ${baseUrl} ${settings.cert-manager-version} ${settings.cert-mgr-email}
           topo: ${settings.topo}
           dashboard: version2
           ingress-controller: Nginx
