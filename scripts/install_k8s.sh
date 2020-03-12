@@ -7,7 +7,6 @@ fi
 
 CERT_MANAGER_VERSION=$1
 
-# Activate TLS
+# Install cert-manager
 kubectl create namespace cert-manager
 kubectl apply --validate=false -f https://github.com/jetstack/cert-manager/releases/download/${CERT_MANAGER_VERSION}/cert-manager.yaml
-# TODO: not sure the rest of it will work if it is installed before letsencrypt
