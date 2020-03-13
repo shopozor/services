@@ -121,13 +121,6 @@ images:
         options:
           target: fixtures-app
 deployments:
-- name: keycloak
-  helm:
-    chart:
-      name: keycloak
-      repo: https://codecentric.github.io/helm-charts
-    values:
-      clusterDomain: ${CLUSTER_DOMAIN}
 - name: minio
   helm:
     chart:
@@ -180,6 +173,32 @@ deployments:
         username: postgres
       volumePermissions:
         enabled: true
+- name: keycloak
+  helm:
+    chart:
+      name: keycloak
+      repo: https://codecentric.github.io/helm-charts
+    values:
+      clusterDomain: ${CLUSTER_DOMAIN}
+      # TODO: fix the following values for staging and production environments!
+      # TODO: in staging / prod, add ingress? how will hasura talk to this service?
+      keycloak:
+        image:
+          tag: 9.0.0
+        username: admin
+        password: admin
+        persistence:
+          deployPostgres: false
+          existingSecret: postgres-postgresql
+          existingSecretPasswordKey: postgresql-password
+          dbVendor: postgres
+          dbName: keycloak
+          # TODO: put the database hostname in an environment variable???
+          dbHost: postgres-pgpool
+          dbPort: 5432
+          # TODO: is this ok?
+          dbUser: postgres
+          # dbPassword: admin
 - name: api
   helm:
     chart:
@@ -340,6 +359,18 @@ commands:
 - name: hasura.console
   command: |
     hasura console --project ./backend/database-service --endpoint ${HASURA_ENDPOINT} --skip-update-check
+- name: keycloak.password.remote.staging
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context ${KUBE_REMOTE_CONTEXT}
+    kubectl get secret -n staging keycloak-http -o jsonpath="{.data.password}" | base64 --decode; echo
+    kubectl config use-context $CURRENT_CONTEXT
+- name: keycloak.password.remote.production
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context ${KUBE_REMOTE_CONTEXT}
+    kubectl get secret -n production keycloak-http -o jsonpath="{.data.password}" | base64 --decode; echo
+    kubectl config use-context $CURRENT_CONTEXT
 - name: kubernetes.dashboard-token.local
   command: |
     CURRENT_CONTEXT=$(kubectl config current-context)
