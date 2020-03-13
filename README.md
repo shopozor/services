@@ -120,6 +120,7 @@ Then, [activate the helm charts repo](https://github.com/helm/charts#how-do-i-en
 ```
 helm repo add stable https://kubernetes-charts.storage.googleapis.com
 helm repo add bitnami https://charts.bitnami.com/bitnami
+helm repo add codecentric https://codecentric.github.io/helm-charts
 ```
 
 More information on helm:
