@@ -121,6 +121,14 @@ images:
         options:
           target: fixtures-app
 deployments:
+- name: shared
+  helm:
+    chart:
+      name: ./shared/chart/
+    values:
+      postgresql:
+        username: postgres
+        # TODO: if we want, we can set the relevant passwords for development here (and remove them in staging / prod)!
 - name: minio
   helm:
     chart:
@@ -169,7 +177,11 @@ deployments:
       persistence:
         enabled: false
       postgresql:
+        # TODO: maybe the name of the existing secret should be provided by a variable?
+        # TODO: if the secret exists, how do I get the postgresqlRepmgrPassword and postgresqlPassword?
+        existingSecret: shared-postgresql
         database: postgres
+        # TODO: this username is stored in the shared-postgresql secret! maybe postgres can get it from the secret file!
         username: postgres
       volumePermissions:
         enabled: true
@@ -189,16 +201,14 @@ deployments:
         password: admin
         persistence:
           deployPostgres: false
-          existingSecret: postgres-postgresql
+          existingSecret: shared-postgresql
           existingSecretPasswordKey: postgresql-password
+          existingSecretUsernameKey: postgresql-username
           dbVendor: postgres
           dbName: keycloak
           # TODO: put the database hostname in an environment variable???
           dbHost: postgres-pgpool
           dbPort: 5432
-          # TODO: is this ok?
-          dbUser: postgres
-          # dbPassword: admin
 - name: api
   helm:
     chart:
@@ -214,7 +224,7 @@ deployments:
       postgres:
         database: postgres
         hostname: postgres-pgpool
-        secretName: postgres-postgresql
+        secretName: shared-postgresql
         username: postgres
       service:
         cors:
@@ -384,6 +394,7 @@ commands:
     kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep fulladmin | awk '{print $1}') | grep 'token:' | sed -e's/token:\| //g'
     kubectl config use-context $CURRENT_CONTEXT
 - name: postgres.password.dev
+  # TODO: use postgresql secret name from variable here (postgres-postgresql)!
   command: |
     CURRENT_CONTEXT=$(kubectl config current-context)
     kubectl config use-context ${KUBE_LOCAL_CONTEXT}
