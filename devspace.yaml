@@ -533,6 +533,13 @@ profiles:
       storageClass: jelastic-dynamic-volume
       # TODO: fine-tune database name and username
   # TODO: apply production values! https://github.com/bitnami/charts/blob/master/upstreamed/postgresql/values-production.yaml
+  # keycloak
+  - op: remove
+    path: /deployments/name=keycloak/helm/values/keycloak/password
+    # TODO: is the ingress really necessary?
+  - op: replace
+    path: /deployments/name=keycloak/helm/values/keycloak/ingress/hosts/0
+    value: auth-staging.${REMOTE_DOMAIN}
   # api
   # TODO: add an admin secret
   # TODO: configure jwt secret
@@ -630,6 +637,11 @@ profiles:
   # postgres
   # TODO: make sure the database name, username, and password are all different from that defined for staging!
   # TODO: apply production values! https://github.com/bitnami/charts/blob/master/upstreamed/postgresql/values-production.yaml
+  # keycloak
+    # TODO: is the ingress really necessary?
+  - op: replace
+    path: /deployments/name=keycloak/helm/values/keycloak/ingress/hosts/0
+    value: auth.${REMOTE_DOMAIN}
   # database-fixtures
   - op: remove
     path: /deployments/name=database-fixtures
