@@ -15,6 +15,9 @@ vars:
 - name: CONSUMER_UI_PORT
   source: env
   default: 3000
+- name: DATABASE_NAME
+  source: none
+  default: shopozor
 - name: HASURA_ENDPOINT
   source: env
   default: http://api.shopozor/
@@ -180,7 +183,7 @@ deployments:
         # TODO: maybe the name of the existing secret should be provided by a variable?
         # TODO: if the secret exists, how do I get the postgresqlRepmgrPassword and postgresqlPassword?
         existingSecret: shared-postgresql
-        database: postgres
+        database: ${DATABASE_NAME}
         # TODO: this username is stored in the shared-postgresql secret! maybe postgres can get it from the secret file!
         username: postgres
       volumePermissions:
@@ -191,12 +194,21 @@ deployments:
       name: keycloak
       repo: https://codecentric.github.io/helm-charts
     values:
+      # TODO: we need an init container waiting for the DB
       clusterDomain: ${CLUSTER_DOMAIN}
       # TODO: fix the following values for staging and production environments!
       # TODO: in staging / prod, add ingress? how will hasura talk to this service?
       keycloak:
         image:
           tag: 9.0.0
+        # because keycloak uses named ports in its service definition, we can't use the devspace port forwarding feature
+        # therefore, we define the following ingress for dev purposes
+        # TODO: this is probably not necessary in staging and prod, because hasura is our api
+        ingress:
+          enabled: true
+          path: /
+          hosts:
+            - auth.shopozor
         username: admin
         password: admin
         persistence:
@@ -205,8 +217,8 @@ deployments:
           existingSecretPasswordKey: postgresql-password
           existingSecretUsernameKey: postgresql-username
           dbVendor: postgres
-          # TODO: does this database has to be created beforehand??? that might explain why the connection fails
-          dbName: keycloak
+          # the database needs to exist before keycloak is started
+          dbName: ${DATABASE_NAME}
           # TODO: put the database hostname in an environment variable???
           dbHost: postgres-pgpool
           dbPort: 5432
@@ -223,7 +235,7 @@ deployments:
           paths:
           - /
       postgres:
-        database: postgres
+        database: ${DATABASE_NAME}
         hostname: postgres-pgpool
         secretName: shared-postgresql
         username: postgres
