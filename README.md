@@ -83,7 +83,7 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/ngin
 * [optional] [install squash](https://squash.solo.io/overview/) in order to be able to debug your k8s app
 * modify your `C:\Windows\System32\drivers\etc\hosts` (or `/etc/hosts` under Linux) file by adding
 ```
-127.0.0.1  localhost assets.shopozor api.shopozor
+127.0.0.1  localhost assets.shopozor api.shopozor auth.shopozor
 ```
 That is because our assets and api services will be served on `assets.shopozor` and `api.shopozor` hostnames locally.
 
