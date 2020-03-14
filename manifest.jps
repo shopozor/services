@@ -5,7 +5,7 @@ application:
   name: Shopozor k8s cluster
   version: 0.0
 
-  baseUrl: https://raw.githubusercontent.com/shopozor/services/dev
+  baseUrl: https://raw.githubusercontent.com/shopozor/services/secure-ingresses-with-ssl
 
   settings:
     fields:
