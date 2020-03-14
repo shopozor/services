@@ -205,6 +205,7 @@ deployments:
           existingSecretPasswordKey: postgresql-password
           existingSecretUsernameKey: postgresql-username
           dbVendor: postgres
+          # TODO: does this database has to be created beforehand??? that might explain why the connection fails
           dbName: keycloak
           # TODO: put the database hostname in an environment variable???
           dbHost: postgres-pgpool
