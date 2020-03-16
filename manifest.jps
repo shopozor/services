@@ -22,7 +22,7 @@ application:
     - name: k8s-version
       type: string
       caption: k8s manifest version
-      default: v1.16.3
+      default: v1.16.6
     - name: cert-manager-version
       type: string
       caption: Cert-manager version
@@ -38,7 +38,7 @@ application:
 
   onInstall:
   - installKubernetes
-  # TODO: attaching public IP did not work! is the IP there after restart?
+  # TODO: attaching public IP did not work! is the IP there after restart? <-- this is probably not necessary with version v1.16.6!
   - attachIpToWorkerNodes
   - enableSubDomains
   - bindExternalDomains
