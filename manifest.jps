@@ -38,6 +38,7 @@ application:
 
   onInstall:
   - installKubernetes
+  # TODO: attaching public IP did not work! is the IP there after restart?
   - attachIpToWorkerNodes
   - enableSubDomains
   - bindExternalDomains
