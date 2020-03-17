@@ -33,6 +33,7 @@ application:
       type: numberpicker
       required: true
       default: 4096
+      editable: true
       min: 0
       max: 16384
 
