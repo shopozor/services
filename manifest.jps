@@ -9,10 +9,6 @@ application:
 
   settings:
     fields:
-    - name: envName
-      caption: Env Name
-      type: string
-      default: shopozor
     - name: topo
       type: radio-fieldset
       values:
@@ -66,8 +62,8 @@ application:
     installKubernetes:
       install:
         jps: https://github.com/jelastic-jps/kubernetes/blob/${settings.k8s-version}/manifest.jps
-        envName: ${settings.envName}
-        displayName: ${settings.envName}
+        envName: ${env.envName}
+        displayName: ${env.displayName}
         settings:
           # this is deployed at the end (cf. https://github.com/jelastic-jps/kubernetes/blob/v1.16.3/manifest.jps#L61)
           deploy: cmd
@@ -83,7 +79,7 @@ application:
           jaeger: false
     enableSubDomains:
     - jelastic.env.binder.AddDomains[cp]:
-        envName: ${settings.envName}
+        envName: ${env.envName}
         domains: staging,admin-staging,api-staging,assets-staging,admin,api,app,assets
     secure:
     - redirectHttpToHttps
@@ -125,7 +121,7 @@ application:
       user: root
     bindExternalDomains:
     - jelastic.env.binder.BindExtDomains:
-        envName: ${settings.envName}
+        envName: ${env.envName}
         extDomains: ${settings.extDomains}
 
   addons:
