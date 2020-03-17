@@ -32,6 +32,13 @@ application:
       type: string
       required: true
       default: 1.16.1
+    - name: openSslNumbits
+      caption: Numbits (OpenSSL)
+      type: numberpicker
+      required: true
+      default: 4096
+      min: 0
+      max: 16384
 
   globals:
     DHPARAM_FILENAME: /var/lib/nginx/dhparam.pem
@@ -88,7 +95,7 @@ application:
       user: root
     configureSSL:
     - cmd [bl]:
-      - openssl dhparam -out ${globals.DHPARAM_FILENAME} 4096
+      - openssl dhparam -out ${globals.DHPARAM_FILENAME} ${settings.openSslNumbits}
     - installAddon:
         id: letsencrypt
     - cmd [bl]:
