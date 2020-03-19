@@ -56,7 +56,7 @@ services:
   database-service-tests:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-dev
       target: hasura-test
     restart: "no"
     depends_on:
@@ -73,7 +73,7 @@ services:
   database-service-tests-ci:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-dev
       target: hasura-test-ci
     restart: "no"
     depends_on:
@@ -87,7 +87,7 @@ services:
   service-integration-tests:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-dev
       target: integration-test
     restart: "no"
     depends_on:
@@ -105,7 +105,7 @@ services:
   service-integration-tests-ci:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile-dev
       target: integration-test-ci
     restart: "no"
     depends_on:

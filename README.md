@@ -189,7 +189,7 @@ devspace run fixtures.generate
 ```
 * start the shopozor:
 ```
-devspace dev --build-sequential
+devspace dev -n dev --build-sequential
 ```
 
 Then, head to [devspace UI](http://localhost:8090) to interact with the system. Would you need to perform any action on the shopozor, like enabling the assets or the database fixtures, head to the commands in the devspace UI. Those commmands can also be run in a terminal. You list the commands like this:

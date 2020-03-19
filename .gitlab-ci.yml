@@ -1,12 +1,9 @@
 stages:
 - build
 
-# TODO: 1. build the fixtures!
-
 build:
   stage: build
-  image:
-    name: shopozor/devspace
+  image: shopozor/devspace
   services:
   - docker:dind
   script:
