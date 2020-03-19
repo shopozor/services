@@ -2,16 +2,12 @@ stages:
 - build
 
 # TODO: 1. build the fixtures!
-# TODO: 2. build up our own devspace docker image
 
 build:
   stage: build
   image:
-    name: alpine:3.11.3
+    name: shopozor/devspace
   services:
   - docker:dind
   script:
-  - apk add curl tar
-  - curl -s -L "https://github.com/devspace-cloud/devspace/releases/latest" | sed -nE 's!.*"([^"]*devspace-linux-amd64)".*!https://github.com\1!p' | xargs -n 1 curl -L -o /bin/devspace
-  - chmod +x /bin/devspace
   - devspace build --build-sequential --skip-push
