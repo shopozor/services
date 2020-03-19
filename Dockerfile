@@ -70,20 +70,6 @@ WORKDIR /app
 
 CMD [ "yarn", "test:unit:ci" ]
 
-FROM node-dependencies AS node-builder
-
-ARG ASSETS_API
-WORKDIR /app
-RUN npx lerna run build-storybook --concurrency 1
-
-FROM nginx:1.16.0 AS admin-storybook
-
-COPY --from=node-builder /app/frontend/admin-ui/storybook-static /srv
-
-FROM nginx:1.16.0 AS consumer-storybook
-
-COPY --from=node-builder /app/frontend/consumer-ui/storybook-static /srv
-
 FROM node-dependencies AS node-app-builder
 
 ARG GRAPHQL_API
@@ -100,3 +86,17 @@ COPY --from=node-app-builder /app/frontend/admin-ui/dist/spa /srv
 FROM nginx:1.16.0 AS consumer-ui-spa
 
 COPY --from=node-app-builder /app/frontend/consumer-ui/dist /srv/static
+
+FROM node-dependencies AS node-builder
+
+ARG ASSETS_API
+WORKDIR /app
+RUN npx lerna run build-storybook --concurrency 1
+
+FROM nginx:1.16.0 AS admin-storybook
+
+COPY --from=node-builder /app/frontend/admin-ui/storybook-static /srv
+
+FROM nginx:1.16.0 AS consumer-storybook
+
+COPY --from=node-builder /app/frontend/consumer-ui/storybook-static /srv
