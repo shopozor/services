@@ -1,10 +1,31 @@
 stages:
 - build
+- test
 
-build:
+build-services:
   stage: build
   image: shopozor/devspace
   services:
   - docker:dind
+  # TODO: this is only for feature branches! for staging, we want the staging profile and we want to push the images
   script:
-  - devspace build --build-sequential --skip-push
+  - devspace build --build-sequential --skip-push -p feature-tests
+
+build-test-images:
+  stage: build
+  image: docker:latest
+  services:
+  - docker:dind
+  script:
+  - docker build -f Dockerfile -t node-unit-tests:$CI_COMMIT_SHORT_SHA --target node-dependencies .
+
+unit-test:
+  stage: test
+  image: node-unit-testing:$CI_COMMIT_SHORT_SHA
+  script:
+  - yarn test:unit:ci
+  artifacts:
+    reports:
+      junit:
+      - /app/frontend/admin-ui/test-reports/*.xml
+      - /app/frontend/consumer-ui/test-reports/*.xml
