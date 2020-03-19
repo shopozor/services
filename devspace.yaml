@@ -406,6 +406,12 @@ commands:
     find frontend/consumer-ui/dist -type f -exec sed -i s@http\:\/\/assets.shopozor\/@@g {} \;
     rm -f ui.zip && zip -r ui.zip frontend/consumer-ui/dist/
 profiles:
+- name: feature-tests
+  patches:
+  - op: remove
+    path: images.admin-storybook
+  - op: remove
+    path: images.consumer-storybook
 - name: staging
   # TODO: organize TLS!
   #  - https://www.digitalocean.com/community/tutorials/how-to-set-up-an-nginx-ingress-with-cert-manager-on-digitalocean-kubernetes
