@@ -52,7 +52,6 @@ services:
     volumes:
       - ./frontend/consumer-ui/test-reports:/app/frontend/consumer-ui/test-reports
       - ./frontend/admin-ui/test-reports:/app/frontend/admin-ui/test-reports
-      - ./backend/site-generator-service/test-reports:/app/backend/site-generator-service/test-reports
   database-service-tests:
     build:
       context: .
