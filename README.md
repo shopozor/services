@@ -287,3 +287,11 @@ Useful documentation on how to work with helm can be found here:
 In essence, our CI/CD process amounts to (see [microsoft documentation](https://docs.microsoft.com/en-us/azure/architecture/microservices/ci-cd-kubernetes))
 
 ![overall ci / cd process](doc/img/cicd.png)
+
+### Gitlab
+
+In the `services` project, then Settings -> CI / CD -> Variables, set
+
+* `CI_REGISTRY` to `docker.io`
+* `CI_REGISTRY_USER` to our docker hub username
+* `CI_REGISTRY_PASSWORD` to our docker hub password
