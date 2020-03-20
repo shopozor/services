@@ -17,15 +17,17 @@ FROM python:3.8-slim AS fixtures-app
 
 WORKDIR /app
 
+COPY --from=fixtures-app-builder /usr/local/lib/python3.8/site-packages /usr/local/lib/python3.8/site-packages
+COPY --from=fixtures-app-builder /usr/local/bin /usr/local/bin
+COPY --from=hasura-migrations /bin/hasura-cli /usr/local/bin/hasura
+
 COPY ./backend/test-utils ./test_utils
 COPY ./backend/fixtures-generator .
 COPY ./shared/pictures ./pictures
 
 RUN chmod a+x entrypoint.sh
 
-COPY --from=fixtures-app-builder /usr/local/lib/python3.8/site-packages /usr/local/lib/python3.8/site-packages
-COPY --from=fixtures-app-builder /usr/local/bin /usr/local/bin
-COPY --from=hasura-migrations /bin/hasura-cli /usr/local/bin/hasura
+ENTRYPOINT [ "./entrypoint.sh", "medium" ]
 
 FROM bitnami/minio-client AS assets-client
 

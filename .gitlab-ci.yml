@@ -2,6 +2,24 @@ stages:
 - build
 - test
 
+generate-fixtures:
+  variables:
+    IMAGE_NAME: fixtures-generator
+    CONTAINER_NAME: fixtures-generator
+  stage: build
+  image: docker:latest
+  services:
+  - docker:dind
+  script:
+  - docker build -f Dockerfile -t $IMAGE_NAME --target fixtures-app .
+  - docker run --name $CONTAINER_NAME --env PYTHONDONTWRITEBYTECODE=1 $IMAGE_NAME
+  - docker cp $CONTAINER_NAME:/app/fixtures ./shared/
+  artifacts:
+    paths:
+    - $CI_PROJECT_DIR/shared/fixtures/
+  after_script:
+  - docker container rm $CONTAINER_NAME
+
 build-services:
   stage: build
   image: shopozor/devspace
@@ -21,10 +39,19 @@ build-test-images:
   - docker build -f Dockerfile -t $CI_REGISTRY/shopozor/node-unit-tests:$CI_COMMIT_SHORT_SHA --target node-dependencies .
   - docker push $CI_REGISTRY/shopozor/node-unit-tests:$CI_COMMIT_SHORT_SHA
 
+# use-fixtures:
+#   stage: test
+#   script:
+#   - ls
+#   - ls shared
+#   - ls shared/fixtures
+
+# TODO: it's probably simpler and more efficient to build on a node image directly and not build our own image which we then push and reuse to run the tests!
 unit-test:
   stage: test
   image: $CI_REGISTRY/shopozor/node-unit-tests:$CI_COMMIT_SHORT_SHA
   script:
+  - cd $OLDPWD
   - yarn test:unit:ci
   artifacts:
     reports:
