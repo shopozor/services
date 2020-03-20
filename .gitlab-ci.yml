@@ -31,7 +31,7 @@ build-services:
   script:
   - devspace build --build-sequential --skip-push -p feature-tests
 
-unit-test:
+node-unit-tests:
   stage: test
   image: node:13.8.0-alpine
   script:
@@ -40,4 +40,8 @@ unit-test:
   artifacts:
     reports:
       junit:
-      - "**/test-reports/*.xml"
+      # wildcard path "**" does not work: https://gitlab.com/gitlab-org/gitlab-runner/issues/2620
+      - $CI_PROJECT_DIR/frontend/*/test-reports/*.xml
+      - $CI_PROJECT_DIR/backend/*/test-reports/*.xml
+
+# TODO: hasura unit tests!
