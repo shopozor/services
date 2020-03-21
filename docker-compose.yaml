@@ -71,34 +71,17 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-dev
-      target: integration-test
+      target: python-tests
     restart: "no"
     depends_on:
       - graphql-engine-with-tables
     environment:
       PYTHONDONTWRITEBYTECODE: "1"
-      PYTHONPATH: ./tests:$PYTHONPATH
+      PYTHONPATH: /app/backend
     volumes:
-      - ./backend/tests:/app
-      - ./backend/test-utils:/app/common_utils
-      - ./shared/fixtures:/app/fixtures
-      - ./shared/graphql:/app/fixtures/graphql/calls
-      - ./backend/tests/test-reports:/app/test-reports
-    entrypoint: ./entrypoint.sh graphql-engine-with-tables 8080
-  service-integration-tests-ci:
-    build:
-      context: .
-      dockerfile: Dockerfile-dev
-      target: integration-test-ci
-    restart: "no"
-    depends_on:
-      - graphql-engine-with-tables
-    environment:
-      PYTHONDONTWRITEBYTECODE: "1"
-      PYTHONPATH: ./tests:$PYTHONPATH
-    volumes:
-      - ./backend/tests/test-reports:/app/test-reports
-    entrypoint: ./entrypoint.sh graphql-engine-with-tables 8080
+      - .:/app
+    working_dir: /app
+    entrypoint: ./backend/tests/entrypoint.sh graphql-engine-with-tables 8080 /app
   admin-e2e-tests:
     build:
       context: .

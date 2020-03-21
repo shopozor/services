@@ -1,4 +1,4 @@
-FROM python:3.8-slim AS hasura-build
+FROM python:3.8-slim AS python-tests-build
 
 COPY ./backend/requirements.txt .
 
@@ -14,31 +14,7 @@ COPY ./backend/database-service/migrations /hasura-migrations
 
 FROM python:3.8-slim AS python-tests
 
-COPY --from=hasura-build /usr/local/bin/wait-for-it /usr/local/bin/wait-for-it
-COPY --from=hasura-build /usr/local/lib/python3.8/site-packages /usr/local/lib/python3.8/site-packages
-COPY --from=hasura-build /usr/local/bin /usr/local/bin
+COPY --from=python-tests-build /usr/local/bin/wait-for-it /usr/local/bin/wait-for-it
+COPY --from=python-tests-build /usr/local/lib/python3.8/site-packages /usr/local/lib/python3.8/site-packages
+COPY --from=python-tests-build /usr/local/bin /usr/local/bin
 COPY --from=hasura-migrations /bin/hasura-cli /usr/local/bin/hasura
-
-FROM python:3.8-slim AS integration-test-build
-
-COPY ./backend/tests/requirements.txt .
-
-RUN pip install --no-cache-dir -r requirements.txt
-
-FROM python:3.8-slim AS integration-test
-
-COPY --from=hasura-build /usr/local/bin/wait-for-it /usr/local/bin/wait-for-it
-COPY --from=integration-test-build /usr/local/lib/python3.8/site-packages /usr/local/lib/python3.8/site-packages
-COPY --from=integration-test-build /usr/local/bin /usr/local/bin
-COPY --from=hasura-migrations /bin/hasura-cli /usr/local/bin/hasura
-
-WORKDIR /app
-
-FROM integration-test AS integration-test-ci
-
-WORKDIR /app
-
-COPY ./backend/tests .
-COPY ./backend/test-utils ./common_utils
-COPY ./shared/fixtures ./fixtures
-COPY ./shared/graphql ./fixtures/graphql/calls
