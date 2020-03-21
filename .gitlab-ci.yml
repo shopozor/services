@@ -61,7 +61,7 @@ hasura-unit-tests:
   before_script:
   - kubectl create namespace random-namespace
   # TODO: generate random name!
-  - helm install postgres bitnami/postgresql-ha -n random-namespace -f ./backend/database-service/chart/postgres-test-values.yaml --wait
+  - helm install postgres bitnami/postgresql-ha -n random-namespace -f ./backend/database-service/chart/postgres-test-values.yaml
   # TODO: set the relevant value overrides here! e.g. we need an ingress with path different from "/"; we might need something like "/random-namespace"
   - helm install api ./backend/database-service/chart -n random-namespace -f ./backend/database-service/chart/hasura-test-values.yaml --wait
   after_script:
