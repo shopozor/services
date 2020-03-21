@@ -1,4 +1,4 @@
-from utils.hasura_client import HasuraClient
+from test_utils.hasura_client import HasuraClient
 
 import os
 import psycopg2

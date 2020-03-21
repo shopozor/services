@@ -56,33 +56,17 @@ services:
     build:
       context: .
       dockerfile: Dockerfile-dev
-      target: hasura-test
+      target: python-tests
     restart: "no"
     depends_on:
       - graphql-engine-empty
     environment:
       PYTHONDONTWRITEBYTECODE: "1"
-      PYTHONPATH: ./tests:$PYTHONPATH
+      PYTHONPATH: /app/backend
     volumes:
-      - ./backend/database-service:/app
-      - ./backend/test-utils:/app/utils
-      - ./shared/fixtures:/app/fixtures
-      - ./backend/database-service/test-reports:/app/test-reports
-    entrypoint: ./tests/entrypoint.sh graphql-engine-empty 8080
-  database-service-tests-ci:
-    build:
-      context: .
-      dockerfile: Dockerfile-dev
-      target: hasura-test-ci
-    restart: "no"
-    depends_on:
-      - graphql-engine-empty
-    environment:
-      PYTHONDONTWRITEBYTECODE: "1"
-      PYTHONPATH: ./tests:$PYTHONPATH
-    volumes:
-      - ./backend/database-service/test-reports:/app/test-reports
-    entrypoint: ./tests/entrypoint.sh graphql-engine-empty 8080
+      - .:/app
+    working_dir: /app
+    entrypoint: ./backend/database-service/tests/entrypoint.sh graphql-engine-empty 8080 /app
   service-integration-tests:
     build:
       context: .

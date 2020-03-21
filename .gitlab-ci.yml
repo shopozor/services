@@ -7,7 +7,7 @@ stages:
 - env-test
 
 variables:
-  HASURA_TESTS_IMAGE: $CI_REGISTRY/shopozor/hasura-test
+  PYTHON_TESTS_IMAGE: $CI_REGISTRY/shopozor/python-tests
 
 .log_into_docker: &log_into_docker
 - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
@@ -38,8 +38,8 @@ build-tests:
   services:
   - docker:dind
   script:
-  - docker build -f Dockerfile-dev -t $HASURA_TESTS_IMAGE --target hasura-test-ci .
-  - docker push $HASURA_TESTS_IMAGE
+  - docker build -f Dockerfile-dev -t $PYTHON_TESTS_IMAGE --target python-tests .
+  - docker push $PYTHON_TESTS_IMAGE
 
 node-unit-tests:
   stage: unit-test
@@ -58,7 +58,7 @@ node-unit-tests:
 # TODO: we should refactor the test code so that it can be run on the repo directly
 hasura-unit-tests:
   stage: unit-test
-  image: $HASURA_TESTS_IMAGE
+  image: $PYTHON_TESTS_IMAGE
   variables:
     HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:@postgres:5432/postgres
     HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
