@@ -1,0 +1,21 @@
+image: shopozor/graphql-engine
+ingress:
+  enabled: true
+  hosts:
+  # TODO: change this!
+  - host: api.shopozor
+    paths:
+    - /
+postgres:
+  database: postgres
+  hostname: postgres-pgpool
+  secretName: postgres-postgresql
+  username: postgres
+service:
+  cors:
+    domain: '*'
+    enabled: true
+  console:
+    enabled: true
+  server:
+    port: 8080

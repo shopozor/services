@@ -12,6 +12,7 @@ variables:
 .log_into_docker: &log_into_docker
 - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
+# TODO: fix this so that it uses the code of the current git, as we do for the tests!
 generate-fixtures:
   variables:
     IMAGE_NAME: fixtures-generator
@@ -57,17 +58,16 @@ node-unit-tests:
 # TODO: probably deploy this on the k8s cluster, in a random test namespace! [with helm, not devspace]
 # TODO: we should refactor the test code so that it can be run on the repo directly
 hasura-unit-tests:
+  before_script:
+  - kubectl create namespace random-namespace
+  # TODO: generate random name!
+  - helm install postgres bitnami/postgresql-ha -n random-namespace -f ./backend/database-service/chart/postgres-test-values.yaml --wait
+  # TODO: set the relevant value overrides here! e.g. we need an ingress with path different from "/"; we might need something like "/random-namespace"
+  - helm install api ./backend/database-service/chart -n random-namespace -f ./backend/database-service/chart/hasura-test-values.yaml --wait
+  after_script:
+  - kubectl delete namespace random-namespace
   stage: unit-test
   image: $PYTHON_TESTS_IMAGE
-  variables:
-    HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:@postgres:5432/postgres
-    HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
-    HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
-  services:
-  - name: postgres:11.2-alpine
-    alias: postgres
-  - name: hasura/graphql-engine:v1.0.0
-    alias: graphql-engine
   script:
   - wait-for-it graphql-engine:8080 -t 60 -s -- ./backend/database-service/tests/entrypoint.sh graphql-engine 8080 $CI_PROJECT_DIR
 

@@ -21,7 +21,8 @@ COPY --from=fixtures-app-builder /usr/local/lib/python3.8/site-packages /usr/loc
 COPY --from=fixtures-app-builder /usr/local/bin /usr/local/bin
 COPY --from=hasura-migrations /bin/hasura-cli /usr/local/bin/hasura
 
-COPY ./backend/test-utils ./test_utils
+# TODO: don't do this anymore
+COPY ./backend/test_utils ./test_utils
 COPY ./backend/fixtures-generator .
 COPY ./shared/pictures ./pictures
 

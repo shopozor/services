@@ -49,6 +49,7 @@ images:
           target: admin-storybook
           buildArgs:
             ASSETS_API: http://assets.shopozor/
+            GRAPHQL_API: http://api.shopozor/v1/graphql/
   admin-ui:
     image: shopozor/admin-ui
     tags:
@@ -94,6 +95,7 @@ images:
           target: consumer-storybook
           buildArgs:
             ASSETS_API: http://assets.shopozor/
+            GRAPHQL_API: http://api.shopozor/v1/graphql/
   consumer-ui:
     image: shopozor/consumer-ui-spa
     tags:
