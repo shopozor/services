@@ -41,17 +41,6 @@ build-tests:
   - docker build -f Dockerfile-dev -t $HASURA_TESTS_IMAGE --target hasura-test-ci .
   - docker push $HASURA_TESTS_IMAGE
 
-# TODO: this belongs to deployment phase and needs to call deploy, not build!
-# TODO: in a feature branch, I'd like to just build the images, just to see that it is working
-build-services:
-  stage: build
-  image: shopozor/devspace
-  services:
-  - docker:dind
-  # TODO: this is only for feature branches! for staging, we want the staging profile and we want to push the images
-  script:
-  - devspace build --build-sequential --skip-push -p feature-tests
-
 node-unit-tests:
   stage: unit-test
   image: node:13.8.0-alpine
@@ -81,3 +70,14 @@ hasura-unit-tests:
     alias: graphql-engine
   script:
   - wait-for-it graphql-engine:8080 -t 60 -s -- echo "OK"
+
+# TODO: this belongs to deployment phase and needs to call deploy, not build!
+# TODO: in a feature branch, I'd like to just build the images, just to see that it is working
+build-services:
+  stage: build
+  image: shopozor/devspace
+  services:
+  - docker:dind
+  # TODO: this is only for feature branches! for staging, we want the staging profile and we want to push the images
+  script:
+  - devspace build --build-sequential --skip-push -p feature-tests
