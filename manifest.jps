@@ -40,19 +40,6 @@ application:
   globals:
     DHPARAM_FILENAME: /var/lib/nginx/dhparam.pem
 
-  env:
-    topology:
-      nodes:
-      - nodeGroup: bl
-        nodeType: nginx-dockerized
-        tag: ${settings.nginxVersion}
-        displayName: Node balancing
-        count: 1
-        fixedCloudlets: 1
-        cloudlets: 4
-        env:
-          DOCKER_EXPOSED_PORT: 22,80,443
-
   onInstall:
   - installKubernetes
   - enableSubDomains
