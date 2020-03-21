@@ -54,7 +54,7 @@ node-unit-tests:
       - $CI_PROJECT_DIR/frontend/*/test-reports/*.xml
       - $CI_PROJECT_DIR/backend/*/test-reports/*.xml
 
-# TODO: probably deploy this on the k8s cluster, in a random test namespace!
+# TODO: probably deploy this on the k8s cluster, in a random test namespace! [with helm, not devspace]
 # TODO: we should refactor the test code so that it can be run on the repo directly
 hasura-unit-tests:
   stage: unit-test
@@ -69,7 +69,7 @@ hasura-unit-tests:
   - name: hasura/graphql-engine:v1.0.0
     alias: graphql-engine
   script:
-  - wait-for-it graphql-engine:8080 -t 60 -s -- echo "OK"
+  - wait-for-it graphql-engine:8080 -t 60 -s -- ./backend/database-service/tests/entrypoint.sh graphql-engine 8080 $CI_PROJECT_DIR
 
 # TODO: this belongs to deployment phase and needs to call deploy, not build!
 # TODO: in a feature branch, I'd like to just build the images, just to see that it is working
