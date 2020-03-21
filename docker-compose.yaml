@@ -40,7 +40,7 @@ services:
       # - ./shared/pictures:/app/pictures
       - ./shared/fixtures:/app/fixtures
     environment:
-      - PYTHONDONTWRITEBYTECODE=1
+      PYTHONDONTWRITEBYTECODE: "1"
     entrypoint: ./entrypoint.sh medium
   jest-unit-tests:
     build:
@@ -61,8 +61,8 @@ services:
     depends_on:
       - graphql-engine-empty
     environment:
-      - PYTHONDONTWRITEBYTECODE=1
-      - PYTHONPATH=./tests:$PYTHONPATH
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONPATH: ./tests:$PYTHONPATH
     volumes:
       - ./backend/database-service:/app
       - ./backend/test-utils:/app/utils
@@ -78,8 +78,8 @@ services:
     depends_on:
       - graphql-engine-empty
     environment:
-      - PYTHONDONTWRITEBYTECODE=1
-      - PYTHONPATH=./tests:$PYTHONPATH
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONPATH: ./tests:$PYTHONPATH
     volumes:
       - ./backend/database-service/test-reports:/app/test-reports
     entrypoint: ./tests/entrypoint.sh graphql-engine-empty 8080
@@ -92,8 +92,8 @@ services:
     depends_on:
       - graphql-engine-with-tables
     environment:
-      - PYTHONDONTWRITEBYTECODE=1
-      - PYTHONPATH=./tests:$PYTHONPATH
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONPATH: ./tests:$PYTHONPATH
     volumes:
       - ./backend/tests:/app
       - ./backend/test-utils:/app/common_utils
@@ -110,8 +110,8 @@ services:
     depends_on:
       - graphql-engine-with-tables
     environment:
-      - PYTHONDONTWRITEBYTECODE=1
-      - PYTHONPATH=./tests:$PYTHONPATH
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONPATH: ./tests:$PYTHONPATH
     volumes:
       - ./backend/tests/test-reports:/app/test-reports
     entrypoint: ./entrypoint.sh graphql-engine-with-tables 8080
