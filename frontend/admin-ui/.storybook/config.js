@@ -2,6 +2,7 @@ import { configure } from "@storybook/vue";
 
 import Vue from "vue";
 import Quasar from "quasar";
+import VueI18n from 'vue-i18n'
 
 import "quasar/dist/quasar.sass";
 import "@quasar/extras/material-icons/material-icons.css";
@@ -12,6 +13,7 @@ import "@quasar/extras/animate/flipOutY.css";
 import "@quasar/extras/animate/shake.css";
 
 Vue.use(Quasar);
+Vue.use(VueI18n);
 
 // automatically import all files ending in *.stories.js
 configure(require.context("../src", true, /\.stories\.js$/), module);
