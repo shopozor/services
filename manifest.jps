@@ -35,10 +35,6 @@ application:
   onInstall:
     - installKubernetes
     - enableSubDomains
-    # TODO: reactivate when we know in what order we need to install this
-    #       --> the letsencrypt stuff is not yet available
-    #       cf. https://stackoverflow.com/questions/60546645/how-do-i-install-letsencrypt-on-my-jelastic-kubernetes-cluster?noredirect=1#comment107139402_60546645
-    # - setupTLS
     - bindExternalDomains
 
   actions:
@@ -64,21 +60,7 @@ application:
       - jelastic.env.binder.AddDomains[cp]:
           envName: ${settings.envName}
           domains: staging,admin-staging,api-staging,assets-staging,admin,api,app,assets
-    setupTLS:
-      - installAddon:
-          id: letsencrypt
     bindExternalDomains:
       - jelastic.env.binder.BindExtDomains:
           envName: ${settings.envName}
           extDomains: ${settings.extDomains}
-
-  addons:
-    - id: letsencrypt
-      name: letsencrypt
-      onInstall:
-        - install:
-            envName: ${env.envName}
-            jps: https://github.com/jelastic-jps/lets-encrypt/blob/master/manifest.jps
-            settings:
-              nodeGroup: cp
-              customDomains: staging.${env.envName}.hidora.com,admin-staging.${env.envName}.hidora.com,api-staging.${env.envName}.hidora.com,assets-staging.${env.envName}.hidora.com,admin.${env.envName}.hidora.com,api.${env.envName}.hidora.com,assets.${env.envName}.hidora.com,app.${env.envName}.hidora.com
