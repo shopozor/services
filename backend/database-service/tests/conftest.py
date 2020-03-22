@@ -15,6 +15,18 @@ def pytest_addoption(parser):
     parser.addoption(
         '--hasura-endpoint', action='store', default='http://localhost:8080', help='Hasura endpoint'
     )
+    parser.addoption(
+        '--postgres-hostname', action='store', default='postgres', help='Postgresql hostname'
+    )
+    parser.addoption(
+        '--postgres-username', action='store', default='postgres', help='Postgresql username'
+    )
+    parser.addoption(
+        '--postgres-password', action='store', default='', help='Postgresql password'
+    )
+    parser.addoption(
+        '--postgres-database', action='store', default='postgres', help='Postgresql database name'
+    )
 
 
 @pytest.fixture
@@ -52,9 +64,29 @@ def hasura_client(hasura_endpoint, database_project_folder):
 
 
 @pytest.fixture
-def postgres_connection():
+def postgres_hostname(request):
+    return request.config.getoption('--postgres-hostname')
+
+
+@pytest.fixture
+def postgres_username(request):
+    return request.config.getoption('--postgres-username')
+
+
+@pytest.fixture
+def postgres_password(request):
+    return request.config.getoption('--postgres-password')
+
+
+@pytest.fixture
+def postgres_database(request):
+    return request.config.getoption('--postgres-database')
+
+
+@pytest.fixture
+def postgres_connection(postgres_hostname, postgres_username, postgres_password, postgres_database):
     conn = psycopg2.connect(
-        host='postgres', database='postgres', user='postgres', password='')
+        host=postgres_hostname, database=postgres_database, user=postgres_username, password=postgres_password)
     yield conn
     conn.close()
 
