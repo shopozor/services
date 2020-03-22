@@ -1,11 +1,13 @@
 image: shopozor/graphql-engine
 ingress:
   enabled: true
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
   hosts:
   # TODO: change this!
-  - host: api.shopozor
+  - host: test.env-0446770.hidora.com
     paths:
-    - /
+    - /random-namespace(/|$)(.*)
 postgres:
   database: postgres
   hostname: postgres-pgpool
