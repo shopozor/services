@@ -1,9 +1,0 @@
-fullnameOverride: postgres
-persistence:
-  enabled: false
-postgresql:
-  database: postgres
-  username: postgres
-  replicaCount: 1
-volumePermissions:
-  enabled: true

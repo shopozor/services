@@ -6,9 +6,6 @@ stages:
 - deploy
 - env-test
 
-variables:
-  PYTHON_TESTS_IMAGE: $CI_REGISTRY/shopozor/python-tests
-
 .log_into_docker: &log_into_docker
 - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
@@ -31,16 +28,19 @@ generate-fixtures:
   after_script:
   - docker container rm $CONTAINER_NAME
 
-build-tests:
-  before_script:
-  - *log_into_docker
+hasura-service-tests:
   stage: unit-test
-  image: docker:latest
+  image: shopozor/docker-compose:latest
   services:
   - docker:dind
   script:
-  - docker build -f Dockerfile-dev -t $PYTHON_TESTS_IMAGE --target python-tests .
-  - docker push $PYTHON_TESTS_IMAGE
+  - docker-compose build database-service-tests
+  - docker-compose up database-service-tests
+  - ls backend/database-service
+  artifacts:
+    reports:
+      junit:
+      - $CI_PROJECT_DIR/backend/database-service/test-reports/*.xml
 
 node-unit-tests:
   stage: unit-test
@@ -54,22 +54,6 @@ node-unit-tests:
       # wildcard path "**" does not work: https://gitlab.com/gitlab-org/gitlab-runner/issues/2620
       - $CI_PROJECT_DIR/frontend/*/test-reports/*.xml
       - $CI_PROJECT_DIR/backend/*/test-reports/*.xml
-
-# TODO: probably deploy this on the k8s cluster, in a random test namespace! [with helm, not devspace]
-# TODO: we should refactor the test code so that it can be run on the repo directly
-hasura-unit-tests:
-  before_script:
-  - kubectl create namespace random-namespace
-  # TODO: generate random name!
-  - helm install postgres bitnami/postgresql-ha -n random-namespace -f ./backend/database-service/chart/postgres-test-values.yaml
-  # TODO: set the relevant value overrides here! e.g. we need an ingress with path different from "/"; we might need something like "/random-namespace"
-  - helm install api ./backend/database-service/chart -n random-namespace -f ./backend/database-service/chart/hasura-test-values.yaml --wait
-  after_script:
-  - kubectl delete namespace random-namespace
-  stage: unit-test
-  image: $PYTHON_TESTS_IMAGE
-  script:
-  - wait-for-it graphql-engine:8080 -t 60 -s -- ./backend/database-service/tests/entrypoint.sh graphql-engine 8080 $CI_PROJECT_DIR
 
 # TODO: this belongs to deployment phase and needs to call deploy, not build!
 # TODO: in a feature branch, I'd like to just build the images, just to see that it is working
