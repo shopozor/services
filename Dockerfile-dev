@@ -18,3 +18,7 @@ COPY --from=python-tests-build /usr/local/bin/wait-for-it /usr/local/bin/wait-fo
 COPY --from=python-tests-build /usr/local/lib/python3.8/site-packages /usr/local/lib/python3.8/site-packages
 COPY --from=python-tests-build /usr/local/bin /usr/local/bin
 COPY --from=hasura-migrations /bin/hasura-cli /usr/local/bin/hasura
+
+WORKDIR /app
+
+COPY . .

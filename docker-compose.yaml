@@ -64,8 +64,7 @@ services:
       PYTHONDONTWRITEBYTECODE: "1"
       PYTHONPATH: /app/backend
     volumes:
-      - .:/app
-    working_dir: /app
+      - ./backend/database-service/test-reports:/app/backend/database-service/test-reports
     entrypoint: ./backend/database-service/tests/entrypoint.sh graphql-engine-empty 8080 /app
   service-integration-tests:
     build:
@@ -79,8 +78,7 @@ services:
       PYTHONDONTWRITEBYTECODE: "1"
       PYTHONPATH: /app/backend
     volumes:
-      - .:/app
-    working_dir: /app
+      - ./backend/tests/test-reports:/app/backend/tests/test-reports
     entrypoint: ./backend/tests/entrypoint.sh graphql-engine-with-tables 8080 /app
   admin-e2e-tests:
     build:

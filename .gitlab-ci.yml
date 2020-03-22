@@ -16,8 +16,6 @@ generate-fixtures:
     CONTAINER_NAME: fixtures-generator
   stage: fixtures-generation
   image: docker:latest
-  services:
-  - docker:dind
   script:
   - docker build -f Dockerfile -t $IMAGE_NAME --target fixtures-app .
   - docker run --name $CONTAINER_NAME --env PYTHONDONTWRITEBYTECODE=1 $IMAGE_NAME
@@ -31,12 +29,13 @@ generate-fixtures:
 hasura-service-tests:
   stage: unit-test
   image: shopozor/docker-compose:latest
-  services:
-  - docker:dind
-  script:
+  before_script:
   - docker-compose build database-service-tests
-  - docker-compose up database-service-tests
-  - ls backend/database-service
+  script:
+  - docker-compose up --exit-code-from database-service-tests database-service-tests
+  after_script:
+  - docker cp services_database-service-tests_1:/app/backend/database-service/test-reports ./backend/database-service/test-reports
+  - docker-compose down --remove-orphans
   artifacts:
     reports:
       junit:
