@@ -118,7 +118,7 @@ images:
     build:
       docker:
         options:
-          target: fixtures-app
+          target: fixtures-app-ci
 deployments:
 - name: minio
   helm:
