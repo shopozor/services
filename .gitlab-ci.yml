@@ -62,9 +62,6 @@ node-unit-tests:
 build-services:
   stage: build
   image: shopozor/devspace
-  # TODO: is this service really necessary???
-  services:
-  - docker:dind
   # TODO: this is only for feature branches! for staging, we want the staging profile and we want to push the images
   script:
   - devspace build --build-sequential --skip-push -p feature-tests
