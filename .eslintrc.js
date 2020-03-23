@@ -17,7 +17,8 @@ module.exports = {
     'plugin:cypress/recommended',
     'plugin:jest/recommended',
     'plugin:vue/recommended',
-    'standard'
+    'standard',
+    'plugin:json/recommended'
   ],
 
   plugins: [
@@ -36,7 +37,6 @@ module.exports = {
     'chrome': true,
     'defineParameterType': true // cypress-cucumber-preprocessor
   },
-
   // add your custom rules here
   rules: {
     'no-console': 'off',
@@ -46,6 +46,7 @@ module.exports = {
     // allow paren-less arrow functions
     'arrow-parens': 'off',
     'one-var': 'off',
+    'no-trailing-spaces': 'error',
 
     'import/first': 'off',
     'import/named': 'error',
@@ -64,5 +65,11 @@ module.exports = {
 
     // allow debugger during development only
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
-  }
+  },
+  overrides: [{
+    files: [ '*.md', '*.feature' ],
+    rules: {
+      'no-trailing-spaces': 'off',
+    }
+  }]
 }

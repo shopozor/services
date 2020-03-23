@@ -9,6 +9,19 @@ stages:
 .log_into_docker: &log_into_docker
 - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
+lint-python:
+  stage: lint
+  image: shopozor/python-lint
+  script:
+  - autopep8 --exclude node_modules -ir . --exit-code
+
+lint-node:
+  stage: lint
+  image: node:13.8.0-alpine
+  script:
+  - yarn
+  - yarn lint
+
 generate-fixtures:
   variables:
     IMAGE_NAME: fixtures-generator
