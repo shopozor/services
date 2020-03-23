@@ -3,7 +3,6 @@ stages:
 - prepare-fixtures
 - test
 - build
-- specify
 - deploy
 - validate
 
@@ -65,3 +64,14 @@ build-services:
   # TODO: this is only for feature branches! for staging, we want the staging profile and we want to push the images
   script:
   - devspace build --build-sequential --skip-push -p feature-tests
+
+pages:
+  image: shopozor/pickles
+  script:
+  - APP=admin-ui mono /pickles/Pickles.exe --feature-directory=./frontend/$APP/cypress/e2e --output-directory=public/$APP --system-under-test-name=$APP --system-under-test-version=${CI_COMMIT_SHORT_SHA} --language=fr --documentation-format=dhtml --exp --et 'in-preparation'
+  - APP=consumer-ui mono /pickles/Pickles.exe --feature-directory=./frontend/$APP/cypress/e2e --output-directory=public/$APP --system-under-test-name=$APP --system-under-test-version=${CI_COMMIT_SHORT_SHA} --language=fr --documentation-format=dhtml --exp --et 'in-preparation'
+  artifacts:
+    paths:
+    - public
+  only:
+  - master
