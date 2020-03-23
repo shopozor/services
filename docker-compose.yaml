@@ -33,11 +33,10 @@ services:
       target: fixtures-app
     image: ${PRODUCT:-shopozor}/fixtures-service:${TAG:-local}
     restart: "no"
-    # TODO: optimize this for local dev; instead of copying the app's code and test-utils, maybe mount the relevant volumes!
     volumes:
-      # - ./backend/fixtures-generator:/app
-      # - ./backend/test-utils:/app/test_utils
-      # - ./shared/pictures:/app/pictures
+      - ./backend/fixtures-generator:/app
+      - ./backend/test-utils:/app/test_utils
+      - ./shared/pictures:/app/pictures
       - ./shared/fixtures:/app/fixtures
     environment:
       PYTHONDONTWRITEBYTECODE: "1"

@@ -10,7 +10,6 @@ stages:
 .log_into_docker: &log_into_docker
 - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
-# TODO: fix this so that it uses the code of the current git, as we do for the tests!
 generate-fixtures:
   variables:
     IMAGE_NAME: fixtures-generator
@@ -18,7 +17,7 @@ generate-fixtures:
   stage: prepare-fixtures
   image: docker:latest
   script:
-  - docker build -f Dockerfile -t $IMAGE_NAME --target fixtures-app .
+  - docker build -f Dockerfile -t $IMAGE_NAME --target fixtures-app-ci .
   - docker run --name $CONTAINER_NAME --env PYTHONDONTWRITEBYTECODE=1 $IMAGE_NAME
   - docker cp $CONTAINER_NAME:/app/fixtures ./shared/
   artifacts:
@@ -31,7 +30,7 @@ hasura-service-tests:
   stage: test
   image: shopozor/docker-compose:latest
   before_script:
-  - docker-compose build database-service-tests
+  - docker-compose build database-service-tests service-integration-tests
   script:
   - docker-compose up --exit-code-from database-service-tests database-service-tests
   - docker-compose up --exit-code-from service-integration-tests service-integration-tests
@@ -63,6 +62,7 @@ node-unit-tests:
 build-services:
   stage: build
   image: shopozor/devspace
+  # TODO: is this service really necessary???
   services:
   - docker:dind
   # TODO: this is only for feature branches! for staging, we want the staging profile and we want to push the images
