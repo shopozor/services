@@ -41,15 +41,7 @@ cd services
 git config --global init.templateDir ~/.git-template
 pre-commit init-templatedir ~/.git-template
 ```
-After that, everytime you will clone a new git repository, the `pre-commit` hooks will be enforced automatically. Would you like to enable pre-push hooks, you'd need to also run the following command in the `services` root folder:
-```
-pre-commit install --hook-type pre-push
-```
-It will essentially run all the tests before pushing. You can then disable pre-push hooks with the following command:
-```
-pre-commit uninstall --hook-type pre-push
-```
-Note that the pre-push hooks will not work on git bash under Windows. Under Windows, you will need to work with WSL to let that happen.
+After that, everytime you will clone a new git repository, the `pre-commit` hooks will be enforced automatically.
 
 ### VSCode configuration
 
