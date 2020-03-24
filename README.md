@@ -232,6 +232,36 @@ Following [this advice](https://forum.quasar-framework.org/topic/3760/fix-babel-
 cd node_modules/@quasar/babel-preset-app && yarn
 ```
 
+## CI / CD
+
+Useful documentation on how to work with helm can be found here:
+
+* [monorepo cicd helm k8s](https://www.infracloud.io/monorepo-ci-cd-helm-kubernetes/)
+* [gitlab monorepo pipelines](https://aarongorka.com/blog/gitlab-monorepo-pipelines/)
+
+In essence, our CI/CD process amounts to (see [microsoft documentation](https://docs.microsoft.com/en-us/azure/architecture/microservices/ci-cd-kubernetes))
+
+![overall ci / cd process](doc/img/cicd.png)
+
+### Gitlab
+
+#### Docker registry configuration
+
+In the `services` project, then Settings -> CI / CD -> Variables, set
+
+* `CI_REGISTRY` to `docker.io`
+* `CI_REGISTRY_USER` to our docker hub username
+* `CI_REGISTRY_PASSWORD` to our docker hub password
+
+#### Kubernetes configuration
+
+1. First allow requests to the local network from hooks and services: Admin Area -> Settings -> Network -> Outbound Requests -> Allow requests to the local network from hooks and services (the path should end with `/admin/application_settings/network#js-outbound-settings`)
+2. Go to the repository project's Operations, then choose "Kubernetes"; there you fill up the fields following [this documentation](https://docs.gitlab.com/ee/user/project/clusters/add_remove_clusters.html#existing-gke-cluster). The API Url is indeed provided by
+```
+kubectl cluster-info | grep 'Kubernetes master' | awk '/http/ {print $NF}'
+```
+not the url provided in the e-mail sent by jelastic.
+
 ## Specification generation
 
 ### Gherkin step skeletons
@@ -268,33 +298,3 @@ which outputs for example
            return 'pending';
          });
 ```
-
-## CI / CD
-
-Useful documentation on how to work with helm can be found here:
-
-* [monorepo cicd helm k8s](https://www.infracloud.io/monorepo-ci-cd-helm-kubernetes/)
-* [gitlab monorepo pipelines](https://aarongorka.com/blog/gitlab-monorepo-pipelines/)
-
-In essence, our CI/CD process amounts to (see [microsoft documentation](https://docs.microsoft.com/en-us/azure/architecture/microservices/ci-cd-kubernetes))
-
-![overall ci / cd process](doc/img/cicd.png)
-
-### Gitlab
-
-#### Docker registry configuration
-
-In the `services` project, then Settings -> CI / CD -> Variables, set
-
-* `CI_REGISTRY` to `docker.io`
-* `CI_REGISTRY_USER` to our docker hub username
-* `CI_REGISTRY_PASSWORD` to our docker hub password
-
-#### Kubernetes configuration
-
-1. First allow requests to the local network from hooks and services: Admin Area -> Settings -> Network -> Outbound Requests -> Allow requests to the local network from hooks and services (the path should end with `/admin/application_settings/network#js-outbound-settings`)
-2. Go to the repository project's Operations, then choose "Kubernetes"; there you fill up the fields following [this documentation](https://docs.gitlab.com/ee/user/project/clusters/add_remove_clusters.html#existing-gke-cluster). The API Url is indeed provided by
-```
-kubectl cluster-info | grep 'Kubernetes master' | awk '/http/ {print $NF}'
-```
-not the url provided in the e-mail sent by jelastic.
