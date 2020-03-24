@@ -79,6 +79,20 @@ build-services:
   - pre-production
   - production
 
+deploy_staging:
+  stage: deploy
+  image: shopozor/devspace
+  environment:
+    name: staging
+    # TODO: get this from an environment variable!
+    url: http://staging.budzonnerie.hidora.com
+  script:
+  # TODO: I want to push the images! we might need to log into docker ! either add a job to deploy stage where we login or login in this job directly, which would require the devspace image to have the docker binary
+  - devspace deploy --build-sequential -n $KUBE_NAMESPACE -p staging
+  - ./scripts/wait_for_deployments.sh $KUBE_NAMESPACE
+  only:
+  - master
+
 pages:
   image: shopozor/pickles
   script:
@@ -87,5 +101,18 @@ pages:
   artifacts:
     paths:
     - public
+  only:
+  - master
+
+deploy_prod:
+  stage: deploy
+  image: shopozor/devspace
+  script:
+  - devspace deploy --build-sequential -n production -p production
+  environment:
+    name: production
+    # TODO: get this from an environment variable!
+    url: http://app.budzonnerie.hidora.com
+  when: manual
   only:
   - master
