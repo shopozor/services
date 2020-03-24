@@ -108,7 +108,8 @@ deploy_prod:
   stage: deploy
   image: shopozor/devspace
   script:
-  - devspace deploy --build-sequential -n production -p production
+  - devspace deploy --build-sequential -n $KUBE_NAMESPACE -p production
+  - ./scripts/wait_for_deployments.sh $KUBE_NAMESPACE
   environment:
     name: production
     # TODO: get this from an environment variable!
