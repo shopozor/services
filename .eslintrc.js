@@ -17,8 +17,7 @@ module.exports = {
     'plugin:cypress/recommended',
     'plugin:jest/recommended',
     'plugin:vue/recommended',
-    'standard',
-    'plugin:json/recommended'
+    'standard'
   ],
 
   plugins: [
