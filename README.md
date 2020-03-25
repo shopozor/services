@@ -253,9 +253,9 @@ In the `services` project, then Settings -> CI / CD -> Variables, set
 * `CI_REGISTRY` to `docker.io`
 * `CI_REGISTRY_USER` to our docker hub username
 * `CI_REGISTRY_PASSWORD` to our docker hub password
-* `DYNAMIC_STAGING_ENVIRONMENT_URL`
-* `DYNAMIC_PREPROD_ENVIRONMENT_URL`
-* `DYNAMIC_PROD_ENVIRONMENT_URL`
+* `DYNAMIC_STAGING_ENVIRONMENT_URL`, without http / https
+* `DYNAMIC_PREPROD_ENVIRONMENT_URL`, without http / https
+* `DYNAMIC_PROD_ENVIRONMENT_URL`, without http / https, without `app`
 
 
 #### Kubernetes configuration

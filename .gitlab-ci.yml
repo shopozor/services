@@ -75,6 +75,7 @@ build-services:
   - pre-production
   - production
 
+# TODO: see what is possible to get various staging environments! it can be that several people merge with master at the same time!
 deploy_staging:
   stage: deploy
   image: shopozor/devspace
@@ -82,7 +83,7 @@ deploy_staging:
     name: staging
     kubernetes:
       namespace: staging
-    url: $DYNAMIC_STAGING_ENVIRONMENT_URL
+    url: http://$DYNAMIC_STAGING_ENVIRONMENT_URL
     on_stop: stop_staging
     # TODO: auto-stop this environment: https://docs.gitlab.com/ee/ci/environments.html#stopping-an-environment
   script:
@@ -93,17 +94,23 @@ deploy_staging:
   only:
   - master
 
+# TODO: only do this if the deploy_staging was successful!
 review_staging:
   stage: deploy
+  image: shopozor/cypress
+  variables:
+    CONSUMER_UI_URL: http://$DYNAMIC_STAGING_ENVIRONMENT_URL
+    ADMIN_UI_URL: http://admin-$DYNAMIC_STAGING_ENVIRONMENT_URL
   script:
-    - echo "Run the cypress tests!"
-  # TODO: gather the cypress tests reports
-  # artifacts:
-  #   reports:
-  #     dotenv: deploy.env
+    - CYPRESS_baseUrl=$CONSUMER_UI_URL ; cd frontend/consumer-ui && cypress run --env configFile=e2e
+    - CYPRESS_baseUrl=$ADMIN_UI_URL ; cd frontend/admin-ui && cypress run --env configFile=e2e
+  artifacts:
+    reports:
+      junit:
+      - $CI_PROJECT_DIR/frontend/*/test-reports/cypress*.xml
   environment:
     name: staging
-    url: $DYNAMIC_STAGING_ENVIRONMENT_URL
+    url: http://$DYNAMIC_STAGING_ENVIRONMENT_URL
     # on_stop: stop_staging_review
   only:
   - master
@@ -135,8 +142,8 @@ stop_staging:
 pages:
   image: shopozor/pickles
   script:
-  - APP=admin-ui mono /pickles/Pickles.exe --feature-directory=./frontend/$APP/cypress/e2e --output-directory=public/$APP --system-under-test-name=$APP --system-under-test-version=${CI_COMMIT_SHORT_SHA} --language=fr --documentation-format=dhtml --exp --et 'in-preparation'
-  - APP=consumer-ui mono /pickles/Pickles.exe --feature-directory=./frontend/$APP/cypress/e2e --output-directory=public/$APP --system-under-test-name=$APP --system-under-test-version=${CI_COMMIT_SHORT_SHA} --language=fr --documentation-format=dhtml --exp --et 'in-preparation'
+  - APP=admin-ui ; mono /pickles/Pickles.exe --feature-directory=./frontend/$APP/cypress/e2e --output-directory=public/$APP --system-under-test-name=$APP --system-under-test-version=${CI_COMMIT_SHORT_SHA} --language=fr --documentation-format=dhtml --exp --et 'in-preparation'
+  - APP=consumer-ui ; mono /pickles/Pickles.exe --feature-directory=./frontend/$APP/cypress/e2e --output-directory=public/$APP --system-under-test-name=$APP --system-under-test-version=${CI_COMMIT_SHORT_SHA} --language=fr --documentation-format=dhtml --exp --et 'in-preparation'
   artifacts:
     paths:
     - public
@@ -155,11 +162,13 @@ deploy_prod:
   - ./scripts/wait_for_jobs.sh $KUBE_NAMESPACE
   environment:
     name: production
-    url: $DYNAMIC_PROD_ENVIRONMENT_URL
+    url: http://$DYNAMIC_PROD_ENVIRONMENT_URL
     on_stop: stop_prod
   when: manual
   only:
   - master
+
+  # TODO: run smoke tests on pre-prod and on prod!
 
 stop_prod:
   stage: deploy
