@@ -6,12 +6,21 @@ vars:
 - name: ADMIN_UI_PORT
   source: env
   default: 4000
+- name: CLUSTER_DOMAIN
+  source: env
+  default: cluster.local
 - name: CONSUMER_STORYBOOK_PORT
   source: env
   default: 6006
 - name: CONSUMER_UI_PORT
   source: env
   default: 3000
+- name: DATABASE_HOSTNAME
+  source: none
+  default: postgres-pgpool
+- name: DATABASE_NAME
+  source: none
+  default: shopozor
 - name: HASURA_ENDPOINT
   source: env
   default: http://api.shopozor/
@@ -33,9 +42,15 @@ vars:
 - name: MINIO_URL
   source: env
   default: http://assets.shopozor/
-- name: REMOTE_CLUSTER_DOMAIN
+- name: POSTGRES_USERNAME
+  source: env
+  default: postgres
+- name: REMOTE_DOMAIN
   source: env
   default: budzonnerie.hidora.com
+- name: SHARED_POSTGRES_SECRET_NAME
+  source: none
+  default: shared-postgresql
 images:
   admin-storybook:
     image: shopozor/admin-storybook
@@ -120,6 +135,14 @@ images:
         options:
           target: fixtures-app-ci
 deployments:
+- name: shared
+  helm:
+    chart:
+      name: ./shared/chart/
+    values:
+      postgresql:
+        username: ${POSTGRES_USERNAME}
+        # TODO: if we want, we can set the relevant passwords for development here (and remove them in staging / prod)!
 - name: minio
   helm:
     chart:
@@ -129,7 +152,7 @@ deployments:
       accessKey:
         password: minio
       # cf. https://stackoverflow.com/questions/52940774/kubernetes-how-to-check-current-domain-set-by-cluster-domain-from-pod
-      clusterDomain: cluster.local
+      clusterDomain: ${CLUSTER_DOMAIN}
       disableWebUI: false
       ingress:
         annotations:
@@ -168,10 +191,43 @@ deployments:
       persistence:
         enabled: false
       postgresql:
-        database: postgres
-        username: postgres
+        existingSecret: ${SHARED_POSTGRES_SECRET_NAME}
+        database: ${DATABASE_NAME}
+        username: ${POSTGRES_USERNAME}
       volumePermissions:
         enabled: true
+- name: keycloak
+  helm:
+    chart:
+      name: keycloak
+      repo: https://codecentric.github.io/helm-charts
+    values:
+      clusterDomain: ${CLUSTER_DOMAIN}
+      # TODO: fix the following values for staging and production environments!
+      # TODO: in staging / prod, add ingress? how will hasura talk to this service?
+      keycloak:
+        image:
+          tag: 9.0.0
+        # because keycloak uses named ports in its service definition, we can't use the devspace port forwarding feature
+        # therefore, we define the following ingress for dev purposes
+        # TODO: this is probably not necessary in staging and prod, because hasura is our api
+        ingress:
+          enabled: true
+          path: /
+          hosts:
+            - auth.shopozor
+        username: admin
+        password: admin
+        persistence:
+          deployPostgres: false
+          existingSecret: ${SHARED_POSTGRES_SECRET_NAME}
+          existingSecretPasswordKey: postgresql-password
+          existingSecretUsernameKey: postgresql-username
+          dbVendor: postgres
+          # the database needs to exist before keycloak is started
+          dbName: ${DATABASE_NAME}
+          dbHost: ${DATABASE_HOSTNAME}
+          dbPort: 5432
 - name: api
   helm:
     chart:
@@ -185,10 +241,10 @@ deployments:
           paths:
           - /
       postgres:
-        database: postgres
-        hostname: postgres-pgpool
-        secretName: postgres-postgresql
-        username: postgres
+        database: ${DATABASE_NAME}
+        hostname: ${DATABASE_HOSTNAME}
+        secretName: ${SHARED_POSTGRES_SECRET_NAME}
+        username: ${POSTGRES_USERNAME}
       service:
         cors:
           domain: '*'
@@ -332,6 +388,18 @@ commands:
 - name: hasura.console
   command: |
     hasura console --project ./backend/database-service --endpoint ${HASURA_ENDPOINT} --skip-update-check
+- name: keycloak.password.remote.staging
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context ${KUBE_REMOTE_CONTEXT}
+    kubectl get secret -n staging keycloak-http -o jsonpath="{.data.password}" | base64 --decode; echo
+    kubectl config use-context $CURRENT_CONTEXT
+- name: keycloak.password.remote.production
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context ${KUBE_REMOTE_CONTEXT}
+    kubectl get secret -n production keycloak-http -o jsonpath="{.data.password}" | base64 --decode; echo
+    kubectl config use-context $CURRENT_CONTEXT
 - name: kubernetes.dashboard-token.local
   command: |
     CURRENT_CONTEXT=$(kubectl config current-context)
@@ -348,7 +416,8 @@ commands:
   command: |
     CURRENT_CONTEXT=$(kubectl config current-context)
     kubectl config use-context ${KUBE_LOCAL_CONTEXT}
-    kubectl get secret --namespace dev postgres-postgresql -o jsonpath="{.data.postgresql-password}" | base64 --decode
+    secret=$(kubectl get secret --namespace dev ${SHARED_POSTGRES_SECRET_NAME} -o jsonpath="{.data.postgresql-password}" | base64 --decode)
+    echo "postgres password: $secret"
     kubectl config use-context $CURRENT_CONTEXT
 # TODO: this here is only for testing purposes; we will have to remove this command as it is dangerous
 - name: purge.production
@@ -431,22 +500,38 @@ profiles:
     path: images.admin-ui.build.docker.options.buildArgs
     value:
       # TODO: use https!!!
-      GRAPHQL_API: http://api-staging.${REMOTE_CLUSTER_DOMAIN}/v1/graphql/
-      ASSETS_API: http://assets-staging.${REMOTE_CLUSTER_DOMAIN}/
+      GRAPHQL_API: http://api-staging.${REMOTE_DOMAIN}/v1/graphql/
+      ASSETS_API: http://assets-staging.${REMOTE_DOMAIN}/
   - op: replace
     path: images.consumer-ui.build.docker.options.buildArgs
     value:
       # TODO: use https!!!
-      GRAPHQL_API: http://api-staging.${REMOTE_CLUSTER_DOMAIN}/v1/graphql/
-      ASSETS_API: http://assets-staging.${REMOTE_CLUSTER_DOMAIN}/
+      GRAPHQL_API: http://api-staging.${REMOTE_DOMAIN}/v1/graphql/
+      ASSETS_API: http://assets-staging.${REMOTE_DOMAIN}/
   # minio
   - op: remove
     path: /deployments/name=minio/helm/values/accessKey/password
   - op: remove
     path: /deployments/name=minio/helm/values/secretKey/password
+  # TODO: all the following config should be used when we use the cert-manager; make sure the issuer's name is correct!
+  # # TODO: does this annotation bring anything positive? (cf. https://cert-manager.io/docs/usage/ingress/#optional-configuration)
+  # # - op: add
+  # #   path: /deployments/name=minio/helm/values/ingress/certManager
+  # #   value: true
+  # - op: replace
+  #   path: /deployments/name=minio/helm/values/ingress/annotations
+  #   value:
+  #     kubernetes.io/ingress.class: "nginx"
+  #     cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  # - op: add
+  #   path: /deployments/name=minio/helm/values/ingress/hosts/0/tls
+  #   value: true
+  # - op: add
+  #   path: /deployments/name=minio/helm/values/ingress/hosts/0/tlsSecret
+  #   value: minio-tls
   - op: replace
     path: /deployments/name=minio/helm/values/ingress/hosts/0/name
-    value: assets-staging.${REMOTE_CLUSTER_DOMAIN}
+    value: assets-staging.${REMOTE_DOMAIN}
   - op: replace
     path: /deployments/name=minio/helm/values/mode
     value: distributed
@@ -471,16 +556,23 @@ profiles:
       storageClass: jelastic-dynamic-volume
       # TODO: fine-tune database name and username
   # TODO: apply production values! https://github.com/bitnami/charts/blob/master/upstreamed/postgresql/values-production.yaml
+  # keycloak
+  - op: remove
+    path: /deployments/name=keycloak/helm/values/keycloak/password
+    # TODO: is the ingress really necessary?
+  - op: replace
+    path: /deployments/name=keycloak/helm/values/keycloak/ingress/hosts/0
+    value: auth-staging.${REMOTE_DOMAIN}
   # api
   # TODO: add an admin secret
   # TODO: configure jwt secret
   - op: replace
     path: /deployments/name=api/helm/values/ingress/hosts/0/host
-    value: api-staging.${REMOTE_CLUSTER_DOMAIN}
+    value: api-staging.${REMOTE_DOMAIN}
   - op: replace
     path: /deployments/name=api/helm/values/service/cors/domain
     # TODO: only enable https! <-- add issue!
-    value: http://admin-staging.${REMOTE_CLUSTER_DOMAIN},http://staging.${REMOTE_CLUSTER_DOMAIN},https://admin-staging.${REMOTE_CLUSTER_DOMAIN},https://staging.${REMOTE_CLUSTER_DOMAIN}
+    value: http://admin-staging.${REMOTE_DOMAIN},http://staging.${REMOTE_DOMAIN},https://admin-staging.${REMOTE_DOMAIN},https://staging.${REMOTE_DOMAIN}
   # TODO: fine-tune database url!
   # database-fixtures
   - op: add
@@ -510,7 +602,7 @@ profiles:
     value:
       enabled: true
       hosts:
-      - host: admin-staging.${REMOTE_CLUSTER_DOMAIN}
+      - host: admin-staging.${REMOTE_DOMAIN}
         paths:
         - /
   # consumer-ui
@@ -526,7 +618,7 @@ profiles:
     value:
       enabled: true
       hosts:
-      - host: staging.${REMOTE_CLUSTER_DOMAIN}
+      - host: staging.${REMOTE_DOMAIN}
         paths:
         - /
 - name: production
@@ -542,18 +634,18 @@ profiles:
     path: images.admin-ui.build.docker.options.buildArgs
     value:
       # TODO: use https!!!
-      GRAPHQL_API: http://api.${REMOTE_CLUSTER_DOMAIN}/v1/graphql/
-      ASSETS_API: http://assets.${REMOTE_CLUSTER_DOMAIN}/
+      GRAPHQL_API: http://api.${REMOTE_DOMAIN}/v1/graphql/
+      ASSETS_API: http://assets.${REMOTE_DOMAIN}/
   - op: replace
     path: images.consumer-ui.build.docker.options.buildArgs
     value:
       # TODO: use https!!!
-      GRAPHQL_API: http://api.${REMOTE_CLUSTER_DOMAIN}/v1/graphql/
-      ASSETS_API: http://assets.${REMOTE_CLUSTER_DOMAIN}/
+      GRAPHQL_API: http://api.${REMOTE_DOMAIN}/v1/graphql/
+      ASSETS_API: http://assets.${REMOTE_DOMAIN}/
   # minio
   - op: replace
     path: /deployments/name=minio/helm/values/ingress/hosts/0/name
-    value: assets.${REMOTE_CLUSTER_DOMAIN}
+    value: assets.${REMOTE_DOMAIN}
   - op: replace
     path: /deployments/name=minio/helm/values/disableWebUI
     value: true
@@ -568,17 +660,22 @@ profiles:
   # postgres
   # TODO: make sure the database name, username, and password are all different from that defined for staging!
   # TODO: apply production values! https://github.com/bitnami/charts/blob/master/upstreamed/postgresql/values-production.yaml
+  # keycloak
+    # TODO: is the ingress really necessary?
+  - op: replace
+    path: /deployments/name=keycloak/helm/values/keycloak/ingress/hosts/0
+    value: auth.${REMOTE_DOMAIN}
   # database-fixtures
   - op: remove
     path: /deployments/name=database-fixtures
   # api
   - op: replace
     path: /deployments/name=api/helm/values/ingress/hosts/0/host
-    value: api.${REMOTE_CLUSTER_DOMAIN}
+    value: api.${REMOTE_DOMAIN}
   - op: replace
     path: /deployments/name=api/helm/values/service/cors/domain
     # TODO: only enable https! <-- add issue!
-    value: http://admin.${REMOTE_CLUSTER_DOMAIN},http://app.${REMOTE_CLUSTER_DOMAIN},https://admin.${REMOTE_CLUSTER_DOMAIN},https://app.${REMOTE_CLUSTER_DOMAIN}
+    value: http://admin.${REMOTE_DOMAIN},http://app.${REMOTE_DOMAIN},https://admin.${REMOTE_DOMAIN},https://app.${REMOTE_DOMAIN}
   # TODO: add an admin secret
   # TODO: configure jwt secret
   #       cf. https://hasura.io/docs/1.0/graphql/manual/deployment/graphql-engine-flags/reference.html
@@ -591,7 +688,7 @@ profiles:
   - op: replace
     path: /deployments/name=admin-ui/helm/values/ui/ingress/hosts
     value:
-    - host: admin.${REMOTE_CLUSTER_DOMAIN}
+    - host: admin.${REMOTE_DOMAIN}
       paths:
       - /
   # consumer-ui
@@ -599,6 +696,6 @@ profiles:
   - op: replace
     path: /deployments/name=consumer-ui/helm/values/ui/ingress/hosts
     value:
-    - host: app.${REMOTE_CLUSTER_DOMAIN}
+    - host: app.${REMOTE_DOMAIN}
       paths:
       - /

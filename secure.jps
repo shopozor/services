@@ -1,0 +1,87 @@
+jpsVersion: 1.3
+jpsType: update
+application:
+  id: secure-shopozor-k8s-cluster
+  name: Secure Shopozor k8s cluster
+  version: 0.0
+
+  baseUrl: https://raw.githubusercontent.com/shopozor/services/dev
+
+  settings:
+    fields:
+    - name: nginxVersion
+      caption: Nginx version
+      type: string
+      required: true
+      default: 1.16.1
+    - name: openSslNumbits
+      caption: Numbits (OpenSSL)
+      type: numberpicker
+      required: true
+      default: 4096
+      editable: true
+      min: 0
+      max: 16384
+
+  globals:
+    DHPARAM_FILENAME: /var/lib/nginx/dhparam.pem
+
+  onInstall:
+  - addLoadBalancer
+  - secure
+
+  actions:
+    addLoadBalancer:
+    - addNodes:
+      - nodeType: nginx-dockerized
+        fixedCloudlets: 1
+        flexibleCloudlets: 32
+    secure:
+    - redirectHttpToHttps
+    - configureSSL
+    - installTrustedCertificate
+    redirectHttpToHttps:
+    - cmd [bl]:
+      - wget ${baseUrl}/nginx/${settings.nginxVersion}/nginx-jelastic.conf -O /etc/nginx/nginx-jelastic.conf
+      user: root
+    configureSSL:
+    - cmd [bl]:
+      - openssl dhparam -out ${globals.DHPARAM_FILENAME} ${settings.openSslNumbits}
+    - installAddon:
+        id: letsencrypt
+    - cmd [bl]:
+      - wget ${baseUrl}/nginx/${settings.nginxVersion}/conf.d/ssl.conf -O /etc/nginx/conf.d/ssl.conf
+    # TODO: define upstream in ssl.conf with all worker node ips?
+    - replaceInFile:
+        path: /etc/nginx/conf.d/ssl.conf
+        replacements:
+        - pattern: PATH_TO_PEM_FILE
+          replacement: ${globals.DHPARAM_FILENAME}
+      nodeType: bl
+    # TODO: the following actions need some fine-tuning!
+    installTrustedCertificate:
+    - installCertbot
+    # - getAndInstallCertificate
+    installCertbot:
+    - cmd [bl]:
+      - wget https://dl.eff.org/certbot-auto
+      - mv certbot-auto /usr/local/bin/certbot-auto
+      - chown root /usr/local/bin/certbot-auto
+      - chmod 0755 /usr/local/bin/certbot-auto
+      user: root
+    getAndInstallCertificate:
+    - cmd [bl]:
+      # This needs further arguments apparently + ssl.conf adaption?
+      - /usr/local/bin/certbot-auto --nginx
+      user: root
+
+  addons:
+  - id: letsencrypt
+    name: letsencrypt
+    onInstall:
+    - install:
+        envName: ${env.envName}
+        jps: https://github.com/jelastic-jps/lets-encrypt/blob/master/manifest.jps
+        settings:
+          nodeGroup: bl
+          customDomains: ${env.envName}.hidora.com, staging.${env.envName}.hidora.com, admin-staging.${env.envName}.hidora.com, api-staging.${env.envName}.hidora.com,assets-staging.${env.envName}.hidora.com, admin.${env.envName}.hidora.com,api.${env.envName}.hidora.com,app.${env.envName}.hidora.com,assets.${env.envName}.hidora.com
