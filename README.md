@@ -269,7 +269,7 @@ kubectl get secrets # this provides a <secret name> of the kind default-token-xx
 kubectl get secret <secret name> -o jsonpath="{['data']['ca\.crt']}" | base64 --decode
 ```
 * Service token:
-```
+```bash
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep fulladmin | awk '{print $1}') | grep 'token:' | sed -e's/token:\| //g'
 ```
 or the token provided in the Jelastic installation confirmation e-mail.
