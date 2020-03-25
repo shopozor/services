@@ -120,7 +120,7 @@ stop_staging:
   script:
   - devspace purge -n $KUBE_NAMESPACE -p staging
   # TODO: wait until all deployments are purged!
-  # TODO: also delete the persistent volumes!
+  # TODO: also delete the persistent volumes! or stop deploying postgres in this namespace! <-- define new databases for hasura and keycloak for staging, pre-deployment and deployment
   when: manual
   environment:
     name: staging
