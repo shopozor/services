@@ -22,7 +22,7 @@ application:
     - name: k8s-version
       type: string
       caption: k8s manifest version
-      default: v1.16.3
+      default: v1.16.6
     - name: extDomains
       type: string
       caption: External domains (; separates)
