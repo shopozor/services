@@ -20,6 +20,9 @@ for iteration in `seq 1 $TIMEOUT`; do
   nb_success=0
   for name in $job_names ; do
     status=$(kubectl get job $name --namespace $NAMESPACE -o jsonpath='{.status.succeeded}')
+    if [ -z "$status" ] ; then
+      status=0
+    fi
     # when status == 1, then the corresponding job is successful
     # maybe we could just put that information in some kind of arrays and just display the new successful job
     nb_success=$(($nb_success + $status))
