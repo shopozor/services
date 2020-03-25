@@ -1,7 +1,7 @@
-from common_utils import json_helpers
-from common_utils.graphql_client import GraphQLClient
-from common_utils.graphql_helpers import get_query_from_file
-from common_utils.stellar_client import StellarClient
+from test_utils import json_helpers
+from test_utils.graphql_client import GraphQLClient
+from test_utils.graphql_helpers import get_query_from_file
+from test_utils.stellar_client import StellarClient
 
 import os
 import pytest
@@ -13,7 +13,10 @@ def pytest_addoption(parser):
         "--fixtures-folder", action="store", default="/app/fixtures", help="Fixtures folder"
     )
     parser.addoption(
-        "--graphql-folder", action="store", default="/app/fixtures/graphql", help="Folder containing the graphql calls and responses"
+        "--graphql-responses-folder", action="store", default="/app/shared/fixtures/graphql", help="Folder containing the graphql responses"
+    )
+    parser.addoption(
+        "--graphql-calls-folder", action="store", default="/app/shared/graphql", help="Folder containing the graphql calls"
     )
     parser.addoption(
         "--hasura-endpoint", action="store", default="http://localhost:8080", help="Hasura endpoint"
@@ -26,8 +29,13 @@ def hasura_endpoint(request):
 
 
 @pytest.fixture
-def graphql_folder(request):
-    return request.config.getoption('--graphql-folder')
+def graphql_responses_folder(request):
+    return request.config.getoption('--graphql-responses-folder')
+
+
+@pytest.fixture
+def graphql_calls_folder(request):
+    return request.config.getoption('--graphql-calls-folder')
 
 
 @pytest.fixture(autouse=True)
@@ -54,10 +62,10 @@ def stellar_snapshot():
 
 
 @pytest.fixture
-def shops_query(graphql_folder):
-    call = get_query_from_file(os.path.join(graphql_folder, 'calls'), 'shops')
+def shops_query(graphql_calls_folder, graphql_responses_folder):
+    call = get_query_from_file(graphql_calls_folder, 'shops')
     response = json_helpers.load(os.path.join(
-        graphql_folder, 'responses', 'Consumer', 'Shops.json'))
+        graphql_responses_folder, 'responses', 'Consumer', 'Shops.json'))
     return {
         'call': call,
         'response': response
@@ -65,11 +73,10 @@ def shops_query(graphql_folder):
 
 
 @pytest.fixture
-def shop_categories_query(graphql_folder):
-    call = get_query_from_file(os.path.join(
-        graphql_folder, 'calls'), 'shopCategories')
+def shop_categories_query(graphql_calls_folder, graphql_responses_folder):
+    call = get_query_from_file(graphql_calls_folder, 'shopCategories')
     response = json_helpers.load(os.path.join(
-        graphql_folder, 'responses', 'Consumer', 'Categories.json'))
+        graphql_responses_folder, 'responses', 'Consumer', 'Categories.json'))
     return {
         'call': call,
         'response': response
@@ -77,11 +84,11 @@ def shop_categories_query(graphql_folder):
 
 
 @pytest.fixture
-def shop_queries(graphql_folder):
-    call = get_query_from_file(os.path.join(graphql_folder, 'calls'), 'shop')
+def shop_queries(graphql_calls_folder, graphql_responses_folder):
+    call = get_query_from_file(graphql_calls_folder, 'shop')
     # TODO: put the number of shops (5) in the config somehow!
     return [{
         'call': call,
         'variables': {'shopId': id},
-        'response': json_helpers.load(os.path.join(graphql_folder, 'responses', 'Consumer', 'Shops', f'Shop-{id}.json'))
+        'response': json_helpers.load(os.path.join(graphql_responses_folder, 'responses', 'Consumer', 'Shops', f'Shop-{id}.json'))
     } for id in range(1, 5)]

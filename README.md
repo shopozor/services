@@ -41,15 +41,7 @@ cd services
 git config --global init.templateDir ~/.git-template
 pre-commit init-templatedir ~/.git-template
 ```
-After that, everytime you will clone a new git repository, the `pre-commit` hooks will be enforced automatically. Would you like to enable pre-push hooks, you'd need to also run the following command in the `services` root folder:
-```
-pre-commit install --hook-type pre-push
-```
-It will essentially run all the tests before pushing. You can then disable pre-push hooks with the following command:
-```
-pre-commit uninstall --hook-type pre-push
-```
-Note that the pre-push hooks will not work on git bash under Windows. Under Windows, you will need to work with WSL to let that happen.
+After that, everytime you will clone a new git repository, the `pre-commit` hooks will be enforced automatically.
 
 ### VSCode configuration
 
@@ -190,7 +182,7 @@ devspace run fixtures.generate
 ```
 * start the shopozor:
 ```
-devspace dev --build-sequential
+devspace dev -n dev --build-sequential
 ```
 
 Then, head to [devspace UI](http://localhost:8090) to interact with the system. Would you need to perform any action on the shopozor, like enabling the assets or the database fixtures, head to the commands in the devspace UI. Those commmands can also be run in a terminal. You list the commands like this:
@@ -241,6 +233,52 @@ Following [this advice](https://forum.quasar-framework.org/topic/3760/fix-babel-
 cd node_modules/@quasar/babel-preset-app && yarn
 ```
 
+## CI / CD
+
+Useful documentation on how to work with helm can be found here:
+
+* [monorepo cicd helm k8s](https://www.infracloud.io/monorepo-ci-cd-helm-kubernetes/)
+* [gitlab monorepo pipelines](https://aarongorka.com/blog/gitlab-monorepo-pipelines/)
+
+In essence, our CI/CD process amounts to (see [microsoft documentation](https://docs.microsoft.com/en-us/azure/architecture/microservices/ci-cd-kubernetes))
+
+![overall ci / cd process](doc/img/cicd.png)
+
+### Gitlab
+
+#### Docker registry configuration
+
+In the `services` project, then Settings -> CI / CD -> Variables, set
+
+* `CI_REGISTRY` to `docker.io`
+* `CI_REGISTRY_USER` to our docker hub username
+* `CI_REGISTRY_PASSWORD` to our docker hub password
+* `DYNAMIC_STAGING_ENVIRONMENT_URL`
+* `DYNAMIC_PREPROD_ENVIRONMENT_URL`
+* `DYNAMIC_PROD_ENVIRONMENT_URL`
+
+
+#### Kubernetes configuration
+
+1. First allow requests to the local network from hooks and services: Admin Area -> Settings -> Network -> Outbound Requests -> Allow requests to the local network from hooks and services (the path should end with `/admin/application_settings/network#js-outbound-settings`)
+2. Go to the repository project's Operations, then choose "Kubernetes"; there you fill up the fields following [this documentation](https://docs.gitlab.com/ee/user/project/clusters/add_remove_clusters.html#existing-gke-cluster).
+
+* API Url:
+```bash
+kubectl cluster-info | grep 'Kubernetes master' | awk '/http/ {print $NF}'
+```
+(not the url provided in the e-mail sent by jelastic)
+* CA Certificate:
+```bash
+kubectl get secrets # this provides a <secret name> of the kind default-token-xxxxx
+kubectl get secret <secret name> -o jsonpath="{['data']['ca\.crt']}" | base64 --decode
+```
+* Service token:
+```bash
+kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep fulladmin | awk '{print $1}') | grep 'token:' | sed -e's/token:\| //g'
+```
+or the token provided in the Jelastic installation confirmation e-mail.
+
 ## Specification generation
 
 ### Gherkin step skeletons
@@ -277,14 +315,3 @@ which outputs for example
            return 'pending';
          });
 ```
-
-## CI / CD
-
-Useful documentation on how to work with helm can be found here:
-
-* [monorepo cicd helm k8s](https://www.infracloud.io/monorepo-ci-cd-helm-kubernetes/)
-* [gitlab monorepo pipelines](https://aarongorka.com/blog/gitlab-monorepo-pipelines/)
-
-In essence, our CI/CD process amounts to (see [microsoft documentation](https://docs.microsoft.com/en-us/azure/architecture/microservices/ci-cd-kubernetes))
-
-![overall ci / cd process](doc/img/cicd.png)

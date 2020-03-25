@@ -6,6 +6,9 @@
   "editor.fontSize": 14,
   "editor.insertSpaces": true,
   "editor.tabSize": 2,
+  "files.associations": {
+    "*.jps": "yaml"
+  },
   "[python]": {
     "editor.insertSpaces": true,
     "editor.tabSize": 4

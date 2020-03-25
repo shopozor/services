@@ -1,4 +1,4 @@
-#! /bin/bash
+#! /bin/sh
 
 if [ "$#" -lt "1" ] ; then
   echo "Usage: $0 namespace [timeout_iterations] [delta_iterations_in_sec]"

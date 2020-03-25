@@ -1,41 +1,9 @@
-FROM bitnami/minio-client AS assets-client
-
-WORKDIR /app
-
-COPY ./shared/pictures /app
-
 FROM hasura/graphql-engine:v1.0.0.cli-migrations AS hasura-migrations
 
 # /hasura-migrations is the default folder where the client will look for migrations to apply
 COPY ./backend/database-service/migrations /hasura-migrations
 
 WORKDIR /hasura-migrations
-
-FROM python:3.8-slim AS hasura-build
-
-COPY ./backend/database-service/tests/requirements.txt .
-
-RUN apt update && apt install -y wget \
-  && wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh -O /usr/local/bin/wait-for-it \
-  && chmod u+x /usr/local/bin/wait-for-it \
-  && pip install --no-cache-dir -r requirements.txt
-
-FROM python:3.8-slim AS hasura-test
-
-COPY --from=hasura-build /usr/local/bin/wait-for-it /usr/local/bin/wait-for-it
-COPY --from=hasura-build /usr/local/lib/python3.8/site-packages /usr/local/lib/python3.8/site-packages
-COPY --from=hasura-build /usr/local/bin /usr/local/bin
-COPY --from=hasura-migrations /bin/hasura-cli /usr/local/bin/hasura
-
-WORKDIR /app
-
-FROM hasura-test AS hasura-test-ci
-
-WORKDIR /app
-
-COPY ./backend/database-service .
-COPY ./backend/test-utils ./utils
-COPY ./shared/fixtures ./fixtures
 
 FROM python:3.8-slim AS fixtures-app-builder
 
@@ -47,45 +15,28 @@ WORKDIR /app
 
 FROM python:3.8-slim AS fixtures-app
 
-WORKDIR /app
-
-COPY ./backend/test-utils ./test_utils
-COPY ./backend/fixtures-generator .
-COPY ./shared/pictures ./pictures
-
-RUN chmod a+x entrypoint.sh
-
 COPY --from=fixtures-app-builder /usr/local/lib/python3.8/site-packages /usr/local/lib/python3.8/site-packages
 COPY --from=fixtures-app-builder /usr/local/bin /usr/local/bin
 COPY --from=hasura-migrations /bin/hasura-cli /usr/local/bin/hasura
 
-FROM python:3.8-slim AS integration-test-build
+WORKDIR /app
 
-RUN apt update && apt install -y gcc wget \
-  && wget https://raw.githubusercontent.com/vishnubob/wait-for-it/master/wait-for-it.sh -O /usr/local/bin/wait-for-it \
-  && chmod u+x /usr/local/bin/wait-for-it
-
-COPY ./backend/tests/requirements.txt .
-
-RUN pip install --no-cache-dir -r requirements.txt
-
-FROM python:3.8-slim AS integration-test
-
-COPY --from=integration-test-build /usr/local/bin/wait-for-it /usr/local/bin/wait-for-it
-COPY --from=integration-test-build /usr/local/lib/python3.8/site-packages /usr/local/lib/python3.8/site-packages
-COPY --from=integration-test-build /usr/local/bin /usr/local/bin
-COPY --from=hasura-migrations /bin/hasura-cli /usr/local/bin/hasura
+FROM fixtures-app AS fixtures-app-ci
 
 WORKDIR /app
 
-FROM integration-test AS integration-test-ci
+COPY ./backend/test_utils ./test_utils
+COPY ./backend/fixtures-generator .
+COPY ./shared/pictures ./pictures
+RUN chmod a+x entrypoint.sh
+
+ENTRYPOINT [ "./entrypoint.sh", "medium" ]
+
+FROM bitnami/minio-client AS assets-client
 
 WORKDIR /app
 
-COPY ./backend/tests .
-COPY ./backend/test-utils ./common_utils
-COPY ./shared/fixtures ./fixtures
-COPY ./shared/graphql ./fixtures/graphql/calls
+COPY ./shared/pictures /app
 
 FROM cypress/base:12.13.0 AS cypress-tests
 
@@ -124,20 +75,6 @@ WORKDIR /app
 
 CMD [ "yarn", "test:unit:ci" ]
 
-FROM node-dependencies AS node-builder
-
-ARG ASSETS_API
-WORKDIR /app
-RUN npx lerna run build-storybook --concurrency 1
-
-FROM nginx:1.16.0 AS admin-storybook
-
-COPY --from=node-builder /app/frontend/admin-ui/storybook-static /srv
-
-FROM nginx:1.16.0 AS consumer-storybook
-
-COPY --from=node-builder /app/frontend/consumer-ui/storybook-static /srv
-
 FROM node-dependencies AS node-app-builder
 
 ARG GRAPHQL_API
@@ -154,3 +91,17 @@ COPY --from=node-app-builder /app/frontend/admin-ui/dist/spa /srv
 FROM nginx:1.16.0 AS consumer-ui-spa
 
 COPY --from=node-app-builder /app/frontend/consumer-ui/dist /srv/static
+
+FROM node-dependencies AS node-builder
+
+ARG ASSETS_API
+WORKDIR /app
+RUN npx lerna run build-storybook --concurrency 1
+
+FROM nginx:1.16.0 AS admin-storybook
+
+COPY --from=node-builder /app/frontend/admin-ui/storybook-static /srv
+
+FROM nginx:1.16.0 AS consumer-storybook
+
+COPY --from=node-builder /app/frontend/consumer-ui/storybook-static /srv

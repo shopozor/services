@@ -33,14 +33,13 @@ services:
       target: fixtures-app
     image: ${PRODUCT:-shopozor}/fixtures-service:${TAG:-local}
     restart: "no"
-    # TODO: optimize this for local dev; instead of copying the app's code and test-utils, maybe mount the relevant volumes!
     volumes:
-      # - ./backend/fixtures-generator:/app
-      # - ./backend/test-utils:/app/test_utils
-      # - ./shared/pictures:/app/pictures
+      - ./backend/fixtures-generator:/app
+      - ./backend/test-utils:/app/test_utils
+      - ./shared/pictures:/app/pictures
       - ./shared/fixtures:/app/fixtures
     environment:
-      - PYTHONDONTWRITEBYTECODE=1
+      PYTHONDONTWRITEBYTECODE: "1"
     entrypoint: ./entrypoint.sh medium
   jest-unit-tests:
     build:
@@ -52,70 +51,34 @@ services:
     volumes:
       - ./frontend/consumer-ui/test-reports:/app/frontend/consumer-ui/test-reports
       - ./frontend/admin-ui/test-reports:/app/frontend/admin-ui/test-reports
-      - ./backend/site-generator-service/test-reports:/app/backend/site-generator-service/test-reports
   database-service-tests:
     build:
       context: .
-      dockerfile: Dockerfile
-      target: hasura-test
+      dockerfile: Dockerfile-dev
+      target: python-tests
     restart: "no"
     depends_on:
       - graphql-engine-empty
     environment:
-      - PYTHONDONTWRITEBYTECODE=1
-      - PYTHONPATH=./tests:$PYTHONPATH
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONPATH: /app/backend
     volumes:
-      - ./backend/database-service:/app
-      - ./backend/test-utils:/app/utils
-      - ./shared/fixtures:/app/fixtures
-      - ./backend/database-service/test-reports:/app/test-reports
-    entrypoint: ./tests/entrypoint.sh graphql-engine-empty 8080
-  database-service-tests-ci:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: hasura-test-ci
-    restart: "no"
-    depends_on:
-      - graphql-engine-empty
-    environment:
-      - PYTHONDONTWRITEBYTECODE=1
-      - PYTHONPATH=./tests:$PYTHONPATH
-    volumes:
-      - ./backend/database-service/test-reports:/app/test-reports
-    entrypoint: ./tests/entrypoint.sh graphql-engine-empty 8080
+      - ./backend/database-service/test-reports:/app/backend/database-service/test-reports
+    entrypoint: ./backend/database-service/tests/entrypoint.sh graphql-engine-empty 8080 /app
   service-integration-tests:
     build:
       context: .
-      dockerfile: Dockerfile
-      target: integration-test
+      dockerfile: Dockerfile-dev
+      target: python-tests
     restart: "no"
     depends_on:
       - graphql-engine-with-tables
     environment:
-      - PYTHONDONTWRITEBYTECODE=1
-      - PYTHONPATH=./tests:$PYTHONPATH
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONPATH: /app/backend
     volumes:
-      - ./backend/tests:/app
-      - ./backend/test-utils:/app/common_utils
-      - ./shared/fixtures:/app/fixtures
-      - ./shared/graphql:/app/fixtures/graphql/calls
-      - ./backend/tests/test-reports:/app/test-reports
-    entrypoint: ./entrypoint.sh graphql-engine-with-tables 8080
-  service-integration-tests-ci:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: integration-test-ci
-    restart: "no"
-    depends_on:
-      - graphql-engine-with-tables
-    environment:
-      - PYTHONDONTWRITEBYTECODE=1
-      - PYTHONPATH=./tests:$PYTHONPATH
-    volumes:
-      - ./backend/tests/test-reports:/app/test-reports
-    entrypoint: ./entrypoint.sh graphql-engine-with-tables 8080
+      - ./backend/tests/test-reports:/app/backend/tests/test-reports
+    entrypoint: ./backend/tests/entrypoint.sh graphql-engine-with-tables 8080 /app
   admin-e2e-tests:
     build:
       context: .

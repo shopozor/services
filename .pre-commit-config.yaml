@@ -20,9 +20,3 @@
       entry: yarn lint
       language: system
       pass_filenames: false
-    - id: test-all
-      name: test-all
-      entry: make dev-test.all
-      language: system
-      pass_filenames: false
-      stages: [push]
