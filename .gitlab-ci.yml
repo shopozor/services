@@ -88,8 +88,8 @@ deploy_staging:
   script:
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   - devspace deploy --build-sequential -n $KUBE_NAMESPACE -p staging
-  # TODO: this needs to wait for all jobs to be finished
   - ./scripts/wait_for_deployments.sh $KUBE_NAMESPACE
+  - ./scripts/wait_for_jobs.sh $KUBE_NAMESPACE
   only:
   - master
 
@@ -105,6 +105,8 @@ review_staging:
     name: staging
     url: $DYNAMIC_STAGING_ENVIRONMENT_URL
     # on_stop: stop_staging_review
+  only:
+  - master
 
 # stop_staging_review:
 #   script:
@@ -113,6 +115,8 @@ review_staging:
 #   environment:
 #     name: staging
 #     action: stop
+#   only:
+#   - master
 
 stop_staging:
   stage: deploy
@@ -125,6 +129,8 @@ stop_staging:
   environment:
     name: staging
     action: stop
+  only:
+  - master
 
 pages:
   image: shopozor/pickles
@@ -146,6 +152,7 @@ deploy_prod:
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   - devspace deploy --build-sequential -n $KUBE_NAMESPACE -p production
   - ./scripts/wait_for_deployments.sh $KUBE_NAMESPACE
+  - ./scripts/wait_for_jobs.sh $KUBE_NAMESPACE
   environment:
     name: production
     url: $DYNAMIC_PROD_ENVIRONMENT_URL
@@ -163,3 +170,5 @@ stop_prod:
   environment:
     name: production
     action: stop
+  only:
+  - master
