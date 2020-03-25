@@ -53,9 +53,10 @@ application:
           version: ${settings.k8s-version}
           jaeger: false
     enableSubDomains:
-    - jelastic.env.binder.AddDomains[cp]:
-        envName: ${settings.envName}
-        domains: staging,admin-staging,api-staging,assets-staging,admin,api,app,assets
+      - jelastic.env.binder.AddDomains[cp]:
+          envName: ${settings.envName}
+          # TODO: are the auth and auth-staging really necessary?
+          domains: staging,admin-staging,api-staging,assets-staging,auth-staging,admin,api,app,assets,auth
     bindExternalDomains:
     - jelastic.env.binder.BindExtDomains:
         envName: ${settings.envName}
