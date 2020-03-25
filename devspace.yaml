@@ -437,24 +437,25 @@ profiles:
     path: /deployments/name=minio/helm/values/accessKey/password
   - op: remove
     path: /deployments/name=minio/helm/values/secretKey/password
-  # TODO: does this annotation bring anything positive? (cf. https://cert-manager.io/docs/usage/ingress/#optional-configuration)
+  # TODO: all the following config should be used when we use the cert-manager; make sure the issuer's name is correct!
+  # # TODO: does this annotation bring anything positive? (cf. https://cert-manager.io/docs/usage/ingress/#optional-configuration)
+  # # - op: add
+  # #   path: /deployments/name=minio/helm/values/ingress/certManager
+  # #   value: true
+  # - op: replace
+  #   path: /deployments/name=minio/helm/values/ingress/annotations
+  #   value:
+  #     kubernetes.io/ingress.class: "nginx"
+  #     cert-manager.io/cluster-issuer: "letsencrypt-prod"
   # - op: add
-  #   path: /deployments/name=minio/helm/values/ingress/certManager
+  #   path: /deployments/name=minio/helm/values/ingress/hosts/0/tls
   #   value: true
-  - op: replace
-    path: /deployments/name=minio/helm/values/ingress/annotations
-    value:
-      kubernetes.io/ingress.class: "nginx"
-      cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  # - op: add
+  #   path: /deployments/name=minio/helm/values/ingress/hosts/0/tlsSecret
+  #   value: minio-tls
   - op: replace
     path: /deployments/name=minio/helm/values/ingress/hosts/0/name
     value: assets-staging.${REMOTE_CLUSTER_DOMAIN}
-  - op: add
-    path: /deployments/name=minio/helm/values/ingress/hosts/0/tls
-    value: true
-  - op: add
-    path: /deployments/name=minio/helm/values/ingress/hosts/0/tlsSecret
-    value: minio-tls
   - op: replace
     path: /deployments/name=minio/helm/values/mode
     value: distributed
