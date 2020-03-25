@@ -5,41 +5,33 @@ application:
   name: Shopozor k8s cluster
   version: 0.0
 
-  baseUrl: https://raw.githubusercontent.com/shopozor/services/dev
+  baseUrl: https://raw.githubusercontent.com/shopozor/services/secure-ingresses-with-ssl
 
   settings:
     fields:
-      - name: envName
-        caption: Env Name
-        type: string
-        default: shopozor
-      - name: topo
-        type: radio-fieldset
-        values:
-          0-dev: '<b>Development:</b> one master (1) and one scalable worker (1+)'
-          1-prod: '<b>Production:</b> multi master (3) with API balancers (2+) and scalable workers (2+)'
-        default: 0-dev
-      - name: k8s-version
-        type: string
-        caption: k8s manifest version
-        default: v1.16.3
-      - name: cert-manager-version
-        type: string
-        caption: Cert-manager version
-        default: v0.13.1
-      - name: extDomains
-        type: string
-        caption: External domains (; separates)
-        required: true
+    - name: envName
+      caption: Env Name
+      type: string
+      default: shopozor
+    - name: topo
+      type: radio-fieldset
+      values:
+        0-dev: '<b>Development:</b> one master (1) and one scalable worker (1+)'
+        1-prod: '<b>Production:</b> multi master (3) with API balancers (2+) and scalable workers (2+)'
+      default: 0-dev
+    - name: k8s-version
+      type: string
+      caption: k8s manifest version
+      default: v1.16.3
+    - name: extDomains
+      type: string
+      caption: External domains (; separates)
+      required: true
 
   onInstall:
-    - installKubernetes
-    - enableSubDomains
-    # TODO: reactivate when we know in what order we need to install this
-    #       --> the letsencrypt stuff is not yet available
-    #       cf. https://stackoverflow.com/questions/60546645/how-do-i-install-letsencrypt-on-my-jelastic-kubernetes-cluster?noredirect=1#comment107139402_60546645
-    # - setupTLS
-    - bindExternalDomains
+  - installKubernetes
+  - enableSubDomains
+  - bindExternalDomains
 
   actions:
     installKubernetes:
@@ -51,7 +43,7 @@ application:
           # this is deployed at the end (cf. https://github.com/jelastic-jps/kubernetes/blob/v1.16.3/manifest.jps#L61)
           deploy: cmd
           cmd: |-
-            curl -fsSL ${baseUrl}/scripts/install_k8s.sh | /bin/bash -s ${settings.cert-manager-version}
+            curl -fsSL ${baseUrl}/scripts/install_k8s.sh | /bin/bash
           topo: ${settings.topo}
           dashboard: version2
           ingress-controller: Nginx
@@ -61,24 +53,10 @@ application:
           version: ${settings.k8s-version}
           jaeger: false
     enableSubDomains:
-      - jelastic.env.binder.AddDomains[cp]:
-          envName: ${settings.envName}
-          domains: staging,admin-staging,api-staging,assets-staging,admin,api,app,assets
-    setupTLS:
-      - installAddon:
-          id: letsencrypt
+    - jelastic.env.binder.AddDomains[cp]:
+        envName: ${settings.envName}
+        domains: staging,admin-staging,api-staging,assets-staging,admin,api,app,assets
     bindExternalDomains:
-      - jelastic.env.binder.BindExtDomains:
-          envName: ${settings.envName}
-          extDomains: ${settings.extDomains}
-
-  addons:
-    - id: letsencrypt
-      name: letsencrypt
-      onInstall:
-        - install:
-            envName: ${env.envName}
-            jps: https://github.com/jelastic-jps/lets-encrypt/blob/master/manifest.jps
-            settings:
-              nodeGroup: cp
-              customDomains: staging.${env.envName}.hidora.com,admin-staging.${env.envName}.hidora.com,api-staging.${env.envName}.hidora.com,assets-staging.${env.envName}.hidora.com,admin.${env.envName}.hidora.com,api.${env.envName}.hidora.com,assets.${env.envName}.hidora.com,app.${env.envName}.hidora.com
+    - jelastic.env.binder.BindExtDomains:
+        envName: ${settings.envName}
+        extDomains: ${settings.extDomains}
