@@ -212,7 +212,7 @@ devspace dev -n dev --build-sequential
 2. You run the tests
 ```
 devspace run tests.all
-``
+```
 
 ## Adding a new graphql query / mutation / subscription
 
