@@ -1,0 +1,7 @@
+.github/
+**/.quasar/
+.git/
+.vscode/
+**/node_modules/
+**/dist/
+**/chart/

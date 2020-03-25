@@ -1,0 +1,6 @@
+query Shop ($shopId: Int!) {
+  shops_by_pk (id: $shopId) {
+    id
+    name
+  }
+}

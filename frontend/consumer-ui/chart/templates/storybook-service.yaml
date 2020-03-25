@@ -1,0 +1,18 @@
+{{- if .Values.storybook.enabled -}}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "chart.fullname" . }}-storybook
+  labels:
+{{ include "chart.labels" . | indent 4 }}
+spec:
+  type: {{ .Values.storybook.service.type }}
+  ports:
+    - port: {{ .Values.storybook.service.port }}
+      targetPort: http-storybook
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: {{ include "chart.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+{{- end }}

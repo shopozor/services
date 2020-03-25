@@ -1,0 +1,63 @@
+jpsVersion: 1.3
+jpsType: install
+application:
+  id: shopozor-k8s-cluster
+  name: Shopozor k8s cluster
+  version: 0.0
+
+  baseUrl: https://raw.githubusercontent.com/shopozor/services/dev
+
+  settings:
+    fields:
+    - name: envName
+      caption: Env Name
+      type: string
+      default: shopozor
+    - name: topo
+      type: radio-fieldset
+      values:
+        0-dev: '<b>Development:</b> one master (1) and one scalable worker (1+)'
+        1-prod: '<b>Production:</b> multi master (3) with API balancers (2+) and scalable workers (2+)'
+      default: 0-dev
+    - name: k8s-version
+      type: string
+      caption: k8s manifest version
+      default: v1.16.6
+    - name: extDomains
+      type: string
+      caption: External domains (; separates)
+      required: true
+
+  onInstall:
+  - installKubernetes
+  - enableSubDomains
+  - bindExternalDomains
+
+  actions:
+    installKubernetes:
+      install:
+        jps: https://github.com/jelastic-jps/kubernetes/blob/${settings.k8s-version}/manifest.jps
+        envName: ${settings.envName}
+        displayName: ${settings.envName}
+        settings:
+          # this is deployed at the end (cf. https://github.com/jelastic-jps/kubernetes/blob/v1.16.3/manifest.jps#L61)
+          deploy: cmd
+          cmd: |-
+            curl -fsSL ${baseUrl}/scripts/install_k8s.sh | /bin/bash
+          topo: ${settings.topo}
+          dashboard: version2
+          ingress-controller: Nginx
+          storage: true
+          api: true
+          monitoring: true
+          version: ${settings.k8s-version}
+          jaeger: false
+    enableSubDomains:
+      - jelastic.env.binder.AddDomains[cp]:
+          envName: ${settings.envName}
+          # TODO: are the auth and auth-staging really necessary?
+          domains: staging,admin-staging,api-staging,assets-staging,auth-staging,admin,api,app,assets,auth
+    bindExternalDomains:
+    - jelastic.env.binder.BindExtDomains:
+        envName: ${settings.envName}
+        extDomains: ${settings.extDomains}

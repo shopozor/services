@@ -1,0 +1,19 @@
+@import 'tailwindcss/base';
+@import 'tailwindcss/components';
+@import 'tailwindcss/utilities';
+
+.z-999 {
+  z-index: 999;
+}
+.h-3\/4 {
+  height: 75vh !important;
+}
+.overview-title {
+  @apply font-extrabold text-3xl text-center;
+}
+a {
+  @apply underline;
+}
+a.header {
+  @apply mr-4 font-hairline border-b no-underline;
+}

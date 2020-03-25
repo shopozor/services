@@ -1,0 +1,8 @@
+mutation ActivateConsumer($encodedUserId: ID!, $oneTimeToken: String!) {
+  consumerActivate(id: $encodedUserId, input: { token: $oneTimeToken }) {
+    errors {
+      field
+      message
+    }
+  }
+}

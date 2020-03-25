@@ -1,0 +1,11 @@
+query shopCategories {
+  product_categories {
+    description
+    id
+    image {
+      alt
+      url
+    }
+    name
+  }
+}

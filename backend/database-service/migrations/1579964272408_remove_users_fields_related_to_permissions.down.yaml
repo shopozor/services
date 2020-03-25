@@ -1,0 +1,18 @@
+- args:
+    sql: ALTER TABLE "public"."users" ADD COLUMN "is_staff" bool
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."users" ALTER COLUMN "is_staff" DROP NOT NULL
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."users" ADD COLUMN "is_active" bool
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."users" ALTER COLUMN "is_active" DROP NOT NULL
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."users" ADD COLUMN "is_superuser" bool
+  type: run_sql
+- args:
+    sql: ALTER TABLE "public"."users" ALTER COLUMN "is_superuser" DROP NOT NULL
+  type: run_sql

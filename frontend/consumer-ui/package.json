@@ -1,0 +1,62 @@
+{
+  "author": "info@softozor.ch",
+  "cypress-cucumber-preprocessor": {
+    "nonGlobalStepDefinitions": true
+  },
+  "dependencies": {
+    "@nuxtjs/apollo": "^4.0.0-rc2.3",
+    "@nuxtjs/tailwindcss": "^1.2.0",
+    "apollo-cache-inmemory": "^1.6.5",
+    "core-js": "^2.6.5",
+    "cross-env": "^6.0.3",
+    "graphql-tag": "^2.10.1",
+    "leaflet": "^1.6.0",
+    "leaflet-gesture-handling": "^1.1.8",
+    "npm-check-updates": "^4.0.1",
+    "nuxt": "^2.11.0",
+    "nuxt-i18n": "^6.4.1",
+    "nuxt-purgecss": "^0.2.1",
+    "tailwindcss": "^1.1.4",
+    "url-join": "^4.0.1",
+    "vue-client-only": "^2.0.0",
+    "vue-js-modal": "^1.3.31",
+    "vue-loading-overlay": "^3.2.0",
+    "vue2-leaflet": "^2.4.1"
+  },
+  "description": "Shopozor consumer ui",
+  "jest-junit": {
+    "outputDirectory": "./test-reports",
+    "outputName": "unit-test-report.xml"
+  },
+  "lint-staged": {
+    "*.js|*.vue": "yarn lint --fix"
+  },
+  "name": "consumer-ui",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "build-storybook": "build-storybook",
+    "concurrently:dev:jest": "concurrently \"nuxt\" \"jest --watch\"",
+    "cypress:clean": "rimraf cypress/screenshots/* cypress/videos/*",
+    "cypress:e2e": "cross-var wait-on $CYPRESS_baseUrl && cypress run --env configFile=e2e",
+    "cypress:open": "cypress open",
+    "generate": "nuxt generate",
+    "lint": "eslint --ext .js,.vue,.feature .",
+    "start": "nuxt start",
+    "start:dev": "nuxt",
+    "start:e2e": "concurrently \"yarn cypress:e2e\" --kill-others \"yarn start\" --success first",
+    "start:integration": "concurrently \"yarn cypress:integration\" --kill-others \"yarn start\" --success first",
+    "start:integration:dev": "concurrently \"yarn cypress:integration:dev\" --kill-others \"yarn start:dev\" --success first",
+    "storybook": "start-storybook -p 6006",
+    "storybook:ci": "cross-var http-server -a $CONSUMER_STORYBOOK_HOST -p $CONSUMER_STORYBOOK_PORT ./storybook-static",
+    "test": "echo \"See package.json => scripts for available tests.\" && exit 0",
+    "test:unit": "jest",
+    "test:unit:ci": "jest --ci --reporters=default --reporters=jest-junit",
+    "test:unit:coverage": "jest --coverage",
+    "test:unit:ui": "majestic --port 3001",
+    "test:unit:updateSnapshot": "jest --updateSnapshot",
+    "test:unit:watch": "jest --watch",
+    "test:unit:watchAll": "jest --watchAll"
+  },
+  "version": "0.0.0"
+}

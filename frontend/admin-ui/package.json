@@ -1,0 +1,70 @@
+{
+  "browserslist": [
+    "last 1 version, not dead, ie >= 11"
+  ],
+  "capacitorId": "",
+  "cordovaId": "org.cordova.quasar.app",
+  "cypress-cucumber-preprocessor": {
+    "nonGlobalStepDefinitions": true
+  },
+  "dependencies": {
+    "@quasar/extras": "^1.0.0",
+    "animate.css": "^3.7.2",
+    "apollo-cache-inmemory": "^1.6.3",
+    "apollo-client": "^2.6.4",
+    "apollo-link": "^1.2.13",
+    "apollo-link-http": "^1.5.16",
+    "core-js": "^2.6.5",
+    "graphql": "^14.5.8",
+    "graphql-tag": "^2.10.1",
+    "leaflet": "^1.5.1",
+    "node-fetch": "^2.6.0",
+    "quasar": "^1.0.0",
+    "vue-apollo": "^3.0.0-rc.6",
+    "vue-client-only": "^2.0.0",
+    "vue-i18n": "^8.14.1",
+    "vue-simple-calendar": "^4.2.2",
+    "vue2-google-maps": "^0.10.7",
+    "vue2-leaflet": "^2.2.1",
+    "vuelidate": "^0.7.4"
+  },
+  "description": "Shopozor admin dashboards",
+  "engines": {
+    "node": ">= 8.9.0",
+    "npm": ">= 5.6.0",
+    "yarn": ">= 1.6.0"
+  },
+  "jest-junit": {
+    "outputDirectory": "./test-reports",
+    "outputName": "unit-test-report.xml"
+  },
+  "name": "admin-ui",
+  "private": true,
+  "productName": "Shopozor",
+  "scripts": {
+    "build": "quasar build",
+    "build-storybook": "build-storybook",
+    "concurrently:dev:jest": "concurrently \"quasar dev\" \"jest --watch\"",
+    "cypress:clean": "rimraf cypress/screenshots/* cypress/videos/*",
+    "cypress:e2e": "cross-var wait-on $CYPRESS_baseUrl && cypress run --env configFile=e2e",
+    "cypress:open": "cypress open",
+    "lint": "eslint --ext .js,.vue,.feature src",
+    "serve:test:coverage": "quasar serve test/jest/coverage/lcov-report/ --port 8788",
+    "start": "cross-var quasar serve dist/spa -H $ADMIN_UI_HOST -p $ADMIN_UI_PORT",
+    "start:dev": "quasar dev",
+    "start:e2e": "concurrently \"yarn cypress:e2e\" --kill-others \"yarn start\" --success first",
+    "start:integration": "concurrently \"yarn cypress:integration\" --kill-others \"yarn start\" --success first",
+    "start:integration:dev": "concurrently \"yarn cypress:integration:dev\" --kill-others \"yarn start:dev\" --success first",
+    "storybook": "start-storybook -p 7006",
+    "storybook:ci": "cross-var http-server -a $ADMIN_STORYBOOK_HOST -p $ADMIN_STORYBOOK_PORT ./storybook-static",
+    "test": "echo \"See package.json => scripts for available tests.\" && exit 0",
+    "test:unit": "jest",
+    "test:unit:ci": "jest --ci --reporters=default --reporters=jest-junit",
+    "test:unit:coverage": "jest --coverage",
+    "test:unit:ui": "majestic --port 4001",
+    "test:unit:updateSnapshot": "jest --updateSnapshot",
+    "test:unit:watch": "jest --watch",
+    "test:unit:watchAll": "jest --watchAll"
+  },
+  "version": "0.0.0"
+}

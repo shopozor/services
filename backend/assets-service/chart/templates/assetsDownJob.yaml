@@ -1,0 +1,45 @@
+{{- if .Values.assets.down -}}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "chart.fullname" . }}-assets-down
+  labels:
+{{ include "chart.labels" . | indent 4 }}
+spec:
+  template:
+    spec:
+      initContainers:
+      {{- include "wait-for-minio" . | nindent 6 }}
+      - name: wait-for-minio-buckets
+        image: {{ .Values.minio.client.image }}
+        env: {{- include "minio.envvarsblock" . | nindent 10 }}
+        command:
+          - /bin/sh
+          - -c
+          - |
+            TIMEOUT=60
+            echo "waiting $TIMEOUT seconds for buckets to be there"
+            for ATTEMPT in `seq 1 $TIMEOUT`; do
+              mc config host add ${MINIO_ALIAS} http://${MINIO_SERVER_HOST}:${MINIO_SERVER_PORT_NUMBER} ${MINIO_SERVER_ACCESS_KEY} ${MINIO_SERVER_SECRET_KEY}
+              EXPECTED_BUCKETS=0
+              for bucket in food people shops ; do
+                EXPECTED_BUCKETS=$(($EXPECTED_BUCKETS + $(mc ls ${MINIO_ALIAS} | grep $bucket | wc -l)))
+              done
+              echo "EXPECTED_BUCKETS: $EXPECTED_BUCKETS"
+              [ "$EXPECTED_BUCKETS" -eq "3" ] && exit 0 || sleep 1
+            done
+            echo "Failure" && exit 1
+      containers:
+      - name: {{ .Chart.Name }}-assets-down
+        image: {{ .Values.image }}
+        env: {{- include "minio.envvarsblock" . | nindent 10 }}
+        command:
+          - /bin/sh
+          - -c
+          - |
+            mc config host add ${MINIO_ALIAS} http://${MINIO_SERVER_HOST}:${MINIO_SERVER_PORT_NUMBER} ${MINIO_SERVER_ACCESS_KEY} ${MINIO_SERVER_SECRET_KEY}
+            for category in `ls ../shared/pictures`; do
+              mc rm --recursive --force ${MINIO_ALIAS}/$category
+            done
+      restartPolicy: OnFailure
+{{- end -}}

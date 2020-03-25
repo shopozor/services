@@ -1,0 +1,18 @@
+# Default values for chart.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+minio:
+  fullname: minio
+  client:
+    image: bitnami/minio-client
+    alias: minio
+  server:
+    port: 9000
+
+nameOverride: ""
+fullnameOverride: ""
+
+assets:
+  up: false
+  down: false

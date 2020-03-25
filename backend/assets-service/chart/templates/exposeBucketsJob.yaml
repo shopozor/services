@@ -1,0 +1,28 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "chart.fullname" . }}-expose-buckets
+  labels:
+{{ include "chart.labels" . | indent 4 }}
+spec:
+  template:
+    spec:
+      initContainers:
+      {{- include "wait-for-minio" . | nindent 6 }}
+      containers:
+      - name: {{ .Chart.Name }}-expose-buckets
+        image: {{ .Values.minio.client.image }}
+        env: {{- include "minio.envvarsblock" . | nindent 10 }}
+        command:
+          - /bin/sh
+          - -c
+          - |
+            mc config host add ${MINIO_ALIAS} http://${MINIO_SERVER_HOST}:${MINIO_SERVER_PORT_NUMBER} ${MINIO_SERVER_ACCESS_KEY} ${MINIO_SERVER_SECRET_KEY}
+            RESULT=$?
+            [ "$RESULT" -eq "0" ] || exit 1
+
+            for bucket in food people shops ; do
+              mc mb ${MINIO_ALIAS}/$bucket
+              mc policy set public ${MINIO_ALIAS}/$bucket
+            done
+      restartPolicy: OnFailure

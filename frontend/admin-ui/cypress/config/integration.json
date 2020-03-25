@@ -1,0 +1,42 @@
+{
+  "animationDistanceThreshold": 5,
+  "blacklistHosts": null,
+  "chromeWebSecurity": true,
+  "defaultCommandTimeout": 4000,
+  "env": {
+    "timeDeltaInMs": 10,
+    "timeoutInMs": 1000
+  },
+  "execTimeout": 60000,
+  "fileServerFolder": "",
+  "fixturesFolder": "fixtures/graphql/responses",
+  "hosts": null,
+  "ignoreTestFiles": "*.hot-update.js",
+  "integrationFolder": "cypress/integration",
+  "modifyObstructiveCode": true,
+  "numTestsKeptInMemory": 50,
+  "pageLoadTimeout": 60000,
+  "pluginsFile": "cypress/plugins",
+  "port": null,
+  "projectId": "g6v5sw",
+  "reporter": "junit",
+  "reporterOptions": {
+    "mochaFile": "test-reports/cypress-integration-report.[hash].xml",
+    "toConsole": true
+  },
+  "requestTimeout": 5000,
+  "responseTimeout": 30000,
+  "screenshotsFolder": "cypress/screenshots",
+  "taskTimeout": 60000,
+  "testFiles": "**/*.spec.js",
+  "trashAssetsBeforeRuns": true,
+  "userAgent": null,
+  "video": true,
+  "videoCompression": 32,
+  "videoUploadOnPasses": false,
+  "videosFolder": "cypress/videos",
+  "viewportHeight": 900,
+  "viewportWidth": 1440,
+  "waitForAnimations": true,
+  "watchForFileChanges": true
+}

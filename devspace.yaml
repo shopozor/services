@@ -1,0 +1,701 @@
+version: v1beta7
+vars:
+- name: ADMIN_STORYBOOK_PORT
+  source: env
+  default: 7006
+- name: ADMIN_UI_PORT
+  source: env
+  default: 4000
+- name: CLUSTER_DOMAIN
+  source: env
+  default: cluster.local
+- name: CONSUMER_STORYBOOK_PORT
+  source: env
+  default: 6006
+- name: CONSUMER_UI_PORT
+  source: env
+  default: 3000
+- name: DATABASE_HOSTNAME
+  source: none
+  default: postgres-pgpool
+- name: DATABASE_NAME
+  source: none
+  default: shopozor
+- name: HASURA_ENDPOINT
+  source: env
+  default: http://api.shopozor/
+- name: KUBE_LOCAL_CONTEXT
+  source: env
+  default: docker-desktop
+- name: KUBE_REMOTE_CONTEXT
+  source: env
+  default: hidora
+- name: MINIO_ACCESS_KEY
+  source: env
+  default: minio
+- name: MINIO_ALIAS
+  source: env
+  default: minio
+- name: MINIO_SECRET_KEY
+  source: env
+  default: minio123
+- name: MINIO_URL
+  source: env
+  default: http://assets.shopozor/
+- name: POSTGRES_USERNAME
+  source: env
+  default: postgres
+- name: REMOTE_DOMAIN
+  source: env
+  default: budzonnerie.hidora.com
+- name: SHARED_POSTGRES_SECRET_NAME
+  source: none
+  default: shared-postgresql
+images:
+  admin-storybook:
+    image: shopozor/admin-storybook
+    tags:
+    - ${DEVSPACE_RANDOM}
+    dockerfile: Dockerfile
+    context: .
+    build:
+      docker:
+        options:
+          target: admin-storybook
+          buildArgs:
+            ASSETS_API: http://assets.shopozor/
+            GRAPHQL_API: http://api.shopozor/v1/graphql/
+  admin-ui:
+    image: shopozor/admin-ui
+    tags:
+    - ${DEVSPACE_RANDOM}
+    dockerfile: Dockerfile
+    context: .
+    build:
+      docker:
+        options:
+          target: admin-ui
+          buildArgs:
+            ASSETS_API: http://assets.shopozor/
+            GRAPHQL_API: http://api.shopozor/v1/graphql/
+  api:
+    image: shopozor/graphql-engine
+    tags:
+    - ${DEVSPACE_RANDOM}
+    dockerfile: Dockerfile
+    context: .
+    build:
+      docker:
+        options:
+          target: hasura-migrations
+  assets-fixtures:
+    image: shopozor/assets-fixtures
+    tags:
+    - ${DEVSPACE_RANDOM}
+    dockerfile: Dockerfile
+    context: .
+    build:
+      docker:
+        options:
+          target: assets-client
+  consumer-storybook:
+    image: shopozor/consumer-storybook
+    tags:
+    - ${DEVSPACE_RANDOM}
+    dockerfile: Dockerfile
+    context: .
+    build:
+      docker:
+        options:
+          target: consumer-storybook
+          buildArgs:
+            ASSETS_API: http://assets.shopozor/
+            GRAPHQL_API: http://api.shopozor/v1/graphql/
+  consumer-ui:
+    image: shopozor/consumer-ui-spa
+    tags:
+    - ${DEVSPACE_RANDOM}
+    dockerfile: Dockerfile
+    context: .
+    build:
+      docker:
+        options:
+          target: consumer-ui-spa
+          buildArgs:
+            ASSETS_API: http://assets.shopozor/
+            GRAPHQL_API: http://api.shopozor/v1/graphql/
+  fixtures-service:
+    image: shopozor/fixtures-service
+    tags:
+    - ${DEVSPACE_RANDOM}
+    dockerfile: Dockerfile
+    context: .
+    build:
+      docker:
+        options:
+          target: fixtures-app-ci
+deployments:
+- name: shared
+  helm:
+    chart:
+      name: ./shared/chart/
+    values:
+      postgresql:
+        username: ${POSTGRES_USERNAME}
+        # TODO: if we want, we can set the relevant passwords for development here (and remove them in staging / prod)!
+- name: minio
+  helm:
+    chart:
+      name: minio
+      repo: https://charts.bitnami.com/bitnami
+    values:
+      accessKey:
+        password: minio
+      # cf. https://stackoverflow.com/questions/52940774/kubernetes-how-to-check-current-domain-set-by-cluster-domain-from-pod
+      clusterDomain: ${CLUSTER_DOMAIN}
+      disableWebUI: false
+      ingress:
+        annotations:
+          kubernetes.io/ingress.class: nginx
+        enabled: true
+        hosts:
+        - name: assets.shopozor
+          path: /
+      mode: standalone
+      persistence:
+        enabled: false
+        size: 10Gi
+      secretKey:
+        password: minio123
+      service:
+        port: 9000
+- name: minio-initialization
+  helm:
+    chart:
+      name: ./backend/assets-service/chart/
+    values:
+      image: shopozor/assets-fixtures
+      minio:
+        client:
+          alias: minio
+        fullname: minio
+        server:
+          port: 9000
+- name: postgres
+  helm:
+    chart:
+      name: postgresql-ha
+      repo: https://charts.bitnami.com/bitnami
+    values:
+      fullnameOverride: postgres
+      persistence:
+        enabled: false
+      postgresql:
+        existingSecret: ${SHARED_POSTGRES_SECRET_NAME}
+        database: ${DATABASE_NAME}
+        username: ${POSTGRES_USERNAME}
+      volumePermissions:
+        enabled: true
+- name: keycloak
+  helm:
+    chart:
+      name: keycloak
+      repo: https://codecentric.github.io/helm-charts
+    values:
+      clusterDomain: ${CLUSTER_DOMAIN}
+      # TODO: fix the following values for staging and production environments!
+      # TODO: in staging / prod, add ingress? how will hasura talk to this service?
+      keycloak:
+        image:
+          tag: 9.0.0
+        # because keycloak uses named ports in its service definition, we can't use the devspace port forwarding feature
+        # therefore, we define the following ingress for dev purposes
+        # TODO: this is probably not necessary in staging and prod, because hasura is our api
+        ingress:
+          enabled: true
+          path: /
+          hosts:
+            - auth.shopozor
+        username: admin
+        password: admin
+        persistence:
+          deployPostgres: false
+          existingSecret: ${SHARED_POSTGRES_SECRET_NAME}
+          existingSecretPasswordKey: postgresql-password
+          existingSecretUsernameKey: postgresql-username
+          dbVendor: postgres
+          # the database needs to exist before keycloak is started
+          dbName: ${DATABASE_NAME}
+          dbHost: ${DATABASE_HOSTNAME}
+          dbPort: 5432
+- name: api
+  helm:
+    chart:
+      name: backend/database-service/chart
+    values:
+      image: shopozor/graphql-engine
+      ingress:
+        enabled: true
+        hosts:
+        - host: api.shopozor
+          paths:
+          - /
+      postgres:
+        database: ${DATABASE_NAME}
+        hostname: ${DATABASE_HOSTNAME}
+        secretName: ${SHARED_POSTGRES_SECRET_NAME}
+        username: ${POSTGRES_USERNAME}
+      service:
+        cors:
+          domain: '*'
+          enabled: true
+        console:
+          enabled: true
+        server:
+          port: 8080
+- name: admin-ui
+  helm:
+    chart:
+      name: frontend/admin-ui/chart
+    values:
+      services:
+        api:
+          hostname: api
+      storybook:
+        enabled: true
+        image: shopozor/admin-storybook
+        ingress:
+          enabled: false
+        service:
+          port: 7006
+      ui:
+        image: shopozor/admin-ui
+        service:
+          port: 4000
+          type: ClusterIP
+- name: consumer-ui
+  helm:
+    chart:
+      name: frontend/consumer-ui/chart
+    values:
+      services:
+        api:
+          hostname: api
+      storybook:
+        enabled: true
+        image: shopozor/consumer-storybook
+        ingress:
+          enabled: false
+        service:
+          port: 6006
+      ui:
+        image: shopozor/consumer-ui-spa
+        service:
+          port: 3000
+          type: ClusterIP
+dev:
+  ports:
+  - imageName: admin-ui
+    forward:
+    - port: ${ADMIN_UI_PORT}
+      remotePort: 80
+  - imageName: admin-storybook
+    forward:
+    - port: ${ADMIN_STORYBOOK_PORT}
+      remotePort: 8080
+  - imageName: consumer-ui
+    forward:
+    - port: ${CONSUMER_UI_PORT}
+      remotePort: 80
+  - imageName: consumer-storybook
+    forward:
+    - port: ${CONSUMER_STORYBOOK_PORT}
+      remotePort: 8080
+  - labelSelector:
+      app.kubernetes.io/component: pgpool
+      app.kubernetes.io/instance: postgres
+      app.kubernetes.io/name: postgresql-ha
+    forward:
+    - port: 5432
+      remotePort: 5432
+commands:
+- name: assets.cleanup
+  command: |
+    mc config host add ${MINIO_ALIAS} ${MINIO_URL} ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
+    for category in `ls ./shared/pictures`; do
+      echo "Processing category $category"
+      mc rm --recursive --force ${MINIO_ALIAS}/$category
+    done
+- name: assets.push
+  command: |
+    mc config host add ${MINIO_ALIAS} ${MINIO_URL} ${MINIO_ACCESS_KEY} ${MINIO_SECRET_KEY}
+    for category in `ls ./shared/pictures`; do
+      echo "Processing category $category"
+      for f in `ls ./shared/pictures/$category/*` ; do
+        mc cp $f ${MINIO_ALIAS}/$category/$(basename $f)
+      done
+    done
+- name: bootstrap
+  command: |
+    yarn && yarn bootstrap
+- name: cypress.all.run
+  command: |
+    devspace run cypress.admin-ui.run
+    devspace run cypress.consumer-ui.run
+- name: cypress.admin-ui.open
+  command: |
+    devspace run reset.test-data
+    CYPRESS_baseUrl=http://localhost:${ADMIN_UI_PORT}/# NODE_ENV=development npx lerna run cypress:open --scope admin-ui --stream -- --env configFile=e2e
+- name: cypress.admin-ui.run
+  command: |
+    devspace run reset.test-data
+    CYPRESS_baseUrl=http://localhost:${ADMIN_UI_PORT}/# npx lerna run cypress:e2e --scope admin-ui --stream -- --env configFile=e2e
+- name: cypress.consumer-ui.open
+  command: |
+    devspace run reset.test-data
+    CYPRESS_baseUrl=http://localhost:${CONSUMER_UI_PORT} NODE_ENV=development npx lerna run cypress:open --scope consumer-ui --stream -- --env configFile=e2e
+- name: cypress.consumer-ui.run
+  command: |
+    devspace run reset.test-data
+    CYPRESS_baseUrl=http://localhost:${CONSUMER_UI_PORT} npx lerna run cypress:e2e --scope consumer-ui --stream -- --env configFile=e2e
+- name: deploy.production
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context ${KUBE_REMOTE_CONTEXT}
+    devspace deploy --build-sequential -n production -p production --kube-context ${KUBE_REMOTE_CONTEXT}
+    bash ./scripts/wait_for_deployments.sh production 120
+    kubectl config use-context $CURRENT_CONTEXT
+- name: deploy.staging
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context ${KUBE_REMOTE_CONTEXT}
+    devspace deploy --build-sequential -n staging -p staging --kube-context ${KUBE_REMOTE_CONTEXT}
+    bash ./scripts/wait_for_deployments.sh staging 120
+    kubectl config use-context $CURRENT_CONTEXT
+- name: fixtures.cleanup
+  command: |
+    hasura migrate apply --endpoint ${HASURA_ENDPOINT} --project ./shared/fixtures/database --down $(ls ./shared/fixtures/database/migrations/*.up.sql | wc -l) --skip-update-check
+- name: fixtures.generate
+  command: |
+    rm -Rf shared/fixtures
+    mkdir shared/fixtures
+    docker-compose build fixtures-service
+    docker-compose up fixtures-service
+    docker-compose rm -f fixtures-service
+- name: fixtures.push
+  command: |
+    hasura migrate apply --endpoint ${HASURA_ENDPOINT} --project ./shared/fixtures/database --up all --skip-update-check
+- name: hasura.console
+  command: |
+    hasura console --project ./backend/database-service --endpoint ${HASURA_ENDPOINT} --skip-update-check
+- name: keycloak.password.remote.staging
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context ${KUBE_REMOTE_CONTEXT}
+    kubectl get secret -n staging keycloak-http -o jsonpath="{.data.password}" | base64 --decode; echo
+    kubectl config use-context $CURRENT_CONTEXT
+- name: keycloak.password.remote.production
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context ${KUBE_REMOTE_CONTEXT}
+    kubectl get secret -n production keycloak-http -o jsonpath="{.data.password}" | base64 --decode; echo
+    kubectl config use-context $CURRENT_CONTEXT
+- name: kubernetes.dashboard-token.local
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context ${KUBE_LOCAL_CONTEXT}
+    kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep default-token | awk '{print $1}')
+    kubectl config use-context $CURRENT_CONTEXT
+- name: kubernetes.dashboard-token.remote
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context ${KUBE_REMOTE_CONTEXT}
+    kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep fulladmin | awk '{print $1}') | grep 'token:' | sed -e's/token:\| //g'
+    kubectl config use-context $CURRENT_CONTEXT
+- name: postgres.password.dev
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context ${KUBE_LOCAL_CONTEXT}
+    secret=$(kubectl get secret --namespace dev ${SHARED_POSTGRES_SECRET_NAME} -o jsonpath="{.data.postgresql-password}" | base64 --decode)
+    echo "postgres password: $secret"
+    kubectl config use-context $CURRENT_CONTEXT
+# TODO: this here is only for testing purposes; we will have to remove this command as it is dangerous
+- name: purge.production
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context ${KUBE_REMOTE_CONTEXT}
+    devspace purge -n production -p production --kube-context ${KUBE_REMOTE_CONTEXT}
+    kubectl delete namespaces production
+    kubectl config use-context $CURRENT_CONTEXT
+- name: purge.staging
+  command: |
+    CURRENT_CONTEXT=$(kubectl config current-context)
+    kubectl config use-context ${KUBE_REMOTE_CONTEXT}
+    devspace purge -n staging -p staging --kube-context ${KUBE_REMOTE_CONTEXT}
+    kubectl delete namespaces staging
+    kubectl config use-context $CURRENT_CONTEXT
+- name: reset.test-data
+  command: |
+    devspace run assets.cleanup
+    devspace run fixtures.cleanup
+    devspace run assets.push
+    devspace run fixtures.push
+- name: tests.all
+  command: |
+    devspace run tests.all.unit
+    devspace run tests.all.integration
+    devspace run cypress.all.run
+- name: tests.all.unit
+  command: |
+    docker-compose build database-service-tests
+    docker-compose up database-service-tests
+    npx lerna run test:unit --stream
+- name: tests.all.integration
+  command: |
+    docker-compose down --remove-orphans
+    docker-compose build graphql-engine-with-tables service-integration-tests
+    docker-compose up -d graphql-engine-with-tables
+    sleep 60
+    docker-compose up --abort-on-container-exit service-integration-tests
+    docker-compose down --remove-orphans
+- name: tests.admin-ui.unit
+  command: |
+    npx lerna run test:unit --scope admin-ui --stream
+- name: tests.consumer-ui.unit
+  command: |
+    npx lerna run test:unit --scope consumer-ui --stream
+- name: tests.update-snapshots
+  command: |
+    npx lerna run test:unit:updateSnapshot --stream
+- name: ui.prepare-for-designer
+  command: |
+    devspace deploy --build-sequential -n dev
+    bash ./scripts/wait_for_deployments.sh dev 120
+    devspace run fixtures.push
+    yarn generate
+    cp -R shared/pictures/* frontend/consumer-ui/dist/
+    find frontend/consumer-ui/dist -type f -exec sed -i s@http\:\/\/assets.shopozor\/@@g {} \;
+    rm -f ui.zip && zip -r ui.zip frontend/consumer-ui/dist/
+profiles:
+- name: feature-tests
+  patches:
+  - op: remove
+    path: images.admin-storybook
+  - op: remove
+    path: images.consumer-storybook
+- name: staging
+  # TODO: organize TLS!
+  #  - https://www.digitalocean.com/community/tutorials/how-to-set-up-an-nginx-ingress-with-cert-manager-on-digitalocean-kubernetes
+  #  - https://kubernetes.github.io/ingress-nginx/user-guide/tls/
+  patches:
+  # images
+  - op: replace
+    path: /images/0=${DEVSPACE_RANDOM}/0
+    value: staging-${DEVSPACE_GIT_COMMIT}
+  - op: remove
+    path: images.admin-storybook
+  - op: remove
+    path: images.consumer-storybook
+  - op: replace
+    path: images.admin-ui.build.docker.options.buildArgs
+    value:
+      # TODO: use https!!!
+      GRAPHQL_API: http://api-staging.${REMOTE_DOMAIN}/v1/graphql/
+      ASSETS_API: http://assets-staging.${REMOTE_DOMAIN}/
+  - op: replace
+    path: images.consumer-ui.build.docker.options.buildArgs
+    value:
+      # TODO: use https!!!
+      GRAPHQL_API: http://api-staging.${REMOTE_DOMAIN}/v1/graphql/
+      ASSETS_API: http://assets-staging.${REMOTE_DOMAIN}/
+  # minio
+  - op: remove
+    path: /deployments/name=minio/helm/values/accessKey/password
+  - op: remove
+    path: /deployments/name=minio/helm/values/secretKey/password
+  # TODO: all the following config should be used when we use the cert-manager; make sure the issuer's name is correct!
+  # # TODO: does this annotation bring anything positive? (cf. https://cert-manager.io/docs/usage/ingress/#optional-configuration)
+  # # - op: add
+  # #   path: /deployments/name=minio/helm/values/ingress/certManager
+  # #   value: true
+  # - op: replace
+  #   path: /deployments/name=minio/helm/values/ingress/annotations
+  #   value:
+  #     kubernetes.io/ingress.class: "nginx"
+  #     cert-manager.io/cluster-issuer: "letsencrypt-prod"
+  # - op: add
+  #   path: /deployments/name=minio/helm/values/ingress/hosts/0/tls
+  #   value: true
+  # - op: add
+  #   path: /deployments/name=minio/helm/values/ingress/hosts/0/tlsSecret
+  #   value: minio-tls
+  - op: replace
+    path: /deployments/name=minio/helm/values/ingress/hosts/0/name
+    value: assets-staging.${REMOTE_DOMAIN}
+  - op: replace
+    path: /deployments/name=minio/helm/values/mode
+    value: distributed
+  - op: replace
+    path: /deployments/name=minio/helm/values/persistence
+    value:
+      enabled: true
+      mountPath: /data
+      size: 1Gi
+      storageClass: jelastic-dynamic-volume
+  # minio-initialization
+  - op: add
+    path: /deployments/name=minio-initialization/helm/values/assets
+    value:
+      up: true
+  # postgres
+  - op: replace
+    path: /deployments/name=postgres/helm/values/persistence
+    value:
+      enabled: true
+      size: 1Gi
+      storageClass: jelastic-dynamic-volume
+      # TODO: fine-tune database name and username
+  # TODO: apply production values! https://github.com/bitnami/charts/blob/master/upstreamed/postgresql/values-production.yaml
+  # keycloak
+  - op: remove
+    path: /deployments/name=keycloak/helm/values/keycloak/password
+    # TODO: is the ingress really necessary?
+  - op: replace
+    path: /deployments/name=keycloak/helm/values/keycloak/ingress/hosts/0
+    value: auth-staging.${REMOTE_DOMAIN}
+  # api
+  # TODO: add an admin secret
+  # TODO: configure jwt secret
+  - op: replace
+    path: /deployments/name=api/helm/values/ingress/hosts/0/host
+    value: api-staging.${REMOTE_DOMAIN}
+  - op: replace
+    path: /deployments/name=api/helm/values/service/cors/domain
+    # TODO: only enable https! <-- add issue!
+    value: http://admin-staging.${REMOTE_DOMAIN},http://staging.${REMOTE_DOMAIN},https://admin-staging.${REMOTE_DOMAIN},https://staging.${REMOTE_DOMAIN}
+  # TODO: fine-tune database url!
+  # database-fixtures
+  - op: add
+    path: deployments
+    value:
+      helm:
+        chart:
+          name: backend/fixtures-generator/chart
+        values:
+          fixtures:
+            up: true
+          image: shopozor/fixtures-service
+          services:
+            api:
+              hostname: api
+              port: 8080
+      name: database-fixtures
+  # admin-ui
+  - op: replace
+    path: /deployments/name=admin-ui/helm/values/storybook/enabled
+    value: false
+  - op: replace
+    path: /deployments/name=admin-ui/helm/values/ui/service/type
+    value: LoadBalancer
+  - op: add
+    path: /deployments/name=admin-ui/helm/values/ui/ingress
+    value:
+      enabled: true
+      hosts:
+      - host: admin-staging.${REMOTE_DOMAIN}
+        paths:
+        - /
+  # consumer-ui
+  # TODO: replace with consumer-ui image, don't keep consumer-ui-spa!
+  - op: replace
+    path: /deployments/name=consumer-ui/helm/values/storybook/enabled
+    value: false
+  - op: replace
+    path: /deployments/name=consumer-ui/helm/values/ui/service/type
+    value: LoadBalancer
+  - op: add
+    path: /deployments/name=consumer-ui/helm/values/ui/ingress
+    value:
+      enabled: true
+      hosts:
+      - host: staging.${REMOTE_DOMAIN}
+        paths:
+        - /
+- name: production
+  parent: staging
+  patches:
+  # images
+  - op: replace
+    path: /images/0=staging-${DEVSPACE_GIT_COMMIT}
+    value:
+    - prod-${DEVSPACE_GIT_COMMIT}
+    - latest
+  - op: replace
+    path: images.admin-ui.build.docker.options.buildArgs
+    value:
+      # TODO: use https!!!
+      GRAPHQL_API: http://api.${REMOTE_DOMAIN}/v1/graphql/
+      ASSETS_API: http://assets.${REMOTE_DOMAIN}/
+  - op: replace
+    path: images.consumer-ui.build.docker.options.buildArgs
+    value:
+      # TODO: use https!!!
+      GRAPHQL_API: http://api.${REMOTE_DOMAIN}/v1/graphql/
+      ASSETS_API: http://assets.${REMOTE_DOMAIN}/
+  # minio
+  - op: replace
+    path: /deployments/name=minio/helm/values/ingress/hosts/0/name
+    value: assets.${REMOTE_DOMAIN}
+  - op: replace
+    path: /deployments/name=minio/helm/values/disableWebUI
+    value: true
+  - op: replace
+    path: /deployments/name=minio/helm/values/persistence/size
+    value: 50Gi
+  # minio-initialization
+  - op: replace
+    path: /deployments/name=minio-initialization/helm/values/assets
+    value:
+      up: false
+  # postgres
+  # TODO: make sure the database name, username, and password are all different from that defined for staging!
+  # TODO: apply production values! https://github.com/bitnami/charts/blob/master/upstreamed/postgresql/values-production.yaml
+  # keycloak
+    # TODO: is the ingress really necessary?
+  - op: replace
+    path: /deployments/name=keycloak/helm/values/keycloak/ingress/hosts/0
+    value: auth.${REMOTE_DOMAIN}
+  # database-fixtures
+  - op: remove
+    path: /deployments/name=database-fixtures
+  # api
+  - op: replace
+    path: /deployments/name=api/helm/values/ingress/hosts/0/host
+    value: api.${REMOTE_DOMAIN}
+  - op: replace
+    path: /deployments/name=api/helm/values/service/cors/domain
+    # TODO: only enable https! <-- add issue!
+    value: http://admin.${REMOTE_DOMAIN},http://app.${REMOTE_DOMAIN},https://admin.${REMOTE_DOMAIN},https://app.${REMOTE_DOMAIN}
+  # TODO: add an admin secret
+  # TODO: configure jwt secret
+  #       cf. https://hasura.io/docs/1.0/graphql/manual/deployment/graphql-engine-flags/reference.html
+  - op: replace
+    path: /deployments/name=api/helm/values/service/console/enabled
+    # TODO: find out why setting this to false makes the api unable to start
+    value: false
+  # TODO: https://hasura.io/docs/1.0/graphql/manual/deployment/production-checklist.html
+  # admin-ui
+  - op: replace
+    path: /deployments/name=admin-ui/helm/values/ui/ingress/hosts
+    value:
+    - host: admin.${REMOTE_DOMAIN}
+      paths:
+      - /
+  # consumer-ui
+  # TODO: replace with consumer-ui image, don't keep consumer-ui-spa!
+  - op: replace
+    path: /deployments/name=consumer-ui/helm/values/ui/ingress/hosts
+    value:
+    - host: app.${REMOTE_DOMAIN}
+      paths:
+      - /

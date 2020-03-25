@@ -1,0 +1,8 @@
+- args:
+    sql: CREATE TABLE "public"."product_images"("id" serial NOT NULL, "alt" text,
+      "url" varchar NOT NULL, PRIMARY KEY ("id") , UNIQUE ("id"));
+  type: run_sql
+- args:
+    name: product_images
+    schema: public
+  type: add_existing_table_or_view

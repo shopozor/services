@@ -1,0 +1,3 @@
+- args:
+    sql: DROP TABLE "public"."vat"
+  type: run_sql

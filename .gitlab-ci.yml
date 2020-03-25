@@ -1,0 +1,165 @@
+stages:
+- lint
+- prepare-fixtures
+- test
+- build
+- deploy
+
+lint-python:
+  stage: lint
+  image: shopozor/python-lint:latest
+  script:
+  - autopep8 --exclude node_modules -ir . --exit-code
+
+lint-node:
+  stage: lint
+  image: node:13.8.0-alpine
+  script:
+  - yarn
+  - yarn lint
+
+generate-fixtures:
+  variables:
+    IMAGE_NAME: fixtures-generator
+    CONTAINER_NAME: fixtures-generator
+  stage: prepare-fixtures
+  image: docker:latest
+  script:
+  - docker build -f Dockerfile -t $IMAGE_NAME --target fixtures-app-ci .
+  - docker run --name $CONTAINER_NAME --env PYTHONDONTWRITEBYTECODE=1 $IMAGE_NAME
+  - docker cp $CONTAINER_NAME:/app/fixtures ./shared/
+  artifacts:
+    paths:
+    - $CI_PROJECT_DIR/shared/fixtures/
+  after_script:
+  - docker container rm $CONTAINER_NAME
+
+hasura-service-tests:
+  stage: test
+  image: shopozor/docker-compose:latest
+  before_script:
+  - docker-compose build database-service-tests service-integration-tests
+  script:
+  - docker-compose up --exit-code-from database-service-tests database-service-tests
+  - docker-compose up --exit-code-from service-integration-tests service-integration-tests
+  after_script:
+  - docker cp services_database-service-tests_1:/app/backend/database-service/test-reports ./backend/database-service/test-reports
+  - docker cp services_service-integration-tests_1:/app/backend/tests/test-reports ./backend/tests/test-reports
+  - docker-compose down --remove-orphans
+  artifacts:
+    reports:
+      junit:
+      - $CI_PROJECT_DIR/backend/database-service/test-reports/*.xml
+      - $CI_PROJECT_DIR/backend/tests/test-reports/*.xml
+
+node-unit-tests:
+  stage: test
+  image: node:13.8.0-alpine
+  script:
+  - yarn && yarn bootstrap
+  - yarn test:unit:ci
+  artifacts:
+    reports:
+      junit:
+      # wildcard path "**" does not work: https://gitlab.com/gitlab-org/gitlab-runner/issues/2620
+      - $CI_PROJECT_DIR/frontend/*/test-reports/*.xml
+      - $CI_PROJECT_DIR/backend/*/test-reports/*.xml
+
+build-services:
+  stage: build
+  image: shopozor/devspace
+  script:
+  - devspace build --build-sequential --skip-push -p feature-tests
+  except:
+  - master
+  - pre-production
+  - production
+
+deploy_staging:
+  stage: deploy
+  image: shopozor/devspace
+  environment:
+    name: staging
+    kubernetes:
+      namespace: staging
+    url: $DYNAMIC_STAGING_ENVIRONMENT_URL
+    on_stop: stop_staging
+    # TODO: auto-stop this environment: https://docs.gitlab.com/ee/ci/environments.html#stopping-an-environment
+  script:
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  - devspace deploy --build-sequential -n $KUBE_NAMESPACE -p staging
+  # TODO: this needs to wait for all jobs to be finished
+  - ./scripts/wait_for_deployments.sh $KUBE_NAMESPACE
+  only:
+  - master
+
+review_staging:
+  stage: deploy
+  script:
+    - echo "Run the cypress tests!"
+  # TODO: gather the cypress tests reports
+  # artifacts:
+  #   reports:
+  #     dotenv: deploy.env
+  environment:
+    name: staging
+    url: $DYNAMIC_STAGING_ENVIRONMENT_URL
+    # on_stop: stop_staging_review
+
+# stop_staging_review:
+#   script:
+#     - ./teardown-environment
+#   when: manual
+#   environment:
+#     name: staging
+#     action: stop
+
+stop_staging:
+  stage: deploy
+  image: shopozor/devspace
+  script:
+  - devspace purge -n $KUBE_NAMESPACE -p staging
+  # TODO: wait until all deployments are purged!
+  # TODO: also delete the persistent volumes! or stop deploying postgres in this namespace! <-- define new databases for hasura and keycloak for staging, pre-deployment and deployment
+  when: manual
+  environment:
+    name: staging
+    action: stop
+
+pages:
+  image: shopozor/pickles
+  script:
+  - APP=admin-ui mono /pickles/Pickles.exe --feature-directory=./frontend/$APP/cypress/e2e --output-directory=public/$APP --system-under-test-name=$APP --system-under-test-version=${CI_COMMIT_SHORT_SHA} --language=fr --documentation-format=dhtml --exp --et 'in-preparation'
+  - APP=consumer-ui mono /pickles/Pickles.exe --feature-directory=./frontend/$APP/cypress/e2e --output-directory=public/$APP --system-under-test-name=$APP --system-under-test-version=${CI_COMMIT_SHORT_SHA} --language=fr --documentation-format=dhtml --exp --et 'in-preparation'
+  artifacts:
+    paths:
+    - public
+  only:
+  - master
+
+# TODO: incremental deployments + review on pre-production environment?
+#       cf. https://docs.gitlab.com/ee/ci/environments.html
+deploy_prod:
+  stage: deploy
+  image: shopozor/devspace
+  script:
+  - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  - devspace deploy --build-sequential -n $KUBE_NAMESPACE -p production
+  - ./scripts/wait_for_deployments.sh $KUBE_NAMESPACE
+  environment:
+    name: production
+    url: $DYNAMIC_PROD_ENVIRONMENT_URL
+    on_stop: stop_prod
+  when: manual
+  only:
+  - master
+
+stop_prod:
+  stage: deploy
+  image: shopozor/devspace
+  script:
+  - devspace purge -n $KUBE_NAMESPACE -p production
+  when: manual
+  environment:
+    name: production
+    action: stop

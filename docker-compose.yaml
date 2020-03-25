@@ -1,22 +1,110 @@
-version: '3.6'
+version: "3.6"
 services:
   postgres:
-    image: postgres
-    restart: always
+    image: postgres:11.2-alpine
+    restart: "always"
     volumes:
-    - db_data:/var/lib/postgresql/data
-  graphql-engine:
-    image: hasura/graphql-engine:v1.0.0-beta.8
-    ports:
-    - "8080:8080"
+      - db_data:/var/lib/postgresql-11.2/data
+  graphql-engine-empty:
+    image: hasura/graphql-engine:v1.0.0
     depends_on:
-    - "postgres"
-    restart: always
+      - postgres
+    restart: "always"
     environment:
       HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:@postgres:5432/postgres
-      HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
       HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
-      ## uncomment next line to set an admin secret
-      # HASURA_GRAPHQL_ADMIN_SECRET: myadminsecretkey
+  graphql-engine-with-tables:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: hasura-migrations
+    depends_on:
+      - postgres
+    restart: "always"
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:@postgres:5432/postgres
+      HASURA_GRAPHQL_ENABLE_CONSOLE: "true"
+      HASURA_GRAPHQL_ENABLED_LOG_TYPES: startup, http-log, webhook-log, websocket-log, query-log
+  fixtures-service:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: fixtures-app
+    image: ${PRODUCT:-shopozor}/fixtures-service:${TAG:-local}
+    restart: "no"
+    volumes:
+      - ./backend/fixtures-generator:/app
+      - ./backend/test-utils:/app/test_utils
+      - ./shared/pictures:/app/pictures
+      - ./shared/fixtures:/app/fixtures
+    environment:
+      PYTHONDONTWRITEBYTECODE: "1"
+    entrypoint: ./entrypoint.sh medium
+  jest-unit-tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: jest-unit-testing
+    image: ${PRODUCT:-shopozor}/jest-unit-testing:${TAG:-local}
+    restart: "no"
+    volumes:
+      - ./frontend/consumer-ui/test-reports:/app/frontend/consumer-ui/test-reports
+      - ./frontend/admin-ui/test-reports:/app/frontend/admin-ui/test-reports
+  database-service-tests:
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
+      target: python-tests
+    restart: "no"
+    depends_on:
+      - graphql-engine-empty
+    environment:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONPATH: /app/backend
+    volumes:
+      - ./backend/database-service/test-reports:/app/backend/database-service/test-reports
+    entrypoint: ./backend/database-service/tests/entrypoint.sh graphql-engine-empty 8080 /app
+  service-integration-tests:
+    build:
+      context: .
+      dockerfile: Dockerfile-dev
+      target: python-tests
+    restart: "no"
+    depends_on:
+      - graphql-engine-with-tables
+    environment:
+      PYTHONDONTWRITEBYTECODE: "1"
+      PYTHONPATH: /app/backend
+    volumes:
+      - ./backend/tests/test-reports:/app/backend/tests/test-reports
+    entrypoint: ./backend/tests/entrypoint.sh graphql-engine-with-tables 8080 /app
+  admin-e2e-tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: cypress-tests
+      args:
+        CYPRESS_VERSION: 3.8.0
+    restart: "no"
+    volumes:
+      - .:/app
+    environment:
+      CYPRESS_baseUrl: http://localhost:${ADMIN_UI_PORT:-4000}
+    entrypoint: lerna run cypress:e2e --scope admin-ui --stream -- --env configFile=e2e
+  consumer-e2e-tests:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: cypress-tests
+      args:
+        CYPRESS_VERSION: 3.8.0
+    restart: "no"
+    volumes:
+      - .:/app
+    environment:
+      CYPRESS_baseUrl: http://localhost:${CONSUMER_UI_PORT:-3000}
+    entrypoint: lerna run cypress:e2e --scope consumer-ui --stream -- --env configFile=e2e
+
 volumes:
   db_data:
