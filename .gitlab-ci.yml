@@ -6,9 +6,6 @@ stages:
 - deploy
 - validate
 
-.log_into_docker: &log_into_docker
-- docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-
 lint-python:
   stage: lint
   image: shopozor/python-lint:latest
@@ -84,14 +81,51 @@ deploy_staging:
   image: shopozor/devspace
   environment:
     name: staging
-    # TODO: get this from an environment variable!
-    url: http://staging.budzonnerie.hidora.com
+    kubernetes:
+      namespace: staging
+    url: $DYNAMIC_STAGING_ENVIRONMENT_URL
+    on_stop: stop_staging
+    # TODO: auto-stop this environment: https://docs.gitlab.com/ee/ci/environments.html#stopping-an-environment
   script:
   - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
   - devspace deploy --build-sequential -n $KUBE_NAMESPACE -p staging
+  # TODO: this needs to wait for all jobs to be finished
   - ./scripts/wait_for_deployments.sh $KUBE_NAMESPACE
   only:
   - master
+
+review_staging:
+  stage: deploy
+  script:
+    - echo "Run the cypress tests!"
+  # TODO: gather the cypress tests reports
+  # artifacts:
+  #   reports:
+  #     dotenv: deploy.env
+  environment:
+    name: staging
+    url: $DYNAMIC_STAGING_ENVIRONMENT_URL
+    # on_stop: stop_staging_review
+
+# stop_staging_review:
+#   script:
+#     - ./teardown-environment
+#   when: manual
+#   environment:
+#     name: staging
+#     action: stop
+
+stop_staging:
+  stage: deploy
+  image: shopozor/devspace
+  script:
+  - devspace purge -n $KUBE_NAMESPACE -p staging
+  # TODO: wait until all deployments are purged!
+  # TODO: also delete the persistent volumes!
+  when: manual
+  environment:
+    name: staging
+    action: stop
 
 pages:
   image: shopozor/pickles
@@ -104,6 +138,8 @@ pages:
   only:
   - master
 
+# TODO: incremental deployments + review on pre-production environment?
+#       cf. https://docs.gitlab.com/ee/ci/environments.html
 deploy_prod:
   stage: deploy
   image: shopozor/devspace
@@ -113,8 +149,18 @@ deploy_prod:
   - ./scripts/wait_for_deployments.sh $KUBE_NAMESPACE
   environment:
     name: production
-    # TODO: get this from an environment variable!
-    url: http://app.budzonnerie.hidora.com
+    url: $DYNAMIC_PROD_ENVIRONMENT_URL
+    on_stop: stop_prod
   when: manual
   only:
   - master
+
+stop_prod:
+  stage: deploy
+  image: shopozor/devspace
+  script:
+  - devspace purge -n $KUBE_NAMESPACE -p production
+  when: manual
+  environment:
+    name: production
+    action: stop
