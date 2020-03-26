@@ -92,7 +92,6 @@ deploy_staging:
   only:
   - master
 
-# TODO: only do this if the deploy_staging was successful!
 review_staging:
   stage: deploy
   image: shopozor/cypress
@@ -111,11 +110,11 @@ review_staging:
     paths:
     - $CI_PROJECT_DIR/cypress/videos
     - $CI_PROJECT_DIR/cypress/screenshots
-    # TODO: also get videos and screenshots
   environment:
     name: staging
     url: http://$DYNAMIC_STAGING_ENVIRONMENT_URL
     # on_stop: stop_staging_review
+  when: on_success
   only:
   - master
 
