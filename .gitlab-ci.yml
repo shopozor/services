@@ -145,8 +145,8 @@ stop_staging:
 pages:
   image: shopozor/pickles
   script:
-  - APP=admin-ui ; mono /pickles/Pickles.exe --feature-directory=./frontend/$APP/cypress/e2e --output-directory=public/$APP --system-under-test-name=$APP --system-under-test-version=${CI_COMMIT_SHORT_SHA} --language=fr --documentation-format=dhtml --exp --et 'in-preparation'
-  - APP=consumer-ui ; mono /pickles/Pickles.exe --feature-directory=./frontend/$APP/cypress/e2e --output-directory=public/$APP --system-under-test-name=$APP --system-under-test-version=${CI_COMMIT_SHORT_SHA} --language=fr --documentation-format=dhtml --exp --et 'in-preparation'
+  - APP=admin-ui ; mono /pickles/Pickles.exe --feature-directory=cypress/$APP --output-directory=public/$APP --system-under-test-name=$APP --system-under-test-version=${CI_COMMIT_SHORT_SHA} --language=fr --documentation-format=dhtml --exp --et 'in-preparation'
+  - APP=consumer-ui ; mono /pickles/Pickles.exe --feature-directory=cypress/$APP --output-directory=public/$APP --system-under-test-name=$APP --system-under-test-version=${CI_COMMIT_SHORT_SHA} --language=fr --documentation-format=dhtml --exp --et 'in-preparation'
   artifacts:
     paths:
     - public
