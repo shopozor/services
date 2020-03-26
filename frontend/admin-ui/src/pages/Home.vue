@@ -1,11 +1,13 @@
+
+<!-- thok: this must enhanced -->
 <template>
   <q-page class="flex flex-center">
-    <img alt="Quasar logo" src="~assets/quasar-logo-full.svg">
+    THIS IS THE HOME PAGE
   </q-page>
 </template>
 
 <script>
 export default {
-  name: 'PageIndex'
+  name: 'PageHome'
 }
 </script>
