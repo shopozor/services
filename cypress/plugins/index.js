@@ -14,11 +14,10 @@
 const cucumber = require('cypress-cucumber-preprocessor').default
 
 module.exports = (on, config) => {
-  on('before:browser:launch', (browser = {}, args) => {
+  on('before:browser:launch', (browser = {}, launchOptions) => {
     if (process.env.NODE_ENV === 'development' && browser.name === 'chrome') {
-      args.push('--remote-debugging-port=9222')
+      launchOptions.args.push('--remote-debugging-port=9222')
       console.log('DEBUG MODE ENABLED')
-      return args
     }
   })
   on('file:preprocessor', cucumber())

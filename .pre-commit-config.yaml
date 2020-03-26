@@ -13,10 +13,10 @@
   - id: pretty-format-json
     exclude: .vscode/*
     args: [--autofix, --indent=2]
-- repo: local
-  hooks:
-    - id: eslint
-      name: eslint
-      entry: yarn lint
-      language: system
-      pass_filenames: false
+# - repo: local
+#   hooks:
+#     - id: eslint
+#       name: eslint
+#       entry: yarn lint
+#       language: system
+#       pass_filenames: false
