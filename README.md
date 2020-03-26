@@ -261,23 +261,19 @@ In the `services` project, then Settings -> CI / CD -> Variables, set
 #### Kubernetes configuration
 
 1. First allow requests to the local network from hooks and services: Admin Area -> Settings -> Network -> Outbound Requests -> Allow requests to the local network from hooks and services (the path should end with `/admin/application_settings/network#js-outbound-settings`)
-2. Go to the repository project's Operations, then choose "Kubernetes"; there you fill up the fields following [this documentation](https://docs.gitlab.com/ee/user/project/clusters/add_remove_clusters.html#existing-gke-cluster).
+2. Go to the repository project's Operations, then choose "Kubernetes"; there you fill up the fields following [this documentation](https://docs.gitlab.com/ee/user/project/clusters/add_remove_clusters.html#existing-gke-cluster):
 
-* API Url:
 ```bash
-kubectl cluster-info | grep 'Kubernetes master' | awk '/http/ {print $NF}'
+# not the url provided in the e-mail sent by jelastic
+apiUrl=$(kubectl cluster-info | grep 'Kubernetes master' | awk '/http/ {print $NF}')
+secret=$(kubectl get secrets | grep default-token | cut -d " " -f 1) # this provides a <secret name> of the kind default-token-xxxxx
+certificate=$(kubectl get secret $secret -o jsonpath="{['data']['ca\.crt']}" | base64 --decode)
+# this is the token provided in the Jelastic installation confirmation e-mail.
+serviceToken=$(kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep fulladmin | awk '{print $1}') | grep 'token:' | sed -e's/token:\| //g')
+echo "API Url       : $apiUrl"
+echo "CA Certificate: $certificate"
+echo "Service token : $serviceToken"
 ```
-(not the url provided in the e-mail sent by jelastic)
-* CA Certificate:
-```bash
-kubectl get secrets # this provides a <secret name> of the kind default-token-xxxxx
-kubectl get secret <secret name> -o jsonpath="{['data']['ca\.crt']}" | base64 --decode
-```
-* Service token:
-```bash
-kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep fulladmin | awk '{print $1}') | grep 'token:' | sed -e's/token:\| //g'
-```
-or the token provided in the Jelastic installation confirmation e-mail.
 
 ## Specification generation
 
