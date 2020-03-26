@@ -257,7 +257,6 @@ In the `services` project, then Settings -> CI / CD -> Variables, set
 * `DYNAMIC_PREPROD_ENVIRONMENT_URL`, without http / https
 * `DYNAMIC_PROD_ENVIRONMENT_URL`, without http / https, without `app`
 
-
 #### Kubernetes configuration
 
 1. First allow requests to the local network from hooks and services: Admin Area -> Settings -> Network -> Outbound Requests -> Allow requests to the local network from hooks and services (the path should end with `/admin/application_settings/network#js-outbound-settings`)
@@ -278,6 +277,31 @@ kubectl get secret <secret name> -o jsonpath="{['data']['ca\.crt']}" | base64 --
 kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | grep fulladmin | awk '{print $1}') | grep 'token:' | sed -e's/token:\| //g'
 ```
 or the token provided in the Jelastic installation confirmation e-mail.
+
+#### Gitlab runner
+
+Following [this advice](https://forum.gitlab.com/t/docker-compose-does-not-mount-volumes/4910/3), configure the gitlab runner with the following `./srv/docker/gitlab-runner/config.toml`:
+```
+[[runners]]
+  name = "node62814"
+  url = "https://gitlab-test.hidora.com:4848/ci"
+  token = "pUh1g2v_XTtvCgRKkbeF"
+  executor = "docker"
+  [runners.custom_build_dir]
+  [runners.cache]
+    [runners.cache.s3]
+    [runners.cache.gcs]
+  [runners.docker]
+    tls_verify = false
+    image = "gitlab/dind:latest"
+    privileged = true
+    disable_entrypoint_overwrite = false
+    oom_kill_disable = false
+    disable_cache = false
+    volumes = ["/var/run/docker.sock:/var/run/docker.sock", "/cache", "/builds:/builds:rw"]
+    shm_size = 0
+```
+The above configuration of the `volumes` allows to mount docker volumes properly.
 
 ## Specification generation
 

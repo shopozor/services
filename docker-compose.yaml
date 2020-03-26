@@ -34,13 +34,11 @@ services:
     image: ${PRODUCT:-shopozor}/fixtures-service:${TAG:-local}
     restart: "no"
     volumes:
-      - ./backend/fixtures-generator:/app
-      - ./backend/test-utils:/app/test_utils
-      - ./shared/pictures:/app/pictures
-      - ./shared/fixtures:/app/fixtures
+      - .:/app
     environment:
       PYTHONDONTWRITEBYTECODE: "1"
-    entrypoint: ./entrypoint.sh medium
+      PYTHONPATH: /app/backend
+    entrypoint: ./backend/fixtures-generator/entrypoint.sh /app/shared/fixtures ./backend/fixtures-generator ./shared/pictures medium
   jest-unit-tests:
     build:
       context: .
@@ -63,7 +61,7 @@ services:
       PYTHONDONTWRITEBYTECODE: "1"
       PYTHONPATH: /app/backend
     volumes:
-      - ./backend/database-service/test-reports:/app/backend/database-service/test-reports
+      - .:/app
     entrypoint: ./backend/database-service/tests/entrypoint.sh graphql-engine-empty 8080 /app
   service-integration-tests:
     build:
@@ -77,7 +75,7 @@ services:
       PYTHONDONTWRITEBYTECODE: "1"
       PYTHONPATH: /app/backend
     volumes:
-      - ./backend/tests/test-reports:/app/backend/tests/test-reports
+      - .:/app
     entrypoint: ./backend/tests/entrypoint.sh graphql-engine-with-tables 8080 /app
 
 volumes:

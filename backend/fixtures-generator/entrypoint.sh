@@ -1,10 +1,11 @@
 #! /bin/bash
 
-FIXTURES_FOLDER=fixtures
+FIXTURES_FOLDER=${1:-fixtures}
 DATABASE_FIXTURES_FOLDER=${FIXTURES_FOLDER}/database
 GRAPHQL_RESPONSES_FOLDER=${FIXTURES_FOLDER}/graphql/responses
-APP_ROOT=.
-FIXTURES_SET=${1:-medium}
+APP_ROOT=${2:-.}
+PICTURES_FOLDER=${3:-pictures}
+FIXTURES_SET=${4:-medium}
 
 GENERATE_JSON_FIXTURES=${APP_ROOT}/generate_json_fixtures.py
 JSON_TO_SQL=${APP_ROOT}/json2sql.py
@@ -14,7 +15,7 @@ JSON_TO_SQL=${APP_ROOT}/json2sql.py
 [[ -d ${GRAPHQL_RESPONSES_FOLDER} ]] && rm -Rf ${GRAPHQL_RESPONSES_FOLDER}/*
 
 # Generate the json fixtures
-python ${GENERATE_JSON_FIXTURES} -o ${DATABASE_FIXTURES_FOLDER} --fixtures-set ${FIXTURES_SET}
+python ${GENERATE_JSON_FIXTURES} -o ${DATABASE_FIXTURES_FOLDER} --fixtures-set ${FIXTURES_SET} -p ${PICTURES_FOLDER}
 
 # Generate the sql migrations based on the json fixtures
 FIXTURES_MIGRATIONS_FOLDER=${DATABASE_FIXTURES_FOLDER}/migrations
@@ -29,4 +30,4 @@ python ${JSON_TO_SQL} -i ${DATABASE_FIXTURES_FOLDER}/Shopozor.json -n shopozor-d
 touch ${DATABASE_FIXTURES_FOLDER}/config.yaml
 
 # Generate graphql responses
-python ./generate_graphql_responses.py -o ${GRAPHQL_RESPONSES_FOLDER} -i ${DATABASE_FIXTURES_FOLDER}
+python ${APP_ROOT}/generate_graphql_responses.py -o ${GRAPHQL_RESPONSES_FOLDER} -i ${DATABASE_FIXTURES_FOLDER}

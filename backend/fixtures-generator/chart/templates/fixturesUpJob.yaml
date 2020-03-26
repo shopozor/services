@@ -37,7 +37,7 @@ spec:
           - /bin/sh
           - -c
           - |
-            ./entrypoint.sh medium
+            ./entrypoint.sh fixtures . pictures medium
             hasura migrate apply --endpoint http://${API_HOSTNAME}:${API_PORT} --project /app/fixtures/database --up all --skip-update-check
       restartPolicy: OnFailure
       volumes:

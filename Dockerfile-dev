@@ -20,6 +20,3 @@ COPY --from=python-tests-build /usr/local/bin /usr/local/bin
 COPY --from=hasura-migrations /bin/hasura-cli /usr/local/bin/hasura
 
 WORKDIR /app
-
-COPY . .
-RUN chmod +x ./backend/tests/run_tests.sh
