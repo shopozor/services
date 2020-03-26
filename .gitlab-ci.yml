@@ -81,8 +81,6 @@ deploy_staging:
   image: shopozor/devspace
   environment:
     name: staging
-    kubernetes:
-      namespace: staging
     url: http://$DYNAMIC_STAGING_ENVIRONMENT_URL
     on_stop: stop_staging
     # TODO: auto-stop this environment: https://docs.gitlab.com/ee/ci/environments.html#stopping-an-environment
@@ -102,12 +100,18 @@ review_staging:
     CONSUMER_UI_URL: http://$DYNAMIC_STAGING_ENVIRONMENT_URL
     ADMIN_UI_URL: http://admin-$DYNAMIC_STAGING_ENVIRONMENT_URL
   script:
-    - CYPRESS_baseUrl=$CONSUMER_UI_URL ; cd frontend/consumer-ui && cypress run --env configFile=e2e
-    - CYPRESS_baseUrl=$ADMIN_UI_URL ; cd frontend/admin-ui && cypress run --env configFile=e2e
+    # maybe use previously built node_modules as artifact
+    - yarn
+    - CYPRESS_baseUrl=$CONSUMER_UI_URL ; yarn cypress:consumer-ui:run
+    - CYPRESS_baseUrl=$ADMIN_UI_URL ; yarn cypress:admin-ui:run
   artifacts:
     reports:
       junit:
-      - $CI_PROJECT_DIR/frontend/*/test-reports/cypress*.xml
+      - $CI_PROJECT_DIR/cypress/test-reports/*.xml
+    paths:
+    - $CI_PROJECT_DIR/cypress/videos
+    - $CI_PROJECT_DIR/cypress/screenshots
+    # TODO: also get videos and screenshots
   environment:
     name: staging
     url: http://$DYNAMIC_STAGING_ENVIRONMENT_URL

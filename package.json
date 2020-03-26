@@ -1,5 +1,8 @@
 {
   "author": "info@softozor.ch",
+  "cypress-cucumber-preprocessor": {
+    "nonGlobalStepDefinitions": true
+  },
   "dependencies": {
     "admin-ui": "file:frontend\\admin-ui",
     "consumer-ui": "file:frontend\\consumer-ui"
@@ -88,9 +91,11 @@
     "build": "lerna run build && yarn build-storybook",
     "build-storybook": "lerna run build-storybook",
     "clean:node_modules": "lerna clean && rimraf node_modules",
-    "cypress:clean": "lerna run cypress:clean",
-    "cypress:e2e:ci": "lerna run cypress:e2e:ci --concurrency 1",
-    "cypress:integration:ci": "lerna run cypress:integration:ci --concurrency 1",
+    "cypress:admin-ui:open": "cypress open --config integrationFolder=cypress/admin-ui,supportFile=cypress/admin-ui/support/index.js",
+    "cypress:admin-ui:run": "cypress run --config integrationFolder=cypress/admin-ui,supportFile=cypress/admin-ui/support/index.js",
+    "cypress:clean": "rimraf cypress/screenshots/* cypress/videos/*",
+    "cypress:consumer-ui:open": "cypress open --config integrationFolder=cypress/consumer-ui,supportFile=cypress/consumer-ui/support/index.js",
+    "cypress:consumer-ui:run": "cypress run --config integrationFolder=cypress/consumer-ui,supportFile=cypress/consumer-ui/support/index.js",
     "generate": "lerna run generate",
     "lint": "lerna run lint -- --fix",
     "start:dev": "lerna run start:dev --stream",

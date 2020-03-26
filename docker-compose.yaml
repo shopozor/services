@@ -79,28 +79,6 @@ services:
     volumes:
       - ./backend/tests/test-reports:/app/backend/tests/test-reports
     entrypoint: ./backend/tests/entrypoint.sh graphql-engine-with-tables 8080 /app
-  admin-e2e-tests:
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: cypress-tests
-      args:
-        CYPRESS_VERSION: 3.8.0
-    restart: "no"
-    volumes:
-      - .:/app
-    environment:
-      CYPRESS_baseUrl: http://localhost:${ADMIN_UI_PORT:-4000}
-    entrypoint: lerna run cypress:e2e --scope admin-ui --stream -- --env configFile=e2e
-  consumer-e2e-tests:
-    image: shopozor/cypress
-    restart: "no"
-    volumes:
-      - .:/app
-    environment:
-      CYPRESS_baseUrl: http://localhost:${CONSUMER_UI_PORT:-3000}
-    working_dir: /app
-    entrypoint: lerna run cypress:e2e --scope consumer-ui --stream -- --env configFile=e2e
 
 volumes:
   db_data:
